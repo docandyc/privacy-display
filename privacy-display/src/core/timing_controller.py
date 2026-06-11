@@ -91,6 +91,29 @@ class TimingController:
                 next_vblank_count=self._token.next_vblank_count,
             )
 
+    def advance_on_vblank(self) -> tuple[int, int]:
+        """
+        推进一次 VBlank 时序并返回应输出的子帧索引。
+
+        PoC 的后台线程仍可用 `time.sleep` 模拟；真实窗口/显示循环可在
+        `pygame.display.flip()` 这类 vsync 阻塞返回后调用本方法，把令牌推进
+        绑定到实际显示刷新，而不是只依赖软件计时。
+        """
+        with self._lock:
+            perm = self._token.permutation
+            k = self._token.subframe_index
+            cycle = self._token.cycle
+            actual_k = perm[k % len(perm)] if perm else k
+
+            self._token.subframe_index = (k + 1) % self.n
+            if self._token.subframe_index == 0:
+                self._token.cycle += 1
+            self._token.next_vblank_count += 1
+
+        if self.on_subframe:
+            self.on_subframe(cycle, actual_k)
+        return cycle, actual_k
+
     def start(self) -> None:
         """启动后台时序线程。"""
         self._running = True
@@ -110,20 +133,7 @@ class TimingController:
             jitter = abs(now - next_tick)
             self._jitter_history.append(jitter)
 
-            with self._lock:
-                perm = self._token.permutation
-                k = self._token.subframe_index
-                cycle = self._token.cycle
-
-            if perm and self.on_subframe:
-                actual_k = perm[k % len(perm)] if perm else k
-                self.on_subframe(cycle, actual_k)
-
-            with self._lock:
-                self._token.subframe_index = (k + 1) % self.n
-                if self._token.subframe_index == 0:
-                    self._token.cycle += 1
-                self._token.next_vblank_count += 1
+            self.advance_on_vblank()
 
             next_tick += self.frame_interval
             sleep_time = next_tick - time.perf_counter()

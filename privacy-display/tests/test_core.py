@@ -85,6 +85,22 @@ class TestMaskGenerator:
         perm = gen.generate_permutation(cycle=7)
         assert sorted(perm) == list(range(n)), f"非法置换: {perm}"
 
+    def test_permutation_sampling_rejects_modulo_bias_tail(self):
+        """置换下标采样应丢弃 uint32 取模偏置尾部。"""
+        class FakeCipher:
+            def __init__(self):
+                self.calls = 0
+
+            def encrypt(self, data):
+                self.calls += 1
+                values = np.array([2**32 - 1, 4, 5, 6, 7, 8, 9, 10], dtype=np.uint32)
+                return values.tobytes()[:len(data)]
+
+        fake = FakeCipher()
+        # upper=3 时 2**32-1 位于拒绝区间，4 被接受，4 % 3 == 1。
+        assert MaskGenerator._uniform_int_from_cipher(fake, 3) == 1
+        assert fake.calls == 1
+
 
 class TestSubframeComposer:
     def test_subframe_completeness(self):

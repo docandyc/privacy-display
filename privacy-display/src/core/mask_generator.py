@@ -122,14 +122,34 @@ class MaskGenerator:
         subkey = self._derive_subkey(cycle ^ 0xFFFF_FFFF)
         nonce = struct.pack(">Q", cycle ^ 0xFFFF_FFFF)[:8]
         cipher = ChaCha20.new(key=subkey, nonce=nonce)
-        random_bytes = cipher.encrypt(bytes(self.n * 4))
-        rand_vals = np.frombuffer(random_bytes, dtype=np.uint32)
 
         perm = list(range(self.n))
         for i in range(self.n - 1, 0, -1):
-            j = int(rand_vals[i]) % (i + 1)
+            j = self._uniform_int_from_cipher(cipher, i + 1)
             perm[i], perm[j] = perm[j], perm[i]
         return perm
+
+    @staticmethod
+    def _uniform_int_from_cipher(cipher, upper_exclusive: int) -> int:
+        """
+        从 ChaCha20 字节流中抽取 [0, upper_exclusive) 的无偏整数。
+
+        直接对 uint32 做 `% upper_exclusive` 会在 upper_exclusive 不是
+        2 的幂时产生极小但真实存在的取模偏置。这里使用拒绝采样：
+        丢弃落在最大可整除区间之外的 uint32，再取模。
+        """
+        if upper_exclusive <= 0:
+            raise ValueError("upper_exclusive must be positive")
+
+        uint32_space = 1 << 32
+        limit = uint32_space - (uint32_space % upper_exclusive)
+
+        while True:
+            raw = np.frombuffer(cipher.encrypt(bytes(4 * 8)), dtype=np.uint32)
+            for value in raw:
+                candidate = int(value)
+                if candidate < limit:
+                    return candidate % upper_exclusive
 
     def generate_view_differentiated(
         self, cycle: int, regions: tuple[int, int] = (3, 3)

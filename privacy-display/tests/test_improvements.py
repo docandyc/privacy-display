@@ -67,6 +67,22 @@ class TestBlackFrameAE:
         assert not tc.should_emit_black_frame(render_ready=True, time_to_vblank_ms=2.0)
         assert tc.black_frame_count == 2
 
+    def test_external_vblank_advances_timing_token(self):
+        from src.core.timing_controller import TimingController
+        seen = []
+        tc = TimingController(
+            refresh_rate=240,
+            n=3,
+            on_subframe=lambda cycle, idx: seen.append((cycle, idx)),
+        )
+        tc.set_permutation(7, [2, 0, 1])
+
+        assert tc.advance_on_vblank() == (7, 2)
+        assert tc.advance_on_vblank() == (7, 0)
+        assert tc.advance_on_vblank() == (7, 1)
+        assert tc.get_token().cycle == 8
+        assert seen == [(7, 2), (7, 0), (7, 1)]
+
 
 # ------------------------------------------------------------------
 # A3 多显示器同步

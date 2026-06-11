@@ -1,13 +1,16 @@
 """
 隐私保护窗口演示（pygame）
 
-实时捕获屏幕内容，应用时间分片掩模后在独立窗口中循环显示子帧，
-模拟 144Hz 显示器上 n=2 的实际运行效果。
+实时捕获屏幕内容，应用时间分片掩模后在独立窗口中循环显示子帧。
+默认 n=2@120Hz，并在运行时强制满足交底书 f_r >= 60n 的刷新率约束。
 """
 
+import json
 import numpy as np
+import platform
+import re
+import subprocess
 import time
-import threading
 from dataclasses import dataclass
 
 
@@ -16,11 +19,269 @@ class WindowConfig:
     width: int = 1280
     height: int = 720
     n: int = 2
-    refresh_rate: int = 60       # 目标刷新率（Hz）
+    refresh_rate: int = 120      # 目标刷新率（Hz），需满足 f_r >= 60n
     epsilon: float = 8 / 255
     gamma_factor: float = 1.1
     show_hud: bool = True         # 显示 HUD 信息
     capture_region: tuple | None = None  # (x, y, w, h) 截图区域，None=全屏
+    prefer_vsync: bool = True      # 优先使用 SDL/系统 VBlank 阻塞
+    insert_inversion: bool = False  # 启用后周期末输出反色帧用于长曝光防御
+    emergency_black_frame: bool = True  # 渲染超时时实际输出黑帧
+
+    def __post_init__(self) -> None:
+        self.refresh_rate = ensure_safe_refresh_rate(self.n, self.refresh_rate)
+
+
+def minimum_refresh_rate(n: int) -> int:
+    """交底书约束：完整周期 T_cycle=n/f_r ≤ 16.7ms，即 f_r ≥ 60n。"""
+    return int(60 * n)
+
+
+def ensure_safe_refresh_rate(n: int, refresh_rate: int) -> int:
+    """返回满足 f_r >= 60n 的目标刷新率。"""
+    return max(int(refresh_rate), minimum_refresh_rate(n))
+
+
+@dataclass(frozen=True)
+class DisplayCapabilities:
+    """当前显示器能力探测结果。"""
+
+    refresh_rate_hz: int | None = None
+    width: int | None = None
+    height: int | None = None
+    source: str = "unknown"
+
+
+@dataclass(frozen=True)
+class RuntimeDisplayConfig:
+    """结合交底书约束和硬件能力后的运行参数。"""
+
+    n: int
+    refresh_rate: int
+    safe: bool
+    note: str
+
+
+def resolve_runtime_display_config(
+    n: int,
+    requested_refresh_rate: int,
+    detected_refresh_rate: int | None,
+) -> RuntimeDisplayConfig:
+    """
+    根据硬件刷新率解析可运行参数。
+
+    若硬件刷新率不足以满足 f_r >= 60n，优先降低 n；若连 n=2 都不满足，
+    标记为 unsafe，让窗口 HUD 明确暴露风险。
+    """
+    requested = ensure_safe_refresh_rate(n, requested_refresh_rate)
+    if detected_refresh_rate is None:
+        return RuntimeDisplayConfig(n, requested, True, "refresh=target")
+
+    detected = int(round(detected_refresh_rate))
+    if detected >= minimum_refresh_rate(n):
+        return RuntimeDisplayConfig(
+            n,
+            detected,
+            True,
+            f"refresh=detected:{detected}",
+        )
+
+    max_safe_n = int(detected // 60)
+    if max_safe_n >= 2:
+        adjusted_n = min(n, max_safe_n)
+        return RuntimeDisplayConfig(
+            adjusted_n,
+            detected,
+            True,
+            f"n lowered to {adjusted_n} for {detected}Hz display",
+        )
+
+    return RuntimeDisplayConfig(
+        2,
+        detected,
+        False,
+        f"display refresh {detected}Hz below minimum 120Hz",
+    )
+
+
+def detect_display_capabilities(pygame_module=None) -> DisplayCapabilities:
+    """
+    读取当前显示器分辨率和刷新率。
+
+    pygame/SDL 通常能给出桌面尺寸但不给刷新率；刷新率再用平台命令探测。
+    探测失败时返回 refresh_rate_hz=None，调用方会退回目标刷新率。
+    """
+    width = height = None
+    if pygame_module is not None:
+        try:
+            sizes = pygame_module.display.get_desktop_sizes()
+            if sizes:
+                width, height = sizes[0]
+        except Exception:
+            pass
+        if width is None or height is None:
+            try:
+                info = pygame_module.display.Info()
+                width = int(info.current_w)
+                height = int(info.current_h)
+            except Exception:
+                pass
+
+    refresh, source = _detect_platform_refresh_rate()
+    return DisplayCapabilities(refresh, width, height, source)
+
+
+def _detect_platform_refresh_rate() -> tuple[int | None, str]:
+    system = platform.system()
+    try:
+        if system == "Darwin":
+            return _detect_macos_refresh_rate(), "system_profiler"
+        if system == "Linux":
+            return _detect_xrandr_refresh_rate(), "xrandr"
+        if system == "Windows":
+            return _detect_windows_refresh_rate(), "win32"
+    except Exception:
+        return None, "unavailable"
+    return None, "unsupported"
+
+
+def _detect_macos_refresh_rate() -> int | None:
+    proc = subprocess.run(
+        ["system_profiler", "SPDisplaysDataType", "-json"],
+        capture_output=True,
+        text=True,
+        timeout=3,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    try:
+        payload = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return _extract_refresh_rate_from_text(proc.stdout)
+    rates = _collect_refresh_rates(payload)
+    return max(rates) if rates else _extract_refresh_rate_from_text(proc.stdout)
+
+
+def _detect_xrandr_refresh_rate() -> int | None:
+    proc = subprocess.run(
+        ["xrandr", "--current"],
+        capture_output=True,
+        text=True,
+        timeout=2,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    current_rates = [
+        float(match.group(1))
+        for match in re.finditer(r"(\d+(?:\.\d+)?)\*", proc.stdout)
+    ]
+    return int(round(max(current_rates))) if current_rates else None
+
+
+def _detect_windows_refresh_rate() -> int | None:
+    try:
+        import ctypes
+        from ctypes import wintypes
+    except Exception:
+        return None
+
+    class DEVMODE(ctypes.Structure):
+        _fields_ = [
+            ("dmDeviceName", wintypes.WCHAR * 32),
+            ("dmSpecVersion", wintypes.WORD),
+            ("dmDriverVersion", wintypes.WORD),
+            ("dmSize", wintypes.WORD),
+            ("dmDriverExtra", wintypes.WORD),
+            ("dmFields", wintypes.DWORD),
+            ("dmOrientation", wintypes.SHORT),
+            ("dmPaperSize", wintypes.SHORT),
+            ("dmPaperLength", wintypes.SHORT),
+            ("dmPaperWidth", wintypes.SHORT),
+            ("dmScale", wintypes.SHORT),
+            ("dmCopies", wintypes.SHORT),
+            ("dmDefaultSource", wintypes.SHORT),
+            ("dmPrintQuality", wintypes.SHORT),
+            ("dmColor", wintypes.SHORT),
+            ("dmDuplex", wintypes.SHORT),
+            ("dmYResolution", wintypes.SHORT),
+            ("dmTTOption", wintypes.SHORT),
+            ("dmCollate", wintypes.SHORT),
+            ("dmFormName", wintypes.WCHAR * 32),
+            ("dmLogPixels", wintypes.WORD),
+            ("dmBitsPerPel", wintypes.DWORD),
+            ("dmPelsWidth", wintypes.DWORD),
+            ("dmPelsHeight", wintypes.DWORD),
+            ("dmDisplayFlags", wintypes.DWORD),
+            ("dmDisplayFrequency", wintypes.DWORD),
+        ]
+
+    mode = DEVMODE()
+    mode.dmSize = ctypes.sizeof(DEVMODE)
+    if ctypes.windll.user32.EnumDisplaySettingsW(None, -1, ctypes.byref(mode)):
+        return int(mode.dmDisplayFrequency) or None
+    return None
+
+
+def _collect_refresh_rates(value) -> list[int]:
+    rates: list[int] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if "refresh" in str(key).lower():
+                rates.extend(_extract_refresh_rates_from_value(child))
+            rates.extend(_collect_refresh_rates(child))
+    elif isinstance(value, list):
+        for child in value:
+            rates.extend(_collect_refresh_rates(child))
+    elif isinstance(value, str):
+        rates.extend(_extract_refresh_rates_from_value(value))
+    return rates
+
+
+def _extract_refresh_rates_from_value(value) -> list[int]:
+    if isinstance(value, (int, float)) and 24 <= float(value) <= 1000:
+        return [int(round(value))]
+    if isinstance(value, str):
+        return [
+            int(round(float(match.group(1))))
+            for match in re.finditer(r"(\d+(?:\.\d+)?)\s*Hz", value, re.IGNORECASE)
+        ]
+    return []
+
+
+def _extract_refresh_rate_from_text(text: str) -> int | None:
+    rates = _extract_refresh_rates_from_value(text)
+    return max(rates) if rates else None
+
+
+def create_display_surface(pygame_module, size: tuple[int, int], prefer_vsync: bool):
+    """创建显示表面；支持时优先开启 SDL vsync。"""
+    if prefer_vsync:
+        try:
+            return pygame_module.display.set_mode(size, vsync=1), True
+        except TypeError:
+            pass
+        except Exception:
+            pass
+    return pygame_module.display.set_mode(size), False
+
+
+def select_output_frame(
+    subframes: list[np.ndarray],
+    inversion_frame: np.ndarray | None,
+    black_frame: np.ndarray,
+    slot_index: int,
+    n: int,
+    use_inversion: bool,
+    emergency_black: bool,
+) -> tuple[np.ndarray, str]:
+    """根据当前时隙选择实际输出帧。"""
+    if emergency_black or not subframes:
+        return black_frame, "black"
+    if use_inversion and slot_index == n and inversion_frame is not None:
+        return inversion_frame, "inversion"
+    return subframes[slot_index % n], "subframe"
 
 
 class PrivacyWindow:
@@ -62,10 +323,24 @@ class PrivacyWindow:
         from src.core.mask_generator import MaskGenerator
         from src.core.subframe_composer import SubframeComposer
         from src.core.noise_injector import NoiseInjector
+        from src.core.timing_controller import TimingController
         from src.gpu.renderer import create_renderer
 
         pygame.init()
-        screen = pygame.display.set_mode((self.cfg.width, self.cfg.height))
+        capabilities = detect_display_capabilities(pygame)
+        runtime = resolve_runtime_display_config(
+            self.cfg.n,
+            self.cfg.refresh_rate,
+            capabilities.refresh_rate_hz,
+        )
+        self.cfg.n = runtime.n
+        self.cfg.refresh_rate = runtime.refresh_rate
+
+        screen, vsync_enabled = create_display_surface(
+            pygame,
+            (self.cfg.width, self.cfg.height),
+            self.cfg.prefer_vsync,
+        )
         pygame.display.set_caption("隐私保护显示演示 | Privacy Display PoC")
         clock = pygame.time.Clock()
         font = pygame.font.SysFont("monospace", 14)
@@ -77,10 +352,13 @@ class PrivacyWindow:
         composer = SubframeComposer(n=n, gamma=n * self.cfg.gamma_factor)
         injector = NoiseInjector(n=n, epsilon=self.cfg.epsilon)
         renderer = create_renderer(w, h, n, gamma=n * self.cfg.gamma_factor)
+        timing = TimingController(refresh_rate=self.cfg.refresh_rate, n=n)
 
         self._running = True
         frame_interval = 1.0 / self.cfg.refresh_rate
         screenshot_counter = 0
+        self._inversion_frame: np.ndarray | None = None
+        self._last_output_kind = "subframe"
 
         with mss.mss() as sct:
             while self._running:
@@ -99,15 +377,27 @@ class PrivacyWindow:
                             self.cfg.show_hud = not self.cfg.show_hud
                         elif event.key == pygame.K_n:
                             n = 4 if n == 2 else 2
+                            runtime = resolve_runtime_display_config(
+                                n,
+                                self.cfg.refresh_rate,
+                                capabilities.refresh_rate_hz,
+                            )
+                            n = runtime.n
+                            self.cfg.n = n
+                            self.cfg.refresh_rate = runtime.refresh_rate
+                            frame_interval = 1.0 / self.cfg.refresh_rate
                             gen = MaskGenerator(w, h, n)
                             composer = SubframeComposer(n=n, gamma=n * self.cfg.gamma_factor)
                             injector = NoiseInjector(n=n, epsilon=self.cfg.epsilon)
                             renderer = create_renderer(w, h, n, gamma=n * self.cfg.gamma_factor)
+                            timing = TimingController(refresh_rate=self.cfg.refresh_rate, n=n)
                             self._cycle = 0
+                            self._current_subframe_idx = 0
                         elif event.key == pygame.K_s:
                             if self._subframes:
+                                shot_idx = min(self._current_subframe_idx, len(self._subframes) - 1)
                                 _save_screenshot(
-                                    self._subframes[self._current_subframe_idx],
+                                    self._subframes[shot_idx],
                                     f"screenshot_{screenshot_counter:04d}.png"
                                 )
                                 screenshot_counter += 1
@@ -135,6 +425,7 @@ class PrivacyWindow:
                 if self._current_subframe_idx == 0:
                     masks = gen.generate(self._cycle)
                     perm = gen.generate_permutation(self._cycle)
+                    timing.set_permutation(self._cycle, perm)
 
                     img_f = img.astype(np.float32) / 255.0
                     noise_base = injector.generate_fgsm_noise(img_f)
@@ -145,10 +436,27 @@ class PrivacyWindow:
                         img, masks, sub_noises, perm
                     )
                     self._permutation = perm
+                    self._inversion_frame = composer.compose_inversion_frame(img)
 
-                # 显示当前子帧
-                sf_idx = self._current_subframe_idx % n
-                sf = self._subframes[sf_idx] if self._subframes else img
+                elapsed_before_output = time.perf_counter() - t_start
+                time_to_vblank_ms = max(0.0, (frame_interval - elapsed_before_output) * 1000)
+                render_ready = bool(self._subframes)
+                emergency_black = (
+                    self.cfg.emergency_black_frame
+                    and timing.should_emit_black_frame(render_ready, time_to_vblank_ms)
+                )
+
+                black = composer.compose_black_frame(img.shape)
+                sf, output_kind = select_output_frame(
+                    self._subframes,
+                    self._inversion_frame,
+                    black,
+                    self._current_subframe_idx,
+                    n,
+                    self.cfg.insert_inversion,
+                    emergency_black,
+                )
+                self._last_output_kind = output_kind
                 surf = pygame.surfarray.make_surface(sf.swapaxes(0, 1))
                 screen.blit(surf, (0, 0))
 
@@ -156,28 +464,36 @@ class PrivacyWindow:
                 if self.cfg.show_hud:
                     _draw_hud(screen, font, {
                         "n": n,
-                        "subframe": f"{sf_idx+1}/{n}",
+                        "subframe": f"{min(self._current_subframe_idx + 1, n)}/{n}",
                         "cycle": self._cycle,
                         "fps": self._stats["fps"],
                         "refresh": self.cfg.refresh_rate,
                         "paused": self._paused,
+                        "vsync": vsync_enabled,
+                        "display": capabilities.refresh_rate_hz,
+                        "mode": output_kind,
+                        "black": timing.black_frame_count,
+                        "safe": runtime.safe,
+                        "note": runtime.note,
                     })
 
                 pygame.display.flip()
+                timing.advance_on_vblank()
 
                 # 更新子帧索引
-                self._current_subframe_idx = (self._current_subframe_idx + 1) % n
+                cycle_slots = n + (1 if self.cfg.insert_inversion else 0)
+                self._current_subframe_idx = (self._current_subframe_idx + 1) % cycle_slots
                 if self._current_subframe_idx == 0:
                     self._cycle += 1
 
-                # 精确帧率控制
-                elapsed = time.perf_counter() - t_start
-                sleep_t = max(0, frame_interval - elapsed)
-                if sleep_t > 0:
-                    time.sleep(sleep_t)
+                if not vsync_enabled:
+                    elapsed = time.perf_counter() - t_start
+                    sleep_t = max(0, frame_interval - elapsed)
+                    if sleep_t > 0:
+                        time.sleep(sleep_t)
+                    clock.tick(self.cfg.refresh_rate)
 
                 self._stats["fps"] = 1.0 / max(time.perf_counter() - t_start, 1e-6)
-                clock.tick(self.cfg.refresh_rate)
 
         pygame.quit()
         renderer.release() if hasattr(renderer, "release") else None
@@ -192,9 +508,12 @@ def _draw_hud(screen, font, info: dict) -> None:
 
     lines = [
         f"n={info['n']}  subframe={info['subframe']}  cycle={info['cycle']}",
-        f"refresh={info['refresh']}Hz  fps={info['fps']:.1f}",
+        f"refresh={info['refresh']}Hz  fps={info['fps']:.1f}  vsync={int(info.get('vsync', False))}",
+        f"mode={info.get('mode', 'subframe')}  black={info.get('black', 0)}  display={info.get('display') or '?'}Hz",
         "ESC:quit  N:toggle-n  S:screenshot  SPACE:pause  H:hud",
     ]
+    if not info.get("safe", True):
+        lines.insert(0, f"[ UNSAFE REFRESH ] {info.get('note', '')}")
     if info.get("paused"):
         lines.insert(0, "[ PAUSED ]")
 
