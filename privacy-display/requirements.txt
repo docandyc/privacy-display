@@ -13,5 +13,6 @@ pytesseract>=0.3.10
 easyocr>=1.7
 paddlepaddle>=3.3
 paddleocr>=3.6
+ultralytics>=8.4
 colormath>=3.0.0
 tqdm>=4.66

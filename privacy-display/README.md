@@ -57,8 +57,9 @@ source .venv/bin/activate
 
 # 核心依赖（已安装）：numpy scipy pycryptodome pillow opencv-python pytest moderngl
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
+# 目标检测实验使用：ultralytics YOLOv8n（首次运行会下载 yolov8n.pt，本地权重不提交）
 
-python -m pytest tests/ -q          # 102 项单元测试
+python -m pytest tests/ -q          # 107 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
@@ -68,12 +69,14 @@ python main.py window               # 实时屏幕保护演示（默认 n=2@120H
 python experiments/performance_benchmark.py # A4 性能实测
 python experiments/build_corpus.py          # C2 生成多样本语料
 python experiments/ablation_noise.py        # B1 对抗噪声消融
+python experiments/detection_attack.py      # G2 YOLOv8n 目标检测攻击
 ```
 
 > **改进路线见 [`改进文档.md`](改进文档.md)**：已实现 HDR 补偿(ICtCp/PQ)、黑帧+AE 攻击、
 > 多显示器同步、性能实测、真实对抗噪声+消融、去混淆/重构攻击、视角差异化掩模、
-> 掩模取模偏置修复、多样本多引擎评测、SSIM/运动模糊指标等。新增模块：
-> `src/core/hdr_compensation.py`、`src/core/multi_display.py`、`src/attack/reconstruction_attack.py`。
+> 掩模取模偏置修复、多样本多引擎评测、YOLOv8n 目标检测评测、SSIM/运动模糊指标等。
+> 新增模块：`src/core/hdr_compensation.py`、`src/core/multi_display.py`、
+> `src/attack/reconstruction_attack.py`、`src/attack/detection_evaluator.py`。
 
 ---
 
