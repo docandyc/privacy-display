@@ -194,6 +194,56 @@ class CameraSimulator:
         )
         return stacked.clip(0, 255).astype(np.uint8)
 
+    def off_axis_temporal_average_attack(
+        self,
+        subframes: list[np.ndarray],
+        angle_degrees: float = 35.0,
+        regions: tuple[int, int] = (3, 3),
+        cycles: int = 1,
+    ) -> np.ndarray:
+        """
+        离轴相机时域平均攻击模型（交底书 7.2）。
+
+        正视时完整周期平均会重构原图；离轴时 LCD 视角响应导致区域级亮度
+        衰减、色偏和微小错位。这里用区域分块近似这些现象，配合
+        view-differentiated 掩模可量化"正视 vs 离轴"攻击差异。
+        """
+        if not subframes:
+            raise ValueError("subframes must not be empty")
+        if cycles <= 0:
+            raise ValueError("cycles must be positive")
+
+        h, w = subframes[0].shape[:2]
+        rows, cols = regions
+        angle = abs(float(angle_degrees))
+        attenuation = float(np.clip(np.cos(np.deg2rad(angle)) ** 1.4, 0.35, 1.0))
+        color_shift = np.array(
+            [1.0 - 0.12 * (1 - attenuation), 1.0, 1.0 + 0.18 * (1 - attenuation)],
+            dtype=np.float32,
+        )
+        result = np.zeros_like(subframes[0], dtype=np.float32)
+        rh = h // rows
+        rw = w // cols
+
+        for r in range(rows):
+            for c in range(cols):
+                y0, y1 = r * rh, h if r == rows - 1 else (r + 1) * rh
+                x0, x1 = c * rw, w if c == cols - 1 else (c + 1) * rw
+                phase = (r + 2 * c) % len(subframes)
+                sampled = [
+                    subframes[(i + phase) % len(subframes)][y0:y1, x0:x1].astype(np.float32)
+                    for i in range(len(subframes) * cycles)
+                ]
+                region = np.mean(sampled, axis=0)
+                region = region * attenuation * color_shift.reshape(1, 1, 3)
+                # 离轴透视/采样错位：区域位置越偏，错位越明显。
+                shift_x = int(round((c - (cols - 1) / 2) * angle / 25))
+                shift_y = int(round((r - (rows - 1) / 2) * angle / 40))
+                region = np.roll(region, shift=(shift_y, shift_x), axis=(0, 1))
+                result[y0:y1, x0:x1] = region
+
+        return np.clip(result, 0, 255).astype(np.uint8)
+
     # ------------------------------------------------------------------
     # 长曝光攻击
     # ------------------------------------------------------------------

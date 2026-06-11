@@ -1,0 +1,23 @@
+{
+  "method": "tiny_unet_single_subframe",
+  "training": {
+    "available": true,
+    "epochs": 3,
+    "loss": 0.4078780710697174,
+    "train_samples": 5,
+    "size": [
+      64,
+      32
+    ]
+  },
+  "holdout": {
+    "unet": {
+      "psnr_db": 9.538420677185059,
+      "ssim": 0.7828301613892701
+    },
+    "inpaint_baseline": {
+      "psnr_db": 22.521808624267578,
+      "ssim": 0.9288231442617607
+    }
+  }
+}

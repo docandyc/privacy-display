@@ -1,0 +1,17 @@
+{
+  "n": 4,
+  "regions": [
+    3,
+    3
+  ],
+  "angle_degrees": 35.0,
+  "frontal_temporal_average": {
+    "psnr_db": 55.43075180053711,
+    "ssim": 0.9999736025276301
+  },
+  "off_axis_temporal_average": {
+    "psnr_db": 12.457674026489258,
+    "ssim": 0.9107812398076213
+  },
+  "off_axis_ssim_drop": 0.08919236272000886
+}

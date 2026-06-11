@@ -31,6 +31,10 @@ class MaskGenerator:
         self.n = n
         self.key = key if key is not None else os.urandom(32)
         self._cycle_counter = 0
+        self._pregenerated_masks: list[list[np.ndarray]] | None = None
+        self._pregenerated_permutations: list[list[int]] | None = None
+        self._pregenerate_start = 0
+        self._pregenerate_cycles = 0
 
     def _derive_subkey(self, cycle: int) -> bytes:
         """HKDF 风格派生周期相关子密钥，确保不同周期掩模统计独立。"""
@@ -185,3 +189,38 @@ class MaskGenerator:
                 R[y0:y1, x0:x1] = sub._generate_index_matrix(region_cycle)
 
         return [(R == k) for k in range(self.n)]
+
+    def pregenerate(self, cycles: int = 1024, start_cycle: int = 0) -> None:
+        """
+        预生成固定周期窗口内的掩模与置换环形缓冲。
+
+        PoC 仍允许按需生成；该接口对应交底书 4.1.1/5.1 中的 1024 周期
+        预生成思路。缓冲内容完全由 key+cycle 决定，因此同一 cycle 的
+        预生成结果应与按需生成一致。
+        """
+        if cycles <= 0:
+            raise ValueError("cycles must be positive")
+
+        self._pregenerate_start = int(start_cycle)
+        self._pregenerate_cycles = int(cycles)
+        self._pregenerated_masks = []
+        self._pregenerated_permutations = []
+
+        for offset in range(cycles):
+            cycle = start_cycle + offset
+            self._pregenerated_masks.append(self.generate(cycle))
+            self._pregenerated_permutations.append(self.generate_permutation(cycle))
+
+    def get_pregenerated_masks(self, cycle: int) -> list[np.ndarray]:
+        """从预生成环形缓冲读取掩模；返回副本，避免调用方修改缓存。"""
+        if self._pregenerated_masks is None or self._pregenerate_cycles <= 0:
+            raise RuntimeError("pregenerate() must be called before reading masks")
+        idx = (cycle - self._pregenerate_start) % self._pregenerate_cycles
+        return [mask.copy() for mask in self._pregenerated_masks[idx]]
+
+    def get_pregenerated_permutation(self, cycle: int) -> list[int]:
+        """从预生成环形缓冲读取置换序列。"""
+        if self._pregenerated_permutations is None or self._pregenerate_cycles <= 0:
+            raise RuntimeError("pregenerate() must be called before reading permutations")
+        idx = (cycle - self._pregenerate_start) % self._pregenerate_cycles
+        return list(self._pregenerated_permutations[idx])

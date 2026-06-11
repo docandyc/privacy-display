@@ -13,6 +13,7 @@ HDR 亮度补偿（交底书 4.3 节）
 """
 
 import numpy as np
+from dataclasses import dataclass
 
 
 # ------------------------------------------------------------------
@@ -43,6 +44,77 @@ def pq_decode(pq_value: np.ndarray) -> np.ndarray:
     num = np.maximum(Vm2 - _PQ_C1, 0.0)
     den = _PQ_C2 - _PQ_C3 * Vm2
     return np.power(num / den, 1.0 / _PQ_M1) * _PQ_LMAX
+
+
+# ------------------------------------------------------------------
+# HLG (ITU-R BT.2100) 编解码
+# ------------------------------------------------------------------
+
+_HLG_A = 0.17883277
+_HLG_B = 1 - 4 * _HLG_A
+_HLG_C = 0.5 - _HLG_A * np.log(4 * _HLG_A)
+
+
+def hlg_encode(scene_linear: np.ndarray) -> np.ndarray:
+    """HLG OETF：场景线性光 [0,1] → HLG 编码值 [0,1]。"""
+    E = np.clip(scene_linear, 0.0, 1.0)
+    out = np.empty_like(E, dtype=np.float64)
+    low = E <= 1 / 12
+    out[low] = np.sqrt(3 * E[low])
+    out[~low] = _HLG_A * np.log(12 * E[~low] - _HLG_B) + _HLG_C
+    return out
+
+
+def hlg_decode(hlg_value: np.ndarray) -> np.ndarray:
+    """HLG 逆 OETF：编码值 [0,1] → 场景线性光 [0,1]。"""
+    V = np.clip(hlg_value, 0.0, 1.0)
+    out = np.empty_like(V, dtype=np.float64)
+    low = V <= 0.5
+    out[low] = (V[low] ** 2) / 3
+    out[~low] = (np.exp((V[~low] - _HLG_C) / _HLG_A) + _HLG_B) / 12
+    return out
+
+
+@dataclass(frozen=True)
+class AmbientAdaptation:
+    """模拟 ALS 环境光反馈，保持近似 Weber 对比度。"""
+
+    target_weber_contrast: float = 3.0
+    panel_reflectance: float = 0.02
+    reference_content_nits: float = 100.0
+    min_backlight_scale: float = 0.5
+    max_backlight_scale: float = 8.0
+
+    def adapt(self, ambient_lux: float, content_luminance_nits: float = 100.0) -> dict:
+        """
+        根据环境光估计所需背光/γ 调整。
+
+        环境反射亮度用 lux*reflectance/pi 近似；为保持 Weber 对比度 C，
+        目标白场约为 (C+1)*反射黑位。结果钳位到 PoC 可用范围。
+        """
+        lux = max(0.0, float(ambient_lux))
+        content = max(1e-3, float(content_luminance_nits))
+        reflected_nits = lux * self.panel_reflectance / np.pi
+        required_white = max(
+            self.reference_content_nits,
+            (self.target_weber_contrast + 1.0) * reflected_nits,
+        )
+        scale = np.clip(
+            required_white / content,
+            self.min_backlight_scale,
+            self.max_backlight_scale,
+        )
+        achieved_contrast = (
+            (content * scale - reflected_nits) / max(reflected_nits, 1e-6)
+            if reflected_nits > 0 else float("inf")
+        )
+        return {
+            "ambient_lux": lux,
+            "reflected_nits": float(reflected_nits),
+            "backlight_scale": float(scale),
+            "gamma_factor": float(1.0 / scale),
+            "weber_contrast": float(achieved_contrast),
+        }
 
 
 # ------------------------------------------------------------------

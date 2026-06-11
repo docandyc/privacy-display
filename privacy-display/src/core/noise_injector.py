@@ -63,6 +63,8 @@ class NoiseInjector:
         self._templates: dict[str, np.ndarray] = {}
         self._template_metadata: dict[str, dict] = {}
         self._last_gradient_source = "none"
+        self._easyocr_gradient_reader = None
+        self._easyocr_gradient_model = None
         specs = {spec.name: spec for spec in DEFAULT_TARGET_MODELS}
         names = target_models or [spec.name for spec in DEFAULT_TARGET_MODELS]
         self._target_specs = {name: specs[name] for name in names if name in specs}
@@ -320,7 +322,10 @@ class NoiseInjector:
         return self._last_gradient_source
 
     def _get_spec(self, model_name: str) -> TargetModelSpec:
-        return self._target_specs.get(model_name, self._target_specs["tesseract"])
+        fallback = self._target_specs.get("tesseract")
+        if fallback is None:
+            fallback = next(iter(self._target_specs.values()))
+        return self._target_specs.get(model_name, fallback)
 
     def _effective_epsilon(self, model_name: str) -> float:
         state = self._online_state.get(model_name, {})
@@ -342,12 +347,86 @@ class NoiseInjector:
         return dict(self._template_metadata.get(name, {}))
 
     def _target_gradient(self, image: np.ndarray, spec: TargetModelSpec) -> np.ndarray:
+        if spec.name == "easyocr":
+            easyocr_grad = self._easyocr_e2e_gradient(image)
+            if easyocr_grad is not None:
+                self._last_gradient_source = "easyocr_e2e"
+                return easyocr_grad
         shadow = self._differentiable_shadow_gradient(image, spec)
         if shadow is not None:
             self._last_gradient_source = "shadow"
             return shadow
         self._last_gradient_source = "surrogate"
         return self._surrogate_gradient(image, spec)
+
+    def _easyocr_e2e_gradient(self, image: np.ndarray) -> np.ndarray | None:
+        """
+        尝试对 EasyOCR 识别网络本体反传输入梯度。
+
+        EasyOCR 的内部 recognizer API 不是公开稳定接口，因此该路径必须
+        fail-soft：成功时标记 `easyocr_e2e`，任何导入/权重/形状问题都回退
+        到本地可微影子模型。
+        """
+        try:
+            import torch
+            import torch.nn.functional as F
+        except ImportError:
+            return None
+
+        try:
+            if self._easyocr_gradient_model is None:
+                if self._easyocr_gradient_reader is None:
+                    import easyocr
+                    self._easyocr_gradient_reader = easyocr.Reader(
+                        ["en"],
+                        gpu=False,
+                        download_enabled=False,
+                        verbose=False,
+                    )
+                self._easyocr_gradient_model = getattr(
+                    self._easyocr_gradient_reader,
+                    "recognizer",
+                    None,
+                )
+            model = self._easyocr_gradient_model
+            if model is None:
+                return None
+
+            image_f = np.clip(image.astype(np.float32), 0.0, 1.0)
+            x = torch.from_numpy(image_f.transpose(2, 0, 1)).unsqueeze(0).float()
+            gray = (x[:, 0:1] * 0.299 + x[:, 1:2] * 0.587 + x[:, 2:3] * 0.114)
+            gray = F.interpolate(gray, size=(32, 128), mode="bilinear", align_corners=False)
+            gray.requires_grad_(True)
+
+            model.eval()
+            try:
+                output = model(gray, None)
+            except TypeError:
+                output = model(gray)
+            if isinstance(output, (list, tuple)):
+                output = output[0]
+            if not hasattr(output, "float"):
+                return None
+
+            # Untargeted differentiable OCR loss: make the recognizer logits
+            # unstable without requiring labels or converter internals.
+            logits = output.float()
+            loss = logits.square().mean()
+            loss.backward()
+            grad_gray = gray.grad
+            if grad_gray is None:
+                return None
+            grad_rgb = grad_gray.repeat(1, 3, 1, 1)
+            grad_rgb = F.interpolate(
+                grad_rgb,
+                size=image_f.shape[:2],
+                mode="bilinear",
+                align_corners=False,
+            )
+            grad = grad_rgb.detach().squeeze(0).cpu().numpy().transpose(1, 2, 0)
+            return grad.astype(np.float32)
+        except Exception:
+            return None
 
     def _differentiable_shadow_gradient(
         self,
@@ -619,6 +698,30 @@ class NoiseInjector:
         # 验证互补性
         total = sum(sub_noises)
         assert np.max(np.abs(total)) < 1e-5, "子噪声互补性验证失败"
+        return sub_noises
+
+    def split_complementary_spatial(
+        self,
+        noise_base: np.ndarray,
+        tile: int = 1,
+    ) -> list[np.ndarray]:
+        """
+        空间-时间联合互补扰动。
+
+        在 `split_complementary` 的逐像素 ΣN_k=0 之外，引入棋盘格空间极性：
+        同一子帧内相邻像素极性相反，弱化多相机/离轴叠加时的局部一致噪声。
+        对缓慢变化的文字/背景区域，2×2 邻域噪声和接近 0。
+        """
+        if tile <= 0:
+            raise ValueError("tile must be positive")
+        h, w = noise_base.shape[:2]
+        yy, xx = np.mgrid[0:h, 0:w]
+        checker = (((yy // tile) + (xx // tile)) % 2) * 2 - 1
+        checker = checker.astype(np.float32)[:, :, None]
+        spatial_base = noise_base.astype(np.float32) * checker
+        sub_noises = self.split_complementary(spatial_base)
+        ok, residual = self.verify_complementarity(sub_noises)
+        assert ok, f"空间互补性验证失败: {residual:.2e}"
         return sub_noises
 
     def verify_complementarity(self, sub_noises: list[np.ndarray]) -> tuple[bool, float]:

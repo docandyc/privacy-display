@@ -7,6 +7,8 @@
 
 import time
 import threading
+import hashlib
+import json
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -17,7 +19,51 @@ class TimingToken:
     cycle: int = 0
     subframe_index: int = 0
     permutation: list[int] = field(default_factory=list)
+    permutation_hash: str = ""
     next_vblank_count: int = 0
+
+
+DISPLAY_INTERFACES_GBPS = {
+    "dp1.4_hbr3": 25.92,
+    "dp2.0_uhbr20": 77.37,
+    "hdmi2.1_frl": 42.67,
+}
+
+
+def compute_permutation_hash(permutation: list[int]) -> str:
+    """计算置换序列哈希，用于时序令牌完整性校验。"""
+    payload = json.dumps(list(permutation), separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def compute_bandwidth_gbps(
+    width: int,
+    height: int,
+    refresh_rate: float,
+    bpp: int = 4,
+    overhead: float = 1.2,
+) -> float:
+    """显示链路带宽估算：H×V×f_r×Bpp×8×overhead。"""
+    if width <= 0 or height <= 0 or refresh_rate <= 0 or bpp <= 0:
+        raise ValueError("width, height, refresh_rate and bpp must be positive")
+    return float(width * height * refresh_rate * bpp * 8 * overhead / 1e9)
+
+
+def check_bandwidth_fit(required_gbps: float) -> dict:
+    """判断估算带宽能否落入常见 DP/HDMI 接口有效载荷。"""
+    if required_gbps < 0:
+        raise ValueError("required_gbps must be non-negative")
+    fits = {
+        name: required_gbps <= capacity
+        for name, capacity in DISPLAY_INTERFACES_GBPS.items()
+    }
+    viable = [name for name, ok in fits.items() if ok]
+    return {
+        "required_gbps": float(required_gbps),
+        "fits": fits,
+        "recommended": min(viable, key=lambda n: DISPLAY_INTERFACES_GBPS[n])
+        if viable else None,
+    }
 
 
 class TimingController:
@@ -80,6 +126,7 @@ class TimingController:
         with self._lock:
             self._token.cycle = cycle
             self._token.permutation = permutation
+            self._token.permutation_hash = compute_permutation_hash(permutation)
             self._token.subframe_index = 0
 
     def get_token(self) -> TimingToken:
@@ -88,6 +135,7 @@ class TimingController:
                 cycle=self._token.cycle,
                 subframe_index=self._token.subframe_index,
                 permutation=list(self._token.permutation),
+                permutation_hash=self._token.permutation_hash,
                 next_vblank_count=self._token.next_vblank_count,
             )
 

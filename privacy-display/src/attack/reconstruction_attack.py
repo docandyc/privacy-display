@@ -16,6 +16,13 @@
 import numpy as np
 
 
+class _NumpyIdentityReconstructor:
+    """torch 不可用时的轻量占位，保持接口可用。"""
+
+    def __call__(self, frame: np.ndarray) -> np.ndarray:
+        return reconstruct_inpaint_single(frame)
+
+
 def reconstruct_median_stack(subframes: list[np.ndarray], k: int | None = None) -> np.ndarray:
     """
     多帧中值堆叠重构。
@@ -82,6 +89,105 @@ def reconstruct_average_sharpen(subframes: list[np.ndarray]) -> np.ndarray:
         return sharp
     except ImportError:
         return avg_u8
+
+
+def train_tiny_unet_reconstructor(
+    pairs: list[tuple[np.ndarray, np.ndarray]],
+    epochs: int = 2,
+    size: tuple[int, int] = (32, 32),
+    seed: int = 0,
+) -> tuple[object, dict]:
+    """
+    CPU 友好的 tiny U-Net 学习型重构攻击。
+
+    pairs 为 (masked_subframe, original) 训练样本。该函数定位为 PoC 下界：
+    少量 epoch/低分辨率训练，用来证明学习型攻击链路存在，而非上界评估。
+    """
+    if not pairs:
+        raise ValueError("pairs must not be empty")
+    try:
+        import cv2
+        import torch
+        import torch.nn as nn
+        import torch.nn.functional as F
+    except ImportError:
+        return _NumpyIdentityReconstructor(), {
+            "available": False,
+            "epochs": 0,
+            "loss": None,
+            "note": "torch/cv2 unavailable",
+        }
+
+    torch.manual_seed(seed)
+
+    class TinyUNet(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.enc1 = nn.Sequential(nn.Conv2d(3, 8, 3, padding=1), nn.ReLU())
+            self.enc2 = nn.Sequential(nn.Conv2d(8, 16, 3, padding=1), nn.ReLU())
+            self.dec1 = nn.Sequential(nn.Conv2d(24, 8, 3, padding=1), nn.ReLU())
+            self.out = nn.Conv2d(8, 3, 1)
+
+        def forward(self, x):
+            e1 = self.enc1(x)
+            pooled = F.avg_pool2d(e1, 2)
+            e2 = self.enc2(pooled)
+            up = F.interpolate(e2, size=e1.shape[-2:], mode="bilinear", align_corners=False)
+            return torch.sigmoid(self.out(self.dec1(torch.cat([e1, up], dim=1))))
+
+    model = TinyUNet()
+    opt = torch.optim.Adam(model.parameters(), lr=0.01)
+    xs, ys = [], []
+    for masked, original in pairs:
+        xs.append(cv2.resize(masked, size).astype(np.float32) / 255.0)
+        ys.append(cv2.resize(original, size).astype(np.float32) / 255.0)
+    x = torch.from_numpy(np.stack(xs).transpose(0, 3, 1, 2)).float()
+    y = torch.from_numpy(np.stack(ys).transpose(0, 3, 1, 2)).float()
+
+    last_loss = 0.0
+    model.train()
+    for _ in range(max(1, epochs)):
+        opt.zero_grad()
+        pred = model(x)
+        loss = F.l1_loss(pred, y)
+        loss.backward()
+        opt.step()
+        last_loss = float(loss.detach().cpu())
+    model.eval()
+    return model, {
+        "available": True,
+        "epochs": int(max(1, epochs)),
+        "loss": last_loss,
+        "train_samples": len(pairs),
+        "size": list(size),
+    }
+
+
+def reconstruct_unet_single(
+    subframe: np.ndarray,
+    model,
+    size: tuple[int, int] = (32, 32),
+) -> np.ndarray:
+    """用 tiny U-Net 模型重构单子帧；非 torch 模型走 fallback。"""
+    if isinstance(model, _NumpyIdentityReconstructor):
+        return model(subframe)
+    try:
+        import cv2
+        import torch
+        import torch.nn.functional as F
+    except ImportError:
+        return reconstruct_inpaint_single(subframe)
+
+    h, w = subframe.shape[:2]
+    small = cv2.resize(subframe, size).astype(np.float32) / 255.0
+    x = torch.from_numpy(small.transpose(2, 0, 1)).unsqueeze(0).float()
+    with torch.no_grad():
+        pred = model(x)
+        if pred.shape[-2:] != size[::-1]:
+            pred = F.interpolate(pred, size=(size[1], size[0]), mode="bilinear", align_corners=False)
+    arr = pred.squeeze(0).cpu().numpy().transpose(1, 2, 0)
+    arr = cv2.resize(arr, (w, h))
+    return np.clip(arr * 255, 0, 255).astype(np.uint8)
 
 
 def evaluate_reconstruction(

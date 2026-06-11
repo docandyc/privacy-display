@@ -59,7 +59,7 @@ source .venv/bin/activate
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
 # 目标检测实验使用：ultralytics YOLOv8n（首次运行会下载 yolov8n.pt，本地权重不提交）
 
-python -m pytest tests/ -q          # 107 项单元测试
+python -m pytest tests/ -q          # 117 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
@@ -70,13 +70,17 @@ python experiments/performance_benchmark.py # A4 性能实测
 python experiments/build_corpus.py          # C2 生成多样本语料
 python experiments/ablation_noise.py        # B1 对抗噪声消融
 python experiments/detection_attack.py      # G2 YOLOv8n 目标检测攻击
+python experiments/view_attack.py           # G3 离轴相机攻击
+python experiments/unet_reconstruction.py   # G5 学习型重构攻击
 ```
 
 > **改进路线见 [`改进文档.md`](改进文档.md)**：已实现 HDR 补偿(ICtCp/PQ)、黑帧+AE 攻击、
 > 多显示器同步、性能实测、真实对抗噪声+消融、去混淆/重构攻击、视角差异化掩模、
-> 掩模取模偏置修复、多样本多引擎评测、YOLOv8n 目标检测评测、SSIM/运动模糊指标等。
+> 掩模取模偏置修复、多样本多引擎评测、YOLOv8n 目标检测评测、离轴攻击、
+> 学习型重构攻击、HLG/ALS、配置持久化、SSIM/运动模糊指标等。
 > 新增模块：`src/core/hdr_compensation.py`、`src/core/multi_display.py`、
-> `src/attack/reconstruction_attack.py`、`src/attack/detection_evaluator.py`。
+> `src/core/fatigue_policy.py`、`src/core/config.py`、`src/attack/reconstruction_attack.py`、
+> `src/attack/detection_evaluator.py`。
 
 ---
 
@@ -151,11 +155,13 @@ PoC 确认方案对以下**主流威胁仍然有效**：
 |------|------|------|
 | 3.2.1 随机点阵掩模 + CSPRNG + 卡方检验 | `core/mask_generator.py` | ✓ 单元测试 |
 | 3.2.2 对抗噪声 + 时域互补 + Fisher-Yates 置换 | `core/noise_injector.py` | ✓ ΣN_k=0 |
-| 3.2.3 高刷新率链路（时序/带宽数学关系） | `core/timing_controller.py` | ✓ 模拟 |
-| 3.2.4 相机针对性防御（全局/卷帘/长曝光） | `attack/camera_simulator.py` | ✓ 攻击实验 |
+| 3.2.3 高刷新率链路（时序/带宽数学关系） | `core/timing_controller.py` | ✓ hash/带宽/模拟 |
+| 3.2.4 相机针对性防御（全局/卷帘/长曝光/离轴） | `attack/camera_simulator.py` | ✓ 攻击实验 |
 | 4.2 驱动层注入 | — | 未来工作（需内核） |
-| 4.3 HDR 亮度补偿 | `core/subframe_composer.py` + GLSL | ✓ 背光提升模型 |
+| 4.3 HDR 亮度补偿 + HLG + ALS | `core/hdr_compensation.py` | ✓ PQ/HLG/环境光单测 |
+| 5.1 配置持久化 + 预生成缓冲 | `core/config.py` + `core/mask_generator.py` | ✓ JSON/环形缓冲单测 |
 | 6.3 视觉无感评估体系（FPI/ΔE/均匀性） | `evaluation/metrics.py` | ✓ 指标吻合 |
+| 7.4 视觉疲劳策略 | `core/fatigue_policy.py` | ✓ 刷新率/蓝光/距离单测 |
 
 ---
 

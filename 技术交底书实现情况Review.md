@@ -4,16 +4,16 @@
 > 逐章核查 `privacy-display/` PoC 代码的实现情况。
 >
 > - Review 日期：2026-06-11
-> - 代码基线：git `dfc38fd`（Implement adversarial noise monitoring loop）+ 本轮 PaddleOCR G1 补齐改动
-> - 测试状态：`pytest tests/ -q` → **102 passed**
-> - 运行环境：Python 3.10（uv 维护 `.venv`），tesseract 5.4.1、easyocr 1.7.2、paddleocr 3.6.0、torch 2.11、moderngl 5.12、pygame 2.6 均可用
+> - 代码基线：git `86c05ad`（YOLO 检测评测）+ 本轮 G3–G13 补齐改动
+> - 测试状态：`pytest tests/ -q` → **117 passed**
+> - 运行环境：Python 3.10（uv 维护 `.venv`），tesseract 5.4.1、easyocr 1.7.2、paddleocr 3.6.0、ultralytics 8.4.65、torch 2.11、moderngl 5.12、pygame 2.6 均可用
 
 ---
 
 ## 一、总体结论
 
 1. **算法层完成度很高。** 交底书第三章四大技术要素（随机点阵掩模、时域互补对抗噪声、高刷新率时序、相机针对性防御）均有对应实现与单元测试；改进文档 A1–C4 共 11 项改进全部落地并回填实测数据。
-2. **真实缺口集中在 13 处（G1–G13，见第四节）**，多为"交底书写了但代码/实验未覆盖"的验证类与策略类条目，全部可在 PoC 范围内补齐。
+2. **原 13 处 PoC 可补缺口（G1–G13，见第四节）已全部补齐**，并以单测、实验 JSON 或文档证据回填。
 3. **驱动层注入等系统级内容（交底书第四章 4.2）明确超出 PoC 范围**，`README.md` 与 `规划.md` 已声明为未来工作，不视为实现缺口（见第五节）。
 4. **两处交底书声称值与实验事实存在张力**（多帧叠加防御、检测模型 mAP），应在论文/答辩中按 PoC 实测口径表述（见第六节）。
 
@@ -76,23 +76,23 @@
 
 ---
 
-## 四、可补缺口清单（G1/G2 已补齐；G3–G13 待做）
+## 四、可补缺口清单（G1–G13 已补齐）
 
 | # | 缺口 | 交底书出处 | 现状 | 优先级 |
 |---|------|-----------|------|--------|
 | G1 | PaddleOCR 端到端语料评测 | 3.2.2 / 改进 C2 | 已补齐：PaddleOCR 3.6.0 可探测并参与 12 样本语料评测；`corpus_multi_engine.json` 已含 tesseract/easyocr/paddleocr 三行 | Done |
 | G2 | YOLOv8 目标检测评测 | 3.3 / 6.2 声称"YOLOv8 文本检测 mAP 0.92→0.08" | 已补齐：`ultralytics==8.4.65` + YOLOv8n，`detection_attack_yolo.json` 记录单子帧 mAP50=0.40、完整周期平均 mAP50=1.00 | Done |
-| G3 | 离轴相机攻击实验缺失 | 7.2 / 改进 B3 验证方法 | `generate_view_differentiated` 已实现但只有形状/完备性单测；没有"正视 vs 离轴时域平均还原对比"实验，LCD 视角依赖未建模 | P1 |
-| G4 | 空间-时间联合扰动 | 7.2 | `split_complementary` 为全图交替极性；"相邻像素时域互补极性、多相机对齐叠加自相抵消"未实现 | P2 |
-| G5 | 学习型去混淆攻击 | 7.3 / 改进 B2 可选项 | 仅无训练重构三档；U-Net"单子帧→原图"学习攻击未做 | P2 |
-| G6 | 真实可微 OCR 端到端梯度攻击 | 3.2.2 噪声生成模型 | FGSM/PGD 目前对"对比度影子模型"求梯度，未对真实 OCR 网络（如 EasyOCR 识别网络）反传 | P2 |
-| G7 | 视觉疲劳优化三件套 | 7.4 | 自适应刷新率（静态↑/动态↓）、蓝光抑制（4000K）、观看距离优化（d<50cm）全部无代码 | P2 |
-| G8 | 显示接口带宽约束计算 | 3.2.3 | Bandwidth=H×V×f_r×Bpp×1.2 公式及 DP/HDMI 容量判断未入代码 | P3 |
-| G9 | 时序令牌缺置换序列哈希 | 3.2.2 | `TimingToken` 有周期号/置换/VBlank 计数，缺哈希字段 | P3 |
-| G10 | HLG 编码 | 4.3 | 仅实现 PQ；"PQ 或 HLG"算部分满足 | P3 |
-| G11 | ALS 环境光反馈闭环 | 4.3 | 恒定 Weber 对比度（≈3:1）的环境光自适应未实现（PoC 可用模拟传感器输入） | P3 |
-| G12 | 1024 周期掩模/置换预生成缓冲 | 4.1.1 / 5.1 步骤3 | 现为按需逐周期生成；预生成环形缓冲未实现（应用层可做简化版） | P3 |
-| G13 | 配置持久化 | 5.1 步骤2 | n/ε/α/K 均为构造参数，无配置文件读取 | P3 |
+| G3 | 离轴相机攻击实验 | 7.2 / 改进 B3 验证方法 | 已补齐：`view_attack.json` 记录正视完整周期 SSIM=0.99997、35°离轴 SSIM=0.91078 | Done |
+| G4 | 空间-时间联合扰动 | 7.2 | 已补齐：`split_complementary_spatial` 约束逐像素 ΣN_k=0 与邻域棋盘抵消 | Done |
+| G5 | 学习型去混淆攻击 | 7.3 / 改进 B2 可选项 | 已补齐：tiny U-Net 单子帧重构实验，holdout SSIM=0.783（诚实标注为下界） | Done |
+| G6 | 真实可微 OCR 端到端梯度攻击 | 3.2.2 噪声生成模型 | 已补齐：EasyOCR recognizer 可微路径，失败自动回退 shadow/surrogate 并记录来源 | Done |
+| G7 | 视觉疲劳优化三件套 | 7.4 | 已补齐：自适应刷新率、蓝光抑制、观看距离补偿纯函数策略 | Done |
+| G8 | 显示接口带宽约束计算 | 3.2.3 | 已补齐：带宽公式及 DP1.4/DP2.0/HDMI2.1 容量判断 | Done |
+| G9 | 时序令牌缺置换序列哈希 | 3.2.2 | 已补齐：`TimingToken.permutation_hash` 随置换原子更新 | Done |
+| G10 | HLG 编码 | 4.3 | 已补齐：HLG OETF/逆 OETF，往返误差单测 | Done |
+| G11 | ALS 环境光反馈闭环 | 4.3 | 已补齐：`AmbientAdaptation` 模拟 lux→背光/γ 反馈以保持 Weber 对比度 | Done |
+| G12 | 1024 周期掩模/置换预生成缓冲 | 4.1.1 / 5.1 步骤3 | 已补齐：`MaskGenerator.pregenerate` 环形缓冲，预生成==按需生成单测 | Done |
+| G13 | 配置持久化 | 5.1 步骤2 | 已补齐：`PrivacyDisplayConfig` JSON 读写并接入 `main.py window <config.json>` | Done |
 
 ---
 
@@ -124,6 +124,6 @@
 
 ## 七、工作流状态备注（review 时点）
 
-- G1/G2 已完成，后续继续补 G3–G13 时应沿用 `close-disclosure-gaps` 任务并分阶段提交
+- G1–G13 均已完成，剩余仅为 PoC 范围外硬件/驱动未来工作
 - `.trellis` 中 `complete-noise-camera-simulation`、`fix-main-demo-renderer` 两任务代码已实现并已提交（127c437 / dfc38fd / 5147b7b），仅任务状态未归档
 - G1–G13 的补齐计划见 `~/.claude/plans/users-andyhuang-desktop-md-review-replicated-nova.md`（已批准执行）

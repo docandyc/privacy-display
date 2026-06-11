@@ -158,7 +158,13 @@ def cmd_benchmark():
 def cmd_window():
     """启动实时隐私保护演示窗口。"""
     from src.demo.privacy_window import PrivacyWindow, WindowConfig
-    cfg = WindowConfig(width=1280, height=720, n=2, show_hud=True)
+    config_path = sys.argv[2] if len(sys.argv) > 2 else None
+    if config_path:
+        from src.core.config import PrivacyDisplayConfig
+        persisted = PrivacyDisplayConfig.load(config_path)
+        cfg = WindowConfig(**persisted.to_window_kwargs())
+    else:
+        cfg = WindowConfig(width=1280, height=720, n=2, show_hud=True)
     win = PrivacyWindow(cfg)
     win.run()
 
