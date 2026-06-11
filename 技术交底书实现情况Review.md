@@ -4,7 +4,7 @@
 > 逐章核查 `privacy-display/` PoC 代码的实现情况。
 >
 > - Review 日期：2026-06-11
-> - 代码基线：git `86c05ad`（YOLO 检测评测）+ 本轮 G3–G13 补齐改动
+> - 代码基线：git `167b83a`（Close disclosure implementation gaps）
 > - 测试状态：`pytest tests/ -q` → **117 passed**
 > - 运行环境：Python 3.10（uv 维护 `.venv`），tesseract 5.4.1、easyocr 1.7.2、paddleocr 3.6.0、ultralytics 8.4.65、torch 2.11、moderngl 5.12、pygame 2.6 均可用
 
@@ -51,7 +51,7 @@
 | 6.3 | 亮度均匀性（九区域 ΔL/L） | `metrics.compute_brightness_uniformity` | <5% |
 | 6.3 / 改进 C3 | SSIM + pursuit-camera 运动模糊宽度 | `metrics.compute_ssim / compute_motion_blur_width` | SSIM 0.99+，增幅<5% |
 | 6.4 / 改进 A4 | 性能实测（掩模/噪声/合成/渲染/端到端） | `experiments/performance_benchmark.py` | 实测表 + 与交底书声称差距如实标注 |
-| 7.2（部分） | 视角差异化掩模（区域独立子密钥） | `mask_generator.generate_view_differentiated` | 单测（**离轴攻击实验缺失→G3**） |
+| 7.2 | 视角差异化掩模（区域独立子密钥）+ 离轴攻击实验 | `mask_generator.generate_view_differentiated` + `camera_simulator.off_axis_temporal_average_attack` + `experiments/view_attack.py` | 正视 SSIM 0.99997，35°离轴 SSIM 0.91078 |
 | 7.3 | 无训练重构攻击（中值/max/均值锐化/单帧 inpaint，改进项 B2） | `src/attack/reconstruction_attack.py` | max 堆叠 SSIM 0.991 攻破；单帧 inpaint 0% |
 | 7.3 | HKDF 密钥派生多样性 | `mask_generator._derive_subkey` | 同 3.2.1 |
 | 改进 B1 | 噪声消融四组对照 + 弱掩模泄露压力测试 | `experiments/ablation_noise.py` | 掩模主防御、噪声二级强化结论 |
