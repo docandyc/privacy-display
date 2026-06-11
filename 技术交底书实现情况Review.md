@@ -4,7 +4,7 @@
 > 逐章核查 `privacy-display/` PoC 代码的实现情况。
 >
 > - Review 日期：2026-06-11
-> - 代码基线：git `167b83a`（Close disclosure implementation gaps）
+> - 代码基线：git `9d200df`（harden G3/G5/G2 experiments with OCR metrics and honest conclusions；第一轮基线为 `167b83a`）
 > - 测试状态：`pytest tests/ -q` → **118 passed**
 > - 运行环境：Python 3.10（uv 维护 `.venv`），tesseract 5.4.1、easyocr 1.7.2、paddleocr 3.6.0、ultralytics 8.4.65、torch 2.11、moderngl 5.12、pygame 2.6 均可用
 
