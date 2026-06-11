@@ -22,6 +22,7 @@ class WindowConfig:
     refresh_rate: int = 120      # 目标刷新率（Hz），需满足 f_r >= 60n
     epsilon: float = 8 / 255
     gamma_factor: float = 1.1
+    inversion_alpha: float = 0.3  # 反色帧持续时间系数，t_inv = alpha * Δt
     show_hud: bool = True         # 显示 HUD 信息
     capture_region: tuple | None = None  # (x, y, w, h) 截图区域，None=全屏
     prefer_vsync: bool = True      # 优先使用 SDL/系统 VBlank 阻塞
@@ -34,6 +35,9 @@ class WindowConfig:
 
     def __post_init__(self) -> None:
         self.refresh_rate = ensure_safe_refresh_rate(self.n, self.refresh_rate)
+        if self.gamma_factor <= 0:
+            raise ValueError("gamma_factor must be positive")
+        validate_inversion_alpha(self.inversion_alpha)
 
 
 def minimum_refresh_rate(n: int) -> int:
@@ -44,6 +48,49 @@ def minimum_refresh_rate(n: int) -> int:
 def ensure_safe_refresh_rate(n: int, refresh_rate: int) -> int:
     """返回满足 f_r >= 60n 的目标刷新率。"""
     return max(int(refresh_rate), minimum_refresh_rate(n))
+
+
+def validate_inversion_alpha(alpha: float) -> None:
+    """交底书约束：反色帧持续时间系数 alpha ∈ [0.2, 0.5]。"""
+    if not (0.2 <= float(alpha) <= 0.5):
+        raise ValueError("inversion_alpha must be in [0.2, 0.5]")
+
+
+def noise_pedestal_value(epsilon: float) -> float:
+    """把归一化噪声预算 ε 转成像素空间 pedestal。"""
+    if epsilon < 0:
+        raise ValueError("epsilon must be non-negative")
+    return float(epsilon * 255)
+
+
+def sub_noises_to_pixel_space(
+    sub_noises_f: list[np.ndarray],
+    epsilon: float,
+) -> tuple[list[np.ndarray], float]:
+    """
+    将 [-ε,+ε] 归一化子噪声转换到像素空间，并加入 pedestal。
+
+    pedestal 让未激活像素也高于 0，从而避免负噪声在显示裁剪时破坏
+    ΣN_k=0；这与 main/benchmark/重构攻击实验中的真实链路保持一致。
+    """
+    pedestal = noise_pedestal_value(epsilon)
+    sub_noises = [
+        (nf * 255 + pedestal).astype(np.float32)
+        for nf in sub_noises_f
+    ]
+    return sub_noises, pedestal
+
+
+def output_slot_duration(
+    frame_interval: float,
+    output_kind: str,
+    inversion_alpha: float,
+) -> float:
+    """返回当前输出 slot 的目标持续时间；反色帧按 alpha*Δt 模拟。"""
+    validate_inversion_alpha(inversion_alpha)
+    if output_kind == "inversion":
+        return frame_interval * float(inversion_alpha)
+    return frame_interval
 
 
 @dataclass(frozen=True)
@@ -389,7 +436,12 @@ class PrivacyWindow:
         w, h = self.cfg.width, self.cfg.height
 
         gen = MaskGenerator(w, h, n)
-        composer = SubframeComposer(n=n, gamma=n * self.cfg.gamma_factor)
+        composer = SubframeComposer(
+            n=n,
+            gamma=n * self.cfg.gamma_factor,
+            insert_inversion=self.cfg.insert_inversion,
+            inversion_alpha=self.cfg.inversion_alpha,
+        )
         injector = NoiseInjector(n=n, epsilon=self.cfg.epsilon)
         renderer = create_renderer(w, h, n, gamma=n * self.cfg.gamma_factor)
         timing = TimingController(refresh_rate=self.cfg.refresh_rate, n=n)
@@ -430,6 +482,8 @@ class PrivacyWindow:
                             composer = SubframeComposer(
                                 n=n,
                                 gamma=n * self.cfg.gamma_factor,
+                                insert_inversion=self.cfg.insert_inversion,
+                                inversion_alpha=self.cfg.inversion_alpha,
                             )
                             injector = NoiseInjector(n=n, epsilon=self.cfg.epsilon)
                             renderer = create_renderer(
@@ -493,9 +547,10 @@ class PrivacyWindow:
                         "gradient": injector.last_gradient_source,
                     }
                     sub_noises_f = injector.split_complementary(noise_base)
-                    sub_noises = [
-                        (nf * 255).astype(np.float32) for nf in sub_noises_f
-                    ]
+                    sub_noises, pedestal = sub_noises_to_pixel_space(
+                        sub_noises_f,
+                        self.cfg.epsilon,
+                    )
 
                     self._subframes = renderer.render_all_subframes(
                         img, masks, sub_noises, perm
@@ -514,6 +569,7 @@ class PrivacyWindow:
                     )
                     if monitor_state is not None:
                         self._monitor_state = monitor_state
+                    self._noise_state["pedestal_px"] = pedestal
 
                 elapsed_before_output = time.perf_counter() - t_start
                 time_to_vblank_ms = max(
@@ -537,6 +593,11 @@ class PrivacyWindow:
                     emergency_black,
                 )
                 self._last_output_kind = output_kind
+                target_interval = output_slot_duration(
+                    frame_interval,
+                    output_kind,
+                    self.cfg.inversion_alpha,
+                )
                 surf = pygame.surfarray.make_surface(sf.swapaxes(0, 1))
                 screen.blit(surf, (0, 0))
 
@@ -559,6 +620,7 @@ class PrivacyWindow:
                         "note": runtime.note,
                         "noise": self._noise_state,
                         "monitor": self._monitor_state,
+                        "inversion_alpha": self.cfg.inversion_alpha,
                     })
 
                 pygame.display.flip()
@@ -574,10 +636,10 @@ class PrivacyWindow:
 
                 if not vsync_enabled:
                     elapsed = time.perf_counter() - t_start
-                    sleep_t = max(0, frame_interval - elapsed)
+                    sleep_t = max(0, target_interval - elapsed)
                     if sleep_t > 0:
                         time.sleep(sleep_t)
-                    clock.tick(self.cfg.refresh_rate)
+                    clock.tick(max(1, int(round(1.0 / target_interval))))
 
                 self._stats["fps"] = 1.0 / max(time.perf_counter() - t_start, 1e-6)
 
@@ -612,6 +674,7 @@ def _draw_hud(screen, font, info: dict) -> None:
         "noise="
         f"{noise.get('model', '?')}/{noise.get('method', '?')}"
         f" grad={noise.get('gradient', 'none')} "
+        f"ped={noise.get('pedestal_px', 0):.1f}px "
         f"ocr={monitor.get('status', 'idle')}",
     )
     if not info.get("safe", True):

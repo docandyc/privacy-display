@@ -162,7 +162,14 @@ def test_pregenerated_masks_match_on_demand():
 
 
 def test_config_save_load_and_validation(tmp_path):
-    cfg = PrivacyDisplayConfig(n=4, epsilon=0.05, alpha=1.2, refresh_rate=240)
+    cfg = PrivacyDisplayConfig(
+        n=4,
+        epsilon=0.05,
+        gamma_factor=1.2,
+        inversion_alpha=0.3,
+        insert_inversion=True,
+        refresh_rate=240,
+    )
     path = tmp_path / "privacy-display.json"
     cfg.save(path)
 
@@ -171,8 +178,33 @@ def test_config_save_load_and_validation(tmp_path):
     assert loaded.n == 4
     assert loaded.key == cfg.key
     assert loaded.to_window_kwargs()["gamma_factor"] == 1.2
+    assert loaded.to_window_kwargs()["inversion_alpha"] == 0.3
+    assert loaded.to_window_kwargs()["insert_inversion"] is True
     with pytest.raises(ValueError):
         PrivacyDisplayConfig(n=1)
+    with pytest.raises(ValueError):
+        PrivacyDisplayConfig(inversion_alpha=1.1)
+
+
+def test_config_alpha_alias_maps_to_inversion_alpha():
+    cfg = PrivacyDisplayConfig.from_dict({
+        "n": 4,
+        "alpha": 0.3,
+        "refresh_rate": 240,
+    })
+
+    assert cfg.inversion_alpha == 0.3
+
+
+def test_config_legacy_alpha_above_inversion_range_maps_to_gamma_factor():
+    cfg = PrivacyDisplayConfig.from_dict({
+        "n": 4,
+        "alpha": 1.2,
+        "refresh_rate": 240,
+    })
+
+    assert cfg.gamma_factor == 1.2
+    assert cfg.inversion_alpha == 0.3
 
 
 def test_tiny_unet_reconstructor_smoke():

@@ -5,9 +5,11 @@ from src.demo.privacy_window import (
     WindowConfig,
     ensure_safe_refresh_rate,
     minimum_refresh_rate,
+    output_slot_duration,
     resolve_runtime_display_config,
     run_online_noise_monitor,
     select_output_frame,
+    sub_noises_to_pixel_space,
 )
 
 
@@ -35,6 +37,36 @@ def test_window_config_enforces_refresh_rate_constraint():
     assert minimum_refresh_rate(2) == 120
     assert cfg.refresh_rate == 120
     assert ensure_safe_refresh_rate(4, cfg.refresh_rate) == 240
+
+
+def test_window_config_validates_inversion_alpha():
+    cfg = WindowConfig(n=2, refresh_rate=120, inversion_alpha=0.3)
+
+    assert cfg.inversion_alpha == 0.3
+    assert output_slot_duration(1 / 120, "inversion", cfg.inversion_alpha) == (1 / 120) * 0.3
+    assert output_slot_duration(1 / 120, "subframe", cfg.inversion_alpha) == 1 / 120
+
+
+def test_window_config_rejects_invalid_inversion_alpha():
+    try:
+        WindowConfig(n=2, refresh_rate=120, inversion_alpha=1.1)
+    except ValueError as exc:
+        assert "inversion_alpha" in str(exc)
+    else:
+        raise AssertionError("invalid inversion_alpha should be rejected")
+
+
+def test_sub_noises_to_pixel_space_adds_pedestal():
+    sub_noises_f = [
+        np.full((2, 2, 3), -8 / 255, dtype=np.float32),
+        np.full((2, 2, 3), 8 / 255, dtype=np.float32),
+    ]
+
+    sub_noises, pedestal = sub_noises_to_pixel_space(sub_noises_f, epsilon=8 / 255)
+
+    assert pedestal == 8
+    assert np.allclose(sub_noises[0], 0.0)
+    assert np.allclose(sub_noises[1], 16.0)
 
 
 def test_runtime_display_config_uses_detected_refresh_rate():

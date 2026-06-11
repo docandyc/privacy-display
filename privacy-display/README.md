@@ -44,7 +44,7 @@ privacy-display/
 │   └── evaluation/
 │       ├── metrics.py           # FPI / CIEDE2000 ΔE / 归一化互信息 / 亮度均匀性
 │       └── benchmark.py         # 参数扫描评测套件 + matplotlib 图表
-└── tests/                       # 57 个单元测试
+└── tests/                       # 123 个单元测试
 ```
 
 ---
@@ -59,7 +59,7 @@ source .venv/bin/activate
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
 # 目标检测实验使用：ultralytics YOLOv8n（首次运行会下载 yolov8n.pt，本地权重不提交）
 
-python -m pytest tests/ -q          # 117 项单元测试
+python -m pytest tests/ -q          # 123 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
