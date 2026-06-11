@@ -1,0 +1,110 @@
+[
+  {
+    "config": {
+      "n": 2,
+      "refresh_rate": 60.0,
+      "epsilon": 0.03137254901960784,
+      "gamma_factor": 1.1,
+      "use_noise": true,
+      "use_inversion": false
+    },
+    "fpi": 0.25,
+    "fpi_safe": false,
+    "delta_e": 0.18873996913355942,
+    "entropy_ratio_mean": 0.612207902428142,
+    "ocr_original_acc": 0.8108108108108107,
+    "ocr_subframe_acc": 0.0,
+    "accuracy_reduction_pct": 81.08108108108108,
+    "protection_effective": true
+  },
+  {
+    "config": {
+      "n": 2,
+      "refresh_rate": 144.0,
+      "epsilon": 0.03137254901960784,
+      "gamma_factor": 1.1,
+      "use_noise": true,
+      "use_inversion": false
+    },
+    "fpi": 0.013888888888888892,
+    "fpi_safe": true,
+    "delta_e": 0.1886035590811795,
+    "entropy_ratio_mean": 0.6116777392947339,
+    "ocr_original_acc": 0.8108108108108107,
+    "ocr_subframe_acc": 0.0,
+    "accuracy_reduction_pct": 81.08108108108108,
+    "protection_effective": true
+  },
+  {
+    "config": {
+      "n": 4,
+      "refresh_rate": 144.0,
+      "epsilon": 0.03137254901960784,
+      "gamma_factor": 1.1,
+      "use_noise": true,
+      "use_inversion": false
+    },
+    "fpi": 0.30000000000000004,
+    "fpi_safe": false,
+    "delta_e": 0.36862998553139825,
+    "entropy_ratio_mean": 0.34165372403665106,
+    "ocr_original_acc": 0.8108108108108107,
+    "ocr_subframe_acc": 0.0,
+    "accuracy_reduction_pct": 81.08108108108108,
+    "protection_effective": true
+  },
+  {
+    "config": {
+      "n": 4,
+      "refresh_rate": 240.0,
+      "epsilon": 0.03137254901960784,
+      "gamma_factor": 1.1,
+      "use_noise": true,
+      "use_inversion": false
+    },
+    "fpi": 0.03,
+    "fpi_safe": true,
+    "delta_e": 0.36862998553139825,
+    "entropy_ratio_mean": 0.3427798951346067,
+    "ocr_original_acc": 0.8108108108108107,
+    "ocr_subframe_acc": 0.0,
+    "accuracy_reduction_pct": 81.08108108108108,
+    "protection_effective": true
+  },
+  {
+    "config": {
+      "n": 4,
+      "refresh_rate": 144.0,
+      "epsilon": 0.01568627450980392,
+      "gamma_factor": 1.1,
+      "use_noise": true,
+      "use_inversion": false
+    },
+    "fpi": 0.30000000000000004,
+    "fpi_safe": false,
+    "delta_e": 0.36862998553139825,
+    "entropy_ratio_mean": 0.22455190920222326,
+    "ocr_original_acc": 0.8108108108108107,
+    "ocr_subframe_acc": 0.0,
+    "accuracy_reduction_pct": 81.08108108108108,
+    "protection_effective": true
+  },
+  {
+    "config": {
+      "n": 4,
+      "refresh_rate": 144.0,
+      "epsilon": 0,
+      "gamma_factor": 1.1,
+      "use_noise": false,
+      "use_inversion": false
+    },
+    "fpi": 0.30000000000000004,
+    "fpi_safe": false,
+    "delta_e": 0.0,
+    "entropy_ratio_mean": 0.25019361704289705,
+    "ocr_original_acc": 0.8108108108108107,
+    "ocr_subframe_acc": 0.0,
+    "accuracy_reduction_pct": 81.08108108108108,
+    "protection_effective": true
+  }
+]

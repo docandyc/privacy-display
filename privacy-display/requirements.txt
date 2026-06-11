@@ -1,0 +1,15 @@
+numpy>=1.24
+scipy>=1.11
+matplotlib>=3.7
+opencv-python>=4.8
+Pillow>=10.0
+pycryptodome>=3.19
+torch>=2.1
+torchvision>=0.16
+moderngl>=5.10
+pygame>=2.5
+mss>=9.0
+pytesseract>=0.3.10
+easyocr>=1.7
+colormath>=3.0.0
+tqdm>=4.66

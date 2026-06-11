@@ -1,0 +1,14 @@
+{
+  "en_short": "PASSWORD admin123",
+  "en_sentence": "The quick brown fox jumps over the lazy dog",
+  "zh_short": "机密文件 严禁外传",
+  "zh_sentence": "本季度营业收入同比增长百分之十五",
+  "mixed": "用户 user@mail.com 密码 Pa$$w0rd",
+  "digits": "1234567890 3.14159 0xFF2A",
+  "code": "def login(pwd):     return hash(pwd)",
+  "table": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+  "paragraph": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+  "account": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+  "zh_paragraph": "第三章 核心算法 时间分片掩模将每帧拆分 人眼积分后还原完整图像",
+  "url_token": "https://api.site.com/v2?token=eyJhbGc"
+}

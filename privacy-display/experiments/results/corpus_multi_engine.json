@@ -1,0 +1,16 @@
+{
+  "tesseract": {
+    "n_samples": 12,
+    "original_mean": 0.6950642523410381,
+    "original_std": 0.40224695839281577,
+    "subframe_mean": 0.0004578754578754586,
+    "subframe_std": 0.0015186010944850754
+  },
+  "easyocr": {
+    "n_samples": 12,
+    "original_mean": 0.9185637249394699,
+    "original_std": 0.06664081223801041,
+    "subframe_mean": 0.0,
+    "subframe_std": 0.0
+  }
+}
