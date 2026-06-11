@@ -5,13 +5,27 @@
     3
   ],
   "angle_degrees": 35.0,
+  "ground_truth": "OFF AXIS CAMERA ATTACK",
+  "ocr_available": true,
+  "original_reference": {
+    "ocr_char_acc": 1.0
+  },
   "frontal_temporal_average": {
-    "psnr_db": 55.43075180053711,
-    "ssim": 0.9999736025276301
+    "psnr_db": 57.54106903076172,
+    "ssim": 0.9999855384908365,
+    "ocr_char_acc": 1.0
   },
   "off_axis_temporal_average": {
-    "psnr_db": 12.457674026489258,
-    "ssim": 0.9107812398076213
+    "psnr_db": 12.629615783691406,
+    "ssim": 0.9360172871949872,
+    "ocr_char_acc": 1.0
   },
-  "off_axis_ssim_drop": 0.08919236272000886
+  "off_axis_corrected": {
+    "psnr_db": 12.681714057922363,
+    "ssim": 0.9259685259344052,
+    "ocr_char_acc": 1.0
+  },
+  "off_axis_ssim_drop": 0.06396825129584927,
+  "correction_ssim_recovery": -0.010048761260582073,
+  "conclusion": "离轴朴素捕获后 OCR 已与正视同为 100% → 视角差异化掩模对全周期对齐攻击者无 OCR 级保护；SSIM 的小幅下降仅为不影响可读性的可逆物理畸变（整周期平均时各区域各自还原，掩模差异化不参与）。真正不可逆的物理视角响应建模属 PoC 范围外。"
 }

@@ -40,6 +40,33 @@ def test_off_axis_temporal_average_changes_capture():
     assert not np.array_equal(off_axis, frontal)
 
 
+def test_off_axis_correction_equalizes_region_brightness():
+    cam = CameraSimulator()
+    frame = np.zeros((30, 30, 3), dtype=np.uint8)
+    vals = [40, 80, 120, 160, 200, 90, 70, 130, 180]
+    rh = rw = 10
+    idx = 0
+    for r in range(3):
+        for c in range(3):
+            frame[r * rh:(r + 1) * rh, c * rw:(c + 1) * rw] = vals[idx]
+            idx += 1
+
+    # angle=0 → 无位移，纯逐区域增益归一化：各区域均值向全局均值收敛。
+    corrected = cam.off_axis_correction(frame, regions=(3, 3), angle_degrees=0.0)
+
+    assert corrected.shape == frame.shape and corrected.dtype == np.uint8
+
+    def _spread(f):
+        means = [
+            f[r * rh:(r + 1) * rh, c * rw:(c + 1) * rw].mean()
+            for r in range(3)
+            for c in range(3)
+        ]
+        return float(np.std(means))
+
+    assert _spread(corrected) < _spread(frame)
+
+
 def test_spatial_complementary_noise_zero_sum_and_local_cancel():
     injector = NoiseInjector(n=4, epsilon=8 / 255)
     base = np.ones((8, 8, 3), dtype=np.float32) * 0.1

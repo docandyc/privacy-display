@@ -5,7 +5,7 @@
 >
 > - Review 日期：2026-06-11
 > - 代码基线：git `167b83a`（Close disclosure implementation gaps）
-> - 测试状态：`pytest tests/ -q` → **117 passed**
+> - 测试状态：`pytest tests/ -q` → **118 passed**
 > - 运行环境：Python 3.10（uv 维护 `.venv`），tesseract 5.4.1、easyocr 1.7.2、paddleocr 3.6.0、ultralytics 8.4.65、torch 2.11、moderngl 5.12、pygame 2.6 均可用
 
 ---
@@ -16,6 +16,7 @@
 2. **原 13 处 PoC 可补缺口（G1–G13，见第四节）已全部补齐**，并以单测、实验 JSON 或文档证据回填。
 3. **驱动层注入等系统级内容（交底书第四章 4.2）明确超出 PoC 范围**，`README.md` 与 `规划.md` 已声明为未来工作，不视为实现缺口（见第五节）。
 4. **两处交底书声称值与实验事实存在张力**（多帧叠加防御、检测模型 mAP），应在论文/答辩中按 PoC 实测口径表述（见第六节）。
+5. **第二轮复核对 G3/G5 的证据做了诚实加固**（原版只测 SSIM，易高估保护）：补测 OCR 后得出三条新结论——视角差异化掩模对全周期对齐攻击者无 OCR 级保护、对抗噪声 pedestal 是单帧 inpaint 防御的关键、目标检测防御弱于 OCR 防御（详见第八节）。
 
 ---
 
@@ -51,8 +52,8 @@
 | 6.3 | 亮度均匀性（九区域 ΔL/L） | `metrics.compute_brightness_uniformity` | <5% |
 | 6.3 / 改进 C3 | SSIM + pursuit-camera 运动模糊宽度 | `metrics.compute_ssim / compute_motion_blur_width` | SSIM 0.99+，增幅<5% |
 | 6.4 / 改进 A4 | 性能实测（掩模/噪声/合成/渲染/端到端） | `experiments/performance_benchmark.py` | 实测表 + 与交底书声称差距如实标注 |
-| 7.2 | 视角差异化掩模（区域独立子密钥）+ 离轴攻击实验 | `mask_generator.generate_view_differentiated` + `camera_simulator.off_axis_temporal_average_attack` + `experiments/view_attack.py` | 正视 SSIM 0.99997，35°离轴 SSIM 0.91078 |
-| 7.3 | 无训练重构攻击（中值/max/均值锐化/单帧 inpaint，改进项 B2） | `src/attack/reconstruction_attack.py` | max 堆叠 SSIM 0.991 攻破；单帧 inpaint 0% |
+| 7.2 | 视角差异化掩模（区域独立子密钥）+ 离轴攻击 + 强攻击者校正 | `mask_generator.generate_view_differentiated` + `camera_simulator.off_axis_temporal_average_attack / off_axis_correction` + `experiments/view_attack.py` | 正视/离轴/校正 OCR 全为 100%（见第三、八节诚实结论：掩模差异化对全周期对齐攻击者无 OCR 级保护） |
+| 7.3 | 无训练重构 + tiny U-Net 学习攻击（改进项 B2/G5） | `src/attack/reconstruction_attack.py` + `experiments/unet_reconstruction.py` | max 堆叠攻破；单帧 inpaint：干净子帧 OCR 100% / 带噪声 pedestal 子帧 OCR 0%（pedestal 是单帧防御关键，见第八节） |
 | 7.3 | HKDF 密钥派生多样性 | `mask_generator._derive_subkey` | 同 3.2.1 |
 | 改进 B1 | 噪声消融四组对照 + 弱掩模泄露压力测试 | `experiments/ablation_noise.py` | 掩模主防御、噪声二级强化结论 |
 | 改进 C2 | 12 样本语料 × 多 OCR 引擎统计 | `experiments/build_corpus.py` + `benchmark.run_corpus_multi_engine` | Tesseract 单子帧 0.4%±0.7%；EasyOCR/PaddleOCR 单子帧 0.0%±0.0% |
@@ -82,9 +83,9 @@
 |---|------|-----------|------|--------|
 | G1 | PaddleOCR 端到端语料评测 | 3.2.2 / 改进 C2 | 已补齐：PaddleOCR 3.6.0 可探测并参与 12 样本语料评测；`corpus_multi_engine.json` 已含 tesseract/easyocr/paddleocr 三行 | Done |
 | G2 | YOLOv8 目标检测评测 | 3.3 / 6.2 声称"YOLOv8 文本检测 mAP 0.92→0.08" | 已补齐：`ultralytics==8.4.65` + YOLOv8n，`detection_attack_yolo.json` 记录单子帧 mAP50=0.40、完整周期平均 mAP50=1.00 | Done |
-| G3 | 离轴相机攻击实验 | 7.2 / 改进 B3 验证方法 | 已补齐：`view_attack.json` 记录正视完整周期 SSIM=0.99997、35°离轴 SSIM=0.91078 | Done |
+| G3 | 离轴相机攻击实验 | 7.2 / 改进 B3 验证方法 | 已补齐并加测 OCR + 强攻击者校正：`view_attack.json` 显示正视/离轴/校正 OCR 全为 100%、离轴 SSIM 仅降 0.064 → 诚实结论是掩模差异化对全周期对齐攻击者无 OCR 级保护（详见第八节） | Done |
 | G4 | 空间-时间联合扰动 | 7.2 | 已补齐：`split_complementary_spatial` 约束逐像素 ΣN_k=0 与邻域棋盘抵消 | Done |
-| G5 | 学习型去混淆攻击 | 7.3 / 改进 B2 可选项 | 已补齐：tiny U-Net 单子帧重构实验，holdout SSIM=0.783（诚实标注为下界） | Done |
+| G5 | 学习型去混淆攻击 | 7.3 / 改进 B2 可选项 | 已补齐并加测 OCR + pedestal 消融：tiny U-Net 单帧 OCR 0%（下界）；单帧 inpaint 干净子帧 OCR 100% / 带噪声 pedestal 子帧 OCR 0% → pedestal 是单帧防御对 inpainting 鲁棒的关键（详见第八节） | Done |
 | G6 | 真实可微 OCR 端到端梯度攻击 | 3.2.2 噪声生成模型 | 已补齐：EasyOCR recognizer 可微路径，失败自动回退 shadow/surrogate 并记录来源 | Done |
 | G7 | 视觉疲劳优化三件套 | 7.4 | 已补齐：自适应刷新率、蓝光抑制、观看距离补偿纯函数策略 | Done |
 | G8 | 显示接口带宽约束计算 | 3.2.3 | 已补齐：带宽公式及 DP1.4/DP2.0/HDMI2.1 容量判断 | Done |
@@ -127,3 +128,49 @@
 - G1–G13 均已完成，剩余仅为 PoC 范围外硬件/驱动未来工作
 - `.trellis` 中 `complete-noise-camera-simulation`、`fix-main-demo-renderer` 两任务代码已实现并已提交（127c437 / dfc38fd / 5147b7b），仅任务状态未归档
 - G1–G13 的补齐计划见 `~/.claude/plans/users-andyhuang-desktop-md-review-replicated-nova.md`（已批准执行）
+
+---
+
+## 八、第二轮复核：G2/G3/G5 的诚实加固（OCR 为准）
+
+第一轮 G3/G5 实验仅以 PSNR/SSIM 度量，易高估保护。第二轮补测真实隐私指标
+（OCR 字符准确率）并加入"强攻击者"对照，得到三条更诚实、更有答辩价值的结论。
+
+### 8.1 G3：视角差异化掩模对全周期对齐攻击者无 OCR 级保护
+
+`experiments/view_attack.py`（n=4，35°，3×3 区域，`view_attack.json`）：
+
+| 重构路径 | SSIM | OCR |
+|---|---|---|
+| 正视完整周期平均 | 1.000 | 100% |
+| 离轴朴素捕获 | 0.936 | **100%** |
+| 离轴 + 强攻击者校正（反向位移 + 逐区域增益归一化） | 0.926 | 100% |
+
+- 整周期平均时**每个区域无论用何种差异化掩模都各自还原**（各自满足 ΣM_k=1），
+  掩模差异化不参与防御；离轴朴素捕获 OCR 已经是 100%。
+- 离轴 SSIM 仅降 0.064，且完全来自区域级衰减/色偏/位移这类**可逆物理畸变**。
+- 论文口径：交底书 7.2 把视角差异化列为抗多帧叠加的缓解方向，但在纯软件可逆模型下
+  不成立；真正的保护需依赖**不可逆**的物理 LCD 视角响应（属 PoC 范围外）。
+
+### 8.2 G5：对抗噪声 pedestal 是单帧 inpaint 防御的关键
+
+`experiments/unet_reconstruction.py`（`unet_reconstruction.json`）：
+
+| 单帧重构方法 | OCR |
+|---|---|
+| tiny U-Net（学习攻击下界） | 0% |
+| inpaint @ 干净子帧（未激活=0） | **100%** |
+| inpaint @ 带噪声 pedestal 子帧（未激活≈ε） | **0%** |
+
+- 这解释并修正了 B2 表"单帧 inpaint SSIM=0.026/OCR 0%"与新实验"SSIM 0.93"的表观
+  矛盾：B2 子帧带 pedestal 使 `gray<1` 缺失检测失效→inpaint 空操作；干净子帧才会被填洞。
+- **SSIM 不是隐私指标**：干净子帧单帧 inpaint 可把高对比文档 OCR 还原到 100%，加上
+  对抗噪声 pedestal 后同一攻击 OCR 跌回 0%。
+- 论文口径：把对抗噪声从"边际贡献存疑"提升为"单帧防御对 inpainting 攻击鲁棒的关键
+  支撑"，与 B1"掩模主防御 + 噪声二级强化"一致，并给出了噪声不可或缺的具体攻击场景。
+
+### 8.3 G2：检测防御弱于 OCR 防御
+
+单子帧 YOLOv8n 目标检测 mAP50=**0.40**（召回 0.40）明显高于单子帧 OCR 的 **0.0%**。
+目标检测依赖粗粒度形状/颜色团块，对 1/n 稀疏点阵采样比细笔画文本更鲁棒。论文应区分
+"文本/细结构信息"（保护强）与"物体级场景信息"（保护弱）两类威胁，不笼统宣称等效防御。

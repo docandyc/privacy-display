@@ -10,14 +10,27 @@
       32
     ]
   },
+  "ground_truth": "HOLDOUT SECRET 42",
+  "ocr_available": true,
+  "ssim_note": "白底黑字 SSIM 被背景主导，不代表文字被还原；OCR 才是隐私指标。B2 表 inpaint SSIM=0.026 来自带 pedestal 子帧使 inpaint 空操作，本实验干净子帧 SSIM 偏高且 inpaint 可恢复 OCR——见 pedestal 消融。",
+  "pedestal_ablation": {
+    "note": "干净子帧（未激活=0）单帧 inpaint 即可恢复高对比文档 OCR；加对抗噪声 pedestal 后单帧 inpaint OCR≈0 → pedestal 是单帧防御对 inpainting 攻击鲁棒的关键，印证 B1‘噪声二级强化’结论。",
+    "clean_subframe_inpaint_ocr": 1.0,
+    "noised_subframe_inpaint_ocr": 0.0
+  },
   "holdout": {
+    "original_reference": {
+      "ocr_char_acc": 1.0
+    },
     "unet": {
       "psnr_db": 9.538420677185059,
-      "ssim": 0.7828301613892701
+      "ssim": 0.7828301613892701,
+      "ocr_char_acc": 0.0
     },
     "inpaint_baseline": {
       "psnr_db": 22.521808624267578,
-      "ssim": 0.9288231442617607
+      "ssim": 0.9288231442617607,
+      "ocr_char_acc": 1.0
     }
   }
 }

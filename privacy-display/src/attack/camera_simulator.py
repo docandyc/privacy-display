@@ -244,6 +244,63 @@ class CameraSimulator:
 
         return np.clip(result, 0, 255).astype(np.uint8)
 
+    def off_axis_correction(
+        self,
+        frame: np.ndarray,
+        regions: tuple[int, int] = (3, 3),
+        angle_degrees: float = 35.0,
+        target_mean: np.ndarray | None = None,
+    ) -> np.ndarray:
+        """
+        强攻击者对离轴畸变的最佳努力校正（诚实性对照，交底书 7.2）。
+
+        `off_axis_temporal_average_attack` 施加的区域级衰减、色偏与整块位移
+        都是**可逆**的：知道（或反推出）成像几何的攻击者可以反向平移，并用
+        数据驱动的逐区域增益归一化撤销亮度/色彩差异，无需知道精确衰减系数。
+
+        本函数即模拟该校正，用来量化"视角差异化掩模"在纯软件模型下能提供
+        多少**不可被撤销**的保护——结论是：几乎为零。离轴 SSIM 下降主要来自
+        可逆物理畸变，而非掩模差异化（整周期平均时各区域各自还原）。真正不可逆
+        的物理视角响应建模属 PoC 范围外。
+
+        Args:
+            frame: 离轴攻击输出帧（已 ×n 复原亮度的重构图）
+            regions: 与前向模型一致的区域划分
+            angle_degrees: 攻击者估计的离轴角（用于反向平移几何）
+            target_mean: 各区域归一化到的目标逐通道均值，None 取全帧均值
+
+        Returns:
+            校正后帧 uint8 (H, W, 3)
+        """
+        if frame.ndim != 3:
+            raise ValueError("frame must be H×W×3")
+        h, w = frame.shape[:2]
+        rows, cols = regions
+        f = frame.astype(np.float32)
+        if target_mean is None:
+            target_mean = f.reshape(-1, f.shape[-1]).mean(axis=0)
+        angle = abs(float(angle_degrees))
+        rh = h // rows
+        rw = w // cols
+        out = f.copy()
+
+        for r in range(rows):
+            for c in range(cols):
+                y0, y1 = r * rh, h if r == rows - 1 else (r + 1) * rh
+                x0, x1 = c * rw, w if c == cols - 1 else (c + 1) * rw
+                # 反向平移：撤销前向模型施加的整块位移。
+                shift_x = int(round((c - (cols - 1) / 2) * angle / 25))
+                shift_y = int(round((r - (rows - 1) / 2) * angle / 40))
+                region = np.roll(
+                    f[y0:y1, x0:x1], shift=(-shift_y, -shift_x), axis=(0, 1)
+                )
+                # 数据驱动逐区域增益归一化：撤销区域级衰减/色偏，无需已知系数。
+                rmean = region.reshape(-1, region.shape[-1]).mean(axis=0)
+                gain = np.where(rmean > 1e-3, target_mean / rmean, 1.0)
+                out[y0:y1, x0:x1] = region * gain.reshape(1, 1, -1)
+
+        return np.clip(out, 0, 255).astype(np.uint8)
+
     # ------------------------------------------------------------------
     # 长曝光攻击
     # ------------------------------------------------------------------
