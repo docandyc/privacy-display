@@ -38,7 +38,8 @@ class MultiDisplaySync:
         Args:
             displays: 显示器列表，须恰有一台 is_master=True
         """
-        assert displays, "至少需要一台显示器"
+        if not displays:
+            raise ValueError("至少需要一台显示器")
         masters = [d for d in displays if d.is_master]
         if not masters:
             displays[0].is_master = True  # 默认第一台为主

@@ -61,10 +61,12 @@ class SubframeComposer:
         Returns:
             子帧列表，每帧 uint8 (H, W, 3)
         """
-        assert image.dtype == np.uint8
-        assert len(masks) == self.n
-        if sub_noises is not None:
-            assert len(sub_noises) == self.n
+        if image.dtype != np.uint8:
+            raise ValueError(f"图像 dtype 须为 uint8，实际为 {image.dtype}")
+        if len(masks) != self.n:
+            raise ValueError(f"掩模数量须为 {self.n}，实际为 {len(masks)}")
+        if sub_noises is not None and len(sub_noises) != self.n:
+            raise ValueError(f"子噪声数量须为 {self.n}，实际为 {len(sub_noises)}")
 
         img_f = image.astype(np.float32)
         subframes = []

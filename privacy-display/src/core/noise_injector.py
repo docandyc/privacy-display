@@ -678,7 +678,8 @@ class NoiseInjector:
           偶数 n：N_k = (-1)^(k+1) * noise_base / (n/2)
           奇数 n：最后一个子噪声设为前 n-1 个的负和
         """
-        assert self.n >= 2
+        if self.n < 2:
+            raise ValueError(f"子帧数量 n 须不小于 2，实际为 {self.n}")
 
         sub_noises = []
         if self.n % 2 == 0:
@@ -697,7 +698,8 @@ class NoiseInjector:
 
         # 验证互补性
         total = sum(sub_noises)
-        assert np.max(np.abs(total)) < 1e-5, "子噪声互补性验证失败"
+        if np.max(np.abs(total)) >= 1e-5:
+            raise RuntimeError("子噪声互补性验证失败")
         return sub_noises
 
     def split_complementary_spatial(
@@ -721,7 +723,8 @@ class NoiseInjector:
         spatial_base = noise_base.astype(np.float32) * checker
         sub_noises = self.split_complementary(spatial_base)
         ok, residual = self.verify_complementarity(sub_noises)
-        assert ok, f"空间互补性验证失败: {residual:.2e}"
+        if not ok:
+            raise RuntimeError(f"空间互补性验证失败: {residual:.2e}")
         return sub_noises
 
     def verify_complementarity(self, sub_noises: list[np.ndarray]) -> tuple[bool, float]:

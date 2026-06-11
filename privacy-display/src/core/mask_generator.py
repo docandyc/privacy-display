@@ -25,7 +25,8 @@ class MaskGenerator:
             n: 子帧数量（拆分因子）
             key: 32 字节密钥，None 时随机生成
         """
-        assert 2 <= n <= 16, "子帧数量 n 须在 [2, 16] 范围内"
+        if not 2 <= n <= 16:
+            raise ValueError(f"子帧数量 n 须在 [2, 16] 范围内，实际为 {n}")
         self.width = width
         self.height = height
         self.n = n
