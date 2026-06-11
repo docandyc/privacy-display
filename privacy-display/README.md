@@ -58,11 +58,11 @@ source .venv/bin/activate
 # 核心依赖（已安装）：numpy scipy pycryptodome pillow opencv-python pytest moderngl
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
 
-python -m pytest tests/ -q          # 79 项单元测试（57 原有 + 22 改进项）
+python -m pytest tests/ -q          # 102 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
-python main.py window               # 实时屏幕保护演示（需 pygame+mss）
+python main.py window               # 实时屏幕保护演示（默认 n=2@120Hz，需 pygame+mss）
 
 # 改进项实验（见 改进文档.md）
 python experiments/performance_benchmark.py # A4 性能实测

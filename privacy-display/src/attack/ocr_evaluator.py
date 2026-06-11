@@ -2,12 +2,11 @@
 OCR 准确率评估器
 
 测量原始帧与子帧的 OCR 识别准确率，量化隐私保护效果。
-支持 Tesseract、EasyOCR 两种主流 OCR 引擎。
+支持 Tesseract、EasyOCR、PaddleOCR 三种主流 OCR 引擎。
 """
 
 import numpy as np
 from dataclasses import dataclass
-from typing import Literal
 
 
 @dataclass
@@ -53,11 +52,12 @@ class OCREvaluator:
     def __init__(self, engines: list[str] | None = None):
         """
         Args:
-            engines: 使用的 OCR 引擎列表，可选 'tesseract', 'easyocr'
+            engines: 使用的 OCR 引擎列表，可选 'tesseract', 'easyocr', 'paddleocr'
                      None 时自动检测可用引擎
         """
         self.engines = engines or self._detect_available_engines()
         self._easyocr_reader = None
+        self._paddleocr_reader = None
 
     def _detect_available_engines(self) -> list[str]:
         available = []
@@ -71,6 +71,11 @@ class OCREvaluator:
             import easyocr  # noqa: F401
             available.append("easyocr")
         except ImportError:
+            pass
+        try:
+            import paddleocr  # noqa: F401
+            available.append("paddleocr")
+        except Exception:
             pass
         return available
 
@@ -87,6 +92,74 @@ class OCREvaluator:
         results = self._easyocr_reader.readtext(image, detail=0)
         return " ".join(results)
 
+    def _run_paddleocr(self, image: np.ndarray) -> str:
+        from paddleocr import PaddleOCR
+
+        if self._paddleocr_reader is None:
+            self._paddleocr_reader = PaddleOCR(
+                lang="ch",
+                use_doc_orientation_classify=False,
+                use_doc_unwarping=False,
+                use_textline_orientation=False,
+            )
+
+        if hasattr(self._paddleocr_reader, "predict"):
+            result = self._paddleocr_reader.predict(image)
+        else:
+            result = self._paddleocr_reader.ocr(image)
+        return self._parse_paddleocr_text(result)
+
+    @classmethod
+    def _parse_paddleocr_text(cls, result) -> str:
+        """解析 PaddleOCR 2.x/3.x 常见返回结构中的识别文本。"""
+        texts: list[str] = []
+        cls._collect_paddle_text(result, texts)
+        return " ".join(t for t in texts if t)
+
+    @classmethod
+    def _collect_paddle_text(cls, value, texts: list[str]) -> None:
+        if value is None:
+            return
+        if isinstance(value, str):
+            texts.append(value)
+            return
+        if isinstance(value, dict):
+            for key in ("rec_texts", "text", "texts"):
+                if key in value:
+                    cls._collect_paddle_text(value[key], texts)
+                    return
+            if "res" in value:
+                cls._collect_paddle_text(value["res"], texts)
+                return
+            for child in value.values():
+                cls._collect_paddle_text(child, texts)
+            return
+        if hasattr(value, "json"):
+            cls._collect_paddle_text(value.json, texts)
+            return
+        if hasattr(value, "res"):
+            cls._collect_paddle_text(value.res, texts)
+            return
+        if isinstance(value, tuple):
+            if len(value) == 2 and isinstance(value[0], str):
+                texts.append(value[0])
+                return
+            if len(value) == 2 and isinstance(value[1], (int, float)):
+                cls._collect_paddle_text(value[0], texts)
+                return
+        if isinstance(value, list):
+            # PaddleOCR 2.x: [box, ("text", score)]
+            if (
+                len(value) == 2
+                and isinstance(value[1], tuple)
+                and value[1]
+                and isinstance(value[1][0], str)
+            ):
+                texts.append(value[1][0])
+                return
+            for child in value:
+                cls._collect_paddle_text(child, texts)
+
     def recognize(self, image: np.ndarray, engine: str = "tesseract") -> str:
         """对单张图像运行 OCR，返回识别文本。"""
         image = np.ascontiguousarray(image)
@@ -94,6 +167,8 @@ class OCREvaluator:
             return self._run_tesseract(image)
         elif engine == "easyocr":
             return self._run_easyocr(image)
+        elif engine == "paddleocr":
+            return self._run_paddleocr(image)
         else:
             raise ValueError(f"不支持的引擎: {engine}")
 
