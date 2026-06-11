@@ -28,6 +28,9 @@ class GPURenderer:
         self._prog = None
         self._vao = None
         self._fbo = None
+        self._img_tex = None
+        self._mask_tex = None
+        self._noise_tex = None
         self._initialized = False
 
     def _init_gl(self) -> None:
@@ -57,6 +60,15 @@ class GPURenderer:
         # 帧缓冲区（离屏渲染）
         color_attach = self._ctx.texture((self.width, self.height), 3)
         self._fbo = self._ctx.framebuffer(color_attachments=[color_attach])
+
+        # 持久纹理：一次性创建，每帧仅 write()，避免分配/释放抖动
+        self._img_tex = self._ctx.texture((self.width, self.height), 3)
+        self._img_tex.filter = mgl.NEAREST, mgl.NEAREST
+        self._mask_tex = self._ctx.texture((self.width, self.height), 1)
+        self._mask_tex.filter = mgl.NEAREST, mgl.NEAREST
+        self._noise_tex = self._ctx.texture(
+            (self.width, self.height), 3, dtype="f4"
+        )
         self._initialized = True
 
     def render_subframe(
@@ -83,16 +95,14 @@ class GPURenderer:
 
         import moderngl as mgl
 
-        # 上传图像纹理
+        # 上传图像纹理（持久纹理，仅写入新数据）
         img_data = np.flip(image, axis=0).astype(np.uint8).tobytes()
-        img_tex = self._ctx.texture((self.width, self.height), 3, img_data)
-        img_tex.filter = mgl.NEAREST, mgl.NEAREST
+        self._img_tex.write(img_data)
 
         # 上传掩模纹理（R8 单通道）
         mask_u8 = (mask.astype(np.uint8) * 255)
         mask_data = np.flip(mask_u8, axis=0).tobytes()
-        mask_tex = self._ctx.texture((self.width, self.height), 1, mask_data)
-        mask_tex.filter = mgl.NEAREST, mgl.NEAREST
+        self._mask_tex.write(mask_data)
 
         # 上传噪声纹理（float32，免量化误差）
         # sub_noise 单位为像素值空间 [-255, 255]，与 SoftwareRenderer 一致；
@@ -102,14 +112,12 @@ class GPURenderer:
         else:
             noise_arr = (sub_noise / 255.0 + 0.5).astype(np.float32)
         noise_data = np.flip(noise_arr, axis=0).copy().tobytes()
-        noise_tex = self._ctx.texture(
-            (self.width, self.height), 3, noise_data, dtype="f4"
-        )
+        self._noise_tex.write(noise_data)
 
         # 绑定纹理
-        img_tex.use(0)
-        mask_tex.use(1)
-        noise_tex.use(2)
+        self._img_tex.use(0)
+        self._mask_tex.use(1)
+        self._noise_tex.use(2)
         self._prog["u_image"] = 0
         self._prog["u_mask"] = 1
         self._prog["u_noise"] = 2
@@ -125,11 +133,6 @@ class GPURenderer:
         raw = self._fbo.read(components=3, alignment=1)
         result = np.frombuffer(raw, dtype=np.uint8).reshape(self.height, self.width, 3)
         result = np.flip(result, axis=0).copy()
-
-        # 释放纹理
-        img_tex.release()
-        mask_tex.release()
-        noise_tex.release()
 
         return result
 
@@ -158,6 +161,11 @@ class GPURenderer:
 
     def release(self) -> None:
         if self._ctx:
+            for tex_attr in ("_img_tex", "_mask_tex", "_noise_tex"):
+                tex = getattr(self, tex_attr, None)
+                if tex is not None:
+                    tex.release()
+                    setattr(self, tex_attr, None)
             self._ctx.release()
             self._initialized = False
 

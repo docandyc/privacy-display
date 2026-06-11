@@ -14,6 +14,7 @@ from Crypto.Cipher import ChaCha20
 from Crypto.Hash import HMAC, SHA256
 import os
 import struct
+import warnings
 
 
 class MaskGenerator:
@@ -108,8 +109,11 @@ class MaskGenerator:
                 break
             cycle += 0x1_0000_0000  # 偏移种子重新生成
         else:
-            # 超过重试次数时直接使用最后一次结果
-            pass
+            warnings.warn(
+                f"卡方均匀性检验连续 {max_retries} 次未通过 (cycle={cycle})，"
+                "使用最后一次生成的掩模",
+                RuntimeWarning,
+            )
 
         masks = [(R == k) for k in range(self.n)]
         return masks
@@ -185,7 +189,7 @@ class MaskGenerator:
                 y0, y1 = r * rh, (self.height if r == rows - 1 else (r + 1) * rh)
                 x0, x1 = c * rw, (self.width if c == cols - 1 else (c + 1) * rw)
                 # 区域专属周期种子：cycle 与区域坐标绑定 → 区域间统计独立
-                region_cycle = cycle ^ ((r * 73856093) ^ (c * 19349663)) & 0x7FFFFFFF
+                region_cycle = (cycle ^ (r * 73856093) ^ (c * 19349663)) & 0x7FFFFFFF
                 sub = MaskGenerator(x1 - x0, y1 - y0, self.n, key=self.key)
                 R[y0:y1, x0:x1] = sub._generate_index_matrix(region_cycle)
 

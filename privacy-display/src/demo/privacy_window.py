@@ -542,23 +542,23 @@ class PrivacyWindow:
                     clock.tick(30)
                     continue
 
-                # 捕获屏幕
-                region = self.cfg.capture_region or {
-                    "left": 0, "top": 0, "width": w, "height": h
-                }
-                if isinstance(region, tuple):
-                    region = {"left": region[0], "top": region[1],
-                              "width": region[2], "height": region[3]}
-                shot = sct.grab(region)
-                img = np.array(shot)[:, :, :3]  # BGRA -> BGR
-                img = img[:, :, ::-1]  # BGR -> RGB
-
-                if img.shape[:2] != (h, w):
-                    import cv2
-                    img = cv2.resize(img, (w, h))
-
-                # 生成掩模与噪声
+                # 仅在周期首时隙截屏并生成掩模与噪声（其余时隙复用已渲染子帧）
                 if self._current_subframe_idx == 0:
+                    # 捕获屏幕
+                    region = self.cfg.capture_region or {
+                        "left": 0, "top": 0, "width": w, "height": h
+                    }
+                    if isinstance(region, tuple):
+                        region = {"left": region[0], "top": region[1],
+                                  "width": region[2], "height": region[3]}
+                    shot = sct.grab(region)
+                    img = np.array(shot)[:, :, :3]  # BGRA -> BGR
+                    img = img[:, :, ::-1]  # BGR -> RGB
+
+                    if img.shape[:2] != (h, w):
+                        import cv2
+                        img = cv2.resize(img, (w, h))
+
                     masks = gen.generate(self._cycle)
                     perm = gen.generate_permutation(self._cycle)
                     timing.set_permutation(self._cycle, perm)
@@ -610,7 +610,7 @@ class PrivacyWindow:
                     and timing.should_emit_black_frame(render_ready, time_to_vblank_ms)
                 )
 
-                black = composer.compose_black_frame(img.shape)
+                black = composer.compose_black_frame((h, w, 3))
                 sf, output_kind = select_output_frame(
                     self._subframes,
                     self._inversion_frame,
