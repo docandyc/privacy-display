@@ -34,7 +34,10 @@ def build_subframes(img, n, epsilon, n_cycles, with_noise=True):
     for cycle in range(n_cycles):
         masks = gen.generate(cycle)
         if with_noise:
-            nb = injector.generate_fgsm_noise(img.astype(np.float32) / 255.0)
+            nb, _, _ = injector.generate_rotating_noise(
+                img.astype(np.float32) / 255.0,
+                cycle=cycle,
+            )
             sn_f = injector.split_complementary(nb)
             sn = [(x * 255 + pedestal).astype(np.float32) for x in sn_f]
         else:

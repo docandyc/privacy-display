@@ -157,8 +157,16 @@ def analyze_single_frame_readability(
         mse = np.mean((orig_f - sf_f) ** 2)
         psnr = 10 * np.log10(255 ** 2 / mse) if mse > 0 else float("inf")
 
-        # 有效像素比例（非零像素 / 总像素）
-        active_ratio = float(np.mean(sf > 0))
+        # 有效像素比例：估计承载原始内容的像素占比。
+        # 噪声基底会让被掩模关闭的像素也非零，因此不能直接用 sf > 0。
+        orig_luma = np.mean(orig_f, axis=-1)
+        sf_luma = np.mean(sf_f, axis=-1)
+        content_pixels = orig_luma > 16.0
+        threshold = np.maximum(orig_luma * 0.5, 16.0)
+        if np.any(content_pixels):
+            active_ratio = float(np.mean(sf_luma[content_pixels] > threshold[content_pixels]))
+        else:
+            active_ratio = float(np.mean(sf_luma > 16.0))
 
         results.append({
             "subframe": i,

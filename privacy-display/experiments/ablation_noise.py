@@ -7,8 +7,8 @@
 
   组1  仅掩模（无噪声）
   组2  仅噪声（无掩模分割，全帧叠加噪声）
-  组3  掩模 + 启发式噪声（Sobel 边缘，原实现）
-  组4  掩模 + 真实对抗噪声（预训练 VGG FGSM）
+  组3  掩模 + 目标模型代理 FGSM 噪声（Tesseract）
+  组4  掩模 + 多模型轮换 PGD 噪声（EasyOCR/PaddleOCR/YOLOv8 等）
 
 测量各组单子帧 OCR 字符准确率。预期结论：去掉噪声后准确率变化很小，
 证明掩模是防御主力——这对专利是双刃剑，但科学诚实优先。
@@ -43,17 +43,17 @@ def run_group(img, gt, ev, n, mode):
         subframes = composer.compose(img, masks, None)
     elif mode == "noise_only":
         # 无掩模：每子帧 = 全图/n + 互补噪声（不做像素分割）
-        nb = injector.generate_fgsm_noise(img.astype(np.float32)/255.0)
+        nb = injector.generate_fgsm_noise(img.astype(np.float32)/255.0, "tesseract")
         sn = [(x*255).astype(np.float32) for x in injector.split_complementary(nb)]
         subframes = [np.clip(img.astype(np.float32)/n + s, 0, 255).astype(np.uint8) for s in sn]
     elif mode == "mask_heuristic":
         masks = gen.generate(0)
-        nb = injector.generate_fgsm_noise(img.astype(np.float32)/255.0)  # Sobel 启发式
+        nb = injector.generate_fgsm_noise(img.astype(np.float32)/255.0, "tesseract")
         sn = [(x*255+ped).astype(np.float32) for x in injector.split_complementary(nb)]
         subframes = composer.compose(img, masks, sn)
     elif mode == "mask_adversarial":
         masks = gen.generate(0)
-        nb = injector.generate_pytorch_fgsm(img.astype(np.float32)/255.0)  # 预训练 VGG
+        nb, _, _ = injector.generate_rotating_noise(img.astype(np.float32)/255.0, cycle=1)
         sn = [(x*255+ped).astype(np.float32) for x in injector.split_complementary(nb)]
         subframes = composer.compose(img, masks, sn)
     else:
@@ -78,8 +78,8 @@ def main():
     groups = [
         ("组1  仅掩模（无噪声）", "mask_only"),
         ("组2  仅噪声（无掩模分割）", "noise_only"),
-        ("组3  掩模+启发式噪声(Sobel)", "mask_heuristic"),
-        ("组4  掩模+真实对抗噪声(预训练VGG)", "mask_adversarial"),
+        ("组3  掩模+Tesseract代理FGSM", "mask_heuristic"),
+        ("组4  掩模+多模型轮换PGD", "mask_adversarial"),
     ]
     results = {}
     for label, mode in groups:

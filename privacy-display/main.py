@@ -75,7 +75,11 @@ def cmd_demo(n: int = 4, refresh_rate: float = 240.0, epsilon: float = 8/255):
 
     # 生成对抗噪声
     img_f = img.astype(np.float32) / 255.0
-    noise_base = injector.generate_fgsm_noise(img_f)
+    noise_base, target_model, attack_method = injector.generate_rotating_noise(
+        img_f,
+        cycle=0,
+    )
+    print(f"  噪声目标模型: {target_model} ({attack_method.upper()})")
     sub_noises_f = injector.split_complementary(noise_base)
 
     # 基底电平：屏幕无法显示负光，黑像素处负噪声会被裁剪而破坏

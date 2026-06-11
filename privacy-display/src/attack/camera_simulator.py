@@ -80,22 +80,68 @@ class CameraSimulator:
         """
         h, w = subframes[0].shape[:2]
         delta_t = 1.0 / display_rate
-        readout = self.params.readout_time * h  # 全帧卷帘总时间
 
         if switch_time is None:
-            # 随机选一个切换时刻
+            # 相机帧起点相对显示子帧周期的相位
             switch_time = np.random.uniform(0, delta_t)
 
         result = np.zeros_like(subframes[0], dtype=np.float32)
-        n = len(subframes)
 
         for y in range(h):
-            row_t = y * readout / h  # 第 y 行的曝光开始时刻
-            # 判断该行曝光期间经历哪个子帧
-            sf_idx = int(row_t / delta_t) % n
-            result[y] = subframes[sf_idx][y].astype(np.float32)
+            row_start = switch_time + y * self.params.readout_time
+            row_end = row_start + self.params.exposure_time
+            weights = self._exposure_weights(
+                row_start,
+                row_end,
+                display_rate,
+                len(subframes),
+            )
+            for sf_idx, weight in enumerate(weights):
+                if weight > 0:
+                    result[y] += subframes[sf_idx][y].astype(np.float32) * weight
 
         return result.clip(0, 255).astype(np.uint8)
+
+    @staticmethod
+    def _exposure_weights(
+        start_time: float,
+        end_time: float,
+        display_rate: float,
+        n_subframes: int,
+    ) -> np.ndarray:
+        """
+        计算曝光窗口与各显示子帧的时间重叠比例。
+
+        对应交底书 7.1：一行曝光窗口可能跨过多个子帧切换边界，
+        捕获值应按重叠时间做线性积分，而不是只取某一个子帧。
+        """
+        if end_time <= start_time:
+            idx = int(np.floor(start_time * display_rate)) % n_subframes
+            weights = np.zeros(n_subframes, dtype=np.float32)
+            weights[idx] = 1.0
+            return weights
+
+        interval = 1.0 / display_rate
+        total = end_time - start_time
+        weights = np.zeros(n_subframes, dtype=np.float64)
+        cursor = start_time
+        guard = 0
+
+        while cursor < end_time and guard < 10000:
+            absolute_idx = int(np.floor(cursor / interval))
+            next_boundary = (absolute_idx + 1) * interval
+            segment_end = min(end_time, next_boundary)
+            overlap = max(0.0, segment_end - cursor)
+            weights[absolute_idx % n_subframes] += overlap
+            if segment_end <= cursor:
+                break
+            cursor = segment_end
+            guard += 1
+
+        if weights.sum() <= 0:
+            idx = int(np.floor(start_time / interval)) % n_subframes
+            weights[idx] = total
+        return (weights / total).astype(np.float32)
 
     def count_contaminated_rows(
         self, h: int, display_rate: float, switch_time: float
@@ -104,16 +150,13 @@ class CameraSimulator:
         计算卷帘快门下被"污染"（跨子帧边界）的行数。
         对应交底书 7.1 节的 N_row 计算。
         """
-        delta_t = 1.0 / display_rate
-        readout = self.params.readout_time * h
-
+        interval = 1.0 / display_rate
         contaminated = 0
         for y in range(h):
-            row_start = y * readout / h
+            row_start = switch_time + y * self.params.readout_time
             row_end = row_start + self.params.exposure_time
-            # 跨越子帧边界的行被污染
-            sf_start = int(row_start / delta_t)
-            sf_end = int(row_end / delta_t)
+            sf_start = int(np.floor(row_start / interval))
+            sf_end = int(np.floor(np.nextafter(row_end, row_start) / interval))
             if sf_start != sf_end:
                 contaminated += 1
         return contaminated

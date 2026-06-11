@@ -60,7 +60,7 @@ class Benchmark:
         ocr_results = []
         metric_results = []
 
-        for img, gt in zip(self.test_images, self.ground_truths):
+        for sample_idx, (img, gt) in enumerate(zip(self.test_images, self.ground_truths)):
             h, w = img.shape[:2]
             gen = MaskGenerator(w, h, cfg.n)
             # 背光提升模型：γ=1，亮度恢复由 integrate_subframes 的
@@ -76,7 +76,7 @@ class Benchmark:
 
             if cfg.use_noise:
                 img_f = img.astype(np.float32) / 255.0
-                noise_base = injector.generate_fgsm_noise(img_f)
+                noise_base, _, _ = injector.generate_rotating_noise(img_f, cycle=sample_idx)
                 sub_noises_f = injector.split_complementary(noise_base)
                 # 转换为 uint8 空间并加基底电平（防止黑像素裁剪负噪声）
                 pedestal = cfg.epsilon * 255
@@ -221,13 +221,16 @@ def run_corpus_multi_engine(
     report = {}
     for engine in avail:
         orig_accs, sf_accs = [], []
-        for img, gt in zip(images, truths):
+        for sample_idx, (img, gt) in enumerate(zip(images, truths)):
             h, w = img.shape[:2]
             gen = MaskGenerator(w, h, n)
             composer = SubframeComposer(n=n, gamma=1.0)
             injector = NoiseInjector(n=n, epsilon=epsilon)
             masks = gen.generate()
-            nb = injector.generate_fgsm_noise(img.astype(np.float32) / 255.0)
+            nb, _, _ = injector.generate_rotating_noise(
+                img.astype(np.float32) / 255.0,
+                cycle=sample_idx,
+            )
             ped = epsilon * 255
             sub_noises = [(x * 255 + ped).astype(np.float32)
                           for x in injector.split_complementary(nb)]

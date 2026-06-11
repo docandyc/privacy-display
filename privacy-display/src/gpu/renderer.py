@@ -210,9 +210,16 @@ class SoftwareRenderer:
 
 def create_renderer(width: int, height: int, n: int, gamma: float = 4.4):
     """工厂函数：优先使用 GPU 渲染器，失败时回退到软件渲染。"""
+    renderer = GPURenderer(width, height, n, gamma)
     try:
-        import moderngl  # noqa: F401
-        return GPURenderer(width, height, n, gamma)
+        renderer._init_gl()
+        return renderer
     except ImportError:
         print("[警告] moderngl 未安装，使用软件渲染器")
-        return SoftwareRenderer(n, gamma)
+    except Exception as exc:
+        try:
+            renderer.release()
+        except Exception:
+            pass
+        print(f"[警告] GPU 渲染初始化失败 ({type(exc).__name__}: {exc})，使用软件渲染器")
+    return SoftwareRenderer(n, gamma)
