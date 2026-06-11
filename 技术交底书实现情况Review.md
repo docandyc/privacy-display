@@ -3,9 +3,9 @@
 > 对照《发明专利技术交底书：一种基于视觉暂留与时间分片掩模的显示器隐私保护方法及系统》
 > 逐章核查 `privacy-display/` PoC 代码的实现情况。
 >
-> - Review 日期：2026-06-11
-> - 代码基线：git `9d200df`（harden G3/G5/G2 experiments with OCR metrics and honest conclusions；第一轮基线为 `167b83a`）
-> - 测试状态：`pytest tests/ -q` → **118 passed**
+> - Review 日期：2026-06-12
+> - 代码基线：git `2e52e93` + 本轮 review 修复（HDR 积分回归、实时窗口亮度模型、文档口径更新）
+> - 测试状态：`pytest tests/ -q` → **127 passed**
 > - 运行环境：Python 3.10（uv 维护 `.venv`），tesseract 5.4.1、easyocr 1.7.2、paddleocr 3.6.0、ultralytics 8.4.65、torch 2.11、moderngl 5.12、pygame 2.6 均可用
 
 ---
@@ -17,6 +17,7 @@
 3. **驱动层注入等系统级内容（交底书第四章 4.2）明确超出 PoC 范围**，`README.md` 与 `规划.md` 已声明为未来工作，不视为实现缺口（见第五节）。
 4. **两处交底书声称值与实验事实存在张力**（多帧叠加防御、检测模型 mAP），应在论文/答辩中按 PoC 实测口径表述（见第六节）。
 5. **第二轮复核对 G3/G5 的证据做了诚实加固**（原版只测 SSIM，易高估保护）：补测 OCR 后得出三条新结论——视角差异化掩模对全周期对齐攻击者无 OCR 级保护、对抗噪声 pedestal 是单帧 inpaint 防御的关键、目标检测防御弱于 OCR 防御（详见第八节）。
+6. **本轮修复已补上 HDR 视觉积分回归与窗口亮度模型一致性**：HDR 子帧按峰值亮度归一化输出预览，积分时按 `peak_nits/content_peak_nits` 恢复内容亮度；实时窗口默认改为与 demo/benchmark 一致的 `backlight` 模型，`pixel` 模式仅用于演示 SDR 像素补偿。
 
 ---
 
@@ -43,10 +44,10 @@
 | 5.4 步骤17 | 渲染延迟应急黑帧 | `timing_controller.should_emit_black_frame` | 单测 |
 | 4.1 | 四模块架构（掩模/噪声/渲染/时序） | `src/core/` + `src/gpu/` 应用层版 | — |
 | 4.1.3 | 像素着色器掩模+噪声+补偿合成 | `gpu/renderer.py` + `shaders/mask_apply.*`（GPU 与软件渲染像素级一致） | 单测 + GL 失败自动回退 |
-| 4.3 | HDR：PQ(ST.2084) 编解码、RGB↔ICtCp、超色域软裁剪、L_k·n 补偿（改进项 A1） | `src/core/hdr_compensation.py` | PQ 往返误差、保色相单测 |
+| 4.3 | HDR：PQ(ST.2084) 编解码、RGB↔ICtCp、超色域软裁剪、L_k·n 补偿与 HDR 感知积分 | `src/core/hdr_compensation.py` + `src/core/subframe_composer.py` | PQ 往返误差、保色相单测、HDR 积分还原回归 |
 | 4.3（部分） | SDR 像素补偿 γ=n·β 与背光提升模型 B=n | `subframe_composer`（PoC 默认背光模型，γ 路径保留） | README §7 工程说明 |
 | 4.4 | 多显示器主从同步 + 异构刷新率 LCM 虚拟时钟（改进项 A3） | `src/core/multi_display.py` | 同步误差 max 0.05ms<0.1ms |
-| 5.1 步骤1 | 显示能力检测 + n 自动降级 | `demo/privacy_window.py`（macOS/xrandr/Windows 刷新率查询） | 单测 |
+| 5.1 步骤1 | 显示能力检测 + n 自动降级 + 实时窗口亮度模型配置 | `demo/privacy_window.py`（macOS/xrandr/Windows 刷新率查询；`brightness_model=backlight/pixel`） | 单测 |
 | 6.3 | FPI（含随机点阵 1/√N 调制衰减模型） | `evaluation/metrics.py:compute_fpi` | 240Hz/n4→0.030 等与交底书吻合 |
 | 6.3 | CIEDE2000 ΔE | `metrics.compute_delta_e` | 实测 0.006 < 1.0 |
 | 6.3 | 亮度均匀性（九区域 ΔL/L） | `metrics.compute_brightness_uniformity` | <5% |
@@ -82,7 +83,7 @@
 | # | 缺口 | 交底书出处 | 现状 | 优先级 |
 |---|------|-----------|------|--------|
 | G1 | PaddleOCR 端到端语料评测 | 3.2.2 / 改进 C2 | 已补齐：PaddleOCR 3.6.0 可探测并参与 12 样本语料评测；`corpus_multi_engine.json` 已含 tesseract/easyocr/paddleocr 三行 | Done |
-| G2 | YOLOv8 目标检测评测 | 3.3 / 6.2 声称"YOLOv8 文本检测 mAP 0.92→0.08" | 已补齐：`ultralytics==8.4.65` + YOLOv8n，`detection_attack_yolo.json` 记录单子帧 mAP50=0.40、完整周期平均 mAP50=1.00 | Done |
+| G2 | YOLOv8 通用目标检测评测 | 3.3 / 6.2 声称"YOLOv8 文本检测 mAP 0.92→0.08" | 已补齐为 PoC 通用目标检测实验：`ultralytics==8.4.65` + YOLOv8n，`detection_attack_yolo.json` 记录单子帧 mAP50=0.40、完整周期平均 mAP50=1.00；不等同于文本检测 mAP | Done |
 | G3 | 离轴相机攻击实验 | 7.2 / 改进 B3 验证方法 | 已补齐并加测 OCR + 强攻击者校正：`view_attack.json` 显示正视/离轴/校正 OCR 全为 100%、离轴 SSIM 仅降 0.064 → 诚实结论是掩模差异化对全周期对齐攻击者无 OCR 级保护（详见第八节） | Done |
 | G4 | 空间-时间联合扰动 | 7.2 | 已补齐：`split_complementary_spatial` 约束逐像素 ΣN_k=0 与邻域棋盘抵消 | Done |
 | G5 | 学习型去混淆攻击 | 7.3 / 改进 B2 可选项 | 已补齐并加测 OCR + pedestal 消融：tiny U-Net 单帧 OCR 0%（下界）；单帧 inpaint 干净子帧 OCR 100% / 带噪声 pedestal 子帧 OCR 0% → pedestal 是单帧防御对 inpainting 鲁棒的关键（详见第八节） | Done |
@@ -105,6 +106,7 @@
 - **SPIR-V 跨平台着色器 + 平台抽象层（PAL）**：PoC 使用 moderngl/GLSL
 - **GPU Compute Shader 掩模生成（<0.1ms）与 R8_UINT 纹理、双缓冲/环形缓冲 GPU 显存管理**：PoC 为 CPU 生成（实测 15–27ms，已在性能报告中如实对比）
 - **硬件 VBlank 中断、SCHED_FIFO / MMCSS 实时线程、±0.5ms 硬同步**：PoC 为软件模拟时序
+- **真实 HDR framebuffer / PQ-HLG 输出 / 系统色彩管理接入**：PoC 已有 HDR 数学补偿与积分回归，但普通 SDR 窗口无法输出真实 HDR 帧
 - **6.1/6.2 实施例的真实 240Hz/480Hz 硬件验证**：PoC 在 60–120Hz 普通屏上以 n=2 演示 + 数值模型外推
 - **6.1 受试者主观实验（10 人暗室 30 分钟）**：未开展；FPI/ΔE/SSIM 客观指标替代
 
@@ -120,6 +122,7 @@
 | GPU 负载 3–5%、帧生成 +0.3ms | Python/CPU 路径慢 1–2 个数量级（性能报告已如实标注） | 声明该指标针对驱动层实现假设，PoC 验证算法正确性而非生产性能 |
 | 抗多帧叠加约束（3.1） | 覆盖完整周期的逐像素聚合可完全还原 | 按第三节口径限定威胁模型 + 列缓解方向 |
 | FPI 0.02–0.03 / ΔE<1.0 | FPI 0.030 / ΔE 0.006 | 吻合，直接引用 |
+| HDR 视觉无感 | 本轮新增 HDR 感知积分回归；白场 headroom 允许时 Delta E≈0.20 | 可表述为“数学补偿链路成立”；真实 HDR 输出仍列未来工作 |
 
 ---
 
@@ -169,7 +172,7 @@
 - 论文口径：把对抗噪声从"边际贡献存疑"提升为"单帧防御对 inpainting 攻击鲁棒的关键
   支撑"，与 B1"掩模主防御 + 噪声二级强化"一致，并给出了噪声不可或缺的具体攻击场景。
 
-### 8.3 G2：检测防御弱于 OCR 防御
+### 8.3 G2：通用目标检测防御弱于 OCR 防御
 
 单子帧 YOLOv8n 目标检测 mAP50=**0.40**（召回 0.40）明显高于单子帧 OCR 的 **0.0%**。
 目标检测依赖粗粒度形状/颜色团块，对 1/n 稀疏点阵采样比细笔画文本更鲁棒。论文应区分

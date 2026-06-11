@@ -39,6 +39,38 @@ class TestHDR:
         sfs = composer.compose(img, gen.generate(0))
         assert len(sfs) == n and all(s.dtype == np.uint8 for s in sfs)
 
+    def test_hdr_integration_restores_content_luminance(self):
+        """HDR 子帧是峰值归一化预览，积分时必须按 headroom 还原内容亮度。"""
+        n = 4
+        gen = MaskGenerator(32, 24, n)
+        composer = SubframeComposer(
+            n=n,
+            gamma=1.0,
+            hdr_mode=True,
+            peak_nits=1000,
+            content_peak_nits=100,
+        )
+        img = np.full((24, 32, 3), 180, dtype=np.uint8)
+        sfs = composer.compose(img, gen.generate(0))
+        integrated = composer.integrate_subframes(sfs)
+        diff = np.abs(integrated.astype(np.int16) - img.astype(np.int16))
+        assert diff.mean() < 2.0
+
+    def test_hdr_integration_restores_white_when_headroom_allows(self):
+        n = 4
+        gen = MaskGenerator(16, 16, n)
+        composer = SubframeComposer(
+            n=n,
+            gamma=1.0,
+            hdr_mode=True,
+            peak_nits=1000,
+            content_peak_nits=100,
+        )
+        img = np.full((16, 16, 3), 255, dtype=np.uint8)
+        sfs = composer.compose(img, gen.generate(0))
+        integrated = composer.integrate_subframes(sfs)
+        assert integrated.mean() > 252
+
 
 # ------------------------------------------------------------------
 # A2 黑帧 + 自动曝光攻击

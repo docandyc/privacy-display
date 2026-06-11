@@ -13,6 +13,8 @@ import subprocess
 import time
 from dataclasses import dataclass
 
+from src.core.config import VALID_BRIGHTNESS_MODELS
+
 
 @dataclass
 class WindowConfig:
@@ -21,7 +23,8 @@ class WindowConfig:
     n: int = 2
     refresh_rate: int = 120      # 目标刷新率（Hz），需满足 f_r >= 60n
     epsilon: float = 8 / 255
-    gamma_factor: float = 1.1
+    gamma_factor: float = 1.1     # pixel 模式下的 SDR 舒适度修正因子
+    brightness_model: str = "backlight"  # "backlight" 或 "pixel"
     inversion_alpha: float = 0.3  # 反色帧持续时间系数，t_inv = alpha * Δt
     show_hud: bool = True         # 显示 HUD 信息
     capture_region: tuple | None = None  # (x, y, w, h) 截图区域，None=全屏
@@ -37,6 +40,7 @@ class WindowConfig:
         self.refresh_rate = ensure_safe_refresh_rate(self.n, self.refresh_rate)
         if self.gamma_factor <= 0:
             raise ValueError("gamma_factor must be positive")
+        validate_brightness_model(self.brightness_model)
         validate_inversion_alpha(self.inversion_alpha)
 
 
@@ -54,6 +58,20 @@ def validate_inversion_alpha(alpha: float) -> None:
     """交底书约束：反色帧持续时间系数 alpha ∈ [0.2, 0.5]。"""
     if not (0.2 <= float(alpha) <= 0.5):
         raise ValueError("inversion_alpha must be in [0.2, 0.5]")
+
+
+def validate_brightness_model(model: str) -> None:
+    """实时窗口亮度模型：backlight 与离线实验一致，pixel 演示 SDR 像素补偿。"""
+    if model not in VALID_BRIGHTNESS_MODELS:
+        raise ValueError("brightness_model must be 'backlight' or 'pixel'")
+
+
+def runtime_renderer_gamma(n: int, gamma_factor: float, brightness_model: str) -> float:
+    """计算实时渲染 gamma；默认 backlight 模型保持 γ=1，与 benchmark/demo 对齐。"""
+    validate_brightness_model(brightness_model)
+    if brightness_model == "backlight":
+        return 1.0
+    return float(n * gamma_factor)
 
 
 def noise_pedestal_value(epsilon: float) -> float:
@@ -436,14 +454,19 @@ class PrivacyWindow:
         w, h = self.cfg.width, self.cfg.height
 
         gen = MaskGenerator(w, h, n)
+        render_gamma = runtime_renderer_gamma(
+            n,
+            self.cfg.gamma_factor,
+            self.cfg.brightness_model,
+        )
         composer = SubframeComposer(
             n=n,
-            gamma=n * self.cfg.gamma_factor,
+            gamma=render_gamma,
             insert_inversion=self.cfg.insert_inversion,
             inversion_alpha=self.cfg.inversion_alpha,
         )
         injector = NoiseInjector(n=n, epsilon=self.cfg.epsilon)
-        renderer = create_renderer(w, h, n, gamma=n * self.cfg.gamma_factor)
+        renderer = create_renderer(w, h, n, gamma=render_gamma)
         timing = TimingController(refresh_rate=self.cfg.refresh_rate, n=n)
 
         self._running = True
@@ -478,10 +501,15 @@ class PrivacyWindow:
                             self.cfg.n = n
                             self.cfg.refresh_rate = runtime.refresh_rate
                             frame_interval = 1.0 / self.cfg.refresh_rate
+                            render_gamma = runtime_renderer_gamma(
+                                n,
+                                self.cfg.gamma_factor,
+                                self.cfg.brightness_model,
+                            )
                             gen = MaskGenerator(w, h, n)
                             composer = SubframeComposer(
                                 n=n,
-                                gamma=n * self.cfg.gamma_factor,
+                                gamma=render_gamma,
                                 insert_inversion=self.cfg.insert_inversion,
                                 inversion_alpha=self.cfg.inversion_alpha,
                             )
@@ -490,7 +518,7 @@ class PrivacyWindow:
                                 w,
                                 h,
                                 n,
-                                gamma=n * self.cfg.gamma_factor,
+                                gamma=render_gamma,
                             )
                             timing = TimingController(
                                 refresh_rate=self.cfg.refresh_rate,
@@ -615,6 +643,8 @@ class PrivacyWindow:
                         "vsync": vsync_enabled,
                         "display": capabilities.refresh_rate_hz,
                         "mode": output_kind,
+                        "brightness": self.cfg.brightness_model,
+                        "gamma": render_gamma,
                         "black": timing.black_frame_count,
                         "safe": runtime.safe,
                         "note": runtime.note,
@@ -662,6 +692,8 @@ def _draw_hud(screen, font, info: dict) -> None:
         ),
         (
             f"mode={info.get('mode', 'subframe')}  "
+            f"brightness={info.get('brightness', 'backlight')}  "
+            f"gamma={info.get('gamma', 1.0):.2f}  "
             f"black={info.get('black', 0)}  "
             f"display={info.get('display') or '?'}Hz"
         ),

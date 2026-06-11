@@ -166,6 +166,7 @@ def test_config_save_load_and_validation(tmp_path):
         n=4,
         epsilon=0.05,
         gamma_factor=1.2,
+        brightness_model="pixel",
         inversion_alpha=0.3,
         insert_inversion=True,
         refresh_rate=240,
@@ -178,6 +179,7 @@ def test_config_save_load_and_validation(tmp_path):
     assert loaded.n == 4
     assert loaded.key == cfg.key
     assert loaded.to_window_kwargs()["gamma_factor"] == 1.2
+    assert loaded.to_window_kwargs()["brightness_model"] == "pixel"
     assert loaded.to_window_kwargs()["inversion_alpha"] == 0.3
     assert loaded.to_window_kwargs()["insert_inversion"] is True
     with pytest.raises(ValueError):

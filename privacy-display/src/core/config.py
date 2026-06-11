@@ -10,6 +10,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 
+VALID_BRIGHTNESS_MODELS = {"backlight", "pixel"}
+
+
 @dataclass
 class PrivacyDisplayConfig:
     width: int = 1280
@@ -17,6 +20,7 @@ class PrivacyDisplayConfig:
     n: int = 2
     epsilon: float = 8 / 255
     gamma_factor: float = 1.1
+    brightness_model: str = "backlight"
     inversion_alpha: float = 0.3
     insert_inversion: bool = False
     key_hex: str = ""
@@ -35,6 +39,8 @@ class PrivacyDisplayConfig:
             raise ValueError("epsilon must be in [0, 1]")
         if float(self.gamma_factor) <= 0:
             raise ValueError("gamma_factor must be positive")
+        if self.brightness_model not in VALID_BRIGHTNESS_MODELS:
+            raise ValueError("brightness_model must be 'backlight' or 'pixel'")
         if not (0.2 <= float(self.inversion_alpha) <= 0.5):
             raise ValueError("inversion_alpha must be in [0.2, 0.5]")
         if int(self.refresh_rate) <= 0:
@@ -84,6 +90,7 @@ class PrivacyDisplayConfig:
             "refresh_rate": self.refresh_rate,
             "epsilon": self.epsilon,
             "gamma_factor": self.gamma_factor,
+            "brightness_model": self.brightness_model,
             "inversion_alpha": self.inversion_alpha,
             "insert_inversion": self.insert_inversion,
             "show_hud": self.show_hud,

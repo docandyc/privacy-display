@@ -44,7 +44,7 @@ privacy-display/
 │   └── evaluation/
 │       ├── metrics.py           # FPI / CIEDE2000 ΔE / 归一化互信息 / 亮度均匀性
 │       └── benchmark.py         # 参数扫描评测套件 + matplotlib 图表
-└── tests/                       # 123 个单元测试
+└── tests/                       # 127 个单元测试
 ```
 
 ---
@@ -59,7 +59,7 @@ source .venv/bin/activate
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
 # 目标检测实验使用：ultralytics YOLOv8n（首次运行会下载 yolov8n.pt，本地权重不提交）
 
-python -m pytest tests/ -q          # 123 项单元测试
+python -m pytest tests/ -q          # 127 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
@@ -74,7 +74,7 @@ python experiments/view_attack.py           # G3 离轴相机攻击
 python experiments/unet_reconstruction.py   # G5 学习型重构攻击
 ```
 
-> **改进路线见 [`改进文档.md`](改进文档.md)**：已实现 HDR 补偿(ICtCp/PQ)、黑帧+AE 攻击、
+> **改进路线见 [`改进文档.md`](改进文档.md)**：已实现 HDR 补偿(ICtCp/PQ/HLG 与 HDR 感知积分回归)、黑帧+AE 攻击、
 > 多显示器同步、性能实测、真实对抗噪声+消融、去混淆/重构攻击、视角差异化掩模、
 > 掩模取模偏置修复、多样本多引擎评测、YOLOv8n 目标检测评测、离轴攻击、
 > 学习型重构攻击、HLG/ALS、配置持久化、SSIM/运动模糊指标等。
@@ -158,7 +158,7 @@ PoC 确认方案对以下**主流威胁仍然有效**：
 | 3.2.3 高刷新率链路（时序/带宽数学关系） | `core/timing_controller.py` | ✓ hash/带宽/模拟 |
 | 3.2.4 相机针对性防御（全局/卷帘/长曝光/离轴） | `attack/camera_simulator.py` | ✓ 攻击实验 |
 | 4.2 驱动层注入 | — | 未来工作（需内核） |
-| 4.3 HDR 亮度补偿 + HLG + ALS | `core/hdr_compensation.py` | ✓ PQ/HLG/环境光单测 |
+| 4.3 HDR 亮度补偿 + HLG + ALS | `core/hdr_compensation.py` + `core/subframe_composer.py` | ✓ PQ/HLG/环境光/HDR 积分单测 |
 | 5.1 配置持久化 + 预生成缓冲 | `core/config.py` + `core/mask_generator.py` | ✓ JSON/环形缓冲单测 |
 | 6.3 视觉无感评估体系（FPI/ΔE/均匀性） | `evaluation/metrics.py` | ✓ 指标吻合 |
 | 7.4 视觉疲劳策略 | `core/fatigue_policy.py` | ✓ 刷新率/蓝光/距离单测 |
@@ -167,6 +167,7 @@ PoC 确认方案对以下**主流威胁仍然有效**：
 
 ## 7. 工程说明
 
-- **亮度补偿采用背光提升模型（γ=1）**：子帧像素不放大，亮度恢复由硬件背光增益 `B=n` 完成（`integrate_subframes` 的 `boost=n/γ`）。交底书的 SDR 像素空间补偿 `γ=n·β` 仅适用暗内容，对亮背景文档会饱和裁剪，故 PoC 默认用背光模型。
+- **亮度补偿默认采用背光提升模型（γ=1）**：子帧像素不放大，亮度恢复由硬件背光增益 `B=n` 完成（`integrate_subframes` 的 `boost=n/γ`）。`main.py demo`、benchmark 和实时窗口默认都使用该模型；实时窗口可通过配置 `brightness_model="pixel"` 演示交底书的 SDR 像素空间补偿 `γ=n·β`，但该模式只适合暗内容，对亮背景文档会饱和裁剪。
+- **HDR 补偿是数值 PoC，不是真实 HDR 输出链路**：`hdr_compensation.py` 实现 PQ/HLG、ICtCp 软裁剪与峰值亮度 headroom；`SubframeComposer` 在 HDR 模式下按 `peak_nits/content_peak_nits` 做 HDR 感知积分回归。普通 SDR 窗口仍不能输出真实 PQ/HLG 帧，真实 HDR framebuffer/系统色彩管理接入属于未来工作。
 - **噪声基底电平（pedestal）**：屏幕无法显示负光，黑像素处的负噪声会被裁剪而破坏 `ΣN_k=0`。给每个子帧加基底 `ε` 留出下探空间、积分时扣除，代价是黑位抬升 `ε/255` 的微小对比度损失。
 - **FPI 模型核心**：随机点阵的空间相位随机化使人眼感受野汇聚后调制深度按 `1/√N` 衰减——这是随机掩模优于全屏高频闪烁方案的数学依据。

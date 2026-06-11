@@ -7,6 +7,7 @@ from src.demo.privacy_window import (
     minimum_refresh_rate,
     output_slot_duration,
     resolve_runtime_display_config,
+    runtime_renderer_gamma,
     run_online_noise_monitor,
     select_output_frame,
     sub_noises_to_pixel_space,
@@ -45,6 +46,23 @@ def test_window_config_validates_inversion_alpha():
     assert cfg.inversion_alpha == 0.3
     assert output_slot_duration(1 / 120, "inversion", cfg.inversion_alpha) == (1 / 120) * 0.3
     assert output_slot_duration(1 / 120, "subframe", cfg.inversion_alpha) == 1 / 120
+
+
+def test_runtime_renderer_gamma_defaults_to_backlight_model():
+    cfg = WindowConfig(n=4, refresh_rate=240, gamma_factor=1.2)
+
+    assert cfg.brightness_model == "backlight"
+    assert runtime_renderer_gamma(cfg.n, cfg.gamma_factor, cfg.brightness_model) == 1.0
+    assert runtime_renderer_gamma(4, 1.2, "pixel") == 4.8
+
+
+def test_window_config_rejects_invalid_brightness_model():
+    try:
+        WindowConfig(n=2, refresh_rate=120, brightness_model="invalid")
+    except ValueError as exc:
+        assert "brightness_model" in str(exc)
+    else:
+        raise AssertionError("invalid brightness_model should be rejected")
 
 
 def test_window_config_rejects_invalid_inversion_alpha():

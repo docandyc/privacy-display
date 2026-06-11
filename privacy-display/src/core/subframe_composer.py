@@ -19,6 +19,7 @@ class SubframeComposer:
         inversion_alpha: float = 0.3,
         hdr_mode: bool = False,
         peak_nits: float = 1000.0,
+        content_peak_nits: float = 100.0,
     ):
         """
         Args:
@@ -29,13 +30,19 @@ class SubframeComposer:
             inversion_alpha: 反色帧时长比例 α ∈ [0.2, 0.5]
             hdr_mode: 启用 HDR 非线性补偿（线性光提升 n 倍 + ICtCp 软裁剪）
             peak_nits: HDR 显示器峰值亮度
+            content_peak_nits: SDR 内容白场对应亮度，用于 HDR 积分还原
         """
         self.n = n
+        if peak_nits <= 0:
+            raise ValueError("peak_nits must be positive")
+        if content_peak_nits <= 0:
+            raise ValueError("content_peak_nits must be positive")
         self.gamma = gamma if gamma is not None else n * brightness_factor
         self.insert_inversion = insert_inversion
         self.inversion_alpha = inversion_alpha
         self.hdr_mode = hdr_mode
         self.peak_nits = peak_nits
+        self.content_peak_nits = content_peak_nits
 
     def compose(
         self,
@@ -79,7 +86,12 @@ class SubframeComposer:
                 )
                 sf_clip = np.clip(sf, 0, 255)
                 linear = sdr_to_linear(sf_clip)
-                comp = hdr_compensate(linear, self.n, self.peak_nits)
+                comp = hdr_compensate(
+                    linear,
+                    self.n,
+                    self.peak_nits,
+                    self.content_peak_nits,
+                )
                 sf = linear_to_sdr(comp)
             else:
                 # SDR 亮度补偿：I_k_comp = clip(I_k * gamma, 0, 255)
@@ -149,6 +161,9 @@ class SubframeComposer:
 
         γ=1（纯背光提升模型）时 integrated = ΣI_k = I 精确成立；
         γ=n（SDR 像素补偿）时仅对 I < 255/γ 的暗内容无裁剪失真。
+        HDR 模式下，子帧数组是“显示峰值归一化”的 SDR 预览：先还原
+        到线性峰值归一化亮度，平均后再乘以 peak/content headroom，
+        才能模拟真实 HDR 亮度积分。
 
         Args:
             boost: 显示亮度增益，None 时自动取 n/γ
@@ -159,6 +174,17 @@ class SubframeComposer:
         Returns:
             uint8 (H, W, 3) 积分后图像
         """
+        if self.hdr_mode:
+            from src.core.hdr_compensation import sdr_to_linear, linear_to_sdr
+
+            if boost is None:
+                boost = self.peak_nits / self.content_peak_nits
+            acc = np.zeros_like(subframes[0], dtype=np.float64)
+            for sf in subframes:
+                acc += sdr_to_linear(np.clip(sf.astype(np.float32) - pedestal, 0, 255))
+            mean = acc / len(subframes)
+            return linear_to_sdr(mean * boost)
+
         if boost is None:
             boost = self.n / self.gamma
         acc = np.zeros_like(subframes[0], dtype=np.float32)
