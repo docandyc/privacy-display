@@ -27,6 +27,10 @@ class WindowConfig:
     prefer_vsync: bool = True      # 优先使用 SDL/系统 VBlank 阻塞
     insert_inversion: bool = False  # 启用后周期末输出反色帧用于长曝光防御
     emergency_black_frame: bool = True  # 渲染超时时实际输出黑帧
+    enable_ocr_monitoring: bool = True  # 周期性 OCR 监测，驱动在线噪声更新
+    monitor_interval_cycles: int = 120  # 监测间隔，避免每周期运行 OCR
+    monitor_engine: str = "tesseract"
+    monitor_ground_truth: str = ""
 
     def __post_init__(self) -> None:
         self.refresh_rate = ensure_safe_refresh_rate(self.n, self.refresh_rate)
@@ -284,6 +288,40 @@ def select_output_frame(
     return subframes[slot_index % n], "subframe"
 
 
+def run_online_noise_monitor(
+    injector,
+    protected_frame: np.ndarray,
+    cycle: int,
+    enabled: bool,
+    interval_cycles: int,
+    model_name: str = "tesseract",
+    engine: str | None = None,
+    ground_truth: str = "",
+    ocr_evaluator=None,
+) -> dict | None:
+    """按周期抽样保护帧运行 OCR 监测，并反馈给噪声在线策略。"""
+    if not enabled or interval_cycles <= 0 or cycle % interval_cycles != 0:
+        return None
+
+    try:
+        state = injector.monitor_online_recognition(
+            protected_frame,
+            ground_truth=ground_truth,
+            model_name=model_name,
+            engine=engine,
+            ocr_evaluator=ocr_evaluator,
+        )
+        state["status"] = "sampled"
+        return state
+    except Exception as exc:
+        return {
+            "status": "unavailable",
+            "engine": engine or model_name,
+            "triggered": False,
+            "error": exc.__class__.__name__,
+        }
+
+
 class PrivacyWindow:
     """
     实时隐私保护演示窗口。
@@ -305,6 +343,8 @@ class PrivacyWindow:
         self._subframes: list[np.ndarray] = []
         self._permutation: list[int] = []
         self._stats = {"fps": 0.0, "jitter_ms": 0.0}
+        self._noise_state = {"model": "?", "method": "?", "gradient": "none"}
+        self._monitor_state = {"status": "idle", "triggered": False}
 
     def run(self) -> None:
         """启动演示窗口（阻塞，直到用户退出）。"""
@@ -387,15 +427,29 @@ class PrivacyWindow:
                             self.cfg.refresh_rate = runtime.refresh_rate
                             frame_interval = 1.0 / self.cfg.refresh_rate
                             gen = MaskGenerator(w, h, n)
-                            composer = SubframeComposer(n=n, gamma=n * self.cfg.gamma_factor)
+                            composer = SubframeComposer(
+                                n=n,
+                                gamma=n * self.cfg.gamma_factor,
+                            )
                             injector = NoiseInjector(n=n, epsilon=self.cfg.epsilon)
-                            renderer = create_renderer(w, h, n, gamma=n * self.cfg.gamma_factor)
-                            timing = TimingController(refresh_rate=self.cfg.refresh_rate, n=n)
+                            renderer = create_renderer(
+                                w,
+                                h,
+                                n,
+                                gamma=n * self.cfg.gamma_factor,
+                            )
+                            timing = TimingController(
+                                refresh_rate=self.cfg.refresh_rate,
+                                n=n,
+                            )
                             self._cycle = 0
                             self._current_subframe_idx = 0
                         elif event.key == pygame.K_s:
                             if self._subframes:
-                                shot_idx = min(self._current_subframe_idx, len(self._subframes) - 1)
+                                shot_idx = min(
+                                    self._current_subframe_idx,
+                                    len(self._subframes) - 1,
+                                )
                                 _save_screenshot(
                                     self._subframes[shot_idx],
                                     f"screenshot_{screenshot_counter:04d}.png"
@@ -428,18 +482,44 @@ class PrivacyWindow:
                     timing.set_permutation(self._cycle, perm)
 
                     img_f = img.astype(np.float32) / 255.0
-                    noise_base = injector.generate_fgsm_noise(img_f)
+                    (
+                        noise_base,
+                        target_model,
+                        attack_method,
+                    ) = injector.generate_rotating_noise(img_f, cycle=self._cycle)
+                    self._noise_state = {
+                        "model": target_model,
+                        "method": attack_method,
+                        "gradient": injector.last_gradient_source,
+                    }
                     sub_noises_f = injector.split_complementary(noise_base)
-                    sub_noises = [(nf * 255).astype(np.float32) for nf in sub_noises_f]
+                    sub_noises = [
+                        (nf * 255).astype(np.float32) for nf in sub_noises_f
+                    ]
 
                     self._subframes = renderer.render_all_subframes(
                         img, masks, sub_noises, perm
                     )
                     self._permutation = perm
                     self._inversion_frame = composer.compose_inversion_frame(img)
+                    monitor_state = run_online_noise_monitor(
+                        injector,
+                        self._subframes[0],
+                        cycle=self._cycle,
+                        enabled=self.cfg.enable_ocr_monitoring,
+                        interval_cycles=self.cfg.monitor_interval_cycles,
+                        model_name=self.cfg.monitor_engine,
+                        engine=self.cfg.monitor_engine,
+                        ground_truth=self.cfg.monitor_ground_truth,
+                    )
+                    if monitor_state is not None:
+                        self._monitor_state = monitor_state
 
                 elapsed_before_output = time.perf_counter() - t_start
-                time_to_vblank_ms = max(0.0, (frame_interval - elapsed_before_output) * 1000)
+                time_to_vblank_ms = max(
+                    0.0,
+                    (frame_interval - elapsed_before_output) * 1000,
+                )
                 render_ready = bool(self._subframes)
                 emergency_black = (
                     self.cfg.emergency_black_frame
@@ -464,7 +544,9 @@ class PrivacyWindow:
                 if self.cfg.show_hud:
                     _draw_hud(screen, font, {
                         "n": n,
-                        "subframe": f"{min(self._current_subframe_idx + 1, n)}/{n}",
+                        "subframe": (
+                            f"{min(self._current_subframe_idx + 1, n)}/{n}"
+                        ),
                         "cycle": self._cycle,
                         "fps": self._stats["fps"],
                         "refresh": self.cfg.refresh_rate,
@@ -475,6 +557,8 @@ class PrivacyWindow:
                         "black": timing.black_frame_count,
                         "safe": runtime.safe,
                         "note": runtime.note,
+                        "noise": self._noise_state,
+                        "monitor": self._monitor_state,
                     })
 
                 pygame.display.flip()
@@ -482,7 +566,9 @@ class PrivacyWindow:
 
                 # 更新子帧索引
                 cycle_slots = n + (1 if self.cfg.insert_inversion else 0)
-                self._current_subframe_idx = (self._current_subframe_idx + 1) % cycle_slots
+                self._current_subframe_idx = (
+                    self._current_subframe_idx + 1
+                ) % cycle_slots
                 if self._current_subframe_idx == 0:
                     self._cycle += 1
 
@@ -508,10 +594,26 @@ def _draw_hud(screen, font, info: dict) -> None:
 
     lines = [
         f"n={info['n']}  subframe={info['subframe']}  cycle={info['cycle']}",
-        f"refresh={info['refresh']}Hz  fps={info['fps']:.1f}  vsync={int(info.get('vsync', False))}",
-        f"mode={info.get('mode', 'subframe')}  black={info.get('black', 0)}  display={info.get('display') or '?'}Hz",
+        (
+            f"refresh={info['refresh']}Hz  fps={info['fps']:.1f}  "
+            f"vsync={int(info.get('vsync', False))}"
+        ),
+        (
+            f"mode={info.get('mode', 'subframe')}  "
+            f"black={info.get('black', 0)}  "
+            f"display={info.get('display') or '?'}Hz"
+        ),
         "ESC:quit  N:toggle-n  S:screenshot  SPACE:pause  H:hud",
     ]
+    noise = info.get("noise") or {}
+    monitor = info.get("monitor") or {}
+    lines.insert(
+        3,
+        "noise="
+        f"{noise.get('model', '?')}/{noise.get('method', '?')}"
+        f" grad={noise.get('gradient', 'none')} "
+        f"ocr={monitor.get('status', 'idle')}",
+    )
     if not info.get("safe", True):
         lines.insert(0, f"[ UNSAFE REFRESH ] {info.get('note', '')}")
     if info.get("paused"):

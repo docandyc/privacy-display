@@ -1,10 +1,12 @@
 """
 对抗性噪声注入器
 
-基于 FGSM/PGD 生成针对 OCR/检测模型的对抗噪声，并将其分解为
-时域互补的 n 个子噪声（∑N_k = 0），确保人眼积分后噪声完全消除。
+基于可微影子模型的 FGSM/PGD 生成针对 OCR/检测模型的对抗噪声，并
+将其分解为时域互补的 n 个子噪声（∑N_k = 0），确保人眼积分后噪声
+完全消除。
 """
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -59,6 +61,8 @@ class NoiseInjector:
         self.online_threshold = online_threshold
         self.template_dir = Path(template_dir) if template_dir else None
         self._templates: dict[str, np.ndarray] = {}
+        self._template_metadata: dict[str, dict] = {}
+        self._last_gradient_source = "none"
         specs = {spec.name: spec for spec in DEFAULT_TARGET_MODELS}
         names = target_models or [spec.name for spec in DEFAULT_TARGET_MODELS]
         self._target_specs = {name: specs[name] for name in names if name in specs}
@@ -77,6 +81,7 @@ class NoiseInjector:
             }
             for name in self._target_order
         }
+        self.load_templates()
 
     # ------------------------------------------------------------------
     # 噪声生成
@@ -86,13 +91,14 @@ class NoiseInjector:
         self,
         image: np.ndarray,
         model_name: str = "tesseract",
+        use_template: bool = True,
     ) -> np.ndarray:
         """
         生成 FGSM 对抗噪声。
 
-        Tesseract/EasyOCR/PaddleOCR 等 OCR 引擎本身通常不可微；本 PoC
-        使用模型特定的 OCR/检测代理梯度来近似端到端攻击方向，并保留
-        模板库优先路径。生产级实现应替换为真实可微分影子模型。
+        Tesseract/EasyOCR/PaddleOCR 等 OCR 引擎本身通常不可微；本实现
+        使用本地可微影子模型计算真实输入梯度，并保留模板库优先路径。
+        若 PyTorch 不可用，才回退到传统图像代理梯度。
 
         Args:
             image: float32 (H, W, 3)，值域 [0, 1]
@@ -101,14 +107,17 @@ class NoiseInjector:
         Returns:
             float32 (H, W, 3) 基础噪声，值域 [-ε, +ε]
         """
-        template = self._get_template(model_name, image.shape[:2])
-        if template is not None:
-            return template
+        if use_template:
+            template = self._get_template(model_name, image.shape[:2])
+            if template is not None:
+                self._last_gradient_source = "template"
+                return template
 
         spec = self._get_spec(model_name)
         eps = self._effective_epsilon(spec.name)
-        grad = self._surrogate_gradient(image, spec)
-        return (eps * np.sign(grad)).clip(-eps, eps).astype(np.float32)
+        grad = self._target_gradient(image, spec)
+        signed = np.where(np.abs(grad) < 1e-6, 0.0, np.sign(grad))
+        return (eps * signed).clip(-eps, eps).astype(np.float32)
 
     def generate_pgd_noise(
         self,
@@ -118,6 +127,7 @@ class NoiseInjector:
         step_size: float | None = None,
         random_start: bool = True,
         seed: int | None = None,
+        use_template: bool = True,
     ) -> np.ndarray:
         """
         生成 PGD 对抗噪声，满足 L∞ 扰动预算。
@@ -126,9 +136,11 @@ class NoiseInjector:
         并投影回 [-ε, ε] 约束盒。该接口用于交底书 3.2.2 的 PGD
         噪声模板生成与在线更新。
         """
-        template = self._get_template(model_name, image.shape[:2])
-        if template is not None:
-            return template
+        if use_template:
+            template = self._get_template(model_name, image.shape[:2])
+            if template is not None:
+                self._last_gradient_source = "template"
+                return template
 
         spec = self._get_spec(model_name)
         eps = self._effective_epsilon(spec.name)
@@ -148,8 +160,9 @@ class NoiseInjector:
         image_f = image.astype(np.float32)
         for _ in range(max(1, iters)):
             adv = np.clip(image_f + perturb, 0.0, 1.0)
-            grad = self._surrogate_gradient(adv, spec)
-            perturb = perturb + alpha * np.sign(grad)
+            grad = self._target_gradient(adv, spec)
+            signed = np.where(np.abs(grad) < 1e-6, 0.0, np.sign(grad))
+            perturb = perturb + alpha * signed
             perturb = np.clip(perturb, -eps, eps).astype(np.float32)
         return perturb
 
@@ -172,6 +185,46 @@ class NoiseInjector:
         else:
             noise = self.generate_fgsm_noise(image, model_name=model_name)
         return noise, model_name, selected_method
+
+    def build_template(
+        self,
+        image: np.ndarray,
+        model_name: str = "tesseract",
+        method: str | None = None,
+        name: str | None = None,
+        save: bool = True,
+    ) -> tuple[np.ndarray, dict]:
+        """
+        生成并可选保存针对目标模型的对抗噪声模板。
+
+        模板不会从现有模板读取，确保离线训练/更新时基于当前影子模型重新
+        计算梯度。返回值包含模板噪声和可审计元数据。
+        """
+        spec = self._get_spec(model_name)
+        selected_method = method or self._online_state[spec.name]["preferred_method"]
+        if selected_method == "pgd":
+            noise = self.generate_pgd_noise(
+                image,
+                model_name=spec.name,
+                seed=0,
+                use_template=False,
+            )
+        else:
+            noise = self.generate_fgsm_noise(
+                image,
+                model_name=spec.name,
+                use_template=False,
+            )
+        metadata = {
+            "model_name": spec.name,
+            "method": selected_method,
+            "epsilon": float(self._effective_epsilon(spec.name)),
+            "gradient_source": self._last_gradient_source,
+            "shape_hw": list(image.shape[:2]),
+        }
+        if save:
+            self.save_template(name or spec.name, noise, metadata)
+        return noise, metadata
 
     def select_target_model(self, cycle: int | None = None) -> str:
         """选择当前周期的目标模型，覆盖 Tesseract/EasyOCR/PaddleOCR/检测模型轮换。"""
@@ -213,9 +266,58 @@ class NoiseInjector:
             self._rotation_offset = (self._rotation_offset + 1) % len(self._target_order)
         return dict(state)
 
+    def monitor_online_recognition(
+        self,
+        image: np.ndarray,
+        ground_truth: str = "",
+        model_name: str = "tesseract",
+        engine: str | None = None,
+        ocr_evaluator=None,
+        threshold: float | None = None,
+    ) -> dict:
+        """
+        运行 OCR 监测并把识别成功率反馈给在线策略。
+
+        这对应交底书中的轻量化影子监测闭环：识别率升高时自动切换到
+        PGD、提高 ε scale 并扰动频域相位。
+        """
+        if ocr_evaluator is None:
+            from src.attack.ocr_evaluator import OCREvaluator
+            ocr_evaluator = OCREvaluator()
+
+        ocr_engines = {"tesseract", "easyocr", "paddleocr"}
+        selected_engine = engine or (
+            model_name if model_name in ocr_engines else "tesseract"
+        )
+        if ground_truth:
+            result = ocr_evaluator.evaluate_single(image, ground_truth, selected_engine)
+            score = float(result.char_accuracy)
+            text = getattr(result, "text", "")
+        else:
+            text = ocr_evaluator.recognize(image, selected_engine)
+            score = 1.0 if text.strip() else 0.0
+
+        trigger_threshold = self.online_threshold if threshold is None else threshold
+        state = self.update_online_strategy(
+            model_name,
+            recognition_score=score,
+            threshold=threshold,
+        )
+        state.update({
+            "engine": selected_engine,
+            "recognized_text": text,
+            "triggered": score > trigger_threshold,
+        })
+        return state
+
     def get_online_state(self, model_name: str) -> dict:
         """返回指定模型的在线更新状态快照。"""
         return dict(self._online_state[self._get_spec(model_name).name])
+
+    @property
+    def last_gradient_source(self) -> str:
+        """最近一次噪声生成使用的梯度来源：template/shadow/surrogate。"""
+        return self._last_gradient_source
 
     def _get_spec(self, model_name: str) -> TargetModelSpec:
         return self._target_specs.get(model_name, self._target_specs["tesseract"])
@@ -235,12 +337,89 @@ class NoiseInjector:
         eps = self._effective_epsilon(self._get_spec(model_name).name)
         return np.clip(template.astype(np.float32), -eps, eps)
 
+    def get_template_metadata(self, name: str) -> dict:
+        """返回模板元数据快照；旧模板无元数据时返回空 dict。"""
+        return dict(self._template_metadata.get(name, {}))
+
+    def _target_gradient(self, image: np.ndarray, spec: TargetModelSpec) -> np.ndarray:
+        shadow = self._differentiable_shadow_gradient(image, spec)
+        if shadow is not None:
+            self._last_gradient_source = "shadow"
+            return shadow
+        self._last_gradient_source = "surrogate"
+        return self._surrogate_gradient(image, spec)
+
+    def _differentiable_shadow_gradient(
+        self,
+        image: np.ndarray,
+        spec: TargetModelSpec,
+    ) -> np.ndarray | None:
+        """
+        使用本地可微影子模型对输入求真实梯度。
+
+        OCR 影子模型优化目标是降低笔画与局部背景的对比度；检测影子模型
+        优化目标是提升边缘/纹理不稳定性。两者都通过 torch autograd 反传
+        得到 ∇_I L(f_shadow(I), y_proxy)。
+        """
+        try:
+            import torch
+            import torch.nn.functional as F
+        except ImportError:
+            return None
+
+        image_f = np.clip(image.astype(np.float32), 0.0, 1.0)
+        x = torch.from_numpy(image_f.transpose(2, 0, 1)).unsqueeze(0)
+        x = x.float()
+        x.requires_grad_(True)
+
+        rgb_weights = torch.tensor(
+            [0.299, 0.587, 0.114],
+            dtype=x.dtype,
+            device=x.device,
+        ).view(1, 3, 1, 1)
+        gray = (x * rgb_weights).sum(dim=1, keepdim=True)
+
+        # OCR strokes can be wider than a 3x3/5x5 edge neighborhood. A larger
+        # differentiable background window gives non-zero gradients across the
+        # stroke body, not only at the contour.
+        blur_size = 15
+        blur_kernel = torch.ones(
+            (1, 1, blur_size, blur_size),
+            dtype=x.dtype,
+            device=x.device,
+        ) / float(blur_size * blur_size)
+        local_mean = F.conv2d(gray, blur_kernel, padding=blur_size // 2)
+
+        if spec.family == "ocr":
+            # Maximize negative contrast energy: gradient moves strokes toward
+            # their local background, which is the OCR-relevant shadow target.
+            loss = -F.mse_loss(gray, local_mean.detach())
+        else:
+            sobel_x = torch.tensor(
+                [[[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]],
+                dtype=x.dtype,
+                device=x.device,
+            ).unsqueeze(0)
+            sobel_y = torch.tensor(
+                [[[-1, -2, -1], [0, 0, 0], [1, 2, 1]]],
+                dtype=x.dtype,
+                device=x.device,
+            ).unsqueeze(0)
+            gx = F.conv2d(gray, sobel_x, padding=1)
+            gy = F.conv2d(gray, sobel_y, padding=1)
+            loss = (gx.square() + gy.square()).mean()
+
+        loss.backward()
+        grad = x.grad.detach().squeeze(0).cpu().numpy().transpose(1, 2, 0)
+        weights = np.array(spec.color_weights, dtype=np.float32).reshape(1, 1, 3)
+        return (grad * weights).astype(np.float32)
+
     def _surrogate_gradient(self, image: np.ndarray, spec: TargetModelSpec) -> np.ndarray:
         """
-        模型特定 OCR/检测代理梯度。
+        torch 不可用时的模型特定 OCR/检测代理梯度。
 
         OCR 目标强调文字笔画边缘和高频纹理；检测目标强调连通区域边界和
-        coarse objectness。该函数提供可离线运行的可替换影子模型接口。
+        coarse objectness。正常路径应优先使用 `_differentiable_shadow_gradient`。
         """
         import cv2
 
@@ -253,12 +432,8 @@ class NoiseInjector:
         lap = cv2.Laplacian(gray, cv2.CV_32F, ksize=3)
         mag = np.sqrt(gx ** 2 + gy ** 2)
 
-        if spec.edge_axis == "x":
-            base = gx + 0.35 * lap
-        elif spec.edge_axis == "y":
-            base = gy + 0.35 * lap
-        elif spec.edge_axis == "laplace":
-            base = lap + 0.25 * (gx - gy)
+        if spec.family == "ocr":
+            base = self._ocr_contrast_attack_gradient(gray, spec)
         elif spec.edge_axis == "coarse":
             base = cv2.GaussianBlur(mag, (0, 0), 2.0) + 0.2 * lap
         else:
@@ -291,6 +466,40 @@ class NoiseInjector:
         weights = np.array(spec.color_weights, dtype=np.float32).reshape(1, 1, 3)
         grad = surrogate[:, :, None] * weights
         return grad.astype(np.float32)
+
+    def _ocr_contrast_attack_gradient(
+        self,
+        gray: np.ndarray,
+        spec: TargetModelSpec,
+    ) -> np.ndarray:
+        """
+        OCR-directed proxy gradient.
+
+        OCR engines are most sensitive to stroke/background contrast. This
+        gradient approximates the sign of a loss that reduces local text
+        contrast: dark strokes are pushed lighter and nearby bright background
+        is pushed darker. The output is still bounded by FGSM/PGD callers.
+        """
+        import cv2
+
+        sigma = float(np.clip(16.0 / max(spec.texture_frequency, 1.0), 0.75, 2.5))
+        local_mean = cv2.GaussianBlur(gray, (0, 0), sigma)
+        contrast_grad = local_mean - gray
+
+        if spec.edge_axis == "x":
+            directional = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3)
+        elif spec.edge_axis == "y":
+            directional = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=3)
+        elif spec.edge_axis == "laplace":
+            directional = cv2.Laplacian(gray, cv2.CV_32F, ksize=3)
+        else:
+            gx = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3)
+            gy = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=3)
+            directional = np.sqrt(gx ** 2 + gy ** 2)
+
+        if np.max(np.abs(directional)) > 1e-8:
+            directional = directional / (np.max(np.abs(directional)) + 1e-8)
+        return (0.85 * contrast_grad + 0.15 * directional).astype(np.float32)
 
     def _gradient_based_noise(self, image: np.ndarray) -> np.ndarray:
         """
@@ -424,14 +633,25 @@ class NoiseInjector:
     # 模板库管理
     # ------------------------------------------------------------------
 
-    def save_template(self, name: str, noise: np.ndarray) -> None:
+    def save_template(
+        self,
+        name: str,
+        noise: np.ndarray,
+        metadata: dict | None = None,
+    ) -> None:
         """保存预计算噪声模板到磁盘（npz，避免 pickle 的不安全反序列化）。"""
         if self.template_dir is None:
             return
         self.template_dir.mkdir(parents=True, exist_ok=True)
         path = self.template_dir / f"{name}.npz"
-        np.savez_compressed(path, noise=noise.astype(np.float32))
+        metadata = metadata or {}
+        np.savez_compressed(
+            path,
+            noise=noise.astype(np.float32),
+            metadata=np.array(json.dumps(metadata, ensure_ascii=False)),
+        )
         self._templates[name] = noise
+        self._template_metadata[name] = dict(metadata)
 
     def load_templates(self) -> None:
         """从磁盘加载所有噪声模板（npz）。"""
@@ -440,3 +660,11 @@ class NoiseInjector:
         for path in self.template_dir.glob("*.npz"):
             with np.load(path) as data:
                 self._templates[path.stem] = data["noise"]
+                if "metadata" in data:
+                    try:
+                        raw = str(data["metadata"].item())
+                        self._template_metadata[path.stem] = json.loads(raw)
+                    except Exception:
+                        self._template_metadata[path.stem] = {}
+                else:
+                    self._template_metadata[path.stem] = {}

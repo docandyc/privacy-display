@@ -6,6 +6,7 @@ from src.demo.privacy_window import (
     ensure_safe_refresh_rate,
     minimum_refresh_rate,
     resolve_runtime_display_config,
+    run_online_noise_monitor,
     select_output_frame,
 )
 
@@ -79,3 +80,48 @@ def test_select_output_frame_outputs_black_and_inversion_frames():
     frame, kind = select_output_frame(subframes, inversion, black, 0, 2, True, True)
     assert kind == "black"
     assert np.array_equal(frame, black)
+
+
+def test_online_noise_monitor_samples_on_configured_interval():
+    class FakeInjector:
+        def __init__(self):
+            self.calls = []
+
+        def monitor_online_recognition(
+            self,
+            protected_frame,
+            ground_truth,
+            model_name,
+            engine,
+            ocr_evaluator,
+        ):
+            self.calls.append((protected_frame, ground_truth, model_name, engine))
+            return {"triggered": True, "preferred_method": "pgd"}
+
+    injector = FakeInjector()
+    frame = np.zeros((4, 4, 3), dtype=np.uint8)
+
+    skipped = run_online_noise_monitor(
+        injector,
+        frame,
+        cycle=3,
+        enabled=True,
+        interval_cycles=2,
+    )
+    sampled = run_online_noise_monitor(
+        injector,
+        frame,
+        cycle=4,
+        enabled=True,
+        interval_cycles=2,
+        model_name="tesseract",
+        engine="tesseract",
+        ground_truth="SECRET",
+        ocr_evaluator=object(),
+    )
+
+    assert skipped is None
+    assert sampled["status"] == "sampled"
+    assert sampled["preferred_method"] == "pgd"
+    assert injector.calls[0][0] is frame
+    assert injector.calls[0][1:] == ("SECRET", "tesseract", "tesseract")
