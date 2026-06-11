@@ -1,0 +1,11 @@
+# LaTeX 构建中间产物
+*.aux
+*.log
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.xdv
+*.synctex.gz
+# 保留最终 PDF 可按需取消下一行注释
+# main.pdf

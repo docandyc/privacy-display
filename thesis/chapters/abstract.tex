@@ -1,0 +1,27 @@
+% ============ 中文摘要 ============
+\chapter*{摘\quad 要}
+\addcontentsline{toc}{chapter}{摘\quad 要}
+\markboth{摘要}{摘要}
+
+随着以 Ray-Ban Meta、Apple Vision Pro 为代表的智能眼镜快速普及，显示器上的文本、代码、账号等敏感信息面临被抽帧分析与流式识别等方式动态窃取的风险。现有防窥膜等物理遮蔽方案成本高且损害观看体验，简单高频闪烁方案易被多帧叠加破解，亟需一种无需额外硬件、对人眼无感且对多种相机采集策略有效的软件级隐私保护方案。
+
+针对上述问题，本文设计并实现了一种基于视觉暂留与时间分片掩模的显示器隐私保护系统。系统利用人眼约 50ms 视觉积分窗口与相机高速快门采样的根本差异，由 ChaCha20 密码学安全伪随机数生成器驱动，将每帧图像在时域拆分为 $n$ 个满足完备性与互斥性约束的随机点阵子帧，叠加时域互补的对抗性噪声（FGSM/PGD），并结合 Fisher-Yates 伪随机时序置换与反色帧、黑帧插入策略，使人眼积分后感知完整画面，而相机任一瞬时采样仅能获得碎片化残片。系统由掩模生成器、噪声注入器、渲染驱动器、时序控制器四个模块组成，并实现了 HDR 亮度补偿、多显示器同步与实时屏幕保护演示。
+
+实验表明：系统在 $n=4$、240Hz 配置下闪烁感知指数为 0.030（阈值 0.1）、积分还原帧相对原图的 CIEDE2000 色差 $\Delta E$ 约为 0.37（阈值 1.0），人眼视觉无感；对全局快门抽帧、流式识别、卷帘快门混合采样及插入反色帧后的长曝光攻击，Tesseract、EasyOCR、PaddleOCR 三种引擎在 12 样本语料上的单子帧字符识别率均降至 0.4\% 以下；同时本文诚实指出覆盖完整周期的时域平均攻击可还原图像这一线性方案的原理性边界，并给出缓解方向。本系统以纯软件方式验证了时间分片掩模隐私保护的可行性，对智能眼镜防护、机密信息终端等场景具有应用价值。
+
+\vspace{6mm}
+\noindent{\zihao{-3}\bfseries 关键词：}{\zihao{-4}显示器隐私保护；视觉暂留；时间分片掩模；对抗样本；光学字符识别}
+
+% ============ 英文摘要 ============
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\markboth{Abstract}{Abstract}
+
+With the rapid popularization of smart glasses represented by Ray-Ban Meta and Apple Vision Pro, sensitive information such as text, source code and account credentials displayed on screens is exposed to dynamic theft through snapshot analysis and streaming recognition. Existing physical solutions such as privacy films are costly and degrade the viewing experience, while naive high-frequency flickering can be easily defeated by temporal frame averaging. A software-only protection scheme that requires no extra hardware, remains imperceptible to human eyes and resists multiple camera capture strategies is therefore urgently needed.
+
+To address these problems, this thesis designs and implements a display privacy protection system based on persistence of vision and temporal slicing masks. Exploiting the fundamental difference between the approximately 50ms integration window of the human visual system and the high-speed shutter sampling of cameras, the system, driven by a ChaCha20 cryptographically secure pseudo-random number generator, decomposes every frame into $n$ random dot-matrix subframes satisfying completeness and exclusivity constraints, injects temporally complementary adversarial noise (FGSM/PGD), and combines Fisher-Yates pseudo-random temporal permutation with inversion-frame and black-frame insertion, so that human eyes perceive the complete image after integration while any instantaneous camera sample captures only fragmented residues. The system consists of four modules: mask generator, noise injector, render driver and timing controller, together with HDR luminance compensation, multi-display synchronization and a real-time screen protection demo.
+
+Experiments show that under the $n=4$, 240Hz configuration, the flicker perception index is 0.030 (threshold 0.1) and the CIEDE2000 color difference $\Delta E$ between the integrated frame and the original is about 0.37 (threshold 1.0), which is imperceptible to human eyes. Against global-shutter snapshots, streaming recognition, rolling-shutter mixed sampling, and long-exposure attacks with inversion frames inserted, the single-subframe character recognition accuracy of Tesseract, EasyOCR and PaddleOCR on a 12-sample corpus all drops below 0.4\%. The thesis also honestly identifies the principled boundary of linear temporal schemes—full-cycle temporal averaging can reconstruct the image—and proposes mitigation directions. The system verifies the feasibility of temporal slicing mask privacy protection in a software-only manner, and is valuable for smart-glasses defense and confidential information terminals.
+
+\vspace{6mm}
+\noindent{\zihao{-3}\bfseries Key Words: }{\zihao{-4}display privacy protection; persistence of vision; temporal slicing mask; adversarial examples; optical character recognition}
