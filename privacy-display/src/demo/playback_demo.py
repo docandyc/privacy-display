@@ -12,10 +12,14 @@
 
 import argparse
 import json
+import shutil
+import subprocess
 import sys
+import tempfile
 import time
 from collections import deque
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 
@@ -31,6 +35,9 @@ from src.demo.privacy_window import (
 
 
 ANTI_OCR_PROFILES = ("off", "strong")
+DEMO_NAMES = ("document", "cet6")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CET6_PDF_PATH = PROJECT_ROOT / "2025年6月英语六级真题(第3套).pdf"
 
 
 # ----------------------------------------------------------------------
@@ -107,6 +114,128 @@ def make_demo_document(width: int, height: int) -> np.ndarray:
             y += line_step
 
     return np.array(img, dtype=np.uint8)
+
+
+def fit_image_to_canvas(
+    image: np.ndarray,
+    width: int,
+    height: int,
+    background: tuple[int, int, int] = (245, 245, 245),
+) -> np.ndarray:
+    """等比缩放图像并居中贴到固定画布，避免 PDF/图片被拉伸变形。"""
+    if image.dtype != np.uint8 or image.ndim != 3 or image.shape[2] != 3:
+        raise ValueError("image must be uint8 HxWx3 RGB")
+    if width <= 0 or height <= 0:
+        raise ValueError("canvas size must be positive")
+
+    from PIL import Image
+
+    src_h, src_w = image.shape[:2]
+    scale = min(width / src_w, height / src_h)
+    target_w = max(1, int(round(src_w * scale)))
+    target_h = max(1, int(round(src_h * scale)))
+
+    pil = Image.fromarray(image, mode="RGB")
+    resized = pil.resize((target_w, target_h), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGB", (width, height), background)
+    x = (width - target_w) // 2
+    y = (height - target_h) // 2
+    canvas.paste(resized, (x, y))
+    return np.array(canvas, dtype=np.uint8)
+
+
+def render_pdf_page_to_canvas(
+    pdf_path: str | Path,
+    page_number: int,
+    width: int,
+    height: int,
+) -> np.ndarray:
+    """渲染 PDF 指定页并等比放入 playback 画布。"""
+    path = Path(pdf_path)
+    if not path.exists():
+        raise FileNotFoundError(f"PDF 不存在: {path}")
+    if page_number <= 0:
+        raise ValueError("pdf_page must be positive")
+
+    page = _render_pdf_page_with_pypdfium2(path, page_number, width, height)
+    if page is None:
+        page = _render_pdf_page_with_pdftoppm(path, page_number)
+    return fit_image_to_canvas(page, width, height)
+
+
+def _render_pdf_page_with_pypdfium2(
+    pdf_path: Path,
+    page_number: int,
+    width: int,
+    height: int,
+) -> np.ndarray | None:
+    try:
+        import pypdfium2 as pdfium
+    except ImportError:
+        return None
+
+    pdf = pdfium.PdfDocument(str(pdf_path))
+    try:
+        if page_number > len(pdf):
+            raise ValueError(
+                f"pdf_page {page_number} 超出范围，PDF 共 {len(pdf)} 页"
+            )
+        page = pdf[page_number - 1]
+        try:
+            page_w, page_h = page.get_size()
+            scale = max(width / page_w, height / page_h) * 2.0
+            scale = float(np.clip(scale, 1.5, 4.0))
+            image = page.render(scale=scale).to_pil().convert("RGB")
+            return np.array(image, dtype=np.uint8)
+        finally:
+            page.close()
+    finally:
+        pdf.close()
+
+
+def _render_pdf_page_with_pdftoppm(pdf_path: Path, page_number: int) -> np.ndarray:
+    exe = shutil.which("pdftoppm")
+    if exe is None:
+        raise RuntimeError(
+            "渲染 PDF 需要 pypdfium2 或 pdftoppm。请安装 pypdfium2，"
+            "或安装 Poppler 后重试。"
+        )
+
+    from PIL import Image
+
+    with tempfile.TemporaryDirectory(prefix="privacy-display-pdf-") as tmp:
+        prefix = Path(tmp) / "page"
+        proc = subprocess.run(
+            [
+                exe,
+                "-f",
+                str(page_number),
+                "-l",
+                str(page_number),
+                "-png",
+                "-r",
+                "180",
+                str(pdf_path),
+                str(prefix),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        if proc.returncode != 0:
+            raise RuntimeError(
+                f"pdftoppm 渲染失败: {proc.stderr.strip() or proc.stdout.strip()}"
+            )
+        outputs = sorted(Path(tmp).glob("page-*.png"))
+        if not outputs:
+            raise RuntimeError("pdftoppm 未生成 PNG 输出")
+        return np.array(Image.open(outputs[0]).convert("RGB"), dtype=np.uint8)
+
+
+def make_cet6_demo_document(width: int, height: int, page_number: int = 1) -> np.ndarray:
+    """加载 2025 年 6 月英语六级第 3 套真题 PDF 作为 playback 演示文档。"""
+    return render_pdf_page_to_canvas(CET6_PDF_PATH, page_number, width, height)
 
 
 def generate_cell_masks(
@@ -457,6 +586,8 @@ class PlaybackConfig:
     use_noise: bool = True
     insert_inversion: bool = False
     image_path: str | None = None
+    demo_name: str = "document"
+    pdf_page: int = 1
     benchmark_seconds: float = 0.0  # >0 时运行该秒数后自动退出并打印统计
     show_hud: bool = True
     anti_ocr_profile: str = "off"
@@ -474,6 +605,10 @@ def _load_input_image(cfg: PlaybackConfig) -> np.ndarray:
         img = Image.open(cfg.image_path).convert("RGB")
         img = img.resize((cfg.width, cfg.height))
         return np.array(img, dtype=np.uint8)
+    if cfg.demo_name == "cet6":
+        return make_cet6_demo_document(cfg.width, cfg.height, cfg.pdf_page)
+    if cfg.demo_name != "document":
+        raise ValueError(f"未知 demo: {cfg.demo_name}")
     return make_demo_document(cfg.width, cfg.height)
 
 
@@ -720,6 +855,14 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
     )
     parser.add_argument("--image", type=str, default=None,
                         help="输入图像路径（默认生成演示文档图）")
+    parser.add_argument(
+        "--demo",
+        choices=DEMO_NAMES,
+        default="document",
+        help="内置演示文档：document 为合成文档，cet6 为英语六级 PDF",
+    )
+    parser.add_argument("--pdf-page", type=int, default=1,
+                        help="--demo cet6 时展示的 PDF 页码（从 1 开始）")
     parser.add_argument("--n", type=int, default=4, help="子帧数量")
     parser.add_argument("--cycles", type=int, default=16, help="预生成周期数")
     parser.add_argument("--no-noise", action="store_true",
@@ -755,6 +898,8 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         use_noise=not args.no_noise,
         insert_inversion=args.inversion,
         image_path=args.image,
+        demo_name=args.demo,
+        pdf_page=args.pdf_page,
         benchmark_seconds=args.benchmark,
         anti_ocr_profile=args.anti_ocr_profile,
         mask_cell_size=args.mask_cell_size,

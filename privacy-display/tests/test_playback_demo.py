@@ -1,13 +1,17 @@
 """playback_demo 预计算与 CLI 解析测试（不依赖 pygame/显示环境）。"""
 
 import numpy as np
+import pytest
 
 from src.core.subframe_composer import SubframeComposer
 from src.demo.playback_demo import (
+    CET6_PDF_PATH,
     apply_anti_ocr_artifacts,
     build_playback_frames,
     extract_text_saliency_mask,
+    fit_image_to_canvas,
     generate_cell_masks,
+    make_cet6_demo_document,
     make_demo_document,
     parse_args,
 )
@@ -29,6 +33,29 @@ def test_make_demo_document_shape_and_contrast():
     assert doc.dtype == np.uint8
     assert doc.mean() > 200          # 浅色背景为主
     assert doc.min() < 80            # 含深色文字像素
+
+
+def test_fit_image_to_canvas_preserves_aspect_ratio():
+    img = np.zeros((40, 20, 3), dtype=np.uint8)
+    fitted = fit_image_to_canvas(img, width=100, height=100)
+
+    assert fitted.shape == (100, 100, 3)
+    non_bg = np.any(fitted != 245, axis=2)
+    ys, xs = np.where(non_bg)
+    assert xs.max() - xs.min() + 1 == 50
+    assert ys.max() - ys.min() + 1 == 100
+
+
+def test_make_cet6_demo_document_renders_pdf_when_available():
+    if not CET6_PDF_PATH.exists():
+        pytest.skip("CET6 demo PDF is not present in this checkout")
+
+    doc = make_cet6_demo_document(320, 180, page_number=1)
+
+    assert doc.shape == (180, 320, 3)
+    assert doc.dtype == np.uint8
+    assert doc.mean() > 220
+    assert doc.min() < 80
 
 
 def test_build_playback_frames_counts_without_inversion():
@@ -277,6 +304,8 @@ def test_parse_args_defaults():
     assert cfg.use_noise
     assert not cfg.insert_inversion
     assert cfg.image_path is None
+    assert cfg.demo_name == "document"
+    assert cfg.pdf_page == 1
     assert cfg.benchmark_seconds == 0.0
     assert cfg.anti_ocr_profile == "off"
     assert cfg.mask_cell_size == 1
@@ -317,3 +346,10 @@ def test_parse_args_anti_ocr_options():
     assert cfg.stripe_width == 9
     assert cfg.stripe_alpha == 0.7
     assert cfg.glyph_alpha == 0.8
+
+
+def test_parse_args_cet6_demo_options():
+    cfg = parse_args(["--demo", "cet6", "--pdf-page", "3"])
+
+    assert cfg.demo_name == "cet6"
+    assert cfg.pdf_page == 3
