@@ -44,7 +44,7 @@ privacy-display/
 │   └── evaluation/
 │       ├── metrics.py           # FPI / CIEDE2000 ΔE / 归一化互信息 / 亮度均匀性
 │       └── benchmark.py         # 参数扫描评测套件 + matplotlib 图表
-└── tests/                       # 127 个单元测试
+└── tests/                       # 166 个单元测试
 ```
 
 ---
@@ -59,7 +59,7 @@ source .venv/bin/activate
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
 # 目标检测实验使用：ultralytics YOLOv8n（首次运行会下载 yolov8n.pt，本地权重不提交）
 
-python -m pytest tests/ -q          # 127 项单元测试
+python -m pytest tests/ -q          # 166 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
@@ -73,6 +73,7 @@ python main.py playback --demo cet6 --pdf-page 1 --width 900 --height 1280 --n 4
 # 改进项实验（见 改进文档.md）
 python experiments/performance_benchmark.py # A4 性能实测
 python experiments/build_corpus.py          # C2 生成多样本语料
+python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)"  # 120 样本三引擎全量复测
 python experiments/ablation_noise.py        # B1 对抗噪声消融
 python experiments/detection_attack.py      # G2 YOLOv8n 目标检测攻击
 python experiments/view_attack.py           # G3 离轴相机攻击
@@ -96,7 +97,7 @@ python experiments/unet_reconstruction.py   # G5 学习型重构攻击
 | 指标 | 实测值（n=4, 240Hz, ε=8/255） | 交底书目标 | 状态 |
 |------|------|------|------|
 | FPI 闪烁感知指数 | **0.030** | <0.1 | ✓ 吻合 |
-| Delta E (CIEDE2000) | **0.006** | <1.0 | ✓ 不可感知 |
+| Delta E (CIEDE2000) | **0.37** | <1.0 | ✓ 不可感知 |
 | 噪声互补残差 ΣN_k | **0.0** | =0 | ✓ 精确 |
 | 子帧完备性误差 ΣI_k−I | **0.0** | =0 | ✓ 精确 |
 | 单帧信息保留率（互信息） | **0.15–0.35** | 0.12–0.18 | ✓ 接近 |
@@ -104,7 +105,21 @@ python experiments/unet_reconstruction.py   # G5 学习型重构攻击
 
 FPI 模型与交底书逐项吻合：240Hz/n4→0.030、480Hz/n8→0.035、144Hz/n2→0.014、360Hz/n6→0.033。
 
-### 4.2 攻击防御效果
+### 4.2 语料级 OCR 防御效果
+
+`experiments/build_corpus.py` 默认生成 120 张可复现合成语料（12 类 × 10 变体），并写入 `data/test_images/corpus_metadata.json`，支持按类别、语言、版式、字号做分层统计。`run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)` 的全量结果已保存到 `experiments/results/corpus_multi_engine.json`：
+
+| OCR 引擎 | 样本数 | 原始帧准确率 | 单子帧准确率 | 配对降幅 |
+|------|------:|------:|------:|------:|
+| Tesseract | 120 | **94.0% ± 9.1%** (95%CI 92.3%–95.5%) | **0.0% ± 0.2%** (95%CI 0.0%–0.1%) | **93.9%** (95%CI 92.3%–95.5%) |
+| EasyOCR | 120 | **94.1% ± 8.1%** (95%CI 92.7%–95.5%) | **0.0% ± 0.0%** (95%CI 0.0%–0.0%) | **94.1%** (95%CI 92.7%–95.5%) |
+| PaddleOCR | 120 | **94.9% ± 7.3%** (95%CI 93.7%–96.2%) | **0.0% ± 0.0%** (95%CI 0.0%–0.0%) | **94.9%** (95%CI 93.7%–96.2%) |
+
+补充恢复指标（单子帧）同样为 0：三引擎的词级准确率、exact-match 和敏感 token 恢复率均为 **0.0%**；敏感 token 统计覆盖 104/120 个样本。
+
+投稿前仍建议继续加入 TrOCR、手机 OCR/VLM 与真实拍摄样本，验证防护结论不局限于桌面截图与开源 OCR。
+
+### 4.3 攻击防御效果
 
 | 攻击方式 | OCR 准确率 | 防御 |
 |------|------|------|
@@ -113,8 +128,27 @@ FPI 模型与交底书逐项吻合：240Hz/n4→0.030、480Hz/n8→0.035、144Hz
 | 卷帘快门混合采样 | **0%** | ✓ 有效 |
 | 时域平均（叠加 1–3 帧，<一个周期） | **0%** | ✓ 有效 |
 | **时域平均（叠加 ≥4 帧，覆盖完整周期）** | **100%** | ✗ **失守** |
+| 相位搜索完整周期重构 | **100%** | ✗ 失守 |
+| 加权差分累加（luma/blue） | **0%** | ✓ 当前样本有效 |
+| 蓝通道 max 重构 | **100%** | ✗ 失守 |
 | 长曝光积分（无反色帧） | 100% | ✗ 失守 |
 | 长曝光积分（插入反色帧） | **0%** | ✓ 有效 |
+
+为贴近 IEEE Access 投稿所需的强攻击者模型，`CameraSimulator` 还实现了屏幕-相机通信启发的攻击基线：相位搜索重构（攻击者不知道周期起点但知道周期长度）、逐帧加权差分累加（模拟从不可见闪烁中恢复信号）、蓝通道/单通道恢复（检查颜色侧信道）。`experiments/attack_analysis.py` 会输出这些攻击的 OCR 结果、相位 offset、通道和重构分数，并保存为 `experiments/results/attack_analysis_strong_camera.json`；语料级结果另存为 `experiments/results/corpus_strong_camera_attack.json`。
+
+120 样本语料上的 Tesseract 强攻击统计如下（`n=4, ε=8/255, cycles=2, OCR timeout=4s`）：
+
+| 攻击方式 | 字符恢复率 | exact-match | 敏感 token 恢复率 | 泄露率（字符≥20%） |
+|------|------:|------:|------:|------:|
+| 全局快门单帧 | 0.0% | 0.0% | 0.0% | 0.0% |
+| 加权差分累加（luma/blue） | 0.0% | 0.0% | 0.0% | 0.0% |
+| 完整周期时域平均 | 94.3% | 85.8% | 98.4% | 100.0% |
+| 相位搜索均值重构 | 94.2% | 87.5% | 97.2% | 100.0% |
+| 相位搜索最大值重构 | 94.3% | 85.8% | 96.4% | 100.0% |
+| 蓝通道最大值重构 | 95.0% | 90.0% | 98.3% | 100.0% |
+| 最强攻击逐样本择优 | **95.2%** | **91.7%** | **98.6%** | **100.0%** |
+
+这组负结果是论文安全声明的边界：系统对被动抽帧、逐帧流式识别、卷帘快门和不足完整周期的短曝光有效，但不能宣称防御主动连续录制后的完整周期积分、相位搜索或单通道最大值重构。
 
 ---
 
@@ -143,7 +177,7 @@ PoC 确认方案对以下**主流威胁仍然有效**：
 - **卷帘快门**：逐行混合多子帧 → 0%。
 - **长曝光**：配合反色帧插入 → 0%。
 
-即覆盖了交底书背景技术中描述的 Ray-Ban Meta 等设备的**两种实际采集策略**。只有"主动连续录制完整周期 + 精确帧对齐 + 时域平均"这一更强的离线攻击能突破，而这超出了被动抽帧/流式识别的威胁模型。
+即覆盖了交底书背景技术中描述的 Ray-Ban Meta 等设备的**两种实际采集策略**。新增强攻击者结果进一步表明：只要攻击者能连续录制并做完整周期平均、相位搜索或逐通道 max 重构，内容仍会泄露；120 样本上逐样本最强攻击字符恢复率为 95.2%，泄露率为 100%，而加权差分累加仍未恢复 OCR。这一结果应作为论文中的边界证据，而不是回避：本方案防御被动抽帧/流式逐帧识别，但不宣称防御主动完整周期视频重构。
 
 ### 5.3 可行缓解方向（未来工作）
 

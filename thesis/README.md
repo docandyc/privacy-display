@@ -12,7 +12,7 @@ latexmk -xelatex main.tex      # 自动跑两遍生成目录
 # 或手动：xelatex main.tex && xelatex main.tex
 ```
 
-输出 `main.pdf`（约 34 页）。
+输出 `main.pdf`（约 35 页）。
 
 ## 结构
 
@@ -44,4 +44,4 @@ thesis/
 
 1. **封面信息**：补学号、姓名、指导教师。
 2. **参考文献**：当前为真实可查的国际文献与标准（17 条，外文为主，满足"≥15 篇、外文≥2 篇"）。学校要求参考文献须与**开题报告/任务书一致**，请据此增删并核对页码、补充本课题相关中文文献。
-3. **实验数字口径**：全文已统一引用固定 benchmark/语料结果（FPI 0.030、ΔE≈0.37、多引擎单子帧 OCR ≤0.4%、完整周期叠加 100%），与 `privacy-display/experiments/results/*.json` 一致；若重跑实验请同步更新。
+3. **实验数字口径**：全文已统一引用固定 benchmark/语料结果（FPI 0.030、ΔE≈0.37、Tesseract/EasyOCR/PaddleOCR 均为 120 样本全量复测，单子帧 OCR 约 0.0%、bootstrap 95%CI 上界低于 0.1%、配对降幅 93.9%--94.9%、单子帧词级准确率/exact-match/敏感 token 恢复率均为 0.0%、完整周期叠加 100%、120 样本强攻击逐样本择优字符恢复率 95.2%、敏感 token 恢复率 98.6%），与 `privacy-display/experiments/results/*.json` 一致；若重跑实验请同步更新。

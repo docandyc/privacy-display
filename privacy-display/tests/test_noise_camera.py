@@ -154,3 +154,86 @@ def test_rolling_shutter_rows_follow_readout_time():
 
     assert int(captured[0, 0, 0]) == 0
     assert int(captured[1, 0, 0]) == 100
+
+
+def test_phase_search_recovery_finds_complete_cycle_window():
+    cam = CameraSimulator()
+    original = np.zeros((8, 8, 3), dtype=np.uint8)
+    original[:, :4] = [180, 90, 40]
+    original[:, 4:] = [20, 150, 220]
+    masks = [
+        np.tile(np.array([[1, 0], [0, 0]], dtype=bool), (4, 4)),
+        np.tile(np.array([[0, 1], [0, 0]], dtype=bool), (4, 4)),
+        np.tile(np.array([[0, 0], [1, 0]], dtype=bool), (4, 4)),
+        np.tile(np.array([[0, 0], [0, 1]], dtype=bool), (4, 4)),
+    ]
+    subframes = [(original * mask[..., None]).astype(np.uint8) for mask in masks]
+    # Prefix noise frame makes the correct cycle start at offset 1.
+    sequence = [np.zeros_like(original)] + subframes + [np.zeros_like(original)]
+
+    recovered, meta = cam.phase_search_recovery_attack(
+        sequence,
+        window_size=4,
+        method="mean",
+        restore_brightness=True,
+    )
+
+    assert meta["best_offset"] == 1
+    assert meta["window_size"] == 4
+    assert np.mean(np.abs(recovered.astype(np.int16) - original.astype(np.int16))) < 1.0
+
+
+def test_weighted_differential_accumulator_reports_channel_metadata():
+    cam = CameraSimulator()
+    dark = np.zeros((8, 8, 3), dtype=np.uint8)
+    blue = dark.copy()
+    blue[:, 2:6, 2] = 220
+    frames = [dark, blue, dark, blue]
+
+    recovered, meta = cam.weighted_differential_accumulator_attack(
+        frames,
+        channel="blue",
+    )
+
+    assert recovered.shape == dark.shape
+    assert recovered.dtype == np.uint8
+    assert meta["channel"] == "blue"
+    assert meta["frames"] == 4
+    assert recovered[:, 2:6].mean() > recovered[:, :2].mean()
+
+
+def test_screen_camera_attack_suite_returns_publication_baselines():
+    cam = CameraSimulator()
+    original = np.full((6, 6, 3), 120, dtype=np.uint8)
+    subframes = [
+        original * np.array([[[1]], [[0]], [[0]], [[1]], [[0]], [[0]]], dtype=np.uint8),
+        original * np.array([[[0]], [[1]], [[0]], [[0]], [[1]], [[0]]], dtype=np.uint8),
+        original * np.array([[[0]], [[0]], [[1]], [[0]], [[0]], [[1]]], dtype=np.uint8),
+    ]
+
+    suite = cam.screen_camera_attack_suite(subframes, cycle_length=3)
+
+    assert {
+        "phase_search_mean",
+        "phase_search_max",
+        "differential_luma",
+        "differential_blue",
+        "blue_channel_max",
+    }.issubset(suite)
+    for entry in suite.values():
+        assert entry["frame"].shape == original.shape
+        assert "metadata" in entry and "score" in entry["metadata"]
+
+
+def test_screen_camera_attack_rejects_invalid_inputs():
+    cam = CameraSimulator()
+    frame = np.zeros((2, 2, 3), dtype=np.uint8)
+
+    with pytest.raises(ValueError):
+        cam.phase_search_recovery_attack([], window_size=1)
+    with pytest.raises(ValueError):
+        cam.phase_search_recovery_attack([frame], window_size=2)
+    with pytest.raises(ValueError):
+        cam.weighted_differential_accumulator_attack([frame])
+    with pytest.raises(ValueError):
+        cam.channel_selective_recovery_attack([frame], channel="alpha")

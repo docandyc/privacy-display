@@ -194,6 +194,275 @@ class CameraSimulator:
         )
         return stacked.clip(0, 255).astype(np.uint8)
 
+    def phase_search_recovery_attack(
+        self,
+        frame_sequence: list[np.ndarray],
+        window_size: int | None = None,
+        method: str = "mean",
+        restore_brightness: bool = True,
+    ) -> tuple[np.ndarray, dict]:
+        """
+        强相机攻击者的相位搜索重构。
+
+        屏幕-相机通信文献里的解码器通常不会假设已知帧边界，而是先在视频流
+        中搜索同步相位。本攻击模拟同样能力：攻击者知道一个完整保护周期包含
+        `window_size` 个输出槽，但不知道周期起点，于是枚举所有连续窗口，选择
+        对比度/边缘能量最高的重构结果。
+
+        Args:
+            frame_sequence: 连续采集到的屏幕帧
+            window_size: 一个候选完整周期的帧数；None 时使用全部帧
+            method: "mean"、"max" 或 "median"
+            restore_brightness: mean/median 会因时间平均变暗，是否按窗口长度放大
+
+        Returns:
+            (best_frame, metadata)
+        """
+        if not frame_sequence:
+            raise ValueError("frame_sequence must not be empty")
+        if window_size is None:
+            window_size = len(frame_sequence)
+        if window_size <= 0 or window_size > len(frame_sequence):
+            raise ValueError("window_size must be in [1, len(frame_sequence)]")
+        if method not in {"mean", "max", "median"}:
+            raise ValueError("method must be one of {'mean', 'max', 'median'}")
+
+        best_frame = None
+        best_score = -1.0
+        best_offset = 0
+        best_metrics: dict = {}
+
+        for offset in range(0, len(frame_sequence) - window_size + 1):
+            window = frame_sequence[offset:offset + window_size]
+            candidate = self._combine_frames(
+                window,
+                method=method,
+                restore_brightness=restore_brightness,
+            )
+            score, metrics = self._reconstruction_score(candidate)
+            if score > best_score:
+                best_frame = candidate
+                best_score = score
+                best_offset = offset
+                best_metrics = metrics
+
+        assert best_frame is not None  # for type checkers
+        metadata = {
+            "attack": "phase_search_recovery",
+            "method": method,
+            "window_size": int(window_size),
+            "best_offset": int(best_offset),
+            "score": float(best_score),
+            **best_metrics,
+        }
+        return best_frame, metadata
+
+    def weighted_differential_accumulator_attack(
+        self,
+        frame_sequence: list[np.ndarray],
+        channel: str = "luma",
+        normalize: bool = True,
+    ) -> tuple[np.ndarray, dict]:
+        """
+        屏幕-相机通信式差分累加攻击。
+
+        DeepLight/Revelio/BRIGHTNESS 一类工作说明：相机可以从人眼不明显的
+        时域亮度/颜色变化中恢复信号。该攻击不直接平均帧，而是累加相邻帧
+        差分，突出稳定内容边界和周期性调制痕迹；`channel="blue"` 用于检查
+        蓝通道是否形成可被相机利用的侧信道。
+        """
+        if len(frame_sequence) < 2:
+            raise ValueError("frame_sequence must contain at least two frames")
+        if channel not in {"luma", "red", "green", "blue"}:
+            raise ValueError("channel must be one of {'luma', 'red', 'green', 'blue'}")
+
+        planes = [self._select_channel(frame, channel) for frame in frame_sequence]
+        accum = np.zeros_like(planes[0], dtype=np.float32)
+        total_weight = 0.0
+        for prev, cur in zip(planes, planes[1:]):
+            diff = cur.astype(np.float32) - prev.astype(np.float32)
+            weight = float(np.std(cur) + np.std(prev) + 1e-6)
+            accum += np.abs(diff) * weight
+            total_weight += weight
+
+        if total_weight > 0:
+            accum /= total_weight
+        if normalize:
+            accum = self._normalize_plane(accum)
+        else:
+            accum = np.clip(accum, 0, 255)
+
+        frame = np.repeat(accum[..., None], 3, axis=2).astype(np.uint8)
+        score, metrics = self._reconstruction_score(frame)
+        metadata = {
+            "attack": "weighted_differential_accumulator",
+            "channel": channel,
+            "frames": len(frame_sequence),
+            "score": float(score),
+            **metrics,
+        }
+        return frame, metadata
+
+    def channel_selective_recovery_attack(
+        self,
+        frame_sequence: list[np.ndarray],
+        channel: str = "blue",
+        method: str = "max",
+    ) -> tuple[np.ndarray, dict]:
+        """
+        单通道恢复攻击。
+
+        屏幕-相机通信方案常利用人眼对不同颜色通道的敏感度差异。防御端若
+        在某一通道上留下更稳定的残差信息，相机可只用该通道做重构。
+        """
+        if not frame_sequence:
+            raise ValueError("frame_sequence must not be empty")
+        if channel not in {"luma", "red", "green", "blue"}:
+            raise ValueError("channel must be one of {'luma', 'red', 'green', 'blue'}")
+        if method not in {"mean", "max", "median"}:
+            raise ValueError("method must be one of {'mean', 'max', 'median'}")
+
+        planes = [self._select_channel(frame, channel) for frame in frame_sequence]
+        stack = np.stack([p.astype(np.float32) for p in planes], axis=0)
+        if method == "mean":
+            recovered = np.mean(stack, axis=0)
+        elif method == "max":
+            recovered = np.max(stack, axis=0)
+        else:
+            recovered = np.median(stack, axis=0)
+        recovered = self._normalize_plane(recovered)
+        frame = np.repeat(recovered[..., None], 3, axis=2).astype(np.uint8)
+        score, metrics = self._reconstruction_score(frame)
+        metadata = {
+            "attack": "channel_selective_recovery",
+            "channel": channel,
+            "method": method,
+            "frames": len(frame_sequence),
+            "score": float(score),
+            **metrics,
+        }
+        return frame, metadata
+
+    def screen_camera_attack_suite(
+        self,
+        frame_sequence: list[np.ndarray],
+        cycle_length: int,
+    ) -> dict:
+        """
+        运行一组屏幕-相机通信启发的强攻击基线。
+
+        返回的帧可继续交给 OCR/VLM/SSIM 评估；metadata 记录窗口、通道与
+        重构分数，便于写论文中的攻击矩阵。
+        """
+        if cycle_length <= 0:
+            raise ValueError("cycle_length must be positive")
+        attacks: dict[str, dict] = {}
+
+        phase_mean, phase_mean_meta = self.phase_search_recovery_attack(
+            frame_sequence,
+            window_size=min(cycle_length, len(frame_sequence)),
+            method="mean",
+            restore_brightness=True,
+        )
+        phase_max, phase_max_meta = self.phase_search_recovery_attack(
+            frame_sequence,
+            window_size=min(cycle_length, len(frame_sequence)),
+            method="max",
+            restore_brightness=False,
+        )
+        diff_luma, diff_luma_meta = self.weighted_differential_accumulator_attack(
+            frame_sequence,
+            channel="luma",
+        )
+        diff_blue, diff_blue_meta = self.weighted_differential_accumulator_attack(
+            frame_sequence,
+            channel="blue",
+        )
+        blue_max, blue_max_meta = self.channel_selective_recovery_attack(
+            frame_sequence,
+            channel="blue",
+            method="max",
+        )
+
+        for name, frame, meta in [
+            ("phase_search_mean", phase_mean, phase_mean_meta),
+            ("phase_search_max", phase_max, phase_max_meta),
+            ("differential_luma", diff_luma, diff_luma_meta),
+            ("differential_blue", diff_blue, diff_blue_meta),
+            ("blue_channel_max", blue_max, blue_max_meta),
+        ]:
+            attacks[name] = {"frame": frame, "metadata": meta}
+        return attacks
+
+    @staticmethod
+    def _combine_frames(
+        frames: list[np.ndarray],
+        method: str,
+        restore_brightness: bool,
+    ) -> np.ndarray:
+        stack = np.stack([f.astype(np.float32) for f in frames], axis=0)
+        if method == "mean":
+            combined = np.mean(stack, axis=0)
+        elif method == "max":
+            combined = np.max(stack, axis=0)
+        elif method == "median":
+            combined = np.median(stack, axis=0)
+        else:
+            raise ValueError("unsupported combine method")
+        if restore_brightness and method in {"mean", "median"}:
+            combined *= len(frames)
+        return np.clip(combined, 0, 255).astype(np.uint8)
+
+    @staticmethod
+    def _select_channel(frame: np.ndarray, channel: str) -> np.ndarray:
+        if frame.ndim != 3 or frame.shape[-1] < 3:
+            raise ValueError("frame must be H×W×3")
+        f = frame.astype(np.float32)
+        if channel == "red":
+            return f[..., 0]
+        if channel == "green":
+            return f[..., 1]
+        if channel == "blue":
+            return f[..., 2]
+        if channel == "luma":
+            return 0.2126 * f[..., 0] + 0.7152 * f[..., 1] + 0.0722 * f[..., 2]
+        raise ValueError("unsupported channel")
+
+    @staticmethod
+    def _normalize_plane(plane: np.ndarray) -> np.ndarray:
+        p = plane.astype(np.float32)
+        lo = float(np.percentile(p, 1))
+        hi = float(np.percentile(p, 99))
+        if hi <= lo + 1e-6:
+            return np.zeros_like(p, dtype=np.uint8)
+        norm = (p - lo) * (255.0 / (hi - lo))
+        return np.clip(norm, 0, 255).astype(np.uint8)
+
+    @staticmethod
+    def _reconstruction_score(frame: np.ndarray) -> tuple[float, dict]:
+        f = frame.astype(np.float32)
+        gray = (
+            0.2126 * f[..., 0] + 0.7152 * f[..., 1] + 0.0722 * f[..., 2]
+            if frame.ndim == 3
+            else f
+        )
+        contrast = float(np.std(gray))
+        gx = np.diff(gray, axis=1)
+        gy = np.diff(gray, axis=0)
+        edge_energy = float(np.mean(np.abs(gx)) + np.mean(np.abs(gy)))
+        coverage = float(np.mean(gray > 1.0))
+        saturation = float(np.mean(gray > 254.0))
+        # 攻击者不只偏好高对比，也偏好覆盖完整且不过度椒盐化的候选窗口。
+        # 错误相位常保留随机掩模的高频边缘，视觉上很"硬"但并非好重构，
+        # 因此边缘能量和过曝饱和都作为负信号。
+        score = 300.0 * coverage + contrast - edge_energy - 100.0 * saturation
+        return score, {
+            "contrast": contrast,
+            "edge_energy": edge_energy,
+            "coverage": coverage,
+            "saturation": saturation,
+        }
+
     def off_axis_temporal_average_attack(
         self,
         subframes: list[np.ndarray],
@@ -408,6 +677,14 @@ class CameraSimulator:
             "temporal_avg_16": self.temporal_averaging_attack(subframes, 16),
             "long_exposure_no_inv": self.long_exposure_attack(subframes, None, 4),
         }
+        attack_metadata: dict[str, dict] = {}
+        if len(subframes) >= 2:
+            for name, entry in self.screen_camera_attack_suite(
+                subframes,
+                cycle_length=len(subframes),
+            ).items():
+                attacks[name] = entry["frame"]
+                attack_metadata[name] = entry["metadata"]
         if inversion_frames:
             attacks["long_exposure_with_inv"] = self.long_exposure_attack(
                 subframes, inversion_frames, 4
@@ -415,7 +692,7 @@ class CameraSimulator:
 
         results = {}
         for attack_name, frame in attacks.items():
-            entry: dict = {}
+            entry: dict = dict(attack_metadata.get(attack_name, {}))
 
             # PSNR（与原始图像的相似度，越低说明防御越好）
             mse = np.mean((original.astype(float) - frame.astype(float)) ** 2)

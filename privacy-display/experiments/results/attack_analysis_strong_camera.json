@@ -1,0 +1,921 @@
+{
+  "config": {
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "display_rate_hz": 240,
+    "ocr_engine": "tesseract",
+    "ground_truth": "The quick brown fox 12345 PASSWORD"
+  },
+  "baseline": {
+    "char_accuracy": 1.0,
+    "text": "The quick brown fox 12345 PASSWORD"
+  },
+  "global_shutter_single": [
+    {
+      "slot": 0,
+      "char_accuracy": 0.0,
+      "text": ""
+    },
+    {
+      "slot": 1,
+      "char_accuracy": 0.0,
+      "text": ""
+    },
+    {
+      "slot": 2,
+      "char_accuracy": 0.0,
+      "text": ""
+    },
+    {
+      "slot": 3,
+      "char_accuracy": 0.0,
+      "text": ""
+    }
+  ],
+  "temporal_average": {
+    "1": {
+      "char_accuracy": 0.0,
+      "text": "",
+      "status": "defended"
+    },
+    "2": {
+      "char_accuracy": 0.0,
+      "text": "",
+      "status": "defended"
+    },
+    "3": {
+      "char_accuracy": 0.0,
+      "text": "",
+      "status": "defended"
+    },
+    "4": {
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD",
+      "status": "leaked"
+    },
+    "8": {
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD",
+      "status": "leaked"
+    },
+    "16": {
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD",
+      "status": "leaked"
+    }
+  },
+  "screen_camera_strong_attacker": {
+    "phase_search_mean": {
+      "attack": "phase_search_recovery",
+      "method": "mean",
+      "window_size": 4,
+      "best_offset": 4,
+      "score": 236.01338926951092,
+      "contrast": 39.20997619628906,
+      "edge_energy": 9.382784843444824,
+      "coverage": 1.0,
+      "saturation": 0.9381380208333333,
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD",
+      "status": "leaked"
+    },
+    "phase_search_max": {
+      "attack": "phase_search_recovery",
+      "method": "max",
+      "window_size": 4,
+      "best_offset": 0,
+      "score": 330.8386402130127,
+      "contrast": 42.96753692626953,
+      "edge_energy": 12.128896713256836,
+      "coverage": 1.0,
+      "saturation": 0.0,
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD",
+      "status": "leaked"
+    },
+    "differential_luma": {
+      "attack": "weighted_differential_accumulator",
+      "channel": "luma",
+      "frames": 8,
+      "score": 255.6067632039388,
+      "contrast": 58.595970153808594,
+      "edge_energy": 98.29910278320312,
+      "coverage": 0.9879166666666667,
+      "saturation": 0.010651041666666666,
+      "char_accuracy": 0.0,
+      "text": "",
+      "status": "defended"
+    },
+    "differential_blue": {
+      "attack": "weighted_differential_accumulator",
+      "channel": "blue",
+      "frames": 8,
+      "score": 254.44847997029623,
+      "contrast": 60.34097671508789,
+      "edge_energy": 101.096923828125,
+      "coverage": 0.9879296875,
+      "saturation": 0.011744791666666667,
+      "char_accuracy": 0.0,
+      "text": "",
+      "status": "defended"
+    },
+    "blue_channel_max": {
+      "attack": "channel_selective_recovery",
+      "channel": "blue",
+      "method": "max",
+      "frames": 8,
+      "score": 324.36949157714844,
+      "contrast": 49.19570541381836,
+      "edge_energy": 13.798870086669922,
+      "coverage": 0.9738151041666666,
+      "saturation": 0.03171875,
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD",
+      "status": "leaked"
+    }
+  },
+  "rolling_shutter": {
+    "char_accuracy": 0.0,
+    "text": "",
+    "contaminated_rows": 120,
+    "total_rows": 120
+  },
+  "long_exposure": {
+    "without_inversion": {
+      "char_accuracy": 1.0,
+      "text": "The quick brown fox 12345 PASSWORD"
+    },
+    "with_inversion": {
+      "char_accuracy": 0.0,
+      "text": ""
+    }
+  },
+  "corpus_strong_attacker": {
+    "result_path": "experiments/results/corpus_strong_camera_attack.json",
+    "config": {
+      "n": 4,
+      "epsilon": 0.03137254901960784,
+      "cycles": 2,
+      "engine": "tesseract",
+      "n_samples": 120,
+      "with_noise": true,
+      "ocr_timeout": 4.0,
+      "leak_threshold_char_accuracy": 0.2
+    },
+    "summary": {
+      "attacks": {
+        "blue_channel_max": {
+          "char_accuracy": {
+            "mean": 0.9496981680792753,
+            "std": 0.07997591893887912,
+            "count": 120,
+            "ci95": {
+              "low": 0.9348367599202065,
+              "high": 0.962818615707736,
+              "half_width": 0.013990927893764715,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.9383928571428571,
+            "std": 0.19992382395201902,
+            "count": 120,
+            "ci95": {
+              "low": 0.8983328373015873,
+              "high": 0.9704816468253968,
+              "half_width": 0.036074404761904766,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.9,
+            "std": 0.3,
+            "count": 120,
+            "ci95": {
+              "low": 0.8416666666666667,
+              "high": 0.95,
+              "half_width": 0.05416666666666664,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.9831730769230769,
+              "std": 0.07698565163197109,
+              "count": 104,
+              "ci95": {
+                "low": 0.9679286858974357,
+                "high": 0.9967948717948717,
+                "half_width": 0.014433092948717974,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 26.298854874752614,
+            "std": 2.4501245948687065,
+            "count": 120,
+            "ci95": {
+              "low": 25.85443680529699,
+              "high": 26.738075089106893,
+              "half_width": 0.44181914190495064,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 299.0840002006441,
+            "std": 19.831013970224536,
+            "count": 120,
+            "ci95": {
+              "low": 295.3794040116879,
+              "high": 302.6930416043904,
+              "half_width": 3.6568187963512457,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 1.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 1.0,
+              "high": 1.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "differential_blue": {
+          "char_accuracy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.0,
+              "std": 0.0,
+              "count": 104,
+              "ci95": {
+                "low": 0.0,
+                "high": 0.0,
+                "half_width": 0.0,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 12.693051635093308,
+            "std": 0.9213344668425004,
+            "count": 120,
+            "ci95": {
+              "low": 12.524004033307593,
+              "high": 12.844692227653836,
+              "half_width": 0.16034409717312137,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 247.1754516261204,
+            "std": 6.844861133802029,
+            "count": 120,
+            "ci95": {
+              "low": 245.9332146162832,
+              "high": 248.39724227833167,
+              "half_width": 1.2320138310242328,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "differential_luma": {
+          "char_accuracy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.0,
+              "std": 0.0,
+              "count": 104,
+              "ci95": {
+                "low": 0.0,
+                "high": 0.0,
+                "half_width": 0.0,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 12.616158438641168,
+            "std": 0.9703033963319829,
+            "count": 120,
+            "ci95": {
+              "low": 12.438225258513532,
+              "high": 12.777943058326063,
+              "half_width": 0.16985889990626557,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 247.75374871634048,
+            "std": 6.580783695461227,
+            "count": 120,
+            "ci95": {
+              "low": 246.52344448125038,
+              "high": 248.94348939357818,
+              "half_width": 1.2100224561638981,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "global_shutter_slot0": {
+          "char_accuracy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.0,
+              "std": 0.0,
+              "count": 104,
+              "ci95": {
+                "low": 0.0,
+                "high": 0.0,
+                "half_width": 0.0,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 2.225177891433471,
+            "std": 0.17045800434534208,
+            "count": 120,
+            "ci95": {
+              "low": 2.19524754486232,
+              "high": 2.25603127798192,
+              "half_width": 0.030391866559799974,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "phase_search_max": {
+          "char_accuracy": {
+            "mean": 0.9431662258352589,
+            "std": 0.08729157541510407,
+            "count": 120,
+            "ci95": {
+              "low": 0.9271164354909741,
+              "high": 0.9581809867873129,
+              "half_width": 0.015532275648169391,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.9126984126984128,
+            "std": 0.2459813696505643,
+            "count": 120,
+            "ci95": {
+              "low": 0.8661021825396826,
+              "high": 0.951530753968254,
+              "half_width": 0.042714285714285705,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.8583333333333333,
+            "std": 0.3487079325484613,
+            "count": 120,
+            "ci95": {
+              "low": 0.7916666666666666,
+              "high": 0.9166666666666666,
+              "half_width": 0.0625,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.9639423076923077,
+              "std": 0.15537228824230181,
+              "count": 104,
+              "ci95": {
+                "low": 0.9310697115384614,
+                "high": 0.9887820512820512,
+                "half_width": 0.0288561698717949,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 29.987852630049563,
+            "std": 0.31436250698723084,
+            "count": 120,
+            "ci95": {
+              "low": 29.930997609625006,
+              "high": 30.04142730367186,
+              "half_width": 0.05521484702342683,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 314.12536121556474,
+            "std": 14.2314624942738,
+            "count": 120,
+            "ci95": {
+              "low": 311.614147984086,
+              "high": 316.6161555320278,
+              "half_width": 2.5010037739708935,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 1.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 1.0,
+              "high": 1.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "phase_search_mean": {
+          "char_accuracy": {
+            "mean": 0.9417352075749722,
+            "std": 0.09858655928388133,
+            "count": 120,
+            "ci95": {
+              "low": 0.9232958047026468,
+              "high": 0.9575487233399018,
+              "half_width": 0.017126459318627496,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.9240873015873016,
+            "std": 0.22411330770696783,
+            "count": 120,
+            "ci95": {
+              "low": 0.8820466269841271,
+              "high": 0.9608333333333333,
+              "half_width": 0.03939335317460313,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.875,
+            "std": 0.33071891388307384,
+            "count": 120,
+            "ci95": {
+              "low": 0.8166666666666667,
+              "high": 0.9333333333333333,
+              "half_width": 0.05833333333333335,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.9719551282051283,
+              "std": 0.12796200906636238,
+              "count": 104,
+              "ci95": {
+                "low": 0.9454927884615384,
+                "high": 0.9927884615384616,
+                "half_width": 0.023647836538461586,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 23.990848114245914,
+            "std": 1.9999507024017216,
+            "count": 120,
+            "ci95": {
+              "low": 23.628506888757517,
+              "high": 24.33374464656282,
+              "half_width": 0.35261887890265164,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 228.2514484775453,
+            "std": 5.501708092450289,
+            "count": 120,
+            "ci95": {
+              "low": 227.28243736480385,
+              "high": 229.27494632169473,
+              "half_width": 0.9962544784454366,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 1.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 1.0,
+              "high": 1.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "temporal_average_cycle": {
+          "char_accuracy": {
+            "mean": 0.9429731017326212,
+            "std": 0.09042512736390024,
+            "count": 120,
+            "ci95": {
+              "low": 0.9263559141473603,
+              "high": 0.9585676490876898,
+              "half_width": 0.016105867470164736,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "word_accuracy": {
+            "mean": 0.9114315776815777,
+            "std": 0.24819673737532358,
+            "count": 120,
+            "ci95": {
+              "low": 0.8648812229437229,
+              "high": 0.9533409692159691,
+              "half_width": 0.04422987313612309,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "exact_match": {
+            "mean": 0.8583333333333333,
+            "std": 0.3487079325484613,
+            "count": 120,
+            "ci95": {
+              "low": 0.7916666666666666,
+              "high": 0.9166666666666666,
+              "half_width": 0.0625,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "sensitive_token_recall": {
+            "n_samples_with_sensitive_tokens": 104,
+            "stats": {
+              "mean": 0.9839362026862027,
+              "std": 0.07210031231591396,
+              "count": 104,
+              "ci95": {
+                "low": 0.9689770299145299,
+                "high": 0.9962225274725275,
+                "half_width": 0.013622748778998772,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resamples": 2000
+              }
+            }
+          },
+          "psnr_db": {
+            "mean": 3.55922637071714,
+            "std": 0.16945607272364802,
+            "count": 120,
+            "ci95": {
+              "low": 3.5295495880517,
+              "high": 3.5902826647962396,
+              "half_width": 0.03036653837226977,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "reconstruction_score": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          },
+          "leak_rate_char_ge_20pct": {
+            "mean": 1.0,
+            "std": 0.0,
+            "count": 120,
+            "ci95": {
+              "low": 1.0,
+              "high": 1.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        }
+      },
+      "best_attack_per_sample": {
+        "char_accuracy": {
+          "mean": 0.9516994553519442,
+          "std": 0.0788567253992116,
+          "count": 120,
+          "ci95": {
+            "low": 0.9377993016863504,
+            "high": 0.965205844006534,
+            "half_width": 0.01370327116009179,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.9458928571428571,
+          "std": 0.19344437407117418,
+          "count": 120,
+          "ci95": {
+            "low": 0.9090853174603175,
+            "high": 0.9777033730158731,
+            "half_width": 0.03430902777777778,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.9166666666666666,
+          "std": 0.2763853991962833,
+          "count": 120,
+          "ci95": {
+            "low": 0.8666666666666667,
+            "high": 0.9583333333333334,
+            "half_width": 0.04583333333333334,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 104,
+          "stats": {
+            "mean": 0.9863782051282052,
+            "std": 0.0703989100308419,
+            "count": 104,
+            "ci95": {
+              "low": 0.970352564102564,
+              "high": 0.9975961538461539,
+              "half_width": 0.013621794871794934,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "leak_rate_char_ge_20pct": {
+          "mean": 1.0,
+          "std": 0.0,
+          "count": 120,
+          "ci95": {
+            "low": 1.0,
+            "high": 1.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "attack_wins": {
+          "blue_channel_max": 2,
+          "differential_blue": 0,
+          "differential_luma": 0,
+          "global_shutter_slot0": 0,
+          "phase_search_max": 0,
+          "phase_search_mean": 7,
+          "temporal_average_cycle": 111
+        }
+      }
+    }
+  }
+}

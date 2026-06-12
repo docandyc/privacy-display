@@ -6,6 +6,7 @@ OCR 准确率评估器
 """
 
 import numpy as np
+import re
 from dataclasses import dataclass
 
 
@@ -48,14 +49,67 @@ def _word_accuracy(pred: str, ref: str) -> float:
     return max(0.0, 1.0 - wer)
 
 
+def _normalize_for_match(text: str) -> str:
+    """Normalize OCR text for exact-match style recovery checks."""
+    return re.sub(r"\s+", "", text).casefold()
+
+
+def _sensitive_tokens(text: str) -> list[str]:
+    """
+    Extract credential-like or structured tokens for sensitive-field recovery.
+
+    Natural-language words are intentionally excluded; this metric focuses on
+    fields an attacker would care about recovering exactly, such as numbers,
+    email/URL/path fragments, keys, and account identifiers.
+    """
+    tokens = re.findall(r"[A-Za-z0-9_@:/.$¥?&=%+\-]+", text)
+    out: list[str] = []
+    for token in tokens:
+        stripped = token.strip(".,;:()[]{}<>\"'")
+        if len(stripped) < 2:
+            continue
+        has_digit = any(ch.isdigit() for ch in stripped)
+        has_special = any(ch in stripped for ch in "@:/.$¥?&=%+_-")
+        has_mixed_case = any(ch.islower() for ch in stripped) and any(ch.isupper() for ch in stripped)
+        is_long_id = len(stripped) >= 8 and any(ch.isalpha() for ch in stripped)
+        if has_digit or has_special or has_mixed_case or is_long_id:
+            norm = _normalize_for_match(stripped)
+            if norm and norm not in out:
+                out.append(norm)
+    return out
+
+
+def _sensitive_token_recall(pred: str, ref: str) -> tuple[float, int]:
+    tokens = _sensitive_tokens(ref)
+    if not tokens:
+        return 0.0, 0
+    pred_norm = _normalize_for_match(pred)
+    recovered = sum(1 for token in tokens if token in pred_norm)
+    return recovered / len(tokens), len(tokens)
+
+
+def text_recovery_metrics(pred: str, ref: str) -> dict:
+    """Return OCR recovery metrics for an already recognized text string."""
+    sensitive_recall, sensitive_count = _sensitive_token_recall(pred, ref)
+    return {
+        "char_accuracy": _char_accuracy(pred, ref),
+        "word_accuracy": _word_accuracy(pred, ref),
+        "exact_match": _normalize_for_match(pred) == _normalize_for_match(ref),
+        "sensitive_token_recall": sensitive_recall,
+        "sensitive_token_count": sensitive_count,
+    }
+
+
 class OCREvaluator:
-    def __init__(self, engines: list[str] | None = None):
+    def __init__(self, engines: list[str] | None = None, timeout: float | None = 10.0):
         """
         Args:
             engines: 使用的 OCR 引擎列表，可选 'tesseract', 'easyocr', 'paddleocr'
                      None 时自动检测可用引擎
+            timeout: 单次 OCR 调用超时时间（秒）；None 表示不设置超时
         """
         self.engines = engines or self._detect_available_engines()
+        self.timeout = timeout
         self._easyocr_reader = None
         self._paddleocr_reader = None
 
@@ -83,7 +137,10 @@ class OCREvaluator:
         import pytesseract
         from PIL import Image
         pil_img = Image.fromarray(image)
-        return pytesseract.image_to_string(pil_img, lang="chi_sim+eng").strip()
+        kwargs = {"lang": "chi_sim+eng"}
+        if self.timeout is not None:
+            kwargs["timeout"] = self.timeout
+        return pytesseract.image_to_string(pil_img, **kwargs).strip()
 
     def _run_easyocr(self, image: np.ndarray) -> str:
         import easyocr
@@ -205,15 +262,38 @@ class OCREvaluator:
         sf_results = [self.evaluate_single(sf, ground_truth, engine) for sf in subframes]
 
         mean_sf_acc = float(np.mean([r.char_accuracy for r in sf_results]))
+        mean_sf_word_acc = float(np.mean([r.word_accuracy for r in sf_results]))
         reduction = orig_result.char_accuracy - mean_sf_acc
+        orig_recovery = text_recovery_metrics(orig_result.text, ground_truth)
+        subframe_recovery = [
+            text_recovery_metrics(r.text, ground_truth) for r in sf_results
+        ]
 
         return {
             "engine": engine,
             "original_char_acc": orig_result.char_accuracy,
+            "original_word_acc": orig_result.word_accuracy,
+            "original_exact_match": orig_recovery["exact_match"],
+            "original_sensitive_token_recall": orig_recovery["sensitive_token_recall"],
             "original_text": orig_result.text,
             "subframe_char_accs": [r.char_accuracy for r in sf_results],
+            "subframe_word_accs": [r.word_accuracy for r in sf_results],
+            "subframe_exact_matches": [
+                recovery["exact_match"] for recovery in subframe_recovery
+            ],
+            "subframe_sensitive_token_recalls": [
+                recovery["sensitive_token_recall"] for recovery in subframe_recovery
+            ],
             "subframe_texts": [r.text for r in sf_results],
             "mean_subframe_acc": mean_sf_acc,
+            "mean_subframe_word_acc": mean_sf_word_acc,
+            "mean_subframe_exact_match": float(
+                np.mean([recovery["exact_match"] for recovery in subframe_recovery])
+            ),
+            "mean_subframe_sensitive_token_recall": float(np.mean([
+                recovery["sensitive_token_recall"] for recovery in subframe_recovery
+            ])),
+            "sensitive_token_count": orig_recovery["sensitive_token_count"],
             "accuracy_reduction": reduction,
             "reduction_percent": reduction * 100,
             "protection_effective": mean_sf_acc < 0.20,  # 目标 <20%

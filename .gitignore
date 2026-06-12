@@ -11,12 +11,7 @@ secrets/
 # 编辑器 / IDE
 .vscode/
 .idea/
-.cursor/
-.claude/
-.agents/
-.agent/
-.codex/
-.gemini/
+
 .github/
 __pycache__/
 .pytest_cache/
