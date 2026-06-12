@@ -30,6 +30,9 @@ from src.demo.privacy_window import (
 )
 
 
+ANTI_OCR_PROFILES = ("off", "strong")
+
+
 # ----------------------------------------------------------------------
 # 预计算部分（纯函数，不依赖 pygame）
 # ----------------------------------------------------------------------
@@ -106,6 +109,179 @@ def make_demo_document(width: int, height: int) -> np.ndarray:
     return np.array(img, dtype=np.uint8)
 
 
+def generate_cell_masks(
+    width: int,
+    height: int,
+    n: int,
+    cycle: int,
+    cell_size: int,
+    key: bytes | None = None,
+) -> list[np.ndarray]:
+    """
+    生成大颗粒互补掩模：以 cell 为单位随机分配，再放大到像素网格。
+
+    每个像素仍恰好属于一个子帧槽位，保持互斥/完备性；随机性继续复用
+    MaskGenerator 的 ChaCha20 + 拒绝采样路径，避免另写有偏随机逻辑。
+    """
+    if width <= 0 or height <= 0:
+        raise ValueError("width and height must be positive")
+    if cell_size <= 0:
+        raise ValueError("cell_size must be positive")
+    if cell_size == 1:
+        return MaskGenerator(width, height, n, key=key).generate(cycle)
+
+    cell_w = int(np.ceil(width / cell_size))
+    cell_h = int(np.ceil(height / cell_size))
+    coarse = MaskGenerator(cell_w, cell_h, n, key=key).generate(cycle)
+    return [
+        np.repeat(np.repeat(mask, cell_size, axis=0), cell_size, axis=1)[
+            :height, :width
+        ]
+        for mask in coarse
+    ]
+
+
+def _dilate_bool(mask: np.ndarray, radius: int) -> np.ndarray:
+    """小半径布尔膨胀，避免在纯函数测试里依赖 OpenCV。"""
+    if radius <= 0:
+        return mask.copy()
+
+    h, w = mask.shape
+    padded = np.pad(mask, radius, mode="constant", constant_values=False)
+    out = np.zeros((h, w), dtype=bool)
+    for dy in range(2 * radius + 1):
+        for dx in range(2 * radius + 1):
+            out |= padded[dy:dy + h, dx:dx + w]
+    return out
+
+
+def extract_text_saliency_mask(image: np.ndarray) -> np.ndarray:
+    """
+    提取疑似文字/边缘区域，用于把强扰动限制在 OCR 最关心的位置。
+
+    文档场景通常是浅底深字；这里用亮度分位数估计背景，再叠加梯度边缘，
+    不调用 OCR 或检测模型，保证预生成阶段可离线、可单测。
+    """
+    if image.dtype != np.uint8 or image.ndim != 3 or image.shape[2] != 3:
+        raise ValueError("image must be uint8 HxWx3 RGB")
+
+    gray = image.astype(np.float32).mean(axis=2)
+    background = float(np.percentile(gray, 85))
+    dark_threshold = min(210.0, max(40.0, background - 35.0))
+    dark = gray <= dark_threshold
+
+    grad = np.zeros_like(gray)
+    grad[:, 1:] = np.maximum(grad[:, 1:], np.abs(gray[:, 1:] - gray[:, :-1]))
+    grad[1:, :] = np.maximum(grad[1:, :], np.abs(gray[1:, :] - gray[:-1, :]))
+    edge = grad >= 22.0
+
+    return _dilate_bool(dark | edge, radius=1)
+
+
+def _stripe_mask(
+    shape: tuple[int, int],
+    cycle: int,
+    slot: int,
+    stripe_width: int,
+) -> np.ndarray:
+    if stripe_width <= 0:
+        raise ValueError("stripe_width must be positive")
+
+    h, w = shape
+    yy, xx = np.indices((h, w))
+    period = max(2, stripe_width * 2)
+    phase = (cycle * stripe_width + slot * max(1, stripe_width // 2)) % period
+    if (cycle + slot) % 2 == 0:
+        coord = xx + phase
+    else:
+        coord = yy + phase
+    return ((coord // stripe_width) % 2) == 0
+
+
+def _blend_where(
+    frame_f: np.ndarray,
+    mask: np.ndarray,
+    target: np.ndarray,
+    alpha: float,
+) -> None:
+    if alpha <= 0 or not np.any(mask):
+        return
+    frame_f[mask] = frame_f[mask] * (1.0 - alpha) + target * alpha
+
+
+def apply_anti_ocr_artifacts(
+    frame: np.ndarray,
+    original: np.ndarray,
+    saliency_mask: np.ndarray,
+    cycle: int,
+    slot: int,
+    stripe_width: int,
+    stripe_alpha: float,
+    glyph_alpha: float,
+) -> np.ndarray:
+    """
+    对单个预生成子帧叠加 OCR 对抗伪影。
+
+    - 条纹：奇偶 slot 切换横/竖方向，制造手机采样和滚动快门别名。
+    - 字形扰动：对暗笔画打孔、在邻域生成假笔画，让平均后的字符边缘变脏。
+    """
+    if frame.dtype != np.uint8 or original.dtype != np.uint8:
+        raise ValueError("frame and original must be uint8")
+    if frame.shape != original.shape:
+        raise ValueError("frame and original must have the same shape")
+    if saliency_mask.shape != frame.shape[:2]:
+        raise ValueError("saliency_mask shape must match frame")
+    if not (0.0 <= stripe_alpha <= 1.0):
+        raise ValueError("stripe_alpha must be in [0, 1]")
+    if not (0.0 <= glyph_alpha <= 1.0):
+        raise ValueError("glyph_alpha must be in [0, 1]")
+
+    out = frame.astype(np.float32)
+    h, w = saliency_mask.shape
+    yy, xx = np.indices((h, w))
+    stripe = _stripe_mask((h, w), cycle, slot, stripe_width)
+    stroke = saliency_mask
+    halo = _dilate_bool(stroke, radius=2)
+    near_stroke = halo & ~stroke
+
+    flat = original.reshape(-1, 3).astype(np.float32)
+    background_rgb = np.percentile(flat, 92, axis=0).astype(np.float32)
+    if np.any(stroke):
+        ink_rgb = np.percentile(original[stroke].astype(np.float32), 12, axis=0)
+    else:
+        ink_rgb = np.zeros(3, dtype=np.float32)
+
+    stripe_region = _dilate_bool(stroke, radius=max(1, stripe_width // 2))
+    _blend_where(out, stripe_region & stripe, ink_rgb, stripe_alpha)
+    _blend_where(out, stroke & ~stripe, background_rgb, stripe_alpha * 0.55)
+
+    erase = stroke & (((xx + 2 * yy + cycle + slot) % 5) == 0)
+    fake = near_stroke & (((3 * xx + 5 * yy + 2 * cycle + slot) % 7) <= 1)
+    _blend_where(out, erase, background_rgb, glyph_alpha)
+    _blend_where(out, fake, ink_rgb, glyph_alpha)
+
+    return np.clip(out, 0, 255).astype(np.uint8)
+
+
+def _validate_anti_ocr_options(
+    profile: str,
+    mask_cell_size: int,
+    stripe_width: int,
+    stripe_alpha: float,
+    glyph_alpha: float,
+) -> None:
+    if profile not in ANTI_OCR_PROFILES:
+        raise ValueError(f"anti_ocr_profile must be one of {ANTI_OCR_PROFILES}")
+    if mask_cell_size <= 0:
+        raise ValueError("mask_cell_size must be positive")
+    if stripe_width <= 0:
+        raise ValueError("stripe_width must be positive")
+    if not (0.0 <= stripe_alpha <= 1.0):
+        raise ValueError("stripe_alpha must be in [0, 1]")
+    if not (0.0 <= glyph_alpha <= 1.0):
+        raise ValueError("glyph_alpha must be in [0, 1]")
+
+
 def build_playback_frames(
     image: np.ndarray,
     n: int,
@@ -114,6 +290,11 @@ def build_playback_frames(
     insert_inversion: bool = False,
     use_noise: bool = True,
     key: bytes | None = None,
+    anti_ocr_profile: str = "off",
+    mask_cell_size: int = 3,
+    stripe_width: int = 6,
+    stripe_alpha: float = 0.45,
+    glyph_alpha: float = 0.55,
 ) -> tuple[list[tuple[np.ndarray, str]], dict]:
     """
     对静态图像离线预生成全部回放子帧。
@@ -131,6 +312,11 @@ def build_playback_frames(
         insert_inversion: 每周期末插入反色帧（长曝光防御）
         use_noise: False 时跳过噪声（pedestal=0）
         key: 32 字节掩模密钥，None 时随机生成（传入固定 key 可复现）
+        anti_ocr_profile: "off" 保持原行为，"strong" 启用 OCR 对抗伪影
+        mask_cell_size: strong 模式下的掩模颗粒边长（像素）
+        stripe_width: strong 模式下条纹宽度（像素）
+        stripe_alpha: strong 模式下条纹混合强度
+        glyph_alpha: strong 模式下字形打孔/假笔画强度
 
     Returns:
         (frames, meta)：frames 为 [(uint8 帧, kind)]，kind ∈
@@ -141,6 +327,13 @@ def build_playback_frames(
         raise ValueError("image 须为 uint8 (H, W, 3) RGB 数组")
     if cycles <= 0:
         raise ValueError(f"cycles 须为正，实际为 {cycles}")
+    _validate_anti_ocr_options(
+        anti_ocr_profile,
+        mask_cell_size,
+        stripe_width,
+        stripe_alpha,
+        glyph_alpha,
+    )
 
     h, w = image.shape[:2]
     gen = MaskGenerator(w, h, n, key=key)
@@ -152,9 +345,24 @@ def build_playback_frames(
     permutations: list[list[int]] = []
     noise_schedule: list[dict] = []
     pedestal = 0.0
+    saliency_mask = (
+        extract_text_saliency_mask(image)
+        if anti_ocr_profile == "strong"
+        else None
+    )
 
     for cycle in range(cycles):
-        masks = gen.generate(cycle)
+        if anti_ocr_profile == "strong":
+            masks = generate_cell_masks(
+                w,
+                h,
+                n,
+                cycle,
+                mask_cell_size,
+                key=gen.key,
+            )
+        else:
+            masks = gen.generate(cycle)
         perm = gen.generate_permutation(cycle)
         permutations.append(list(perm))
 
@@ -187,8 +395,20 @@ def build_playback_frames(
                 )
 
         subframes = composer.compose(image, masks, sub_noises)
-        for idx in perm:
-            frames.append((subframes[idx], "subframe"))
+        for slot, idx in enumerate(perm):
+            frame = subframes[idx]
+            if anti_ocr_profile == "strong":
+                frame = apply_anti_ocr_artifacts(
+                    frame,
+                    image,
+                    saliency_mask,
+                    cycle,
+                    slot,
+                    stripe_width,
+                    stripe_alpha,
+                    glyph_alpha,
+                )
+            frames.append((frame, "subframe"))
         if insert_inversion:
             frames.append((composer.compose_inversion_frame(image), "inversion"))
 
@@ -202,6 +422,16 @@ def build_playback_frames(
         "per_cycle_slots": n + (1 if insert_inversion else 0),
         "permutations": permutations,
         "noise_schedule": noise_schedule,
+        "anti_ocr": {
+            "profile": anti_ocr_profile,
+            "mask_cell_size": mask_cell_size,
+            "stripe_width": stripe_width,
+            "stripe_alpha": stripe_alpha,
+            "glyph_alpha": glyph_alpha,
+            "saliency_pixels": (
+                int(saliency_mask.sum()) if saliency_mask is not None else 0
+            ),
+        },
     }
     return frames, meta
 
@@ -223,6 +453,11 @@ class PlaybackConfig:
     image_path: str | None = None
     benchmark_seconds: float = 0.0  # >0 时运行该秒数后自动退出并打印统计
     show_hud: bool = True
+    anti_ocr_profile: str = "off"
+    mask_cell_size: int = 3
+    stripe_width: int = 6
+    stripe_alpha: float = 0.45
+    glyph_alpha: float = 0.55
 
 
 def _load_input_image(cfg: PlaybackConfig) -> np.ndarray:
@@ -296,6 +531,11 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         epsilon=cfg.epsilon,
         insert_inversion=cfg.insert_inversion,
         use_noise=cfg.use_noise,
+        anti_ocr_profile=cfg.anti_ocr_profile,
+        mask_cell_size=cfg.mask_cell_size,
+        stripe_width=cfg.stripe_width,
+        stripe_alpha=cfg.stripe_alpha,
+        glyph_alpha=cfg.glyph_alpha,
     )
 
     # convert 必须在 set_mode 之后；转换完丢弃 numpy 帧引用以省内存
@@ -325,6 +565,15 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         f"refresh={target_refresh}Hz  vsync={int(vsync_enabled)}  "
         f"noise={int(cfg.use_noise)}  inversion={int(cfg.insert_inversion)}",
     ))
+    anti = meta["anti_ocr"]
+    if anti["profile"] != "off":
+        static_surfs.append(_render_hud_line(
+            pygame,
+            font,
+            f"anti-ocr={anti['profile']}  cell={anti['mask_cell_size']}px  "
+            f"stripe={anti['stripe_width']}px/{anti['stripe_alpha']:.2f}  "
+            f"glyph={anti['glyph_alpha']:.2f}",
+        ))
     static_surfs.append(_render_hud_line(
         pygame,
         font,
@@ -470,6 +719,20 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
                         help="运行指定秒数后自动退出并打印 JSON 统计")
     parser.add_argument("--width", type=int, default=1280, help="窗口宽度")
     parser.add_argument("--height", type=int, default=720, help="窗口高度")
+    parser.add_argument(
+        "--anti-ocr-profile",
+        choices=ANTI_OCR_PROFILES,
+        default="off",
+        help="反 OCR 预生成档位：off 保持原行为，strong 加强手机 OCR 抑制",
+    )
+    parser.add_argument("--mask-cell-size", type=int, default=3,
+                        help="strong 模式下随机掩模颗粒边长（像素）")
+    parser.add_argument("--stripe-width", type=int, default=6,
+                        help="strong 模式下条纹宽度（像素）")
+    parser.add_argument("--stripe-alpha", type=float, default=0.45,
+                        help="strong 模式下条纹混合强度 [0,1]")
+    parser.add_argument("--glyph-alpha", type=float, default=0.55,
+                        help="strong 模式下字形打孔/假笔画强度 [0,1]")
     args = parser.parse_args(argv)
 
     return PlaybackConfig(
@@ -481,6 +744,11 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         insert_inversion=args.inversion,
         image_path=args.image,
         benchmark_seconds=args.benchmark,
+        anti_ocr_profile=args.anti_ocr_profile,
+        mask_cell_size=args.mask_cell_size,
+        stripe_width=args.stripe_width,
+        stripe_alpha=args.stripe_alpha,
+        glyph_alpha=args.glyph_alpha,
     )
 
 

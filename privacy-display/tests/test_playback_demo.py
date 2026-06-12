@@ -4,7 +4,10 @@ import numpy as np
 
 from src.core.subframe_composer import SubframeComposer
 from src.demo.playback_demo import (
+    apply_anti_ocr_artifacts,
     build_playback_frames,
+    extract_text_saliency_mask,
+    generate_cell_masks,
     make_demo_document,
     parse_args,
 )
@@ -114,6 +117,113 @@ def test_build_playback_frames_is_deterministic_with_same_key():
         assert np.array_equal(fa, fb)
 
 
+def test_explicit_anti_ocr_off_matches_default_output():
+    img = _small_test_image()
+
+    default_frames, default_meta = build_playback_frames(
+        img, n=2, cycles=2, key=KEY, use_noise=False
+    )
+    off_frames, off_meta = build_playback_frames(
+        img,
+        n=2,
+        cycles=2,
+        key=KEY,
+        use_noise=False,
+        anti_ocr_profile="off",
+    )
+
+    assert default_meta["anti_ocr"]["profile"] == "off"
+    assert off_meta["anti_ocr"]["profile"] == "off"
+    for (fa, ka), (fb, kb) in zip(default_frames, off_frames):
+        assert ka == kb
+        assert np.array_equal(fa, fb)
+
+
+def test_generate_cell_masks_are_deterministic_and_complete():
+    masks_a = generate_cell_masks(
+        width=17, height=13, n=4, cycle=5, cell_size=3, key=KEY
+    )
+    masks_b = generate_cell_masks(
+        width=17, height=13, n=4, cycle=5, cell_size=3, key=KEY
+    )
+
+    total = sum(mask.astype(np.int32) for mask in masks_a)
+    assert np.all(total == 1)
+    for a, b in zip(masks_a, masks_b):
+        assert np.array_equal(a, b)
+
+    assignment = np.argmax(np.stack(masks_a, axis=0), axis=0)
+    assert np.all(assignment[:3, :3] == assignment[0, 0])
+
+
+def test_strong_profile_changes_frames_and_records_metadata():
+    img = make_demo_document(320, 180)
+    off_frames, _ = build_playback_frames(
+        img, n=2, cycles=1, key=KEY, use_noise=False
+    )
+    strong_frames, meta = build_playback_frames(
+        img,
+        n=2,
+        cycles=1,
+        key=KEY,
+        use_noise=False,
+        anti_ocr_profile="strong",
+        mask_cell_size=3,
+        stripe_width=5,
+        stripe_alpha=0.5,
+        glyph_alpha=0.6,
+    )
+
+    anti = meta["anti_ocr"]
+    assert anti["profile"] == "strong"
+    assert anti["mask_cell_size"] == 3
+    assert anti["stripe_width"] == 5
+    assert anti["stripe_alpha"] == 0.5
+    assert anti["glyph_alpha"] == 0.6
+    assert anti["saliency_pixels"] > 0
+    assert any(
+        not np.array_equal(a[0], b[0])
+        for a, b in zip(off_frames, strong_frames)
+    )
+
+
+def test_strong_profile_disrupts_integrated_glyph_regions():
+    img = make_demo_document(320, 180)
+    frames, meta = build_playback_frames(
+        img,
+        n=2,
+        cycles=1,
+        key=KEY,
+        use_noise=False,
+        anti_ocr_profile="strong",
+        stripe_width=5,
+        stripe_alpha=0.6,
+        glyph_alpha=0.7,
+    )
+
+    subframes = [frame for frame, kind in frames if kind == "subframe"]
+    integrated = SubframeComposer(n=2, gamma=1.0).integrate_subframes(
+        subframes,
+        pedestal=meta["pedestal"],
+    )
+    saliency = extract_text_saliency_mask(img)
+    diff = np.abs(integrated.astype(np.int16) - img.astype(np.int16))
+
+    assert float(diff[saliency].mean()) > 8.0
+
+
+def test_apply_anti_ocr_artifacts_is_deterministic():
+    img = make_demo_document(160, 90)
+    frame = img.copy()
+    saliency = extract_text_saliency_mask(img)
+
+    a = apply_anti_ocr_artifacts(frame, img, saliency, 1, 2, 5, 0.4, 0.5)
+    b = apply_anti_ocr_artifacts(frame, img, saliency, 1, 2, 5, 0.4, 0.5)
+
+    assert np.array_equal(a, b)
+    assert not np.array_equal(a, frame)
+
+
 def test_parse_args_defaults():
     cfg = parse_args([])
 
@@ -143,3 +253,19 @@ def test_parse_args_overrides():
     assert cfg.width == 640
     assert cfg.height == 360
     assert cfg.image_path == "doc.png"
+
+
+def test_parse_args_anti_ocr_options():
+    cfg = parse_args([
+        "--anti-ocr-profile", "strong",
+        "--mask-cell-size", "4",
+        "--stripe-width", "9",
+        "--stripe-alpha", "0.7",
+        "--glyph-alpha", "0.8",
+    ])
+
+    assert cfg.anti_ocr_profile == "strong"
+    assert cfg.mask_cell_size == 4
+    assert cfg.stripe_width == 9
+    assert cfg.stripe_alpha == 0.7
+    assert cfg.glyph_alpha == 0.8
