@@ -18,7 +18,6 @@ secrets/
 .codex/
 .gemini/
 .github/
-.trellis/
 __pycache__/
 .pytest_cache/
 .venv/
