@@ -336,6 +336,8 @@ def build_playback_frames(
         stripe_alpha,
         glyph_alpha,
     )
+    effective_insert_inversion = insert_inversion and anti_ocr_profile != "strong"
+    inversion_suppressed = bool(insert_inversion and not effective_insert_inversion)
 
     h, w = image.shape[:2]
     gen = MaskGenerator(w, h, n, key=key)
@@ -411,7 +413,7 @@ def build_playback_frames(
                     glyph_alpha,
                 )
             frames.append((frame, "subframe"))
-        if insert_inversion:
+        if effective_insert_inversion:
             frames.append((composer.compose_inversion_frame(image), "inversion"))
 
     meta = {
@@ -420,8 +422,10 @@ def build_playback_frames(
         "epsilon": epsilon,
         "pedestal": pedestal,
         "use_noise": use_noise,
-        "insert_inversion": insert_inversion,
-        "per_cycle_slots": n + (1 if insert_inversion else 0),
+        "requested_inversion": insert_inversion,
+        "insert_inversion": effective_insert_inversion,
+        "inversion_suppressed": inversion_suppressed,
+        "per_cycle_slots": n + (1 if effective_insert_inversion else 0),
         "permutations": permutations,
         "noise_schedule": noise_schedule,
         "anti_ocr": {
@@ -565,8 +569,14 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         font,
         f"n={cfg.n}  cycles={cfg.cycles}  slots/cycle={per_cycle_slots}  "
         f"refresh={target_refresh}Hz  vsync={int(vsync_enabled)}  "
-        f"noise={int(cfg.use_noise)}  inversion={int(cfg.insert_inversion)}",
+        f"noise={int(cfg.use_noise)}  inversion={int(meta['insert_inversion'])}",
     ))
+    if meta.get("inversion_suppressed"):
+        static_surfs.append(_render_hud_line(
+            pygame,
+            font,
+            "inversion requested but suppressed for readable playback",
+        ))
     anti = meta["anti_ocr"]
     if anti["profile"] != "off":
         static_surfs.append(_render_hud_line(

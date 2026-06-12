@@ -187,6 +187,26 @@ def test_strong_profile_changes_frames_and_records_metadata():
     )
 
 
+def test_strong_profile_suppresses_equal_duration_inversion_for_readability():
+    img = make_demo_document(320, 180)
+    frames, meta = build_playback_frames(
+        img,
+        n=4,
+        cycles=2,
+        key=KEY,
+        use_noise=False,
+        insert_inversion=True,
+        anti_ocr_profile="strong",
+    )
+
+    assert meta["requested_inversion"] is True
+    assert meta["insert_inversion"] is False
+    assert meta["inversion_suppressed"] is True
+    assert meta["per_cycle_slots"] == 4
+    assert len(frames) == 2 * 4
+    assert all(kind == "subframe" for _, kind in frames)
+
+
 def test_strong_profile_disrupts_integrated_glyph_regions():
     img = make_demo_document(320, 180)
     frames, meta = build_playback_frames(
