@@ -64,6 +64,8 @@ python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
 python main.py window               # 实时屏幕保护演示（默认 n=2@120Hz，需 pygame+mss）
+python main.py playback             # 人眼端回放演示（240Hz 屏，预生成子帧后纯 vsync 回放）
+python main.py playback --n 4 --cycles 16 --inversion --benchmark 5   # 带参示例
 
 # 改进项实验（见 改进文档.md）
 python experiments/performance_benchmark.py # A4 性能实测
@@ -175,3 +177,4 @@ PoC 确认方案对以下**主流威胁仍然有效**：
 - **HDR 补偿是数值 PoC，不是真实 HDR 输出链路**：`hdr_compensation.py` 实现 PQ/HLG、ICtCp 软裁剪与峰值亮度 headroom；`SubframeComposer` 在 HDR 模式下按 `peak_nits/content_peak_nits` 做 HDR 感知积分回归。普通 SDR 窗口仍不能输出真实 PQ/HLG 帧，真实 HDR framebuffer/系统色彩管理接入属于未来工作。
 - **噪声基底电平（pedestal）**：屏幕无法显示负光，黑像素处的负噪声会被裁剪而破坏 `ΣN_k=0`。给每个子帧加基底 `ε` 留出下探空间、积分时扣除，代价是黑位抬升 `ε/255` 的微小对比度损失。
 - **FPI 模型核心**：随机点阵的空间相位随机化使人眼感受野汇聚后调制深度按 `1/√N` 衰减——这是随机掩模优于全屏高频闪烁方案的数学依据。
+- **回放演示模式（`main.py playback`）**：实时窗口每周期要做截屏+掩模+噪声+合成（~190ms），在任何硬件上都到不了 120/240Hz，因此只能作为**攻击者视角**演示器。playback 模式对静态测试图离线预生成全部子帧，播放循环只做 blit+vsync，是**人眼端**演示器——在 `f_r ≥ 60n` 的高刷屏（n=4 需 240Hz）上可真实呈现人眼视觉积分后的完整画面（按 O 键可切换未保护原图对比）。现场注意两点：① Windows 上先在"显示设置 → 高级显示"确认面板确实跑在 240Hz；② 用手机拍摄"防拍"效果需用专业模式短曝光（≤1/500s）——自动模式的长曝光会积分完整周期还原画面，这正是本文已记录的长曝光局限，可开 `--inversion` 插入反色帧对抗。

@@ -5,6 +5,7 @@
   python main.py demo          # 生成对比图（不需要 OCR 依赖）
   python main.py benchmark     # 运行完整评测（需要 tesseract）
   python main.py window        # 启动实时显示演示（需要 pygame+mss）
+  python main.py playback      # 人眼端回放演示（预生成子帧后纯 vsync 回放，需 pygame）
   python main.py test-noise    # 验证对抗噪声互补性
 """
 
@@ -169,6 +170,12 @@ def cmd_window():
     win.run()
 
 
+def cmd_playback():
+    """启动预生成回放演示（人眼端效果，需 f_r >= 60n 高刷新率屏）。"""
+    from src.demo import playback_demo
+    playback_demo.main(sys.argv[2:])
+
+
 def cmd_test_noise():
     """快速验证对抗噪声互补性。"""
     print("\n=== 对抗噪声互补性验证 ===")
@@ -184,6 +191,7 @@ COMMANDS = {
     "demo": cmd_demo,
     "benchmark": cmd_benchmark,
     "window": cmd_window,
+    "playback": cmd_playback,
     "test-noise": cmd_test_noise,
 }
 
