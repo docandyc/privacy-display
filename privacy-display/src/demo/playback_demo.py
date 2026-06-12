@@ -34,10 +34,40 @@ from src.demo.privacy_window import (
 )
 
 
-ANTI_OCR_PROFILES = ("off", "strong")
+ANTI_OCR_PROFILES = ("off", "strong", "vlm")
 DEMO_NAMES = ("document", "cet6")
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CET6_PDF_PATH = PROJECT_ROOT / "2025年6月英语六级真题(第3套).pdf"
+
+
+@dataclass(frozen=True)
+class AntiOcrOptions:
+    mask_cell_size: int
+    stripe_width: int
+    stripe_alpha: float
+    glyph_alpha: float
+
+
+ANTI_OCR_PROFILE_DEFAULTS = {
+    "off": AntiOcrOptions(
+        mask_cell_size=1,
+        stripe_width=10,
+        stripe_alpha=0.18,
+        glyph_alpha=0.22,
+    ),
+    "strong": AntiOcrOptions(
+        mask_cell_size=1,
+        stripe_width=10,
+        stripe_alpha=0.18,
+        glyph_alpha=0.22,
+    ),
+    "vlm": AntiOcrOptions(
+        mask_cell_size=2,
+        stripe_width=6,
+        stripe_alpha=0.42,
+        glyph_alpha=0.55,
+    ),
+}
 
 
 # ----------------------------------------------------------------------
@@ -347,13 +377,19 @@ def apply_anti_ocr_artifacts(
     stripe_width: int,
     stripe_alpha: float,
     glyph_alpha: float,
+    profile: str = "strong",
 ) -> np.ndarray:
     """
     对单个预生成子帧叠加 OCR 对抗伪影。
 
     - 条纹：奇偶 slot 切换横/竖方向，制造手机采样和滚动快门别名。
     - 字形扰动：对暗笔画打孔、在邻域生成假笔画，让平均后的字符边缘变脏。
+    - VLM 档：在文字邻域加入更密集的伪笔画网格，降低拍照后版面重建稳定性。
     """
+    if profile == "off":
+        return frame.copy()
+    if profile not in {"strong", "vlm"}:
+        raise ValueError("profile must be one of {'strong', 'vlm'}")
     if frame.dtype != np.uint8 or original.dtype != np.uint8:
         raise ValueError("frame and original must be uint8")
     if frame.shape != original.shape:
@@ -391,7 +427,57 @@ def apply_anti_ocr_artifacts(
     _blend_where(out, erase, background_rgb, glyph_alpha)
     _blend_where(out, fake, ink_rgb, glyph_alpha)
 
+    if profile == "vlm":
+        wide_halo = _dilate_bool(stroke, radius=4)
+        far_halo = wide_halo & ~halo
+        fine_period = max(3, stripe_width // 2)
+        diagonal_period = max(5, stripe_width)
+        block = max(2, stripe_width // 3)
+        mesh = (
+            ((xx + 2 * cycle + 3 * slot) % fine_period == 0)
+            | ((yy + 3 * cycle + 5 * slot) % fine_period == 0)
+            | ((xx + yy + 5 * cycle + 7 * slot) % diagonal_period <= 1)
+        )
+        checker = (((xx // block) + (yy // block) + cycle + slot) % 2) == 0
+        fracture = stroke & checker
+        veil = far_halo & ~checker & (((2 * xx + yy + cycle + 3 * slot) % 5) <= 1)
+
+        _blend_where(out, (wide_halo & ~stroke) & mesh, ink_rgb,
+                     min(1.0, stripe_alpha * 1.35))
+        _blend_where(out, fracture, background_rgb, min(1.0, glyph_alpha * 0.85))
+        _blend_where(out, veil, ink_rgb, min(1.0, glyph_alpha * 0.55))
+
     return np.clip(out, 0, 255).astype(np.uint8)
+
+
+def resolve_anti_ocr_options(
+    profile: str,
+    mask_cell_size: int | None = None,
+    stripe_width: int | None = None,
+    stripe_alpha: float | None = None,
+    glyph_alpha: float | None = None,
+) -> AntiOcrOptions:
+    """合并 profile 默认值与用户显式覆盖值，并统一做参数校验。"""
+    if profile not in ANTI_OCR_PROFILES:
+        raise ValueError(f"anti_ocr_profile must be one of {ANTI_OCR_PROFILES}")
+
+    defaults = ANTI_OCR_PROFILE_DEFAULTS[profile]
+    options = AntiOcrOptions(
+        mask_cell_size=(
+            defaults.mask_cell_size if mask_cell_size is None else mask_cell_size
+        ),
+        stripe_width=defaults.stripe_width if stripe_width is None else stripe_width,
+        stripe_alpha=defaults.stripe_alpha if stripe_alpha is None else stripe_alpha,
+        glyph_alpha=defaults.glyph_alpha if glyph_alpha is None else glyph_alpha,
+    )
+    _validate_anti_ocr_options(
+        profile,
+        options.mask_cell_size,
+        options.stripe_width,
+        options.stripe_alpha,
+        options.glyph_alpha,
+    )
+    return options
 
 
 def _validate_anti_ocr_options(
@@ -422,10 +508,10 @@ def build_playback_frames(
     use_noise: bool = True,
     key: bytes | None = None,
     anti_ocr_profile: str = "off",
-    mask_cell_size: int = 1,
-    stripe_width: int = 10,
-    stripe_alpha: float = 0.18,
-    glyph_alpha: float = 0.22,
+    mask_cell_size: int | None = None,
+    stripe_width: int | None = None,
+    stripe_alpha: float | None = None,
+    glyph_alpha: float | None = None,
 ) -> tuple[list[tuple[np.ndarray, str]], dict]:
     """
     对静态图像离线预生成全部回放子帧。
@@ -443,11 +529,12 @@ def build_playback_frames(
         insert_inversion: 每周期末插入反色帧（长曝光防御）
         use_noise: False 时跳过噪声（pedestal=0）
         key: 32 字节掩模密钥，None 时随机生成（传入固定 key 可复现）
-        anti_ocr_profile: "off" 保持原行为，"strong" 启用 OCR 对抗伪影
-        mask_cell_size: strong 模式下的掩模颗粒边长（像素）
-        stripe_width: strong 模式下条纹宽度（像素）
-        stripe_alpha: strong 模式下条纹混合强度
-        glyph_alpha: strong 模式下字形打孔/假笔画强度
+        anti_ocr_profile: "off" 保持原行为，"strong" 偏人眼可读，
+            "vlm" 偏拍照后 VLM/OCR 压制
+        mask_cell_size: 掩模颗粒边长（像素），None 时按 profile 默认
+        stripe_width: 条纹宽度（像素），None 时按 profile 默认
+        stripe_alpha: 条纹混合强度，None 时按 profile 默认
+        glyph_alpha: 字形打孔/假笔画强度，None 时按 profile 默认
 
     Returns:
         (frames, meta)：frames 为 [(uint8 帧, kind)]，kind ∈
@@ -458,14 +545,15 @@ def build_playback_frames(
         raise ValueError("image 须为 uint8 (H, W, 3) RGB 数组")
     if cycles <= 0:
         raise ValueError(f"cycles 须为正，实际为 {cycles}")
-    _validate_anti_ocr_options(
+    anti_options = resolve_anti_ocr_options(
         anti_ocr_profile,
         mask_cell_size,
         stripe_width,
         stripe_alpha,
         glyph_alpha,
     )
-    effective_insert_inversion = insert_inversion and anti_ocr_profile != "strong"
+    anti_ocr_enabled = anti_ocr_profile != "off"
+    effective_insert_inversion = insert_inversion and not anti_ocr_enabled
     inversion_suppressed = bool(insert_inversion and not effective_insert_inversion)
 
     h, w = image.shape[:2]
@@ -480,18 +568,18 @@ def build_playback_frames(
     pedestal = 0.0
     saliency_mask = (
         extract_text_saliency_mask(image)
-        if anti_ocr_profile == "strong"
+        if anti_ocr_enabled
         else None
     )
 
     for cycle in range(cycles):
-        if anti_ocr_profile == "strong":
+        if anti_ocr_enabled:
             masks = generate_cell_masks(
                 w,
                 h,
                 n,
                 cycle,
-                mask_cell_size,
+                anti_options.mask_cell_size,
                 key=gen.key,
             )
         else:
@@ -530,16 +618,17 @@ def build_playback_frames(
         subframes = composer.compose(image, masks, sub_noises)
         for slot, idx in enumerate(perm):
             frame = subframes[idx]
-            if anti_ocr_profile == "strong":
+            if anti_ocr_enabled:
                 frame = apply_anti_ocr_artifacts(
                     frame,
                     image,
                     saliency_mask,
                     cycle,
                     slot,
-                    stripe_width,
-                    stripe_alpha,
-                    glyph_alpha,
+                    anti_options.stripe_width,
+                    anti_options.stripe_alpha,
+                    anti_options.glyph_alpha,
+                    profile=anti_ocr_profile,
                 )
             frames.append((frame, "subframe"))
         if effective_insert_inversion:
@@ -559,10 +648,10 @@ def build_playback_frames(
         "noise_schedule": noise_schedule,
         "anti_ocr": {
             "profile": anti_ocr_profile,
-            "mask_cell_size": mask_cell_size,
-            "stripe_width": stripe_width,
-            "stripe_alpha": stripe_alpha,
-            "glyph_alpha": glyph_alpha,
+            "mask_cell_size": anti_options.mask_cell_size,
+            "stripe_width": anti_options.stripe_width,
+            "stripe_alpha": anti_options.stripe_alpha,
+            "glyph_alpha": anti_options.glyph_alpha,
             "saliency_pixels": (
                 int(saliency_mask.sum()) if saliency_mask is not None else 0
             ),
@@ -878,17 +967,30 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         "--anti-ocr-profile",
         choices=ANTI_OCR_PROFILES,
         default="off",
-        help="反 OCR 预生成档位：off 保持原行为，strong 加强手机 OCR 抑制",
+        help=(
+            "反 OCR 预生成档位：off 保持原行为，strong 偏人眼可读，"
+            "vlm 偏手机拍摄后 VLM/OCR 压制"
+        ),
     )
-    parser.add_argument("--mask-cell-size", type=int, default=1,
-                        help="strong 模式下随机掩模颗粒边长（像素）")
-    parser.add_argument("--stripe-width", type=int, default=10,
-                        help="strong 模式下条纹宽度（像素）")
-    parser.add_argument("--stripe-alpha", type=float, default=0.18,
-                        help="strong 模式下条纹混合强度 [0,1]")
-    parser.add_argument("--glyph-alpha", type=float, default=0.22,
-                        help="strong 模式下字形打孔/假笔画强度 [0,1]")
+    parser.add_argument("--mask-cell-size", type=int, default=None,
+                        help="反 OCR 档位的随机掩模颗粒边长（像素）")
+    parser.add_argument("--stripe-width", type=int, default=None,
+                        help="反 OCR 档位的条纹宽度（像素）")
+    parser.add_argument("--stripe-alpha", type=float, default=None,
+                        help="反 OCR 档位的条纹混合强度 [0,1]")
+    parser.add_argument("--glyph-alpha", type=float, default=None,
+                        help="反 OCR 档位的字形打孔/假笔画强度 [0,1]")
     args = parser.parse_args(argv)
+    try:
+        anti_options = resolve_anti_ocr_options(
+            args.anti_ocr_profile,
+            args.mask_cell_size,
+            args.stripe_width,
+            args.stripe_alpha,
+            args.glyph_alpha,
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
 
     return PlaybackConfig(
         width=args.width,
@@ -902,10 +1004,10 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         pdf_page=args.pdf_page,
         benchmark_seconds=args.benchmark,
         anti_ocr_profile=args.anti_ocr_profile,
-        mask_cell_size=args.mask_cell_size,
-        stripe_width=args.stripe_width,
-        stripe_alpha=args.stripe_alpha,
-        glyph_alpha=args.glyph_alpha,
+        mask_cell_size=anti_options.mask_cell_size,
+        stripe_width=anti_options.stripe_width,
+        stripe_alpha=anti_options.stripe_alpha,
+        glyph_alpha=anti_options.glyph_alpha,
     )
 
 
