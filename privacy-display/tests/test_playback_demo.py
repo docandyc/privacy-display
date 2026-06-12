@@ -212,6 +212,29 @@ def test_strong_profile_disrupts_integrated_glyph_regions():
     assert float(diff[saliency].mean()) > 8.0
 
 
+def test_default_strong_profile_preserves_readable_text_contrast():
+    img = make_demo_document(320, 180)
+    frames, meta = build_playback_frames(
+        img,
+        n=2,
+        cycles=1,
+        key=KEY,
+        use_noise=False,
+        anti_ocr_profile="strong",
+    )
+
+    subframes = [frame for frame, kind in frames if kind == "subframe"]
+    integrated = SubframeComposer(n=2, gamma=1.0).integrate_subframes(
+        subframes,
+        pedestal=meta["pedestal"],
+    )
+    saliency = extract_text_saliency_mask(img)
+    background = ~saliency
+
+    assert meta["anti_ocr"]["mask_cell_size"] == 1
+    assert float(integrated[background].mean() - integrated[saliency].mean()) > 35.0
+
+
 def test_apply_anti_ocr_artifacts_is_deterministic():
     img = make_demo_document(160, 90)
     frame = img.copy()
@@ -235,6 +258,11 @@ def test_parse_args_defaults():
     assert not cfg.insert_inversion
     assert cfg.image_path is None
     assert cfg.benchmark_seconds == 0.0
+    assert cfg.anti_ocr_profile == "off"
+    assert cfg.mask_cell_size == 1
+    assert cfg.stripe_width == 10
+    assert cfg.stripe_alpha == 0.18
+    assert cfg.glyph_alpha == 0.22
 
 
 def test_parse_args_overrides():

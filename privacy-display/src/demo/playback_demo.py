@@ -251,9 +251,11 @@ def apply_anti_ocr_artifacts(
     else:
         ink_rgb = np.zeros(3, dtype=np.float32)
 
-    stripe_region = _dilate_bool(stroke, radius=max(1, stripe_width // 2))
-    _blend_where(out, stripe_region & stripe, ink_rgb, stripe_alpha)
-    _blend_where(out, stroke & ~stripe, background_rgb, stripe_alpha * 0.55)
+    # Keep default artifacts readable: add faint aliases around glyph edges, and
+    # only lightly erase actual strokes. Higher CLI alphas can still stress OCR.
+    stripe_region = _dilate_bool(stroke, radius=1)
+    _blend_where(out, (stripe_region & ~stroke) & stripe, ink_rgb, stripe_alpha)
+    _blend_where(out, stroke & ~stripe, background_rgb, stripe_alpha * 0.30)
 
     erase = stroke & (((xx + 2 * yy + cycle + slot) % 5) == 0)
     fake = near_stroke & (((3 * xx + 5 * yy + 2 * cycle + slot) % 7) <= 1)
@@ -291,10 +293,10 @@ def build_playback_frames(
     use_noise: bool = True,
     key: bytes | None = None,
     anti_ocr_profile: str = "off",
-    mask_cell_size: int = 3,
-    stripe_width: int = 6,
-    stripe_alpha: float = 0.45,
-    glyph_alpha: float = 0.55,
+    mask_cell_size: int = 1,
+    stripe_width: int = 10,
+    stripe_alpha: float = 0.18,
+    glyph_alpha: float = 0.22,
 ) -> tuple[list[tuple[np.ndarray, str]], dict]:
     """
     对静态图像离线预生成全部回放子帧。
@@ -454,10 +456,10 @@ class PlaybackConfig:
     benchmark_seconds: float = 0.0  # >0 时运行该秒数后自动退出并打印统计
     show_hud: bool = True
     anti_ocr_profile: str = "off"
-    mask_cell_size: int = 3
-    stripe_width: int = 6
-    stripe_alpha: float = 0.45
-    glyph_alpha: float = 0.55
+    mask_cell_size: int = 1
+    stripe_width: int = 10
+    stripe_alpha: float = 0.18
+    glyph_alpha: float = 0.22
 
 
 def _load_input_image(cfg: PlaybackConfig) -> np.ndarray:
@@ -725,13 +727,13 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         default="off",
         help="反 OCR 预生成档位：off 保持原行为，strong 加强手机 OCR 抑制",
     )
-    parser.add_argument("--mask-cell-size", type=int, default=3,
+    parser.add_argument("--mask-cell-size", type=int, default=1,
                         help="strong 模式下随机掩模颗粒边长（像素）")
-    parser.add_argument("--stripe-width", type=int, default=6,
+    parser.add_argument("--stripe-width", type=int, default=10,
                         help="strong 模式下条纹宽度（像素）")
-    parser.add_argument("--stripe-alpha", type=float, default=0.45,
+    parser.add_argument("--stripe-alpha", type=float, default=0.18,
                         help="strong 模式下条纹混合强度 [0,1]")
-    parser.add_argument("--glyph-alpha", type=float, default=0.55,
+    parser.add_argument("--glyph-alpha", type=float, default=0.22,
                         help="strong 模式下字形打孔/假笔画强度 [0,1]")
     args = parser.parse_args(argv)
 
