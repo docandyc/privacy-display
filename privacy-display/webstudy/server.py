@@ -8,6 +8,7 @@ import io
 import json
 import os
 import sqlite3
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -94,6 +95,10 @@ def create_app(db_path: str | Path | None = None) -> Flask:
     def index() -> Response:
         return send_from_directory(STATIC_DIR, "index.html")
 
+    @app.get("/admin")
+    def admin() -> Response:
+        return send_from_directory(STATIC_DIR, "admin.html")
+
     @app.get("/api/health")
     def health() -> Response:
         return jsonify({"ok": True, "db_path": str(app.config["DB_PATH"])})
@@ -132,6 +137,13 @@ def create_app(db_path: str | Path | None = None) -> Flask:
             mimetype="text/csv; charset=utf-8",
             headers={"Content-Disposition": "attachment; filename=privacy_display_study.csv"},
         )
+
+    @app.get("/admin/data.json")
+    def admin_data() -> Response:
+        token_error = check_export_token()
+        if token_error:
+            return jsonify({"error": token_error}), 403
+        return jsonify(build_admin_data(app.config["DB_PATH"]))
 
     @app.get("/admin/stats")
     def stats() -> Response:
@@ -407,6 +419,7 @@ def build_export_csv(db_path: str | Path) -> str:
         "total_chars", "accuracy", "cpm", "wpm", "duration_s",
         "condition_label", "display_label", "stimulus_text", "readability",
         "flicker", "fatigue", "privacy", "order_index", "user_agent", "screen_json",
+        "mask_meta_json",
     ]
     out = io.StringIO()
     writer = csv.DictWriter(out, fieldnames=fieldnames)
@@ -437,6 +450,7 @@ def build_export_csv(db_path: str | Path) -> str:
                     "cpm": row["cpm"],
                     "wpm": row["wpm"],
                     "duration_s": row["duration_s"],
+                    "mask_meta_json": row["mask_meta_json"],
                 })
             for row in conn.execute(
                 "SELECT * FROM ratings WHERE participant_id = ? ORDER BY order_index, id",
@@ -456,6 +470,7 @@ def build_export_csv(db_path: str | Path) -> str:
                     "fatigue": row["fatigue"],
                     "privacy": row["privacy"],
                     "order_index": row["order_index"],
+                    "mask_meta_json": row["mask_meta_json"],
                 })
     return out.getvalue()
 
@@ -478,6 +493,124 @@ def participant_base(participant: sqlite3.Row) -> dict:
         "debug": participant["debug"],
         "user_agent": participant["user_agent"],
         "screen_json": participant["screen_json"],
+    }
+
+
+def build_admin_data(db_path: str | Path) -> dict:
+    """Return all study rows in a shape that the operator dashboard can render."""
+    with get_conn(db_path) as conn:
+        participant_rows = conn.execute(
+            "SELECT * FROM participants ORDER BY id DESC"
+        ).fetchall()
+        typing_rows = [
+            enrich_event_row(row, "typing")
+            for row in conn.execute(
+                """
+                SELECT t.*, p.student_id, p.name, p.refresh_hz, p.refresh_ok
+                FROM typing t
+                JOIN participants p ON p.id = t.participant_id
+                ORDER BY t.participant_id DESC, t.id
+                """
+            )
+        ]
+        rating_rows = [
+            enrich_event_row(row, "rating")
+            for row in conn.execute(
+                """
+                SELECT r.*, p.student_id, p.name, p.refresh_hz, p.refresh_ok
+                FROM ratings r
+                JOIN participants p ON p.id = r.participant_id
+                ORDER BY r.participant_id DESC, r.order_index, r.id
+                """
+            )
+        ]
+
+    typing_by_participant: dict[int, list[dict]] = {}
+    for row in typing_rows:
+        typing_by_participant.setdefault(row["participant_id"], []).append(row)
+
+    ratings_by_participant: dict[int, list[dict]] = {}
+    for row in rating_rows:
+        ratings_by_participant.setdefault(row["participant_id"], []).append(row)
+
+    participants = []
+    paired_deltas = []
+    for participant in participant_rows:
+        pid = int(participant["id"])
+        p_typing = typing_by_participant.get(pid, [])
+        p_ratings = ratings_by_participant.get(pid, [])
+        control = next((row for row in p_typing if row["condition"] == "control"), None)
+        masked = next((row for row in p_typing if row["condition"] == "masked"), None)
+        control_wpm = control["wpm"] if control else None
+        masked_wpm = masked["wpm"] if masked else None
+        delta_wpm = None
+        delta_pct = None
+        if control_wpm is not None and masked_wpm is not None:
+            delta_wpm = masked_wpm - control_wpm
+            if control_wpm:
+                delta_pct = delta_wpm / control_wpm
+            paired_deltas.append({
+                "participant_id": pid,
+                "control_wpm": control_wpm,
+                "masked_wpm": masked_wpm,
+                "delta_wpm": delta_wpm,
+                "delta_pct": delta_pct,
+            })
+
+        participants.append({
+            **participant_base(participant),
+            "typing_rows": len(p_typing),
+            "rating_rows": len(p_ratings),
+            "control_wpm": control_wpm,
+            "masked_wpm": masked_wpm,
+            "delta_wpm": delta_wpm,
+            "delta_pct": delta_pct,
+            "mean_readability": mean([row["readability"] for row in p_ratings]),
+            "mean_flicker": mean([row["flicker"] for row in p_ratings]),
+            "mean_fatigue": mean([row["fatigue"] for row in p_ratings]),
+            "mean_privacy": mean([row["privacy"] for row in p_ratings]),
+        })
+
+    stats = build_stats(db_path)
+    stats["paired_typing"] = summarize_paired_typing(paired_deltas)
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "summary": stats,
+        "participants": participants,
+        "typing": typing_rows,
+        "ratings": rating_rows,
+    }
+
+
+def enrich_event_row(row: sqlite3.Row, row_type: str) -> dict:
+    data = dict(row)
+    data["row_type"] = row_type
+    data["mask_meta"] = parse_json_object(data.pop("mask_meta_json", "{}"))
+    return data
+
+
+def parse_json_object(raw: Any) -> dict:
+    try:
+        parsed = json.loads(raw or "{}")
+    except (TypeError, json.JSONDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def mean(values: list[float | int | None]) -> float | None:
+    clean = [float(value) for value in values if value is not None]
+    if not clean:
+        return None
+    return sum(clean) / len(clean)
+
+
+def summarize_paired_typing(rows: list[dict]) -> dict:
+    return {
+        "n_pairs": len(rows),
+        "control_wpm": mean([row["control_wpm"] for row in rows]),
+        "masked_wpm": mean([row["masked_wpm"] for row in rows]),
+        "delta_wpm": mean([row["delta_wpm"] for row in rows]),
+        "delta_pct": mean([row["delta_pct"] for row in rows]),
     }
 
 

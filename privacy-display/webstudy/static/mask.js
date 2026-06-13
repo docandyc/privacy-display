@@ -184,6 +184,8 @@
     return residual;
   }
 
+  const DEFAULT_SAFE_FLICKER_HZ = 50;
+
   function makeSubframes(text, options) {
     const n = Math.max(2, Math.min(16, Number(options.n) || 4));
     const seed = options.seed || "privacy-display-study";
@@ -191,6 +193,13 @@
     const height = options.height || 260;
     const gamma = n * (Number(options.gammaFactor) || 1.1);
     const epsilonPixels = Math.max(0, Number(options.epsilonPixels) || 8);
+    // Safety gate: a full subframe cycle below the flicker-fusion threshold
+    // (~50 Hz) would flicker and sits in the 3-30 Hz photosensitive-seizure
+    // band. Such conditions fall back to a single static subframe (camera view).
+    const safeFlickerHz = Number(options.safeFlickerHz) > 0 ? Number(options.safeFlickerHz) : DEFAULT_SAFE_FLICKER_HZ;
+    const refreshHz = Number(options.refreshHz) > 0 ? Number(options.refreshHz) : 0;
+    const cycleHz = refreshHz > 0 ? refreshHz / n : null;
+    const mode = refreshHz > 0 && cycleHz < safeFlickerHz ? "static_fallback" : "temporal";
     const sourceCanvas = renderSourceCanvas(text, { width, height, fontSize: options.fontSize });
     const sourceCtx = sourceCanvas.getContext("2d", { willReadFrequently: true });
     const source = sourceCtx.getImageData(0, 0, width, height);
@@ -242,7 +251,11 @@
         counts,
         permutation,
         completeness_ok: counts.reduce((sum, count) => sum + count, 0) === pixelCount,
-        noise_residual: noiseResidual
+        noise_residual: noiseResidual,
+        mode,
+        cycle_hz: cycleHz,
+        refresh_hz: refreshHz || null,
+        safe_flicker_hz: safeFlickerHz
       }
     };
   }
@@ -273,12 +286,22 @@
       if (!this.frames.length) {
         return;
       }
+      // Never smooth: the canvas buffer is drawn 1:1, and CSS uses
+      // image-rendering:pixelated so display scaling stays nearest-neighbour.
+      this.ctx.imageSmoothingEnabled = false;
       const frame = this.frames[this.frameIndex % this.frames.length];
       this.ctx.drawImage(frame, 0, 0);
     }
 
     start() {
       this.stop();
+      // Safety gate: below the flicker-fusion threshold we do NOT animate.
+      // Show one static subframe (the camera-view) instead of flickering.
+      if (this.meta && this.meta.mode === "static_fallback") {
+        this.frameIndex = 0;
+        this.draw();
+        return;
+      }
       const tick = () => {
         this.draw();
         this.frameIndex = (this.frameIndex + 1) % this.frames.length;

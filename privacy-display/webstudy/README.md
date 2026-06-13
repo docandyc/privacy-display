@@ -49,9 +49,9 @@ console.
 
 The first version assumes the lab machines use 240 Hz monitors, but each
 submission still records the measured refresh rate and flags low-refresh
-sessions. If the browser measures below 100 Hz, the frontend displays a warning
-and downgrades playback `n` to 2 so the session is marked rather than silently
-mixed with normal 240 Hz data.
+sessions. The requested `n` is kept unchanged. If the measured subframe cycle
+`refresh_hz / n` is below 50 Hz, the masking player uses `static_fallback`
+instead of temporal animation and stores that mode in `mask_meta_json`.
 
 ## Data
 
@@ -73,7 +73,19 @@ Export all rows:
 http://127.0.0.1:5000/admin/export.csv
 ```
 
-Preview aggregate means:
+Open the operator dashboard:
+
+```text
+http://127.0.0.1:5000/admin
+```
+
+Export all rows as JSON:
+
+```text
+http://127.0.0.1:5000/admin/data.json
+```
+
+Preview aggregate means as API JSON:
 
 ```text
 http://127.0.0.1:5000/admin/stats
@@ -90,6 +102,14 @@ Then export with:
 
 ```text
 http://<host>:5000/admin/export.csv?token=change-me
+```
+
+The same token query works for:
+
+```text
+http://<host>:5000/admin?token=change-me
+http://<host>:5000/admin/data.json?token=change-me
+http://<host>:5000/admin/stats?token=change-me
 ```
 
 ## Notes

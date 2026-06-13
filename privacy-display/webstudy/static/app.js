@@ -9,6 +9,8 @@
   const TARGET_CHARS = DEBUG ? 100 : 220;
   const ASSUMED_MONITOR_HZ = 240;
   const MIN_REFRESH_HZ = 100;
+  // Subframe cycle (refresh / n) below this falls back to a static subframe.
+  const SAFE_FLICKER_HZ = 50;
 
   const STEPS = [
     ["welcome", "Consent"],
@@ -342,13 +344,9 @@
     });
   }
 
-  function effectiveN(n) {
-    if (!state.refresh.hz || state.refresh.ok) {
-      return n;
-    }
-    return Math.min(n, 2);
-  }
-
+  // n is kept at its requested value on every device. Safety on low-refresh
+  // panels is handled by the static-fallback gate in PrivacyMask (cycle<50Hz),
+  // not by silently shrinking n while still flickering.
   function prepareExperiment() {
     if (state.trials.length) {
       return;
@@ -373,7 +371,7 @@
       {
         condition: "masked",
         label: "Masked condition",
-        n: effectiveN(4),
+        n: 4,
         requested_n: 4,
         components: "mask+noise",
         target_text: pair.masked,
@@ -439,7 +437,9 @@
         width: 900,
         height: 260,
         epsilonPixels: 8,
-        gammaFactor: 1.1
+        gammaFactor: 1.1,
+        refreshHz: state.refresh.hz,
+        safeFlickerHz: SAFE_FLICKER_HZ
       });
       trial.mask_meta = meta;
       currentPlayer.start();
@@ -549,7 +549,7 @@
       setStep("submit");
       return;
     }
-    const displayN = effectiveN(condition.n);
+    const displayN = condition.n;
     const text = global.Pseudoword.generateText(`${state.seed}:rating:${condition.id}`, 170);
     const orderLabel = `Condition ${state.ratingCursor + 1} of ${state.ratingOrder.length}`;
 
@@ -589,7 +589,9 @@
       height: 230,
       epsilonPixels: 8,
       gammaFactor: 1.1,
-      fontSize: 22
+      fontSize: 22,
+      refreshHz: state.refresh.hz,
+      safeFlickerHz: SAFE_FLICKER_HZ
     });
     currentPlayer.start();
     logSelftest(condition.id, meta);
@@ -765,6 +767,10 @@
     // eslint-disable-next-line no-console
     console.log("[privacy-display selftest]", label, {
       n: meta.n,
+      mode: meta.mode,
+      cycle_hz: meta.cycle_hz,
+      refresh_hz: meta.refresh_hz,
+      safe_flicker_hz: meta.safe_flicker_hz,
       completeness_ok: meta.completeness_ok,
       mask_pixels: meta.counts.reduce((sum, count) => sum + count, 0),
       noise_residual: meta.noise_residual,

@@ -43,6 +43,8 @@ Questions to answer:
 ### 2. Signatures
 - Command: `python webstudy/server.py --host 127.0.0.1 --port 5000 --db webstudy/study.db`
 - API: `POST /api/submit` with JSON `{participant, session, typing, ratings}`
+- Page: `GET /admin`
+- API: `GET /admin/data.json?token=...`
 - API: `GET /admin/export.csv?token=...`
 - API: `GET /admin/stats`
 - DB tables: `participants`, `typing`, `ratings`
@@ -54,6 +56,8 @@ Questions to answer:
 - `typing` must contain exactly two rows: one `control` and one `masked`; each row stores `target_text`, `typed_text`, accuracy metrics, `duration_s`, `n`, `requested_n`, and `components`.
 - `ratings` must contain exactly four rows for the ablation conditions; each row stores 1-5 integer ratings for `readability`, `flicker`, `fatigue`, and `privacy`, plus `order_index`.
 - CSV export is a long table with `row_type` set to `typing` or `rating`, repeating participant/session columns on each row.
+- `/admin/data.json` returns `summary`, `participants`, `typing`, and `ratings`; event rows must expose parsed `mask_meta` so operators can stratify `temporal` vs `static_fallback` sessions without reparsing CSV.
+- `/admin` is an operator dashboard over `/admin/data.json`; it must expose participant summaries, paired typing deltas, rating means, typing rows, rating rows, and CSV/JSON export links.
 
 ### 4. Validation & Error Matrix
 - Missing participant object -> HTTP 400.
@@ -63,18 +67,22 @@ Questions to answer:
 - `ratings` length not equal to 4 -> HTTP 400.
 - Rating outside `[1, 5]` -> HTTP 400.
 - `accuracy` outside `[0, 1]` -> HTTP 400.
-- `WEBSTUDY_EXPORT_TOKEN` set and query token missing/mismatched -> HTTP 403 for admin exports/stats.
+- `WEBSTUDY_EXPORT_TOKEN` set and query token missing/mismatched -> HTTP 403 for admin JSON exports, CSV exports, and stats.
 
 ### 5. Good/Base/Bad Cases
 - Good: run a debug browser session, submit once, then confirm `/admin/stats` reports one participant, two typing groups, and four rating groups.
+- Good: open `/admin`, confirm the participant appears in the summary table, paired WPM delta is visible, and export links point to CSV/JSON endpoints.
 - Base: low-refresh browser sessions are accepted but must preserve `refresh_ok=false` and the effective `n`/`requested_n` distinction.
 - Bad: storing only aggregate WPM and dropping `target_text`/`typed_text`, because later analysis cannot audit scoring.
 - Bad: exporting separate participant-only rows without event rows, because CSV consumers cannot join typing/rating outcomes without extra queries.
+- Bad: requiring the operator to query raw SQLite manually during collection; the web backend must expose read-only summary/export endpoints.
 
 ### 6. Tests Required
 - Assert valid payload submission returns 200 and inserts one participant, two typing rows, and four rating rows.
 - Assert malformed payloads return 400 for missing identity, wrong typing count, wrong rating count, invalid rating, and invalid accuracy.
 - Assert `/admin/export.csv` includes participant columns plus typing/rating event columns.
+- Assert `/admin/data.json` includes participant summaries, paired typing deltas, parsed `mask_meta`, and the same row counts as the database.
+- Assert `/admin` renders the dashboard tables and CSV/JSON export links in a browser.
 - Assert token-protected admin endpoints reject missing or incorrect tokens when `WEBSTUDY_EXPORT_TOKEN` is set.
 
 ### 7. Wrong vs Correct
