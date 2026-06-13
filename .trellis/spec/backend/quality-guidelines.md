@@ -295,6 +295,270 @@ report = run_corpus_strong_camera_attacks(ocr_timeout=4.0, progress_interval=10)
 json.dump(report, out_file, ensure_ascii=False, indent=2)
 ```
 
+## Scenario: Online VLM Readability Evaluation
+
+### 1. Scope / Trigger
+- Trigger: adding an online vision-language model as an attack evaluator for camera-captured protected frames.
+
+### 2. Signatures
+- `image_to_data_url(image: np.ndarray) -> str`
+- `extract_json_object(text: str) -> dict`
+- `VLMClient(api_key=None, base_url="https://api.siliconflow.cn/v1", model="Qwen/Qwen3-VL-32B-Instruct", timeout=60.0, transport=None)`
+- `VLMClient.analyze_image(image, ground_truth="", prompt=None, max_tokens=256) -> dict`
+- `build_vlm_attack_frames(image, n=4, epsilon=8/255, cycles=2, cycle_start=0, attacks=None, with_noise=True) -> dict`
+- `select_stratified_samples(names, metadata, samples_per_category=1, max_samples=None) -> list[int]`
+- `run_vlm_benchmark(client=None, output_dir="experiments/results", n=4, epsilon=8/255, cycles=2, samples_per_category=1, max_samples=None, attacks=None, save=True, corpus=None, metadata=None) -> dict`
+- Command: `python experiments/vlm_readability_analysis.py --samples-per-category 1`
+
+### 3. Contracts
+- API keys must come only from the `SILICONFLOW_API_KEY` environment variable or an in-memory constructor argument for tests; never store keys in source, docs, command examples, logs, or JSON result files.
+- The SiliconFlow request must use the OpenAI-compatible `POST {base_url}/chat/completions` payload with `model`, `messages`, `temperature=0`, `max_tokens`, and `response_format={"type":"json_object"}`.
+- VLM image inputs must be sent as PNG `data:image/png;base64,...` URLs inside a user message content list.
+- Ground truth must not be sent to the VLM prompt. It is used only locally to calculate `text_recovery_metrics(visible_text, ground_truth)`.
+- The model must be instructed to return JSON only with `visible_text`, `can_read_sensitive`, `confidence`, and `notes`.
+- Corpus VLM reports must include model/base_url, sample-selection config, attack name, metadata, `visible_text` preview, recovery metrics, confidence, row-level errors, per-attack summaries, and best-attacker summaries.
+- Corpus VLM summaries must include `call_status` with total, successful, and failed call counts. If every row failed, the live CLI must return nonzero after writing the diagnostic JSON.
+- Result JSON must not include authorization headers, API keys, full request payloads, or any secret-bearing environment values.
+- Unit tests must use a fake transport/client; online calls are explicit integration runs only.
+
+### 4. Validation & Error Matrix
+- Missing API key in normal client use -> `ValueError` mentioning `SILICONFLOW_API_KEY` but not any key value.
+- Non-2xx API response -> `RuntimeError` with sanitized status/body and no authorization header.
+- Malformed VLM JSON -> `ValueError` from JSON extraction, recorded as row-level `vlm_error` in corpus runs.
+- `samples_per_category <= 0` -> `ValueError`.
+- `max_samples <= 0` when provided -> `ValueError`.
+- Unknown requested attack name -> `ValueError`.
+- Per-row VLM failure during corpus benchmark -> record empty visible text, zero/derived recovery metrics, and continue.
+- All live VLM rows fail due API/DNS/parse errors -> write diagnostic JSON, set `call_status.all_calls_failed=True`, and return nonzero so scripts do not treat zero recovery metrics as valid evidence.
+
+### 5. Good/Base/Bad Cases
+- Good: dry-run command reports the selected samples and attack calls without requiring an API key.
+- Good: fake transport test asserts the request contains an image URL data URL and no ground-truth text.
+- Base: live command reads `SILICONFLOW_API_KEY` from the shell environment and writes `experiments/results/vlm_qwen3_siliconflow.json`.
+- Base: some VLM rows fail, but successful rows remain summarized and the failure count is visible.
+- Bad: adding `--api-key` CLI flags, hard-coding a key, or putting a secret in README examples.
+- Bad: sending the ground-truth text to the VLM prompt and then using its answer as a readability metric.
+- Bad: citing a 0.0% VLM recovery rate from a result file where all rows have `vlm_error`.
+
+### 6. Tests Required
+- Assert `image_to_data_url` emits a PNG data URL for uint8 arrays.
+- Assert `extract_json_object` parses direct and fenced JSON responses.
+- Assert `VLMClient` builds the expected OpenAI-compatible payload through a fake transport, excludes ground truth from the prompt, and computes local recovery metrics.
+- Assert missing API key raises a sanitized `ValueError`.
+- Assert stratified sample selection is deterministic by metadata category.
+- Assert `run_vlm_benchmark` works with an injected fake client, writes JSON, and contains no secret fields.
+- Assert VLM row summaries report call-status counts and all-failed state.
+- Run `pytest tests/test_vlm_evaluator.py tests/test_vlm_benchmark.py -q` after changing VLM paths.
+- Run `pytest tests/ -q` before citing VLM scaffolding in publication-facing docs.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+payload["messages"][1]["content"] = f"Ground truth is {ground_truth}; can you read it?"
+api_key = "<hard-coded-secret>"
+```
+
+#### Correct
+```python
+payload["messages"][1]["content"] = [
+    {"type": "text", "text": "Transcribe only visible text and return JSON."},
+    {"type": "image_url", "image_url": {"url": image_to_data_url(frame)}},
+]
+api_key = os.environ["SILICONFLOW_API_KEY"]
+```
+
+## Scenario: Publication Result Summary
+
+### 1. Scope / Trigger
+- Trigger: consolidating experiment artifacts into thesis or IEEE Access tables.
+
+### 2. Signatures
+- `build_publication_summary(results_dir="experiments/results") -> dict`
+- `render_markdown(summary: dict) -> str`
+- `write_publication_summary(results_dir="experiments/results", summary=None) -> dict`
+- Command: `python experiments/publication_summary.py --results-dir experiments/results`
+- Output files: `experiments/results/publication_summary.json`, `experiments/results/publication_summary.md`
+
+### 3. Contracts
+- The summary builder must only read existing machine-readable result artifacts; it must not rerun experiments, call online services, or require API keys.
+- Required source files are `corpus_multi_engine.json` and `corpus_strong_camera_attack.json`; optional files are `detection_attack_yolo.json`, `view_attack.json`, and `vlm_qwen3_siliconflow.json`.
+- The generated JSON must include `source_files`, `ocr`, `strong_camera`, `detection`, `view_attack`, and `vlm` sections.
+- Missing optional result files must be represented explicitly as `available=False` with a reason, not silently omitted.
+- Missing VLM output must say the online benchmark is implemented but no live result has been generated; thesis text must not cite VLM numbers until the file exists.
+- A VLM result file where every sample row has `vlm_error` must be represented as `available=False`, `reason=all_calls_failed`; thesis/paper text must not cite its zero recovery metrics.
+- Markdown percentages must be derived from the loaded JSON values, including confidence intervals where present.
+- Paper/thesis tables should be updated from `publication_summary.{json,md}` rather than hand-copying from multiple raw result files.
+
+### 4. Validation & Error Matrix
+- Missing required OCR or strong-camera result -> normal file error; do not synthesize placeholder values.
+- Missing optional detection/view/VLM result -> keep summary generation successful and mark that section unavailable.
+- Optional VLM result exists but all rows failed -> keep summary generation successful and mark VLM unavailable with an explicit all-failed interpretation.
+- Older result JSON missing CI fields -> render mean-only percentages instead of failing.
+- Unknown extra OCR engines or attack names -> include them after the known ordered entries.
+
+### 5. Good/Base/Bad Cases
+- Good: rerun experiments, then run `python experiments/publication_summary.py`, then update thesis tables from the generated Markdown.
+- Good: VLM result is absent and the summary explicitly records that no live VLM number should be cited.
+- Good: VLM result file exists only as an API-error diagnostic and the summary says it is not available for citation.
+- Base: detection or view-attack result is absent in a lightweight environment, but OCR and strong attack summaries still render.
+- Bad: editing `publication_summary.md` by hand while raw JSON disagrees.
+- Bad: copying OCR values into the thesis from console logs instead of the generated summary.
+- Bad: treating an all-error VLM JSON file as proof that the VLM could not read the protected frame.
+
+### 6. Tests Required
+- Assert summary building reads minimal OCR and strong-camera fixtures and reports expected means.
+- Assert missing optional VLM/view result files are marked unavailable.
+- Assert all-error VLM result files are marked unavailable and rendered as not citable.
+- Assert Markdown includes OCR, strong-camera, detection, view, and VLM sections.
+- Assert `write_publication_summary` writes both JSON and Markdown outputs.
+- Run `pytest tests/test_publication_summary.py -q` after changing the summary builder.
+- Run `python experiments/publication_summary.py` before updating publication-facing tables.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+README_TABLE = "Tesseract | 94.0% | 0.0%"
+```
+
+#### Correct
+```bash
+python experiments/publication_summary.py
+sed -n '1,120p' experiments/results/publication_summary.md
+```
+
+## Scenario: Reproducibility Manifest
+
+### 1. Scope / Trigger
+- Trigger: adding or changing publication-facing experiment scripts, result files, dependency assumptions, or online-service evaluation paths that must be reproducible from an archived project state.
+
+### 2. Signatures
+- `sha256_file(path: Path) -> str`
+- `file_record(project_root: Path, relative_path: str) -> dict`
+- `package_versions(package_names: list[str] | None = None) -> dict`
+- `git_metadata(project_root: Path) -> dict`
+- `build_reproducibility_manifest(project_root=".", result_files=None, source_files=None, timestamp=None) -> dict`
+- `write_reproducibility_manifest(project_root=".", output_path="experiments/results/reproducibility_manifest.json", manifest=None) -> dict`
+- Command: `scripts/reproduce_all.sh`
+- Command: `scripts/reproduce_all.sh --full-offline`
+- Command: `scripts/reproduce_all.sh --with-vlm-live`
+- Command: `python experiments/reproducibility_manifest.py`
+- Output file: `experiments/results/reproducibility_manifest.json`
+
+### 3. Contracts
+- The manifest must record environment metadata, canonical reproduction commands, Git commit/branch/dirty state, and SHA-256/byte-size records for publication-facing result and source files.
+- Secret values must never be read into or written by the manifest. Online VLM evaluation may list required environment variable names such as `SILICONFLOW_API_KEY`, but not their values.
+- The live VLM command entry must declare `requires_env=["SILICONFLOW_API_KEY"]` and a secret policy note; README examples must use placeholders only.
+- `result_files=[]` and `source_files=[]` are valid explicit empty lists for unit tests and should not be replaced with defaults; defaults apply only when the argument is `None`.
+- Missing result/source files must be represented as `exists=False`, empty `sha256`, and zero bytes rather than failing manifest generation.
+- Absolute output paths must be respected; relative output paths are resolved against `project_root`.
+- Regenerate the manifest after rerunning experiments or changing code that it hashes, otherwise the file hashes no longer describe the current archive.
+- `scripts/reproduce_all.sh` is the publication artifact orchestrator. Its default path must stay offline and bounded: tests, VLM dry-run, publication summary, and reproducibility manifest only.
+- Heavy offline experiments must require `--full-offline`; live online VLM calls must require `--with-vlm-live` plus `SILICONFLOW_API_KEY` in the environment.
+- The orchestrator must never accept an API key as a positional argument or CLI flag.
+- The orchestrator may source a local `.env.local` file, but that file must be gitignored. Only `.env.example` with placeholders may be committed.
+
+### 4. Validation & Error Matrix
+- Missing optional result file -> record `exists=False` and continue.
+- Running outside a Git repository -> return empty commit/branch and `dirty=False`; do not fail.
+- Package not installed -> record that package version as `None`.
+- Unreadable file path in a required test fixture -> normal file error for `sha256_file`, because that helper is direct hash IO.
+- Environment contains an API key -> generated manifest must not contain the key value.
+
+### 5. Good/Base/Bad Cases
+- Good: run `scripts/reproduce_all.sh`, then archive generated summary, manifest, and raw result JSON.
+- Good: run `python experiments/publication_summary.py`, then `python experiments/reproducibility_manifest.py`, then archive both generated files with raw result JSON.
+- Good: manifest shows VLM live benchmark requires `SILICONFLOW_API_KEY` but contains no authorization headers, key values, or request payloads.
+- Base: lightweight environments without a live VLM output still generate a manifest with `vlm_qwen3_siliconflow.json` marked missing.
+- Bad: putting API keys into README examples, CLI flags, JSON outputs, or manifest command strings.
+- Bad: committing `.env.local` or any file containing a real `sk-...` secret.
+- Bad: editing a result JSON after generating the manifest and then using stale hashes as archival evidence.
+
+### 6. Tests Required
+- Assert file records include SHA-256, byte size, and missing-file placeholders.
+- Assert explicit empty `result_files=[]` and `source_files=[]` stay empty.
+- Assert command metadata includes the live VLM environment requirement.
+- Assert a fake `SILICONFLOW_API_KEY` in the process environment does not appear in `json.dumps(manifest)`.
+- Assert nested relative output paths are created by `write_reproducibility_manifest`.
+- Run `bash -n scripts/reproduce_all.sh` after changing the orchestration script.
+- Run `scripts/reproduce_all.sh --skip-tests` to verify the default non-network artifact refresh path when script behavior changes.
+- Run `pytest tests/test_reproducibility_manifest.py -q` after changing manifest code.
+- Run `python experiments/reproducibility_manifest.py` after updating publication-facing result files.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+manifest["api_key"] = os.environ["SILICONFLOW_API_KEY"]
+result_files = result_files or RESULT_FILES
+```
+
+#### Correct
+```python
+manifest["secret_policy"] = {
+    "record_secret_values": False,
+    "secret_env_vars": ["SILICONFLOW_API_KEY"],
+}
+if result_files is None:
+    result_files = RESULT_FILES
+```
+
+## Scenario: Real Camera Capture Analysis
+
+### 1. Scope / Trigger
+- Trigger: adding or changing analysis for manually collected phone, smart-glasses, or camera photos/video frames used as publication evidence.
+
+### 2. Signatures
+- `write_capture_template(capture_dir="experiments/real_captures", filename="metadata_template.json") -> Path`
+- `load_capture_metadata(capture_dir="experiments/real_captures", metadata_file="metadata.json") -> list[dict]`
+- `run_real_capture_ocr(capture_dir="experiments/real_captures", metadata_file="metadata.json", output_dir="experiments/results", engines=None, evaluator=None, ocr_timeout=10.0, save=True) -> dict`
+- `summarize_real_capture_rows(rows: list[dict]) -> dict`
+- `render_real_capture_markdown(report: dict) -> str`
+- Command: `python experiments/real_capture_analysis.py --init-template`
+- Command: `python experiments/real_capture_analysis.py --engines tesseract`
+- Output files: `experiments/results/real_capture_ocr.json`, `experiments/results/real_capture_ocr.md`
+
+### 3. Contracts
+- The module analyzes manually collected image files only; it must not claim that real hardware was tested unless `metadata.json` and referenced capture files exist.
+- Metadata entries must include `id`, `image`, and exact `truth`; publication-grade entries should also include device, camera type, capture mode, distance, angle, exposure, frame rate, display refresh rate, n, epsilon, lighting, and notes.
+- Missing real-capture result files must be marked unavailable in publication summaries, not silently omitted or replaced with simulated results.
+- OCR rows must include engine, condition, device, capture mode, geometry/exposure metadata, recognized-text preview, OCR errors, character accuracy, word accuracy, exact-match, sensitive-token recall, and sensitive-token denominator.
+- Summaries must keep real captures grouped by condition, device, and engine so reviewers can distinguish original/protected/short-exposure/video-frame cases.
+- Unit tests must use tiny local images and fake OCR evaluators; they must not require camera hardware or heavyweight OCR downloads.
+
+### 4. Validation & Error Matrix
+- Missing `metadata.json` in analysis mode -> `FileNotFoundError`.
+- Metadata without a list-valued `captures` field -> `ValueError`.
+- Capture entry missing `id`, `image`, or `truth` -> `ValueError`.
+- Referenced image missing -> `FileNotFoundError`.
+- OCR failure for a row -> record `ocr_error` and zero/derived recovery metrics, continue other rows.
+- No available/requested OCR engines -> `ValueError`.
+
+### 5. Good/Base/Bad Cases
+- Good: generate template, collect phone photos, fill metadata, run analysis, then update publication summary from generated JSON.
+- Good: real capture summary is absent and paper text says no real-device numbers are available yet.
+- Base: analyze only Tesseract on a small reviewed real-capture subset before running heavier OCR engines.
+- Bad: copying simulated `view_attack` or `corpus_strong_camera_attack` values into the real-capture section.
+- Bad: reporting photos without exact ground-truth text, exposure/distance/angle metadata, or the capture image files.
+
+### 6. Tests Required
+- Assert template generation writes required metadata fields.
+- Assert malformed metadata is rejected.
+- Assert fake-OCR real-capture analysis writes JSON and Markdown, groups by condition/device, and preserves metadata.
+- Assert missing referenced image fails before producing a misleading result.
+- Run `pytest tests/test_real_capture.py -q` after changing real-capture code.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+summary["real_capture"] = summary["view_attack"]
+```
+
+#### Correct
+```bash
+python experiments/real_capture_analysis.py --init-template
+python experiments/real_capture_analysis.py --engines tesseract
+python experiments/publication_summary.py
+```
+
 ## Scenario: Privacy Window Runtime Configuration
 
 ### 1. Scope / Trigger

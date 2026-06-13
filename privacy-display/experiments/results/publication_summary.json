@@ -1,0 +1,306 @@
+{
+  "source_files": {
+    "ocr": "corpus_multi_engine.json",
+    "strong_camera": "corpus_strong_camera_attack.json",
+    "detection": "detection_attack_yolo.json",
+    "view_attack": "view_attack.json",
+    "vlm": "vlm_qwen3_siliconflow.json",
+    "real_capture": null
+  },
+  "ocr": {
+    "engines": [
+      {
+        "engine": "tesseract",
+        "n_samples": 120,
+        "n_categories": 9,
+        "original_mean": 0.939721619430126,
+        "original_std": 0.09063123336915063,
+        "original_ci95": {
+          "low": 0.9234187468880103,
+          "high": 0.9552908688420785,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "subframe_mean": 0.0003353174603174603,
+        "subframe_std": 0.002396821290598816,
+        "subframe_ci95": {
+          "low": 0.0,
+          "high": 0.0008455109126984114,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "paired_reduction_mean": 0.9393863019698085,
+        "paired_reduction_ci95": {
+          "low": 0.9229736241317608,
+          "high": 0.9548905069494159,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "subframe_word_accuracy": 0.0,
+        "subframe_exact_match": 0.0,
+        "subframe_sensitive_token_recall": 0.0,
+        "sensitive_token_samples": 104
+      },
+      {
+        "engine": "easyocr",
+        "n_samples": 120,
+        "n_categories": 9,
+        "original_mean": 0.9414089114729055,
+        "original_std": 0.08097515365897287,
+        "original_ci95": {
+          "low": 0.9271264485035167,
+          "high": 0.9554308613462354,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "subframe_mean": 0.0,
+        "subframe_std": 0.0,
+        "subframe_ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "paired_reduction_mean": 0.9414089114729055,
+        "paired_reduction_ci95": {
+          "low": 0.9271264485035167,
+          "high": 0.9554308613462354,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "subframe_word_accuracy": 0.0,
+        "subframe_exact_match": 0.0,
+        "subframe_sensitive_token_recall": 0.0,
+        "sensitive_token_samples": 104
+      },
+      {
+        "engine": "paddleocr",
+        "n_samples": 120,
+        "n_categories": 9,
+        "original_mean": 0.9490724985140991,
+        "original_std": 0.07294995677584284,
+        "original_ci95": {
+          "low": 0.9365798743625091,
+          "high": 0.9615474114759004,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "subframe_mean": 3.109452736318417e-05,
+        "subframe_std": 0.00033920124734563884,
+        "subframe_ci95": {
+          "low": 0.0,
+          "high": 9.328358208955251e-05,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "paired_reduction_mean": 0.9490414039867361,
+        "paired_reduction_ci95": {
+          "low": 0.9365176853077828,
+          "high": 0.9615472002851838,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "subframe_word_accuracy": 0.0,
+        "subframe_exact_match": 0.0,
+        "subframe_sensitive_token_recall": 0.0,
+        "sensitive_token_samples": 104
+      }
+    ]
+  },
+  "strong_camera": {
+    "config": {
+      "n": 4,
+      "epsilon": 0.03137254901960784,
+      "cycles": 2,
+      "engine": "tesseract",
+      "n_samples": 120,
+      "with_noise": true,
+      "ocr_timeout": 4.0,
+      "leak_threshold_char_accuracy": 0.2
+    },
+    "attacks": [
+      {
+        "attack": "global_shutter_slot0",
+        "char_accuracy": 0.0,
+        "char_accuracy_ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.0,
+        "sensitive_token_recall": 0.0,
+        "leak_rate_char_ge_20pct": 0.0
+      },
+      {
+        "attack": "differential_luma",
+        "char_accuracy": 0.0,
+        "char_accuracy_ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.0,
+        "sensitive_token_recall": 0.0,
+        "leak_rate_char_ge_20pct": 0.0
+      },
+      {
+        "attack": "differential_blue",
+        "char_accuracy": 0.0,
+        "char_accuracy_ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.0,
+        "sensitive_token_recall": 0.0,
+        "leak_rate_char_ge_20pct": 0.0
+      },
+      {
+        "attack": "temporal_average_cycle",
+        "char_accuracy": 0.9429731017326212,
+        "char_accuracy_ci95": {
+          "low": 0.9263559141473603,
+          "high": 0.9585676490876898,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.8583333333333333,
+        "sensitive_token_recall": 0.9839362026862027,
+        "leak_rate_char_ge_20pct": 1.0
+      },
+      {
+        "attack": "phase_search_mean",
+        "char_accuracy": 0.9417352075749722,
+        "char_accuracy_ci95": {
+          "low": 0.9232958047026468,
+          "high": 0.9575487233399018,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.875,
+        "sensitive_token_recall": 0.9719551282051283,
+        "leak_rate_char_ge_20pct": 1.0
+      },
+      {
+        "attack": "phase_search_max",
+        "char_accuracy": 0.9431662258352589,
+        "char_accuracy_ci95": {
+          "low": 0.9271164354909741,
+          "high": 0.9581809867873129,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.8583333333333333,
+        "sensitive_token_recall": 0.9639423076923077,
+        "leak_rate_char_ge_20pct": 1.0
+      },
+      {
+        "attack": "blue_channel_max",
+        "char_accuracy": 0.9496981680792753,
+        "char_accuracy_ci95": {
+          "low": 0.9348367599202065,
+          "high": 0.962818615707736,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile"
+        },
+        "exact_match": 0.9,
+        "sensitive_token_recall": 0.9831730769230769,
+        "leak_rate_char_ge_20pct": 1.0
+      }
+    ],
+    "best_attack_per_sample": {
+      "char_accuracy": 0.9516994553519442,
+      "char_accuracy_ci95": {
+        "low": 0.9377993016863504,
+        "high": 0.965205844006534,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile"
+      },
+      "exact_match": 0.9166666666666666,
+      "sensitive_token_recall": 0.9863782051282052,
+      "leak_rate_char_ge_20pct": 1.0,
+      "attack_wins": {
+        "blue_channel_max": 2,
+        "differential_blue": 0,
+        "differential_luma": 0,
+        "global_shutter_slot0": 0,
+        "phase_search_max": 0,
+        "phase_search_mean": 7,
+        "temporal_average_cycle": 111
+      }
+    }
+  },
+  "detection": {
+    "available": true,
+    "engine": "ultralytics-yolo",
+    "model": "yolov8n.pt",
+    "reference_boxes": 5,
+    "single_subframe": {
+      "precision": 0.6666666666666666,
+      "recall": 0.4,
+      "f1": 0.5,
+      "map50": 0.4,
+      "prediction_boxes": 3,
+      "status": "ok"
+    },
+    "temporal_average": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "map50": 1.0,
+      "prediction_boxes": 5,
+      "status": "ok"
+    }
+  },
+  "view_attack": {
+    "available": true,
+    "angle_degrees": 35.0,
+    "frontal_ocr_char_acc": 1.0,
+    "off_axis_ocr_char_acc": 1.0,
+    "off_axis_corrected_ocr_char_acc": 1.0,
+    "off_axis_ssim_drop": 0.06396825129584927,
+    "conclusion": "离轴朴素捕获后 OCR 已与正视同为 100% → 视角差异化掩模对全周期对齐攻击者无 OCR 级保护；SSIM 的小幅下降仅为不影响可读性的可逆物理畸变（整周期平均时各区域各自还原，掩模差异化不参与）。真正不可逆的物理视角响应建模属 PoC 范围外。"
+  },
+  "vlm": {
+    "available": false,
+    "reason": "all_calls_failed",
+    "expected_file": "vlm_qwen3_siliconflow.json",
+    "config": {
+      "model": "Qwen/Qwen3-VL-32B-Instruct",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "n": 4,
+      "epsilon": 0.03137254901960784,
+      "cycles": 2,
+      "with_noise": true,
+      "samples_per_category": 1,
+      "max_samples": null,
+      "n_selected_samples": 9,
+      "attacks": [
+        "original",
+        "global_shutter_slot0",
+        "temporal_average_cycle",
+        "phase_search_mean",
+        "phase_search_max",
+        "differential_luma",
+        "differential_blue",
+        "blue_channel_max"
+      ],
+      "leak_threshold_char_accuracy": 0.2
+    },
+    "call_status": {
+      "total_calls": 72,
+      "successful_calls": 0,
+      "error_calls": 72
+    },
+    "interpretation": "VLM result file exists, but all live API calls failed; do not cite recovery metrics."
+  },
+  "real_capture": {
+    "available": false,
+    "reason": "missing_result_file",
+    "expected_file": "real_capture_ocr.json",
+    "interpretation": "Real camera capture analysis is implemented, but no real photo/video-frame result has been generated."
+  }
+}

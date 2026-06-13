@@ -20,7 +20,9 @@
 
 \subsection{国外研究现状}
 
-屏幕与相机之间的攻防问题在学术界已有持续研究。Zhang 等人\textsuperscript{[3]}在 MobiCom 会议上提出了 Kaleido 系统，通过分析人眼视觉与相机成像在时域响应上的差异，对视频帧进行时域调制，实现"可观看但不可录制"的版权保护效果，验证了利用视觉暂留差异进行显示端防护的可行性，但其目标是视频防盗录，调制方式以帧间颜色扰动为主，未针对静态文本的 OCR 威胁设计像素级掩模。Zhu 等人\textsuperscript{[4]}提出 LiShield 系统，利用智能 LED 光源的高频调制在拍摄图像中引入条带失真以保护物理空间隐私，属于光源干扰类主动防御，需要部署专用光源硬件。Fang 等人\textsuperscript{[5]}研究了抗屏摄水印（screen-shooting resilient watermarking），关注的是拍屏行为发生后的溯源取证，而非阻止信息被识别。
+屏幕与相机之间的攻防问题在学术界已有持续研究。Korayem 等人\textsuperscript{[3]}提出 ScreenAvoider，用于检测照片中是否包含计算机屏幕及敏感内容，其目标是对拍摄后的图像收集与披露进行管理，而不是从显示端阻止相机获取可读画面。Tang 与 Shin\textsuperscript{[4]}提出 Eye-Shield，通过空间退化让移动设备屏幕在近距离正视时可读、在远距离或大角度下模糊，从而防御肩窥攻击；该工作说明屏幕端主动保护具有可行性，但主要面向空间视角差异，不直接解决正面相机短曝光 OCR 威胁。Ge 等人\textsuperscript{[5]}研究了抗屏摄文档水印，关注的是拍屏行为发生后的溯源取证，而非阻止信息被识别。
+
+另一方面，屏幕-相机通信与亮度隐蔽信道研究也为本文提供了重要反向证据。DeepLight\textsuperscript{[18]}、Revelio\textsuperscript{[19]}等系统证明，人眼不明显的屏幕时空调制可以被普通手机摄像头稳定解码；BRIGHTNESS\textsuperscript{[20]}进一步表明，细微亮度变化也可能通过摄像头视频流恢复敏感数据。因此，本文在设计防御方案时不能只验证单帧 OCR，还必须把完整周期平均、相位搜索、差分累加和单通道重构等强相机攻击纳入评测边界。
 
 在对抗机器识别方面，Goodfellow 等人\textsuperscript{[6]}提出快速梯度符号法（Fast Gradient Sign Method, FGSM），证明在图像上叠加人眼难以察觉的有界扰动即可使深度神经网络产生错误输出；Madry 等人\textsuperscript{[7]}进一步提出投影梯度下降法（Projected Gradient Descent, PGD），成为目前公认的一阶对抗攻击强基线；Carlini 与 Wagner\textsuperscript{[8]}的工作则系统评估了神经网络在对抗扰动下的脆弱性。Akhtar 等人\textsuperscript{[9]}对计算机视觉中的对抗攻击进行了系统综述。这些工作为本课题"以对抗噪声最大化单帧识别错误率"的设计提供了理论与算法基础。
 

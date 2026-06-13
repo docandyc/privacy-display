@@ -1,0 +1,3403 @@
+{
+  "config": {
+    "model": "Qwen/Qwen3-VL-32B-Instruct",
+    "base_url": "https://api.siliconflow.cn/v1",
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "cycles": 2,
+    "with_noise": true,
+    "samples_per_category": 1,
+    "max_samples": null,
+    "n_selected_samples": 9,
+    "attacks": [
+      "original",
+      "global_shutter_slot0",
+      "temporal_average_cycle",
+      "phase_search_mean",
+      "phase_search_max",
+      "differential_luma",
+      "differential_blue",
+      "blue_channel_max"
+    ],
+    "leak_threshold_char_accuracy": 0.2
+  },
+  "summary": {
+    "call_status": {
+      "total_calls": 72,
+      "successful_calls": 0,
+      "error_calls": 72,
+      "all_calls_failed": true
+    },
+    "attacks": {
+      "blue_channel_max": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 29.36724198965515,
+          "std": 0.6868061741878126,
+          "count": 9,
+          "ci95": {
+            "low": 28.904070495124188,
+            "high": 29.77918391032171,
+            "half_width": 0.43755670759876075,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "differential_blue": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 11.989092714268217,
+          "std": 0.8055459103263083,
+          "count": 9,
+          "ci95": {
+            "low": 11.436261347557242,
+            "high": 12.466208937912354,
+            "half_width": 0.5149737951775561,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "differential_luma": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 11.906322142212035,
+          "std": 0.9229625758093557,
+          "count": 9,
+          "ci95": {
+            "low": 11.260595711536313,
+            "high": 12.45426720107145,
+            "half_width": 0.596835744767569,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "global_shutter_slot0": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 2.0072953603163572,
+          "std": 0.047134838321704925,
+          "count": 9,
+          "ci95": {
+            "low": 1.9768771866764032,
+            "high": 2.0369161820699513,
+            "half_width": 0.030019497696774033,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "original": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 99.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 99.0,
+            "high": 99.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "phase_search_max": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 30.116190349247656,
+          "std": 0.010179570909151253,
+          "count": 9,
+          "ci95": {
+            "low": 30.109582366389706,
+            "high": 30.122721202500617,
+            "half_width": 0.006569418055455856,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "phase_search_mean": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 26.670152362711292,
+          "std": 0.3688274482417411,
+          "count": 9,
+          "ci95": {
+            "low": 26.437678752134136,
+            "high": 26.916695350828874,
+            "half_width": 0.23950829934736895,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      },
+      "temporal_average_cycle": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "word_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "n_samples_with_sensitive_tokens": 8,
+          "stats": {
+            "mean": 0.0,
+            "std": 0.0,
+            "count": 8,
+            "ci95": {
+              "low": 0.0,
+              "high": 0.0,
+              "half_width": 0.0,
+              "confidence": 0.95,
+              "method": "bootstrap_percentile",
+              "resamples": 2000
+            }
+          }
+        },
+        "vlm_confidence": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "vlm_read_success_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "psnr_db": {
+          "mean": 3.36963063627903,
+          "std": 0.046253347165912395,
+          "count": 9,
+          "ci95": {
+            "low": 3.3389190229636356,
+            "high": 3.398145707137551,
+            "half_width": 0.02961334208695776,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 9
+      }
+    },
+    "best_attack_per_sample": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "n_samples_with_sensitive_tokens": 8,
+        "stats": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 8,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        }
+      },
+      "vlm_read_success_rate": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "attack_wins": {
+        "blue_channel_max": 0,
+        "differential_blue": 0,
+        "differential_luma": 0,
+        "global_shutter_slot0": 0,
+        "original": 9,
+        "phase_search_max": 0,
+        "phase_search_mean": 0,
+        "temporal_average_cycle": 0
+      }
+    }
+  },
+  "samples": [
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "original",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 1.9209572719088432,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 3.2962641117243336,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 27.28280719066852,
+      "reconstruction_score": 218.60009572000214,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 218.60009572000214,
+        "contrast": 21.26803207397461,
+        "edge_energy": 4.950133323669434,
+        "coverage": 1.0,
+        "saturation": 0.9771780303030303
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 30.111783238231666,
+      "reconstruction_score": 305.34316107239385,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 305.34316107239385,
+        "contrast": 24.23569679260254,
+        "edge_energy": 6.815515518188477,
+        "coverage": 1.0,
+        "saturation": 0.12077020202020201
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 10.254449991898554,
+      "reconstruction_score": 234.730621646149,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 234.730621646149,
+        "contrast": 61.05165100097656,
+        "edge_energy": 122.18592834472656,
+        "coverage": 0.9896622474747475,
+        "saturation": 0.010337752525252526
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 10.540664072933232,
+      "reconstruction_score": 232.52328325522066,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 232.52328325522066,
+        "contrast": 62.74061965942383,
+        "edge_energy": 125.4903793334961,
+        "coverage": 0.9896938131313131,
+        "saturation": 0.016351010101010102
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "code_00",
+      "sample_order": 0,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 28.07551849570686,
+      "reconstruction_score": 290.2844899784435,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 290.2844899784435,
+        "contrast": 30.68083953857422,
+        "edge_energy": 9.25998592376709,
+        "coverage": 0.9898200757575758,
+        "saturation": 0.28082386363636364
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "original",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 1.9878664688299577,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 3.358715259758725,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 26.72445035848263,
+      "reconstruction_score": 225.0443618915699,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 225.0443618915699,
+        "contrast": 29.524438858032227,
+        "edge_energy": 8.574405670166016,
+        "coverage": 1.0,
+        "saturation": 0.9590567129629629
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 30.11116950304041,
+      "reconstruction_score": 308.4093748022009,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 308.4093748022009,
+        "contrast": 33.39915466308594,
+        "edge_energy": 10.989490509033203,
+        "coverage": 1.0,
+        "saturation": 0.14000289351851852
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 12.272816029871198,
+      "reconstruction_score": 248.06959519562898,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 248.06959519562898,
+        "contrast": 54.32399368286133,
+        "edge_energy": 101.75642395019531,
+        "coverage": 0.988527199074074,
+        "saturation": 0.010561342592592593
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 12.545872028825723,
+      "reconstruction_score": 246.35351788556136,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 246.35351788556136,
+        "contrast": 55.73320007324219,
+        "edge_energy": 104.35508728027344,
+        "coverage": 0.988527199074074,
+        "saturation": 0.015827546296296298
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "account_00",
+      "sample_order": 1,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 29.891738818799087,
+      "reconstruction_score": 293.1547437597204,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 293.1547437597204,
+        "contrast": 36.80587387084961,
+        "edge_energy": 12.932090759277344,
+        "coverage": 0.9890625,
+        "saturation": 0.27437789351851855
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "original",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 2.0654238557584885,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 3.432212620399432,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 26.16063488995527,
+      "reconstruction_score": 231.66446825721312,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 231.66446825721312,
+        "contrast": 36.79450607299805,
+        "edge_energy": 11.246856689453125,
+        "coverage": 1.0,
+        "saturation": 0.9388318112633182
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 30.123268945254473,
+      "reconstruction_score": 309.294360156473,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 309.294360156473,
+        "contrast": 41.46044921875,
+        "edge_energy": 14.414947509765625,
+        "coverage": 1.0,
+        "saturation": 0.17751141552511415
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 12.654264664680355,
+      "reconstruction_score": 250.7054575857688,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 250.7054575857688,
+        "contrast": 56.8270263671875,
+        "edge_energy": 99.84493255615234,
+        "coverage": 0.9850456621004566,
+        "saturation": 0.017903348554033485
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 12.576162101142906,
+      "reconstruction_score": 250.66871921185128,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 250.66871921185128,
+        "contrast": 56.93258285522461,
+        "edge_energy": 99.99293518066406,
+        "coverage": 0.9850456621004566,
+        "saturation": 0.01784627092846271
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "mixed_00",
+      "sample_order": 2,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 29.881225992248815,
+      "reconstruction_score": 292.8693677301276,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 292.8693677301276,
+        "contrast": 45.239532470703125,
+        "edge_energy": 16.15441131591797,
+        "coverage": 0.9812024353120243,
+        "saturation": 0.3057648401826484
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "original",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 2.0455235409673196,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 3.41581413563539,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 26.369989259780805,
+      "reconstruction_score": 232.9549256524624,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 232.9549256524624,
+        "contrast": 36.93755340576172,
+        "edge_energy": 9.332487106323242,
+        "coverage": 1.0,
+        "saturation": 0.9465014064697609
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 30.112872213868034,
+      "reconstruction_score": 312.09205944259793,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 312.09205944259793,
+        "contrast": 41.43611145019531,
+        "edge_energy": 12.237863540649414,
+        "coverage": 1.0,
+        "saturation": 0.1710618846694796
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 12.607207366143209,
+      "reconstruction_score": 252.0467998112975,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 252.0467998112975,
+        "contrast": 56.87933349609375,
+        "edge_energy": 98.85327911376953,
+        "coverage": 0.9847398030942335,
+        "saturation": 0.014011954992967651
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 12.531870504422841,
+      "reconstruction_score": 251.96168503580213,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 251.96168503580213,
+        "contrast": 56.96036911010742,
+        "edge_energy": 99.06513977050781,
+        "coverage": 0.9847398030942335,
+        "saturation": 0.013554852320675105
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "digits_00",
+      "sample_order": 3,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 29.869734228224807,
+      "reconstruction_score": 295.6388600519773,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 295.6388600519773,
+        "contrast": 45.2066650390625,
+        "edge_energy": 13.859295845031738,
+        "coverage": 0.9806434599156119,
+        "saturation": 0.29901547116736993
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "original",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 2.048651371391938,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 3.3753300956978425,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 26.578972096245096,
+      "reconstruction_score": 224.0600648356184,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 224.0600648356184,
+        "contrast": 29.760910034179688,
+        "edge_energy": 10.330038070678711,
+        "coverage": 1.0,
+        "saturation": 0.953708071278826
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 30.099056819445487,
+      "reconstruction_score": 308.2955562903446,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 308.2955562903446,
+        "contrast": 33.831092834472656,
+        "edge_energy": 12.850788116455078,
+        "coverage": 1.0,
+        "saturation": 0.12684748427672957
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 12.009930436426115,
+      "reconstruction_score": 246.08255279988862,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 246.08255279988862,
+        "contrast": 55.801025390625,
+        "edge_energy": 105.36181640625,
+        "coverage": 0.9888233752620545,
+        "saturation": 0.010036687631027254
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 12.255064924242095,
+      "reconstruction_score": 244.6712488858205,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 244.6712488858205,
+        "contrast": 57.32931900024414,
+        "edge_energy": 108.09439086914062,
+        "coverage": 0.9888233752620545,
+        "saturation": 0.012106918238993711
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "paragraph_00",
+      "sample_order": 4,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 29.515769471915792,
+      "reconstruction_score": 294.1180217231095,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 294.1180217231095,
+        "contrast": 38.53029251098633,
+        "edge_energy": 15.452627182006836,
+        "coverage": 0.9893867924528302,
+        "saturation": 0.25775681341719076
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "original",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 2.051653689998354,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 3.411477742828329,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 26.326248690128185,
+      "reconstruction_score": 229.60677396001205,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 229.60677396001205,
+        "contrast": 34.92097473144531,
+        "edge_energy": 10.787596702575684,
+        "coverage": 1.0,
+        "saturation": 0.9452660406885759
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 30.133524235850576,
+      "reconstruction_score": 306.865542374493,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 306.865542374493,
+        "contrast": 39.386226654052734,
+        "edge_energy": 13.989776611328125,
+        "coverage": 1.0,
+        "saturation": 0.1853090766823161
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 12.665232454757845,
+      "reconstruction_score": 251.06187791779567,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 251.06187791779567,
+        "contrast": 55.82181167602539,
+        "edge_energy": 99.64256286621094,
+        "coverage": 0.9883998435054773,
+        "saturation": 0.016373239436619717
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 12.581027127550566,
+      "reconstruction_score": 250.99535191973237,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 250.99535191973237,
+        "contrast": 55.924659729003906,
+        "edge_energy": 99.82563018798828,
+        "coverage": 0.9883998435054773,
+        "saturation": 0.016236306729264474
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_sentence_00",
+      "sample_order": 5,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 29.89068920403011,
+      "reconstruction_score": 292.4918369776766,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 292.4918369776766,
+        "contrast": 43.012001037597656,
+        "edge_energy": 15.696220397949219,
+        "coverage": 0.9855046948356807,
+        "saturation": 0.3047535211267606
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "original",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 2.0079076983451225,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 3.3846443664221493,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 26.611056523196286,
+      "reconstruction_score": 231.63271787431506,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 231.63271787431506,
+        "contrast": 34.58203125,
+        "edge_energy": 7.4406328201293945,
+        "coverage": 1.0,
+        "saturation": 0.9550868055555556
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 30.11503257358479,
+      "reconstruction_score": 313.31237602233887,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 313.31237602233887,
+        "contrast": 38.72981262207031,
+        "edge_energy": 9.979936599731445,
+        "coverage": 1.0,
+        "saturation": 0.154375
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 12.611584393607782,
+      "reconstruction_score": 252.51329506768124,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 252.51329506768124,
+        "contrast": 55.523983001708984,
+        "edge_energy": 97.49853515625,
+        "coverage": 0.9860069444444445,
+        "saturation": 0.013142361111111112
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 12.556125788402355,
+      "reconstruction_score": 252.39618894788958,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 252.39618894788958,
+        "contrast": 55.6021842956543,
+        "edge_energy": 97.71467590332031,
+        "coverage": 0.9860069444444445,
+        "saturation": 0.012934027777777777
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "en_short_00",
+      "sample_order": 6,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 29.869066512999417,
+      "reconstruction_score": 295.1228178872003,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 295.1228178872003,
+        "contrast": 42.261478424072266,
+        "edge_energy": 11.595257759094238,
+        "coverage": 0.9821006944444445,
+        "saturation": 0.3017361111111111
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "original",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 1.9503067472019548,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 3.2952400904207133,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 27.27443958362889,
+      "reconstruction_score": 218.38553141947813,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 218.38553141947813,
+        "contrast": 21.251813888549805,
+        "edge_energy": 5.185464859008789,
+        "coverage": 1.0,
+        "saturation": 0.976808176100629
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 30.10926663967797,
+      "reconstruction_score": 308.1801159046981,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 308.1801159046981,
+        "contrast": 24.189546585083008,
+        "edge_energy": 6.7706990242004395,
+        "coverage": 1.0,
+        "saturation": 0.09238731656184486
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 10.275714118462826,
+      "reconstruction_score": 235.08324454765398,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 235.08324454765398,
+        "contrast": 60.56829071044922,
+        "edge_energy": 121.40223693847656,
+        "coverage": 0.9899109014675053,
+        "saturation": 0.010560796645702307
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 10.579915219215867,
+      "reconstruction_score": 233.38244354599925,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 233.38244354599925,
+        "contrast": 62.0080451965332,
+        "edge_energy": 124.2650146484375,
+        "coverage": 0.9898191823899372,
+        "saturation": 0.01306341719077568
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "table_00",
+      "sample_order": 7,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 28.320620004995206,
+      "reconstruction_score": 291.08424520592524,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 291.08424520592524,
+        "contrast": 30.43267059326172,
+        "edge_energy": 10.211894989013672,
+        "coverage": 0.9897798742138365,
+        "saturation": 0.26070492662473793
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "original",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 99.0,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "original"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "global_shutter_slot0",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 1.9873675984452364,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter"
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 3.356977303624355,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "temporal_average",
+        "frames": 4
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "phase_search_mean",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 26.702772672315977,
+      "reconstruction_score": 223.8175472846398,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "mean",
+        "window_size": 4,
+        "best_offset": 4,
+        "score": 223.8175472846398,
+        "contrast": 28.45384407043457,
+        "edge_energy": 8.770912170410156,
+        "coverage": 1.0,
+        "saturation": 0.9586538461538462
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 30.129738974275497,
+      "reconstruction_score": 302.60064614124786,
+      "attack_metadata": {
+        "attack": "phase_search_recovery",
+        "method": "max",
+        "window_size": 4,
+        "best_offset": 0,
+        "score": 302.60064614124786,
+        "contrast": 32.29145812988281,
+        "edge_energy": 11.742094039916992,
+        "coverage": 1.0,
+        "saturation": 0.1794871794871795
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "differential_luma",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 11.80569982406044,
+      "reconstruction_score": 244.84089660644534,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "luma",
+        "frames": 8,
+        "score": 244.84089660644534,
+        "contrast": 56.2794189453125,
+        "edge_energy": 106.43852233886719,
+        "coverage": 0.9896581196581197,
+        "saturation": 0.018974358974358976
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "differential_blue",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 11.735132661678378,
+      "reconstruction_score": 244.88760307507638,
+      "attack_metadata": {
+        "attack": "weighted_differential_accumulator",
+        "channel": "blue",
+        "frames": 8,
+        "score": 244.88760307507638,
+        "contrast": 56.345401763916016,
+        "edge_energy": 106.47061920166016,
+        "coverage": 0.9896581196581197,
+        "saturation": 0.018846153846153846
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "name": "url_token_00",
+      "sample_order": 8,
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 28.990815177976287,
+      "reconstruction_score": 289.7498937101446,
+      "attack_metadata": {
+        "attack": "channel_selective_recovery",
+        "channel": "blue",
+        "method": "max",
+        "frames": 8,
+        "score": 289.7498937101446,
+        "contrast": 37.792747497558594,
+        "edge_energy": 14.044990539550781,
+        "coverage": 0.9897863247863248,
+        "saturation": 0.30933760683760686
+      },
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    }
+  ]
+}

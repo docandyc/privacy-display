@@ -4,9 +4,9 @@
 
 \section{实验环境与数据集}
 
-实验在 macOS 平台、Python 3.10 环境下进行，主要依赖 NumPy、SciPy、PyCryptodome、OpenCV、moderngl，OCR 评测使用 Tesseract 5.4.1、EasyOCR 1.7.2、PaddleOCR 3.6.0，目标检测使用 Ultralytics YOLOv8n（8.4.65）。系统配套 166 项单元测试，运行 \verb|pytest tests/ -q| 全部通过，保证被测算法实现正确。
+实验在 macOS 平台、Python 3.10 环境下进行，主要依赖 NumPy、SciPy、PyCryptodome、OpenCV、moderngl，OCR 评测使用 Tesseract 5.4.1、EasyOCR 1.7.2、PaddleOCR 3.6.0，目标检测使用 Ultralytics YOLOv8n（8.4.65）。系统配套 176 项单元测试，运行 \verb|pytest tests/ -q| 全部通过，保证被测算法实现正确。
 
-评测数据集为自建的 120 样本文本语料，由 12 类模板各生成 10 个确定性变体，覆盖英文句子、中文句子、数字、账号口令、URL 令牌、代码片段、表格、段落、财务字段等敏感信息类型。每个样本附带真实文本（ground truth）与类别、语言、版式、字号等元数据，用于计算字符识别准确率并支持分层统计。OCR 结果均在 Tesseract、EasyOCR、PaddleOCR 三个引擎上跑满全量语料，用于验证防御效果不依赖单一 OCR 引擎。
+评测数据集为自建的 120 样本文本语料，由 12 类模板各生成 10 个确定性变体，覆盖英文句子、中文句子、数字、账号口令、URL 令牌、代码片段、表格、段落、财务字段等敏感信息类型。每个样本附带真实文本（ground truth）与类别、语言、版式、字号等元数据，用于计算字符识别准确率并支持分层统计。OCR 结果均在 Tesseract、EasyOCR、PaddleOCR 三个引擎上跑满全量语料，用于验证防御效果不依赖单一 OCR 引擎。系统另实现了在线 VLM 可读性评测入口，可将攻击帧发送至 OpenAI-compatible 视觉语言模型接口并在本地计算同一套恢复指标；由于本章未完成真实在线调用，后续不引用 VLM 数值。
 
 \section{视觉无感性评估}
 

@@ -23,8 +23,15 @@
 ```
 privacy-display/
 ├── main.py                      # 入口: demo / benchmark / window / test-noise
+├── scripts/
+│   └── reproduce_all.sh          # 投稿材料复现编排脚本
 ├── experiments/
 │   ├── attack_analysis.py       # 攻击鲁棒性分析（核心实验）
+│   ├── publication_summary.py   # 论文/投稿表格汇总（读取已有 JSON）
+│   ├── reproducibility_manifest.py # 复现实验清单（环境/命令/文件哈希）
+│   ├── real_capture_analysis.py # 真实手机/相机拍摄图片 OCR 分析
+│   ├── vlm_readability_analysis.py # 在线 VLM 可读性攻击评测（需环境变量密钥）
+│   ├── real_captures/           # 真实拍摄 metadata 模板与待导入图片
 │   └── results/                 # 实验输出（对比图/GIF/JSON/图表）
 ├── src/
 │   ├── core/
@@ -37,14 +44,19 @@ privacy-display/
 │   │   └── shaders/             # GLSL 掩模/噪声/亮度补偿着色器
 │   ├── attack/
 │   │   ├── ocr_evaluator.py     # Tesseract/EasyOCR 准确率测量（CER/WER）
+│   │   ├── vlm_evaluator.py     # OpenAI-compatible 在线 VLM 读屏评测
 │   │   └── camera_simulator.py  # 全局/卷帘快门、时域平均、长曝光攻击
 │   ├── demo/
 │   │   ├── visual_integration.py # 人眼视角 vs 相机视角对比图/动画
 │   │   └── privacy_window.py    # pygame 实时屏幕保护演示
 │   └── evaluation/
 │       ├── metrics.py           # FPI / CIEDE2000 ΔE / 归一化互信息 / 亮度均匀性
-│       └── benchmark.py         # 参数扫描评测套件 + matplotlib 图表
-└── tests/                       # 166 个单元测试
+│       ├── benchmark.py         # 参数扫描评测套件 + matplotlib 图表
+│       ├── publication_summary.py # 论文表格可复现汇总器
+│       ├── real_capture.py      # 真实拍摄 OCR 结果汇总器
+│       ├── reproducibility_manifest.py # 环境/结果/源码哈希 manifest
+│       └── vlm_benchmark.py     # VLM 语料抽样评测与统计汇总
+└── tests/                       # 179 个单元测试
 ```
 
 ---
@@ -59,7 +71,7 @@ source .venv/bin/activate
 # OCR 攻击实验额外需要：pytesseract + 系统 tesseract（brew install tesseract）
 # 目标检测实验使用：ultralytics YOLOv8n（首次运行会下载 yolov8n.pt，本地权重不提交）
 
-python -m pytest tests/ -q          # 166 项单元测试
+python -m pytest tests/ -q          # 183 项单元测试
 python main.py demo                 # 生成对比图/GIF + 打印指标
 python main.py benchmark            # 参数扫描评测（需 tesseract）
 python experiments/attack_analysis.py       # 攻击鲁棒性分析（核心实验）
@@ -78,15 +90,29 @@ python experiments/ablation_noise.py        # B1 对抗噪声消融
 python experiments/detection_attack.py      # G2 YOLOv8n 目标检测攻击
 python experiments/view_attack.py           # G3 离轴相机攻击
 python experiments/unet_reconstruction.py   # G5 学习型重构攻击
+python experiments/real_capture_analysis.py --init-template # 生成真实拍摄 metadata 模板
+python experiments/real_capture_analysis.py --engines tesseract # 分析已采集的真实拍摄图片
+python experiments/publication_summary.py   # 汇总主要 JSON 结果到 publication_summary.{json,md}
+python experiments/reproducibility_manifest.py # 记录环境、复现命令和关键文件哈希
+scripts/reproduce_all.sh                    # 默认安全路径：测试 + VLM dry-run + summary + manifest
+scripts/reproduce_all.sh --full-offline     # 追加重型离线实验，耗时较长
+scripts/reproduce_all.sh --with-vlm-live    # 追加真实在线 VLM，需先设置环境变量
+
+# 在线 VLM 读屏攻击评测（SiliconFlow / Qwen3-VL，密钥只从环境变量或本地 .env.local 读取）
+export SILICONFLOW_API_KEY="<your_api_key>"
+# 或复制 .env.example 为 .env.local，并在 .env.local 中填写；.env.local 不提交
+python experiments/vlm_readability_analysis.py --dry-run --samples-per-category 1
+python experiments/vlm_readability_analysis.py --samples-per-category 1
 ```
 
 > **改进路线见 [`改进文档.md`](改进文档.md)**：已实现 HDR 补偿(ICtCp/PQ/HLG 与 HDR 感知积分回归)、黑帧+AE 攻击、
 > 多显示器同步、性能实测、真实对抗噪声+消融、去混淆/重构攻击、视角差异化掩模、
 > 掩模取模偏置修复、多样本多引擎评测、YOLOv8n 目标检测评测、离轴攻击、
-> 学习型重构攻击、HLG/ALS、配置持久化、SSIM/运动模糊指标等。
+> 学习型重构攻击、在线 VLM 读屏评测入口、HLG/ALS、配置持久化、SSIM/运动模糊指标等。
 > 新增模块：`src/core/hdr_compensation.py`、`src/core/multi_display.py`、
 > `src/core/fatigue_policy.py`、`src/core/config.py`、`src/attack/reconstruction_attack.py`、
-> `src/attack/detection_evaluator.py`。
+> `src/attack/detection_evaluator.py`、`src/attack/vlm_evaluator.py`、`src/evaluation/vlm_benchmark.py`、
+> `src/evaluation/publication_summary.py`、`src/evaluation/reproducibility_manifest.py`。
 
 ---
 
@@ -117,7 +143,27 @@ FPI 模型与交底书逐项吻合：240Hz/n4→0.030、480Hz/n8→0.035、144Hz
 
 补充恢复指标（单子帧）同样为 0：三引擎的词级准确率、exact-match 和敏感 token 恢复率均为 **0.0%**；敏感 token 统计覆盖 104/120 个样本。
 
-投稿前仍建议继续加入 TrOCR、手机 OCR/VLM 与真实拍摄样本，验证防护结论不局限于桌面截图与开源 OCR。
+投稿前仍建议继续加入 TrOCR、手机系统 OCR 与真实拍摄样本，验证防护结论不局限于桌面截图与开源 OCR。
+
+### 4.2A 在线 VLM 可读性评估入口
+
+项目已新增 `experiments/vlm_readability_analysis.py`，可把强相机攻击帧送入 SiliconFlow 的 OpenAI-compatible Chat Completions 接口，默认模型为 `Qwen/Qwen3-VL-32B-Instruct`。VLM 只接收图像和“转写可见文字”的 JSON 指令，ground truth 不会发送给模型，只在本地用于计算字符准确率、词级准确率、exact-match 与敏感 token 恢复率，避免模型照抄答案导致评估污染。
+
+默认 dry-run 会按类别抽样 9 张语料、每张评估 8 类攻击帧，共 72 次调用；真实在线结果保存为 `experiments/results/vlm_qwen3_siliconflow.json`。如果所有 API 调用失败，CLI 会返回非零，`publication_summary` 会把该文件标记为不可引用。本次仓库中的 VLM 文件是沙箱 DNS 失败诊断，不应作为论文 VLM 防御率；在可联网环境中重新运行 `scripts/reproduce_all.sh --with-vlm-live` 后再引用数值。
+
+### 4.2B 投稿表格汇总
+
+`experiments/publication_summary.py` 会读取 `corpus_multi_engine.json`、`corpus_strong_camera_attack.json`、`detection_attack_yolo.json`、`view_attack.json` 和可选的 `vlm_qwen3_siliconflow.json`，输出 `experiments/results/publication_summary.json` 与 `experiments/results/publication_summary.md`。论文或 IEEE Access 草稿更新表格前，应先重新生成该汇总文件，避免从多个结果 JSON 手工抄数造成不一致。
+
+### 4.2C 可复现 manifest
+
+`experiments/reproducibility_manifest.py` 会输出 `experiments/results/reproducibility_manifest.json`，记录 Python/平台/关键包版本、Git commit/branch/dirty 状态、主要复现实验命令，以及结果文件和关键源码文件的 SHA-256。在线 VLM 只记录所需环境变量名 `SILICONFLOW_API_KEY`，不记录 API key 值；该文件用于投稿补充材料或归档前的可审计复现清单。
+
+`scripts/reproduce_all.sh` 是投稿材料的统一编排入口。默认只执行安全、无联网路径：全量单元测试、VLM dry-run 调用量检查、`publication_summary` 和 `reproducibility_manifest` 刷新；`--full-offline` 才会重跑较慢的 OCR/检测/重构实验，`--with-vlm-live` 才会调用在线模型。脚本会自动加载本地 `privacy-display/.env.local`，但该文件被 `.gitignore` 忽略；仓库只保留 [.env.example](/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display/.env.example:1) 占位模板。
+
+### 4.2D 真实手机/相机拍摄分析入口
+
+`experiments/real_capture_analysis.py --init-template` 会生成 `experiments/real_captures/metadata_template.json`，用于记录手机/智能眼镜/相机的设备、拍摄模式、距离、角度、曝光、刷新率和 ground truth。把真实拍摄图片或视频抽帧放入 `experiments/real_captures/` 并将模板复制为 `metadata.json` 后，可运行 `python experiments/real_capture_analysis.py --engines tesseract` 输出 `experiments/results/real_capture_ocr.json` 与 `real_capture_ocr.md`。当前仓库只提供分析入口和模板，不虚构真实拍摄结果。
 
 ### 4.3 攻击防御效果
 

@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-06-13T05:43:12.562769+00:00",
+  "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
+  "git": {
+    "commit": "da62fd658a2226015163c6916cd0f39f28706d05",
+    "branch": "master",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.10.16",
+    "platform": "macOS-12.7.6-arm64-arm-64bit",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "Pillow": "12.2.0",
+      "opencv-python": "4.12.0.88",
+      "pytest": "9.0.3",
+      "pytesseract": "0.3.13",
+      "easyocr": "1.7.2",
+      "paddleocr": "3.6.0",
+      "ultralytics": "8.4.65",
+      "pycryptodome": "3.23.0",
+      "moderngl": "5.12.0"
+    }
+  },
+  "commands": [
+    {
+      "name": "reproduce_quick",
+      "command": "scripts/reproduce_all.sh",
+      "purpose": "Run the default safe artifact refresh path.",
+      "expected": "Tests pass, VLM dry-run succeeds, publication summary and manifest are regenerated."
+    },
+    {
+      "name": "reproduce_full_offline",
+      "command": "scripts/reproduce_all.sh --full-offline",
+      "purpose": "Run heavier offline experiments before refreshing publication artifacts.",
+      "expected": "Offline result JSON files, publication summary, and manifest are regenerated."
+    },
+    {
+      "name": "reproduce_with_vlm_live",
+      "command": "scripts/reproduce_all.sh --with-vlm-live",
+      "purpose": "Run the bounded live online VLM benchmark before refreshing publication artifacts.",
+      "expected": "experiments/results/vlm_qwen3_siliconflow.json, publication summary, and manifest are regenerated.",
+      "requires_env": [
+        "SILICONFLOW_API_KEY"
+      ],
+      "secret_policy": "Do not pass the API key as an argument or write it into logs/artifacts."
+    },
+    {
+      "name": "reproduce_with_real_capture",
+      "command": "scripts/reproduce_all.sh --real-capture",
+      "purpose": "Analyze manually collected real camera captures before refreshing publication artifacts.",
+      "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, publication summary, and manifest are regenerated.",
+      "requires_data": [
+        "experiments/real_captures/metadata.json",
+        "referenced capture image files"
+      ]
+    },
+    {
+      "name": "unit_tests",
+      "command": "./.venv/bin/pytest tests/ -q",
+      "purpose": "Run unit and regression tests.",
+      "expected": "All tests pass."
+    },
+    {
+      "name": "build_corpus",
+      "command": "python experiments/build_corpus.py",
+      "purpose": "Regenerate deterministic 120-sample text corpus.",
+      "expected": "data/test_images/*.png, ground_truth.json, corpus_metadata.json"
+    },
+    {
+      "name": "multi_engine_ocr",
+      "command": "python -c \"from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)\"",
+      "purpose": "Run or merge Tesseract/EasyOCR/PaddleOCR corpus OCR results.",
+      "expected": "experiments/results/corpus_multi_engine.json"
+    },
+    {
+      "name": "strong_camera_attacks",
+      "command": "python experiments/attack_analysis.py",
+      "purpose": "Run single-sample and corpus strong camera attack baselines.",
+      "expected": "experiments/results/attack_analysis_strong_camera.json and corpus_strong_camera_attack.json"
+    },
+    {
+      "name": "detection_attack",
+      "command": "python experiments/detection_attack.py",
+      "purpose": "Evaluate YOLOv8n object-detection leakage.",
+      "expected": "experiments/results/detection_attack_yolo.json"
+    },
+    {
+      "name": "view_attack",
+      "command": "python experiments/view_attack.py",
+      "purpose": "Evaluate off-axis/full-cycle attack behavior.",
+      "expected": "experiments/results/view_attack.json"
+    },
+    {
+      "name": "unet_reconstruction",
+      "command": "python experiments/unet_reconstruction.py",
+      "purpose": "Run learned/inpainting reconstruction attack checks.",
+      "expected": "experiments/results/unet_reconstruction.json"
+    },
+    {
+      "name": "real_capture_template",
+      "command": "python experiments/real_capture_analysis.py --init-template",
+      "purpose": "Create the manual metadata template for real phone/camera capture collection.",
+      "expected": "experiments/real_captures/metadata_template.json"
+    },
+    {
+      "name": "real_capture_ocr",
+      "command": "python experiments/real_capture_analysis.py --engines tesseract",
+      "purpose": "Analyze manually collected real camera photos or video frames.",
+      "expected": "experiments/results/real_capture_ocr.json and real_capture_ocr.md",
+      "requires_data": [
+        "experiments/real_captures/metadata.json",
+        "referenced capture image files"
+      ]
+    },
+    {
+      "name": "vlm_dry_run",
+      "command": "python experiments/vlm_readability_analysis.py --dry-run --samples-per-category 1",
+      "purpose": "Estimate online VLM call count without requiring secrets.",
+      "expected": "Print selected samples, attacks, and call count."
+    },
+    {
+      "name": "vlm_live",
+      "command": "python experiments/vlm_readability_analysis.py --samples-per-category 1",
+      "purpose": "Run online VLM readability benchmark.",
+      "expected": "experiments/results/vlm_qwen3_siliconflow.json",
+      "requires_env": [
+        "SILICONFLOW_API_KEY"
+      ],
+      "secret_policy": "Do not record or commit the API key value."
+    },
+    {
+      "name": "publication_summary",
+      "command": "python experiments/publication_summary.py",
+      "purpose": "Consolidate experiment JSON into paper/table summary artifacts.",
+      "expected": "experiments/results/publication_summary.json and publication_summary.md"
+    },
+    {
+      "name": "reproducibility_manifest",
+      "command": "python experiments/reproducibility_manifest.py",
+      "purpose": "Record environment metadata and file hashes.",
+      "expected": "experiments/results/reproducibility_manifest.json"
+    }
+  ],
+  "result_files": [
+    {
+      "path": "experiments/results/corpus_multi_engine.json",
+      "exists": true,
+      "sha256": "bebef9a89fbc6298ccc2d18fd862a9f88d05087b334c0b32574e210e34cc9db5",
+      "bytes": 411145
+    },
+    {
+      "path": "experiments/results/corpus_strong_camera_attack.json",
+      "exists": true,
+      "sha256": "48fb4572e4569beb5942c4899ae154dad0fdf0afb7fb3e2cec3d2c55916d87dd",
+      "bytes": 813048
+    },
+    {
+      "path": "experiments/results/detection_attack_yolo.json",
+      "exists": true,
+      "sha256": "4ffb9a97c2f4a4ec444deb05e5b2fa1a3f9bc5409ef695b1a5924c003646fba7",
+      "bytes": 739
+    },
+    {
+      "path": "experiments/results/view_attack.json",
+      "exists": true,
+      "sha256": "cec5e21e132bf5849a4fcb13dc9e90070bd22c9b8ab48ec9eb3c231d0ddc7d78",
+      "bytes": 1014
+    },
+    {
+      "path": "experiments/results/unet_reconstruction.json",
+      "exists": true,
+      "sha256": "7592c7fbadedfcc750ea6b5f6e5321943c7b0bf267e513d373ee58403e0f7051",
+      "bytes": 1220
+    },
+    {
+      "path": "experiments/results/real_capture_ocr.json",
+      "exists": false,
+      "sha256": "",
+      "bytes": 0
+    },
+    {
+      "path": "experiments/results/real_capture_ocr.md",
+      "exists": false,
+      "sha256": "",
+      "bytes": 0
+    },
+    {
+      "path": "experiments/results/publication_summary.json",
+      "exists": true,
+      "sha256": "d433e34a1c643899fd7421aa5ed40bd98b1b2d76b68c5d0575e35a16c1e17b46",
+      "bytes": 9369
+    },
+    {
+      "path": "experiments/results/publication_summary.md",
+      "exists": true,
+      "sha256": "7b611b907aaa986412ce444ef6a0eee084ff493a6faa1cd2ecf9d35df1efaa28",
+      "bytes": 2070
+    },
+    {
+      "path": "experiments/results/vlm_qwen3_siliconflow.json",
+      "exists": true,
+      "sha256": "5540cfee255217b4f11161d46cbc5c9f837e7b37af45acef648b55f9cf54bfab",
+      "bytes": 100827
+    }
+  ],
+  "source_files": [
+    {
+      "path": "README.md",
+      "exists": true,
+      "sha256": "80d91782248b7b399177a060f5092e92155894387a610b338f991ea97d56494a",
+      "bytes": 22097
+    },
+    {
+      "path": ".env.example",
+      "exists": true,
+      "sha256": "e1f4b25d538adb1f2c672f58e21ed493b1da0bbc4cf1b0ff0aaf150d01fc833e",
+      "bytes": 160
+    },
+    {
+      "path": "requirements.txt",
+      "exists": true,
+      "sha256": "75d1af59895af13486130e7312a7c44d62f96f0999be63dac83ab6a123e57527",
+      "bytes": 283
+    },
+    {
+      "path": "scripts/reproduce_all.sh",
+      "exists": true,
+      "sha256": "ec5d6f696acc200420fe27e327943f2d80d488758a84637b2ccfb1c6b85b7fcb",
+      "bytes": 3055
+    },
+    {
+      "path": "experiments/build_corpus.py",
+      "exists": true,
+      "sha256": "478be281467d42a756370279f1187badf90dd2d35b2ee5243eb0c5c5c63f75d3",
+      "bytes": 11703
+    },
+    {
+      "path": "experiments/attack_analysis.py",
+      "exists": true,
+      "sha256": "58e54058542efdfc73abd9fc9f6077f626568f8db961db20ef67b4c0cfa03b4b",
+      "bytes": 8714
+    },
+    {
+      "path": "experiments/detection_attack.py",
+      "exists": true,
+      "sha256": "efb47f3fc68a83304e66c559e8df0f352c1601c50afe04283e0d3b6dca74ba05",
+      "bytes": 2888
+    },
+    {
+      "path": "experiments/view_attack.py",
+      "exists": true,
+      "sha256": "6b1879555a029b3772e133b4cb8e4063e5f26f589e6031da48e5209b255b0d3c",
+      "bytes": 5144
+    },
+    {
+      "path": "experiments/unet_reconstruction.py",
+      "exists": true,
+      "sha256": "4860f1627b74be46bb13ed4601ce7917c2e093c4c80847e2a81d9eeb748274a0",
+      "bytes": 6791
+    },
+    {
+      "path": "experiments/real_capture_analysis.py",
+      "exists": true,
+      "sha256": "09611dcae9618f950d25e193f29f288c3fe149919cd5a545beb46675a45ca7b0",
+      "bytes": 2069
+    },
+    {
+      "path": "experiments/real_captures/metadata_template.json",
+      "exists": true,
+      "sha256": "fee4c14d362b536993689e287856c34d60978a97f01ef1eff30bec793fd4a564",
+      "bytes": 810
+    },
+    {
+      "path": "experiments/vlm_readability_analysis.py",
+      "exists": true,
+      "sha256": "5159c39dbfa292ba23661764b34329f3b9fe89f23a9417fd526cd8a8b2392dbc",
+      "bytes": 4365
+    },
+    {
+      "path": "experiments/publication_summary.py",
+      "exists": true,
+      "sha256": "8c71c736efe273759192bfd21c33525302fe4caf83c66f7795c8112ac84a5788",
+      "bytes": 1090
+    },
+    {
+      "path": "experiments/reproducibility_manifest.py",
+      "exists": true,
+      "sha256": "93a78a2925b4005c745a171cff77098b14c026b23403b1b0597c228da44e2550",
+      "bytes": 1577
+    },
+    {
+      "path": "src/evaluation/benchmark.py",
+      "exists": true,
+      "sha256": "039f8a18a780f85a17df308e31d659657e5891cef5b725cdbf494f1c1e872fe7",
+      "bytes": 27883
+    },
+    {
+      "path": "src/evaluation/publication_summary.py",
+      "exists": true,
+      "sha256": "0ae1ad895d17b686048c6ea020955e266a3cf5a874b5c04bce27ebe97bad125b",
+      "bytes": 16115
+    },
+    {
+      "path": "src/evaluation/vlm_benchmark.py",
+      "exists": true,
+      "sha256": "838449cf87d9633236adf8916208726c2c0e593f2345072664aa01fa48ecebda",
+      "bytes": 12359
+    },
+    {
+      "path": "src/evaluation/real_capture.py",
+      "exists": true,
+      "sha256": "692c3a1bf584d13a343a8e569a36dec99f8351eb6641d05817d9f80c9e544298",
+      "bytes": 9629
+    },
+    {
+      "path": "src/evaluation/reproducibility_manifest.py",
+      "exists": true,
+      "sha256": "ea0f1a5ffa56ae32a9417827c8c190a8bba06cb78c4c7357d088dfa69adbb26d",
+      "bytes": 11068
+    },
+    {
+      "path": "src/attack/camera_simulator.py",
+      "exists": true,
+      "sha256": "0afe6a9d9d3f036482b864fe76ad895a243ec1112b2ea69eff0c1b5748062773",
+      "bytes": 27955
+    },
+    {
+      "path": "src/attack/ocr_evaluator.py",
+      "exists": true,
+      "sha256": "58e071a40672673e08af63089947e8cdbca19175690a4e02f7231b6ceb44cc9b",
+      "bytes": 12412
+    },
+    {
+      "path": "src/attack/vlm_evaluator.py",
+      "exists": true,
+      "sha256": "4be9066167d98404400feb8a3e0b8fc5f263b63fdac6886c0eeeebda9a87a2f2",
+      "bytes": 8350
+    }
+  ],
+  "secret_policy": {
+    "record_secret_values": false,
+    "secret_env_vars": [
+      "SILICONFLOW_API_KEY"
+    ],
+    "notes": "Manifest records required secret variable names only, never values."
+  }
+}

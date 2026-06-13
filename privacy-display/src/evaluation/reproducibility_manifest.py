@@ -1,0 +1,296 @@
+"""
+Reproducibility manifest for publication artifacts.
+
+The manifest records environment metadata, canonical reproduction commands, and
+hashes of result/source files. It intentionally records only whether secret
+environment variables are required, never their values.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import platform
+import subprocess
+import sys
+from datetime import datetime, timezone
+from importlib import metadata
+from pathlib import Path
+from typing import Any
+
+
+MANIFEST_JSON = "reproducibility_manifest.json"
+
+RESULT_FILES = [
+    "experiments/results/corpus_multi_engine.json",
+    "experiments/results/corpus_strong_camera_attack.json",
+    "experiments/results/detection_attack_yolo.json",
+    "experiments/results/view_attack.json",
+    "experiments/results/unet_reconstruction.json",
+    "experiments/results/real_capture_ocr.json",
+    "experiments/results/real_capture_ocr.md",
+    "experiments/results/publication_summary.json",
+    "experiments/results/publication_summary.md",
+    "experiments/results/vlm_qwen3_siliconflow.json",
+]
+
+SOURCE_FILES = [
+    "README.md",
+    ".env.example",
+    "requirements.txt",
+    "scripts/reproduce_all.sh",
+    "experiments/build_corpus.py",
+    "experiments/attack_analysis.py",
+    "experiments/detection_attack.py",
+    "experiments/view_attack.py",
+    "experiments/unet_reconstruction.py",
+    "experiments/real_capture_analysis.py",
+    "experiments/real_captures/metadata_template.json",
+    "experiments/vlm_readability_analysis.py",
+    "experiments/publication_summary.py",
+    "experiments/reproducibility_manifest.py",
+    "src/evaluation/benchmark.py",
+    "src/evaluation/publication_summary.py",
+    "src/evaluation/vlm_benchmark.py",
+    "src/evaluation/real_capture.py",
+    "src/evaluation/reproducibility_manifest.py",
+    "src/attack/camera_simulator.py",
+    "src/attack/ocr_evaluator.py",
+    "src/attack/vlm_evaluator.py",
+]
+
+PACKAGE_NAMES = [
+    "numpy",
+    "scipy",
+    "Pillow",
+    "opencv-python",
+    "pytest",
+    "pytesseract",
+    "easyocr",
+    "paddleocr",
+    "ultralytics",
+    "pycryptodome",
+    "moderngl",
+]
+
+REPRODUCTION_COMMANDS = [
+    {
+        "name": "reproduce_quick",
+        "command": "scripts/reproduce_all.sh",
+        "purpose": "Run the default safe artifact refresh path.",
+        "expected": "Tests pass, VLM dry-run succeeds, publication summary and manifest are regenerated.",
+    },
+    {
+        "name": "reproduce_full_offline",
+        "command": "scripts/reproduce_all.sh --full-offline",
+        "purpose": "Run heavier offline experiments before refreshing publication artifacts.",
+        "expected": "Offline result JSON files, publication summary, and manifest are regenerated.",
+    },
+    {
+        "name": "reproduce_with_vlm_live",
+        "command": "scripts/reproduce_all.sh --with-vlm-live",
+        "purpose": "Run the bounded live online VLM benchmark before refreshing publication artifacts.",
+        "expected": "experiments/results/vlm_qwen3_siliconflow.json, publication summary, and manifest are regenerated.",
+        "requires_env": ["SILICONFLOW_API_KEY"],
+        "secret_policy": "Do not pass the API key as an argument or write it into logs/artifacts.",
+    },
+    {
+        "name": "reproduce_with_real_capture",
+        "command": "scripts/reproduce_all.sh --real-capture",
+        "purpose": "Analyze manually collected real camera captures before refreshing publication artifacts.",
+        "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, publication summary, and manifest are regenerated.",
+        "requires_data": ["experiments/real_captures/metadata.json", "referenced capture image files"],
+    },
+    {
+        "name": "unit_tests",
+        "command": "./.venv/bin/pytest tests/ -q",
+        "purpose": "Run unit and regression tests.",
+        "expected": "All tests pass.",
+    },
+    {
+        "name": "build_corpus",
+        "command": "python experiments/build_corpus.py",
+        "purpose": "Regenerate deterministic 120-sample text corpus.",
+        "expected": "data/test_images/*.png, ground_truth.json, corpus_metadata.json",
+    },
+    {
+        "name": "multi_engine_ocr",
+        "command": "python -c \"from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)\"",
+        "purpose": "Run or merge Tesseract/EasyOCR/PaddleOCR corpus OCR results.",
+        "expected": "experiments/results/corpus_multi_engine.json",
+    },
+    {
+        "name": "strong_camera_attacks",
+        "command": "python experiments/attack_analysis.py",
+        "purpose": "Run single-sample and corpus strong camera attack baselines.",
+        "expected": "experiments/results/attack_analysis_strong_camera.json and corpus_strong_camera_attack.json",
+    },
+    {
+        "name": "detection_attack",
+        "command": "python experiments/detection_attack.py",
+        "purpose": "Evaluate YOLOv8n object-detection leakage.",
+        "expected": "experiments/results/detection_attack_yolo.json",
+    },
+    {
+        "name": "view_attack",
+        "command": "python experiments/view_attack.py",
+        "purpose": "Evaluate off-axis/full-cycle attack behavior.",
+        "expected": "experiments/results/view_attack.json",
+    },
+    {
+        "name": "unet_reconstruction",
+        "command": "python experiments/unet_reconstruction.py",
+        "purpose": "Run learned/inpainting reconstruction attack checks.",
+        "expected": "experiments/results/unet_reconstruction.json",
+    },
+    {
+        "name": "real_capture_template",
+        "command": "python experiments/real_capture_analysis.py --init-template",
+        "purpose": "Create the manual metadata template for real phone/camera capture collection.",
+        "expected": "experiments/real_captures/metadata_template.json",
+    },
+    {
+        "name": "real_capture_ocr",
+        "command": "python experiments/real_capture_analysis.py --engines tesseract",
+        "purpose": "Analyze manually collected real camera photos or video frames.",
+        "expected": "experiments/results/real_capture_ocr.json and real_capture_ocr.md",
+        "requires_data": ["experiments/real_captures/metadata.json", "referenced capture image files"],
+    },
+    {
+        "name": "vlm_dry_run",
+        "command": "python experiments/vlm_readability_analysis.py --dry-run --samples-per-category 1",
+        "purpose": "Estimate online VLM call count without requiring secrets.",
+        "expected": "Print selected samples, attacks, and call count.",
+    },
+    {
+        "name": "vlm_live",
+        "command": "python experiments/vlm_readability_analysis.py --samples-per-category 1",
+        "purpose": "Run online VLM readability benchmark.",
+        "expected": "experiments/results/vlm_qwen3_siliconflow.json",
+        "requires_env": ["SILICONFLOW_API_KEY"],
+        "secret_policy": "Do not record or commit the API key value.",
+    },
+    {
+        "name": "publication_summary",
+        "command": "python experiments/publication_summary.py",
+        "purpose": "Consolidate experiment JSON into paper/table summary artifacts.",
+        "expected": "experiments/results/publication_summary.json and publication_summary.md",
+    },
+    {
+        "name": "reproducibility_manifest",
+        "command": "python experiments/reproducibility_manifest.py",
+        "purpose": "Record environment metadata and file hashes.",
+        "expected": "experiments/results/reproducibility_manifest.json",
+    },
+]
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def file_record(project_root: Path, relative_path: str) -> dict:
+    path = project_root / relative_path
+    if not path.exists():
+        return {
+            "path": relative_path,
+            "exists": False,
+            "sha256": "",
+            "bytes": 0,
+        }
+    return {
+        "path": relative_path,
+        "exists": True,
+        "sha256": sha256_file(path),
+        "bytes": int(path.stat().st_size),
+    }
+
+
+def package_versions(package_names: list[str] | None = None) -> dict:
+    versions = {}
+    for name in package_names or PACKAGE_NAMES:
+        try:
+            versions[name] = metadata.version(name)
+        except metadata.PackageNotFoundError:
+            versions[name] = None
+    return versions
+
+
+def git_metadata(project_root: Path) -> dict:
+    return {
+        "commit": _git(project_root, "rev-parse", "HEAD"),
+        "branch": _git(project_root, "rev-parse", "--abbrev-ref", "HEAD"),
+        "dirty": bool(_git(project_root, "status", "--porcelain")),
+    }
+
+
+def build_reproducibility_manifest(
+    project_root: str | Path = ".",
+    result_files: list[str] | None = None,
+    source_files: list[str] | None = None,
+    timestamp: str | None = None,
+) -> dict:
+    """Build a reproducibility manifest without reading or writing secrets."""
+    root = Path(project_root)
+    if result_files is None:
+        result_files = RESULT_FILES
+    if source_files is None:
+        source_files = SOURCE_FILES
+    return {
+        "schema_version": 1,
+        "generated_at_utc": timestamp or datetime.now(timezone.utc).isoformat(),
+        "project_root": str(root.resolve()),
+        "git": git_metadata(root),
+        "environment": {
+            "python": sys.version.split()[0],
+            "platform": platform.platform(),
+            "machine": platform.machine(),
+            "packages": package_versions(),
+        },
+        "commands": REPRODUCTION_COMMANDS,
+        "result_files": [file_record(root, path) for path in result_files],
+        "source_files": [file_record(root, path) for path in source_files],
+        "secret_policy": {
+            "record_secret_values": False,
+            "secret_env_vars": ["SILICONFLOW_API_KEY"],
+            "notes": "Manifest records required secret variable names only, never values.",
+        },
+    }
+
+
+def write_reproducibility_manifest(
+    project_root: str | Path = ".",
+    output_path: str | Path = "experiments/results/reproducibility_manifest.json",
+    manifest: dict | None = None,
+) -> dict:
+    root = Path(project_root)
+    manifest = manifest or build_reproducibility_manifest(root)
+    out = Path(output_path)
+    if not out.is_absolute():
+        out = root / out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+    return manifest
+
+
+def _git(project_root: Path, *args: str) -> str:
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=project_root,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+        )
+    except Exception:
+        return ""
+    if result.returncode != 0:
+        return ""
+    return result.stdout.strip()
