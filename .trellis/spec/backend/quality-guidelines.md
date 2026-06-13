@@ -35,6 +35,63 @@ Questions to answer:
 - CSPRNG-derived bounded integers must use rejection sampling instead of direct modulo. This applies to mask index generation and Fisher-Yates permutation indices; direct `% upper` introduces modulo bias unless `upper` divides the random integer space exactly.
 - Display-timing code that is exercised by an actual window should advance timing tokens from the display/vsync boundary when available. Software `sleep` loops are acceptable only as a simulation fallback and should share the same token-advance path.
 
+## Scenario: Web Study Submission Backend
+
+### 1. Scope / Trigger
+- Trigger: `privacy-display/webstudy` adds or changes the Flask + SQLite user-study demo used to collect participant identity, refresh-rate covariates, typing performance, and ablation ratings.
+
+### 2. Signatures
+- Command: `python webstudy/server.py --host 127.0.0.1 --port 5000 --db webstudy/study.db`
+- API: `POST /api/submit` with JSON `{participant, session, typing, ratings}`
+- API: `GET /admin/export.csv?token=...`
+- API: `GET /admin/stats`
+- DB tables: `participants`, `typing`, `ratings`
+- Env: `WEBSTUDY_DB`, `WEBSTUDY_HOST`, `WEBSTUDY_PORT`, optional `WEBSTUDY_EXPORT_TOKEN`
+
+### 3. Contracts
+- `participant.student_id` and `participant.name` are required non-empty strings; optional fields include `glasses` and `major`.
+- `session` must preserve measured display timing: `assumed_monitor_hz`, `refresh_hz`, `refresh_ok`, `refresh_samples`, and `mean_frame_ms`.
+- `typing` must contain exactly two rows: one `control` and one `masked`; each row stores `target_text`, `typed_text`, accuracy metrics, `duration_s`, `n`, `requested_n`, and `components`.
+- `ratings` must contain exactly four rows for the ablation conditions; each row stores 1-5 integer ratings for `readability`, `flicker`, `fatigue`, and `privacy`, plus `order_index`.
+- CSV export is a long table with `row_type` set to `typing` or `rating`, repeating participant/session columns on each row.
+
+### 4. Validation & Error Matrix
+- Missing participant object -> HTTP 400.
+- Empty `student_id` or `name` -> HTTP 400.
+- `typing` length not equal to 2 -> HTTP 400.
+- Duplicate or unknown typing condition -> HTTP 400.
+- `ratings` length not equal to 4 -> HTTP 400.
+- Rating outside `[1, 5]` -> HTTP 400.
+- `accuracy` outside `[0, 1]` -> HTTP 400.
+- `WEBSTUDY_EXPORT_TOKEN` set and query token missing/mismatched -> HTTP 403 for admin exports/stats.
+
+### 5. Good/Base/Bad Cases
+- Good: run a debug browser session, submit once, then confirm `/admin/stats` reports one participant, two typing groups, and four rating groups.
+- Base: low-refresh browser sessions are accepted but must preserve `refresh_ok=false` and the effective `n`/`requested_n` distinction.
+- Bad: storing only aggregate WPM and dropping `target_text`/`typed_text`, because later analysis cannot audit scoring.
+- Bad: exporting separate participant-only rows without event rows, because CSV consumers cannot join typing/rating outcomes without extra queries.
+
+### 6. Tests Required
+- Assert valid payload submission returns 200 and inserts one participant, two typing rows, and four rating rows.
+- Assert malformed payloads return 400 for missing identity, wrong typing count, wrong rating count, invalid rating, and invalid accuracy.
+- Assert `/admin/export.csv` includes participant columns plus typing/rating event columns.
+- Assert token-protected admin endpoints reject missing or incorrect tokens when `WEBSTUDY_EXPORT_TOKEN` is set.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+conn.execute("INSERT INTO typing (condition, wpm) VALUES (?, ?)", (condition, wpm))
+```
+
+#### Correct
+```python
+conn.execute(
+    "INSERT INTO typing (participant_id, condition, target_text, typed_text, wpm, duration_s) "
+    "VALUES (?, ?, ?, ?, ?, ?)",
+    (participant_id, condition, target_text, typed_text, wpm, duration_s),
+)
+```
+
 ## Scenario: Noise Injector Adversarial Loop
 
 ### 1. Scope / Trigger
