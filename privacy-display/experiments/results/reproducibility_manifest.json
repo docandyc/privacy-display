@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-06-13T05:43:12.562769+00:00",
+  "generated_at_utc": "2026-06-13T14:17:05.723237+00:00",
   "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
   "git": {
-    "commit": "da62fd658a2226015163c6916cd0f39f28706d05",
+    "commit": "7699c74c0d25eb1bde5b84282cad567170be201c",
     "branch": "master",
     "dirty": true
   },
@@ -22,7 +22,10 @@
       "paddleocr": "3.6.0",
       "ultralytics": "8.4.65",
       "pycryptodome": "3.23.0",
-      "moderngl": "5.12.0"
+      "moderngl": "5.12.0",
+      "transformers": null,
+      "torch": "2.11.0",
+      "python-doctr": null
     }
   },
   "commands": [
@@ -99,6 +102,79 @@
       "command": "python experiments/unet_reconstruction.py",
       "purpose": "Run learned/inpainting reconstruction attack checks.",
       "expected": "experiments/results/unet_reconstruction.json"
+    },
+    {
+      "name": "component_ablation",
+      "command": "python experiments/component_ablation.py --max-samples 24",
+      "purpose": "Run systematic component contribution ablation.",
+      "expected": "experiments/results/component_ablation.json"
+    },
+    {
+      "name": "recognizer_generalization",
+      "command": "python experiments/recognizer_generalization.py --engines tesseract --max-samples 24",
+      "purpose": "Run recognizer/attack-frame matrix with offline-safe OCR engines.",
+      "expected": "experiments/results/recognizer_generalization.json"
+    },
+    {
+      "name": "perceptual_ablation",
+      "command": "python experiments/perceptual_ablation.py --max-samples 24",
+      "purpose": "Run channel/perceptual side-channel ablation.",
+      "expected": "experiments/results/perceptual_ablation.json"
+    },
+    {
+      "name": "pareto_sweep",
+      "command": "python experiments/pareto_sweep.py --max-samples 24",
+      "purpose": "Run security/usability Pareto sweep.",
+      "expected": "experiments/results/pareto_sweep.json and pareto_sweep.png"
+    },
+    {
+      "name": "strong_attack_extra",
+      "command": "python experiments/strong_attack_extra.py --max-samples 24",
+      "purpose": "Run rolling-shutter row-alignment and temporal-superresolution boundary checks.",
+      "expected": "experiments/results/strong_attack_extra.json"
+    },
+    {
+      "name": "adaptive_attack_ablation",
+      "command": "python experiments/adaptive_attack_ablation.py --max-samples 24",
+      "purpose": "Run adaptive single-frame OCR preprocessing attacks.",
+      "expected": "experiments/results/adaptive_attack_ablation.json"
+    },
+    {
+      "name": "camera_pipeline_ablation",
+      "command": "python experiments/camera_pipeline_ablation.py --max-samples 24",
+      "purpose": "Run simulated camera pipeline perturbation ablation.",
+      "expected": "experiments/results/camera_pipeline_ablation.json"
+    },
+    {
+      "name": "screen_privacy_baselines",
+      "command": "python experiments/screen_privacy_baselines.py --max-samples 24",
+      "purpose": "Compare temporal masking against software baseline controls.",
+      "expected": "experiments/results/screen_privacy_baselines.json"
+    },
+    {
+      "name": "vlm_prompt_ablation_dry_run",
+      "command": "python experiments/vlm_prompt_ablation.py --dry-run --samples-per-category 1",
+      "purpose": "Estimate online VLM prompt-ablation call count without requiring secrets.",
+      "expected": "Print selected sample, attack, prompt, and call counts."
+    },
+    {
+      "name": "vlm_prompt_ablation_live",
+      "command": "python experiments/vlm_prompt_ablation.py --samples-per-category 1",
+      "purpose": "Run live prompt-robustness ablation for online VLM readability.",
+      "expected": "experiments/results/vlm_prompt_ablation.json",
+      "requires_env": [
+        "SILICONFLOW_API_KEY"
+      ],
+      "secret_policy": "Do not record or commit the API key value."
+    },
+    {
+      "name": "usability_pilot",
+      "command": "python experiments/usability_pilot.py --input experiments/usability_pilot.csv",
+      "purpose": "Summarize a small internal usability pilot when CSV data exists.",
+      "expected": "experiments/results/usability_pilot.json and usability_pilot.md",
+      "requires_data": [
+        "experiments/usability_pilot.csv with non-template rows"
+      ]
     },
     {
       "name": "real_capture_template",
@@ -189,22 +265,94 @@
       "bytes": 0
     },
     {
+      "path": "experiments/results/component_ablation.json",
+      "exists": true,
+      "sha256": "3ff12c6d16979b7c1ac8e0674a4d41ae2217bf9bd7451faa5d13b2ed70e01bd0",
+      "bytes": 4341
+    },
+    {
+      "path": "experiments/results/recognizer_generalization.json",
+      "exists": true,
+      "sha256": "141aca4aeb7f4bc52f6a49aca0927cb9911541f11a4d86e0a50f16e31a1e78dc",
+      "bytes": 36331
+    },
+    {
+      "path": "experiments/results/perceptual_ablation.json",
+      "exists": true,
+      "sha256": "6b19e798e7506149aead244842b02f1f7a83a2c3511f70a3a59564ff1d65fdcf",
+      "bytes": 8524
+    },
+    {
+      "path": "experiments/results/pareto_sweep.json",
+      "exists": true,
+      "sha256": "6b4979ca802d95a3bd3db90649187e0ee33be968314ce24598f3b7efad37a0cc",
+      "bytes": 12979
+    },
+    {
+      "path": "experiments/results/pareto_sweep.png",
+      "exists": true,
+      "sha256": "20f4678696fbdc03e05b271d0582785e397ad7ce2027b8b37a663834bdc56b7e",
+      "bytes": 57158
+    },
+    {
+      "path": "experiments/results/strong_attack_extra.json",
+      "exists": true,
+      "sha256": "34b47a095e9b7b986aa1b33e95a874b8ae503dcdb2b82d93a92a23d48508e917",
+      "bytes": 39926
+    },
+    {
+      "path": "experiments/results/adaptive_attack_ablation.json",
+      "exists": true,
+      "sha256": "01772f5f905cd96421876edf2c9ee1a671622e4abbc65587a0e7566061cfd038",
+      "bytes": 46425
+    },
+    {
+      "path": "experiments/results/camera_pipeline_ablation.json",
+      "exists": true,
+      "sha256": "1eb74b442a6f686bd100910324b4e43ef01d012b9c66437909a67aac5f189f46",
+      "bytes": 53889
+    },
+    {
+      "path": "experiments/results/screen_privacy_baselines.json",
+      "exists": true,
+      "sha256": "4fe9cb1d91d6d393c4120eca0699c57f1c3d1caf5c5317535c32539fe9ea8119",
+      "bytes": 56280
+    },
+    {
+      "path": "experiments/results/vlm_prompt_ablation.json",
+      "exists": false,
+      "sha256": "",
+      "bytes": 0
+    },
+    {
+      "path": "experiments/results/usability_pilot.json",
+      "exists": false,
+      "sha256": "",
+      "bytes": 0
+    },
+    {
+      "path": "experiments/results/usability_pilot.md",
+      "exists": false,
+      "sha256": "",
+      "bytes": 0
+    },
+    {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "d433e34a1c643899fd7421aa5ed40bd98b1b2d76b68c5d0575e35a16c1e17b46",
-      "bytes": 9369
+      "sha256": "777d100e268feb54313f7699991138734704be4defd1fd4ef83047822b142030",
+      "bytes": 23548
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "7b611b907aaa986412ce444ef6a0eee084ff493a6faa1cd2ecf9d35df1efaa28",
-      "bytes": 2070
+      "sha256": "28aa3a2390c1728364063ea1f6e77d33487c6045ddae6a5c24d94aa0cb8bf19a",
+      "bytes": 3517
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
       "exists": true,
-      "sha256": "5540cfee255217b4f11161d46cbc5c9f837e7b37af45acef648b55f9cf54bfab",
-      "bytes": 100827
+      "sha256": "21e966756a760d9137f895a00b618554dd5d80e5d7316137275ca3af6a3137ce",
+      "bytes": 109841
     }
   ],
   "source_files": [
@@ -229,8 +377,8 @@
     {
       "path": "scripts/reproduce_all.sh",
       "exists": true,
-      "sha256": "ec5d6f696acc200420fe27e327943f2d80d488758a84637b2ccfb1c6b85b7fcb",
-      "bytes": 3055
+      "sha256": "440c3c56c17d1a4b36de42d95e7fd8e6108806a3d2b978bf0bba5a794b33fd5a",
+      "bytes": 3810
     },
     {
       "path": "experiments/build_corpus.py",
@@ -269,6 +417,72 @@
       "bytes": 2069
     },
     {
+      "path": "experiments/real_capture_shoot.py",
+      "exists": true,
+      "sha256": "42b91498fb171d5902ee2f712469ba198d1759919fca4014028414f7d6759083",
+      "bytes": 22489
+    },
+    {
+      "path": "experiments/component_ablation.py",
+      "exists": true,
+      "sha256": "695d2bc6483c2f095324bd90b26eab0b589aa199fcbe55885ff915d7f523631a",
+      "bytes": 9946
+    },
+    {
+      "path": "experiments/recognizer_generalization.py",
+      "exists": true,
+      "sha256": "20ff62e856e403c61d8939400a8c88bfc3c757762bf0204bb7b2280458f3c1d5",
+      "bytes": 8225
+    },
+    {
+      "path": "experiments/perceptual_ablation.py",
+      "exists": true,
+      "sha256": "7cb20db926ea1483ed47ef4d72d3517c5606adb1f5e89e6f5008c00b111d3dd9",
+      "bytes": 7660
+    },
+    {
+      "path": "experiments/pareto_sweep.py",
+      "exists": true,
+      "sha256": "00d8757c1ea17331b97b22e042ec64e9e7c8b7e8a70612d1f36de57bf02dd244",
+      "bytes": 9457
+    },
+    {
+      "path": "experiments/strong_attack_extra.py",
+      "exists": true,
+      "sha256": "b183e609a7dd1bf749be5cfa6fbd3260c405a0fc6a521eb88a17cf28a5b5e9a4",
+      "bytes": 7679
+    },
+    {
+      "path": "experiments/adaptive_attack_ablation.py",
+      "exists": true,
+      "sha256": "81a5abe795d3b5af0caac1834c40a93a1963eb840c254ea8371c79a5821b39c6",
+      "bytes": 6301
+    },
+    {
+      "path": "experiments/camera_pipeline_ablation.py",
+      "exists": true,
+      "sha256": "9c4126c44f934c3d6f3531bea423bd6821933761408ca4e5680f197f08088deb",
+      "bytes": 7165
+    },
+    {
+      "path": "experiments/screen_privacy_baselines.py",
+      "exists": true,
+      "sha256": "a36b8a9a811315e524c9c0d1a9281b8d8ac83d51fea2a0413665e1a765e6163f",
+      "bytes": 7291
+    },
+    {
+      "path": "experiments/vlm_prompt_ablation.py",
+      "exists": true,
+      "sha256": "7d237897181d0a21b1d44f0531d570ded7fdde0c8f45d17891685d60a1e08f64",
+      "bytes": 7813
+    },
+    {
+      "path": "experiments/usability_pilot.py",
+      "exists": true,
+      "sha256": "b5daf621013b5b662d2dcf79b15254681602cadfa60c03705457c14ff25d1d40",
+      "bytes": 6009
+    },
+    {
       "path": "experiments/real_captures/metadata_template.json",
       "exists": true,
       "sha256": "fee4c14d362b536993689e287856c34d60978a97f01ef1eff30bec793fd4a564",
@@ -277,8 +491,8 @@
     {
       "path": "experiments/vlm_readability_analysis.py",
       "exists": true,
-      "sha256": "5159c39dbfa292ba23661764b34329f3b9fe89f23a9417fd526cd8a8b2392dbc",
-      "bytes": 4365
+      "sha256": "97205fd45e35daee694be9214d8eada04df6a33f26caab689378a6e43abe5d1f",
+      "bytes": 4879
     },
     {
       "path": "experiments/publication_summary.py",
@@ -301,14 +515,14 @@
     {
       "path": "src/evaluation/publication_summary.py",
       "exists": true,
-      "sha256": "0ae1ad895d17b686048c6ea020955e266a3cf5a874b5c04bce27ebe97bad125b",
-      "bytes": 16115
+      "sha256": "c6d3382bec46193451fc03d6c4155e71b381485941f87e3e2daaa8127a89df8e",
+      "bytes": 21671
     },
     {
       "path": "src/evaluation/vlm_benchmark.py",
       "exists": true,
-      "sha256": "838449cf87d9633236adf8916208726c2c0e593f2345072664aa01fa48ecebda",
-      "bytes": 12359
+      "sha256": "7fdd1aff5782439c2743660885e562380022fc3a371ec73a67a3b7d45474715e",
+      "bytes": 13180
     },
     {
       "path": "src/evaluation/real_capture.py",
@@ -317,22 +531,28 @@
       "bytes": 9629
     },
     {
+      "path": "src/evaluation/sampling.py",
+      "exists": true,
+      "sha256": "9348fea722c93a83e63f80861880771699e741bdcc2f1b68b05b4f5a33e43605",
+      "bytes": 3231
+    },
+    {
       "path": "src/evaluation/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "ea0f1a5ffa56ae32a9417827c8c190a8bba06cb78c4c7357d088dfa69adbb26d",
-      "bytes": 11068
+      "sha256": "5d4f689f3be0a62f97b939eca4d33318e525f1d68c0cbc42e0def7c3f0e00b45",
+      "bytes": 15713
     },
     {
       "path": "src/attack/camera_simulator.py",
       "exists": true,
-      "sha256": "0afe6a9d9d3f036482b864fe76ad895a243ec1112b2ea69eff0c1b5748062773",
-      "bytes": 27955
+      "sha256": "ac7bf4132d519dfceaeb46f5f443a0d98ae9e95c7945a2cb3205746a9b6e7f01",
+      "bytes": 31754
     },
     {
       "path": "src/attack/ocr_evaluator.py",
       "exists": true,
-      "sha256": "58e071a40672673e08af63089947e8cdbca19175690a4e02f7231b6ceb44cc9b",
-      "bytes": 12412
+      "sha256": "f5cde1812b1416c5068fb8804b2de3e2cdf930483c18f255aecdc5aa805b5f65",
+      "bytes": 15792
     },
     {
       "path": "src/attack/vlm_evaluator.py",

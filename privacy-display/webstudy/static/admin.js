@@ -40,7 +40,7 @@
   }
 
   function cycleHz(row) {
-    return row && row.mask_meta ? fmt(row.mask_meta.cycle_hz, 1, " Hz") : "-";
+    return row && row.mask_meta ? fmt(row.mask_meta.cycle_hz, 1, " 赫兹") : "-";
   }
 
   async function loadData() {
@@ -49,7 +49,7 @@
       const response = await fetch(endpoint("/admin/data.json"), { headers: { "Accept": "application/json" } });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || `HTTP ${response.status}`);
+        throw new Error(data.error || `请求失败 ${response.status}`);
       }
       renderDashboard(data);
     } catch (error) {
@@ -59,9 +59,9 @@
 
   function renderLoading() {
     root.innerHTML = `
-      ${header("Loading study data")}
+      ${header("正在加载研究数据")}
       <section class="admin-panel">
-        <p class="status-line">Reading SQLite rows from the study server...</p>
+        <p class="status-line">正在从研究服务器读取数据库数据……</p>
       </section>
     `;
     wireHeaderControls();
@@ -69,11 +69,11 @@
 
   function renderError(message) {
     root.innerHTML = `
-      ${header("Study Admin")}
+      ${header("研究后台")}
       <section class="admin-panel">
-        <h2>Data unavailable</h2>
+        <h2>数据不可用</h2>
         <p class="error">${escapeHtml(message)}</p>
-        <p class="status-line">If export protection is enabled, enter the same token used in the server environment.</p>
+        <p class="status-line">如果启用了导出保护，请输入与服务器环境一致的令牌。</p>
       </section>
     `;
     wireHeaderControls();
@@ -84,14 +84,14 @@
       <header class="admin-header">
         <div>
           <h1>${escapeHtml(title)}</h1>
-          <p>Participant-level results, paired typing comparison, ratings, and exports.</p>
+          <p>查看被试级结果、成对打字对比、评分以及导出数据。</p>
         </div>
         <div class="admin-actions">
-          <input id="adminToken" type="password" placeholder="Export token" value="${escapeHtml(token)}">
-          <button class="button secondary" id="saveToken">Use token</button>
-          <button class="button secondary" id="refreshAdmin">Refresh</button>
-          <a class="button" href="${endpoint("/admin/export.csv")}">Export CSV</a>
-          <a class="button secondary" href="${endpoint("/admin/data.json")}">Export JSON</a>
+          <input id="adminToken" type="password" placeholder="导出令牌" value="${escapeHtml(token)}">
+          <button class="button secondary" id="saveToken">使用令牌</button>
+          <button class="button secondary" id="refreshAdmin">刷新</button>
+          <a class="button" href="${endpoint("/admin/export.csv")}">导出表格</a>
+          <a class="button secondary" href="${endpoint("/admin/data.json")}">导出数据</a>
         </div>
       </header>
     `;
@@ -114,33 +114,33 @@
   function renderDashboard(data) {
     const paired = data.summary.paired_typing || {};
     root.innerHTML = `
-      ${header("Study Admin")}
+      ${header("研究后台")}
       <section class="admin-grid">
-        ${statCard("Participants", data.summary.participants, "submitted sessions")}
-        ${statCard("Paired trials", paired.n_pairs || 0, "control + masked")}
-        ${statCard("Original WPM", fmt(paired.control_wpm, 1), "paired mean")}
-        ${statCard("Masked WPM", fmt(paired.masked_wpm, 1), "paired mean")}
-        ${statCard("Masked delta", `${fmt(paired.delta_wpm, 1)} / ${pct(paired.delta_pct)}`, "masked minus original")}
+        ${statCard("被试人数", data.summary.participants, "已提交会话")}
+        ${statCard("配对试次", paired.n_pairs || 0, "原文 + 遮罩")}
+        ${statCard("原文词速", fmt(paired.control_wpm, 1), "配对均值")}
+        ${statCard("遮罩词速", fmt(paired.masked_wpm, 1), "配对均值")}
+        ${statCard("遮罩差值", `${fmt(paired.delta_wpm, 1)} / ${pct(paired.delta_pct)}`, "遮罩减原文")}
       </section>
       <section class="admin-panel">
         <div class="admin-panel-head">
-          <h2>Participant Summary</h2>
+          <h2>被试汇总</h2>
           <span>${escapeHtml(data.generated_at)}</span>
         </div>
         ${participantTable(data.participants)}
       </section>
       <section class="admin-panel">
         <div class="admin-panel-head">
-          <h2>Rating Means By Condition</h2>
+          <h2>按条件统计的评分均值</h2>
         </div>
         ${ratingSummaryTable(data.summary.ratings || [])}
       </section>
       <details class="admin-panel" open>
-        <summary>Typing Rows</summary>
+        <summary>打字明细</summary>
         ${typingTable(data.typing)}
       </details>
       <details class="admin-panel">
-        <summary>Rating Rows</summary>
+        <summary>评分明细</summary>
         ${ratingRowsTable(data.ratings)}
       </details>
     `;
@@ -158,16 +158,16 @@
 
   function participantTable(rows) {
     if (!rows.length) {
-      return `<p class="status-line">No submissions yet.</p>`;
+      return `<p class="status-line">暂时没有提交记录。</p>`;
     }
     return `
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID</th><th>Student</th><th>Name</th><th>Refresh</th><th>Original WPM</th>
-              <th>Masked WPM</th><th>Delta</th><th>Delta %</th><th>Readability</th>
-              <th>Flicker</th><th>Fatigue</th><th>Privacy</th>
+              <th>编号</th><th>学号</th><th>姓名</th><th>刷新率</th><th>原文词速</th>
+              <th>遮罩词速</th><th>差值</th><th>差值%</th><th>可读性</th>
+              <th>闪烁感</th><th>疲劳感</th><th>隐私感</th>
             </tr>
           </thead>
           <tbody>
@@ -176,7 +176,7 @@
                 <td>${row.participant_id}</td>
                 <td>${escapeHtml(row.student_id)}</td>
                 <td>${escapeHtml(row.name)}</td>
-                <td>${fmt(row.refresh_hz, 1, " Hz")}${row.refresh_ok ? "" : " *"}</td>
+                <td>${fmt(row.refresh_hz, 1, " 赫兹")}${row.refresh_ok ? "" : " *"}</td>
                 <td>${fmt(row.control_wpm, 1)}</td>
                 <td>${fmt(row.masked_wpm, 1)}</td>
                 <td>${fmt(row.delta_wpm, 1)}</td>
@@ -195,15 +195,15 @@
 
   function ratingSummaryTable(rows) {
     if (!rows.length) {
-      return `<p class="status-line">No rating rows yet.</p>`;
+      return `<p class="status-line">暂时没有评分记录。</p>`;
     }
     return `
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Condition</th><th>n</th><th>Components</th><th>Rows</th>
-              <th>Readability</th><th>Flicker</th><th>Fatigue</th><th>Privacy</th>
+              <th>条件</th><th>样本数</th><th>组件</th><th>行数</th>
+              <th>可读性</th><th>闪烁感</th><th>疲劳感</th><th>隐私感</th>
             </tr>
           </thead>
           <tbody>
@@ -227,15 +227,15 @@
 
   function typingTable(rows) {
     if (!rows.length) {
-      return `<p class="status-line">No typing rows yet.</p>`;
+      return `<p class="status-line">暂时没有打字记录。</p>`;
     }
     return `
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Participant</th><th>Condition</th><th>n</th><th>Mode</th><th>Cycle</th>
-              <th>WPM</th><th>CPM</th><th>Accuracy</th><th>Correct</th><th>Duration</th>
+              <th>被试</th><th>条件</th><th>样本数</th><th>模式</th><th>周期</th>
+              <th>词/分</th><th>字/分</th><th>准确率</th><th>正确字符</th><th>时长</th>
             </tr>
           </thead>
           <tbody>
@@ -261,15 +261,15 @@
 
   function ratingRowsTable(rows) {
     if (!rows.length) {
-      return `<p class="status-line">No rating rows yet.</p>`;
+      return `<p class="status-line">暂时没有评分记录。</p>`;
     }
     return `
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Participant</th><th>Condition</th><th>n</th><th>Mode</th><th>Cycle</th>
-              <th>Readability</th><th>Flicker</th><th>Fatigue</th><th>Privacy</th><th>Order</th>
+              <th>被试</th><th>条件</th><th>样本数</th><th>模式</th><th>周期</th>
+              <th>可读性</th><th>闪烁感</th><th>疲劳感</th><th>隐私感</th><th>顺序</th>
             </tr>
           </thead>
           <tbody>

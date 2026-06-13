@@ -5,6 +5,8 @@ OCR 准确率评估器
 支持 Tesseract、EasyOCR、PaddleOCR 三种主流 OCR 引擎。
 """
 
+import os
+
 import numpy as np
 import re
 from dataclasses import dataclass
@@ -101,6 +103,9 @@ def text_recovery_metrics(pred: str, ref: str) -> dict:
 
 
 class OCREvaluator:
+    SUPPORTED_ENGINES = ("tesseract", "easyocr", "paddleocr", "trocr", "doctr")
+    TROCR_MODEL_ID = "microsoft/trocr-base-printed"
+
     def __init__(self, engines: list[str] | None = None, timeout: float | None = 10.0):
         """
         Args:
@@ -108,10 +113,32 @@ class OCREvaluator:
                      None 时自动检测可用引擎
             timeout: 单次 OCR 调用超时时间（秒）；None 表示不设置超时
         """
-        self.engines = engines or self._detect_available_engines()
+        self.engines = self._detect_available_engines() if engines is None else engines
         self.timeout = timeout
         self._easyocr_reader = None
         self._paddleocr_reader = None
+        self._trocr = None        # (processor, model) tuple, lazily loaded
+        self._doctr_predictor = None
+
+    @classmethod
+    def supported_engines(cls) -> tuple[str, ...]:
+        return cls.SUPPORTED_ENGINES
+
+    @staticmethod
+    def _env_truthy(name: str) -> bool:
+        return os.environ.get(name, "").strip().casefold() in {"1", "true", "yes", "on"}
+
+    @classmethod
+    def _trocr_cache_available(cls) -> bool:
+        try:
+            from transformers.utils import cached_file
+
+            cached_file(cls.TROCR_MODEL_ID, "config.json", local_files_only=True)
+            cached_file(cls.TROCR_MODEL_ID, "preprocessor_config.json", local_files_only=True)
+            cached_file(cls.TROCR_MODEL_ID, "generation_config.json", local_files_only=True)
+            return True
+        except Exception:
+            return False
 
     def _detect_available_engines(self) -> list[str]:
         available = []
@@ -131,6 +158,17 @@ class OCREvaluator:
             available.append("paddleocr")
         except Exception:
             pass
+        # Heavy modern OCR engines often download pretrained weights. Auto-list
+        # only local/offline-safe engines; explicit experiments can still request
+        # trocr/doctr and record per-row setup errors instead of citing them.
+        if self._trocr_cache_available():
+            available.append("trocr")
+        if self._env_truthy("PRIVACY_DISPLAY_ENABLE_DOCTR_AUTO"):
+            try:
+                import doctr  # noqa: F401
+                available.append("doctr")
+            except Exception:
+                pass
         return available
 
     def _run_tesseract(self, image: np.ndarray) -> str:
@@ -217,6 +255,39 @@ class OCREvaluator:
             for child in value:
                 cls._collect_paddle_text(child, texts)
 
+    def _run_trocr(self, image: np.ndarray) -> str:
+        """Transformer OCR (microsoft/trocr-base-printed). Printed-text English."""
+        from PIL import Image
+        if self._trocr is None:
+            from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+            model_id = self.TROCR_MODEL_ID
+            processor = TrOCRProcessor.from_pretrained(model_id, local_files_only=True)
+            model = VisionEncoderDecoderModel.from_pretrained(model_id, local_files_only=True)
+            model.eval()
+            self._trocr = (processor, model)
+        processor, model = self._trocr
+        pil_img = Image.fromarray(image).convert("RGB")
+        pixel_values = processor(images=pil_img, return_tensors="pt").pixel_values
+        import torch
+        with torch.no_grad():
+            generated_ids = model.generate(pixel_values, max_new_tokens=64)
+        return processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
+
+    def _run_doctr(self, image: np.ndarray) -> str:
+        """python-doctr detection+recognition pipeline."""
+        if self._doctr_predictor is None:
+            from doctr.models import ocr_predictor
+            self._doctr_predictor = ocr_predictor(pretrained=True)
+        result = self._doctr_predictor([np.ascontiguousarray(image)])
+        words: list[str] = []
+        for page in result.export().get("pages", []):
+            for block in page.get("blocks", []):
+                for line in block.get("lines", []):
+                    for word in line.get("words", []):
+                        if word.get("value"):
+                            words.append(word["value"])
+        return " ".join(words)
+
     def recognize(self, image: np.ndarray, engine: str = "tesseract") -> str:
         """对单张图像运行 OCR，返回识别文本。"""
         image = np.ascontiguousarray(image)
@@ -226,6 +297,10 @@ class OCREvaluator:
             return self._run_easyocr(image)
         elif engine == "paddleocr":
             return self._run_paddleocr(image)
+        elif engine == "trocr":
+            return self._run_trocr(image)
+        elif engine == "doctr":
+            return self._run_doctr(image)
         else:
             raise ValueError(f"不支持的引擎: {engine}")
 

@@ -1,4 +1,6 @@
 import numpy as np
+import sys
+import types
 
 from src.attack.ocr_evaluator import (
     OCREvaluator,
@@ -36,6 +38,69 @@ def test_recognize_paddleocr_uses_cached_reader():
     image = np.zeros((8, 8, 3), dtype=np.uint8)
 
     assert evaluator.recognize(image, "paddleocr") == "cached reader"
+
+
+def test_heavy_ocr_auto_detection_is_offline_safe(monkeypatch):
+    monkeypatch.setattr(OCREvaluator, "_trocr_cache_available", classmethod(lambda cls: False))
+    monkeypatch.delenv("PRIVACY_DISPLAY_ENABLE_DOCTR_AUTO", raising=False)
+
+    evaluator = OCREvaluator(engines=[])
+    engines = evaluator._detect_available_engines()
+
+    assert "trocr" not in engines
+    assert "doctr" not in engines
+
+
+def test_trocr_loader_uses_local_files_only(monkeypatch):
+    calls = []
+
+    class FakeProcessor:
+        @classmethod
+        def from_pretrained(cls, model_id, local_files_only=False):
+            calls.append(("processor", model_id, local_files_only))
+            return cls()
+
+        def __call__(self, images, return_tensors):
+            return types.SimpleNamespace(pixel_values="pixels")
+
+        def batch_decode(self, generated_ids, skip_special_tokens=True):
+            return ["decoded text"]
+
+    class FakeModel:
+        @classmethod
+        def from_pretrained(cls, model_id, local_files_only=False):
+            calls.append(("model", model_id, local_files_only))
+            return cls()
+
+        def eval(self):
+            return None
+
+        def generate(self, pixel_values, max_new_tokens):
+            return ["ids"]
+
+    class FakeNoGrad:
+        def __enter__(self):
+            return None
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    fake_transformers = types.SimpleNamespace(
+        TrOCRProcessor=FakeProcessor,
+        VisionEncoderDecoderModel=FakeModel,
+    )
+    fake_torch = types.SimpleNamespace(no_grad=lambda: FakeNoGrad())
+    monkeypatch.setitem(sys.modules, "transformers", fake_transformers)
+    monkeypatch.setitem(sys.modules, "torch", fake_torch)
+
+    evaluator = OCREvaluator(engines=["trocr"])
+    image = np.zeros((8, 8, 3), dtype=np.uint8)
+
+    assert evaluator.recognize(image, "trocr") == "decoded text"
+    assert calls == [
+        ("processor", OCREvaluator.TROCR_MODEL_ID, True),
+        ("model", OCREvaluator.TROCR_MODEL_ID, True),
+    ]
 
 
 def test_sensitive_tokens_focus_on_structured_fields():

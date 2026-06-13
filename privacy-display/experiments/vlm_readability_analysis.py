@@ -52,6 +52,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base-url", default=DEFAULT_SILICONFLOW_BASE_URL)
     parser.add_argument("--timeout", type=float, default=60.0)
     parser.add_argument(
+        "--progress-interval",
+        type=int,
+        default=1,
+        help="Print one progress line every N live calls; use 0 to disable.",
+    )
+    parser.add_argument(
+        "--no-partial-save",
+        action="store_true",
+        help="Disable rewriting the partial JSON result after each completed call.",
+    )
+    parser.add_argument(
         "--attacks",
         type=_parse_attacks,
         default=",".join(DEFAULT_VLM_ATTACKS),
@@ -110,6 +121,8 @@ def main() -> int:
         attacks=args.attacks,
         corpus=(images, truths, names),
         metadata=metadata,
+        progress_interval=args.progress_interval,
+        partial_save=not args.no_partial_save,
     )
     summary = report["summary"]["best_attack_per_sample"]
     status = report["summary"].get("call_status", {})
@@ -122,7 +135,8 @@ def main() -> int:
         return 3
     print(
         "VLM benchmark complete: "
-        f"samples={report['config']['n_selected_samples']} calls={call_count} "
+        f"samples={report['config']['n_selected_samples']} "
+        f"calls={report['config'].get('completed_calls', call_count)}/{call_count} "
         f"best_char_accuracy={summary['char_accuracy']['mean']:.3f} "
         f"read_success_rate={summary['vlm_read_success_rate']['mean']:.3f}"
     )

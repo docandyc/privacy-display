@@ -1,0 +1,2086 @@
+{
+  "config": {
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "cycles": 2,
+    "display_rate_hz": 240.0,
+    "n_samples": 9,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 24,
+      "samples_per_category": 1,
+      "n_selected": 9
+    },
+    "pipelines": [
+      "clean_subframe",
+      "jpeg_q50",
+      "sensor_noise_iso_high",
+      "motion_blur",
+      "digital_zoom_2x",
+      "auto_contrast",
+      "rolling_shutter_single",
+      "temporal_average_boundary"
+    ]
+  },
+  "summary": {
+    "clean_subframe": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "jpeg_q50": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "sensor_noise_iso_high": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "motion_blur": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "digital_zoom_2x": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "auto_contrast": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "rolling_shutter_single": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "temporal_average_boundary": {
+      "char_accuracy": {
+        "mean": 0.928928619881001,
+        "std": 0.07587911424817326,
+        "count": 9,
+        "ci95": {
+          "low": 0.8775510204081632,
+          "high": 0.9721911884411885,
+          "half_width": 0.04732008401651261,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.8888888888888888,
+        "std": 0.1756820922315766,
+        "count": 9,
+        "ci95": {
+          "low": 0.7592592592592593,
+          "high": 0.9814814814814815,
+          "half_width": 0.1111111111111111,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.6666666666666666,
+        "std": 0.4714045207910317,
+        "count": 9,
+        "ci95": {
+          "low": 0.3333333333333333,
+          "high": 0.8888888888888888,
+          "half_width": 0.2777777777777778,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.8958333333333333,
+        "std": 0.1851707170274081,
+        "count": 8,
+        "ci95": {
+          "low": 0.75,
+          "high": 1.0,
+          "half_width": 0.125,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    }
+  },
+  "samples": [
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 0.8571428571428572,
+      "word_accuracy": 0.5,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "recognized_text": "FAP user@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "clean_subframe",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "jpeg_q50",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "sensor_noise_iso_high",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "motion_blur",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "digital_zoom_2x",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "auto_contrast",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "rolling_shutter_single",
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "pipeline": "temporal_average_boundary",
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGc",
+      "ocr_error": ""
+    }
+  ]
+}

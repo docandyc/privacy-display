@@ -128,3 +128,49 @@ def test_run_vlm_benchmark_writes_report_with_fake_client(tmp_path, monkeypatch)
     assert "secret-value" not in stored_text
     assert "Authorization" not in stored_text
     assert stored["summary"]["attacks"]["original"]["char_accuracy"]["mean"] == 1.0
+
+
+def test_run_vlm_benchmark_saves_partial_report_on_keyboard_interrupt(tmp_path):
+    class InterruptingClient:
+        model = "fake-vlm"
+        base_url = "https://example.invalid/v1"
+
+        def __init__(self):
+            self.calls = 0
+
+        def analyze_image(self, image, ground_truth=""):
+            self.calls += 1
+            if self.calls == 2:
+                raise KeyboardInterrupt
+            return {
+                "visible_text": ground_truth,
+                "can_read_sensitive": True,
+                "confidence": 0.8,
+                "notes": "",
+            }
+
+    image = np.full((8, 8, 3), 160, dtype=np.uint8)
+    corpus = ([image], ["CODE-1234"], ["sample_0"])
+    metadata = {"sample_0": {"category": "code", "language": "en"}}
+
+    with pytest.raises(KeyboardInterrupt):
+        run_vlm_benchmark(
+            client=InterruptingClient(),
+            output_dir=str(tmp_path),
+            n=2,
+            epsilon=0.0,
+            cycles=1,
+            samples_per_category=1,
+            attacks=("original", "global_shutter_slot0"),
+            corpus=corpus,
+            metadata=metadata,
+            with_noise=False,
+            progress_interval=0,
+        )
+
+    stored = json.loads((tmp_path / DEFAULT_VLM_RESULT_FILE).read_text(encoding="utf-8"))
+
+    assert stored["config"]["planned_calls"] == 2
+    assert stored["config"]["completed_calls"] == 1
+    assert stored["config"]["interrupted"] is True
+    assert len(stored["samples"]) == 1

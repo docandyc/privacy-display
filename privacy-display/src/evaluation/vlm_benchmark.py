@@ -23,6 +23,7 @@ from src.attack.vlm_evaluator import (
     VLMClient,
 )
 from src.evaluation.benchmark import _mean_std, _psnr_db, compose_protected_subframes
+from src.evaluation.sampling import select_stratified_samples
 
 
 DEFAULT_VLM_ATTACKS = (
@@ -36,33 +37,6 @@ DEFAULT_VLM_ATTACKS = (
     "blue_channel_max",
 )
 DEFAULT_VLM_RESULT_FILE = "vlm_qwen3_siliconflow.json"
-
-
-def select_stratified_samples(
-    names: list[str],
-    metadata: dict | None,
-    samples_per_category: int = 1,
-    max_samples: int | None = None,
-) -> list[int]:
-    """Return deterministic sample indices, grouped by metadata category."""
-    if samples_per_category <= 0:
-        raise ValueError("samples_per_category must be positive")
-    if max_samples is not None and max_samples <= 0:
-        raise ValueError("max_samples must be positive when provided")
-
-    metadata = metadata or {}
-    buckets: dict[str, list[int]] = {}
-    for idx, name in enumerate(names):
-        category = str(metadata.get(name, {}).get("category", "unknown"))
-        buckets.setdefault(category, []).append(idx)
-
-    selected: list[int] = []
-    for category in sorted(buckets):
-        selected.extend(buckets[category][:samples_per_category])
-
-    if max_samples is not None:
-        selected = selected[:max_samples]
-    return selected
 
 
 def build_vlm_attack_frames(
@@ -213,6 +187,8 @@ def run_vlm_benchmark(
     corpus: tuple[list[np.ndarray], list[str], list[str]] | None = None,
     metadata: dict | None = None,
     with_noise: bool = True,
+    progress_interval: int = 1,
+    partial_save: bool = True,
 ) -> dict:
     """Run a bounded online VLM readability benchmark."""
     if n < 2:
@@ -223,6 +199,8 @@ def run_vlm_benchmark(
         raise ValueError("samples_per_category must be positive")
     if max_samples is not None and max_samples <= 0:
         raise ValueError("max_samples must be positive when provided")
+    if progress_interval < 0:
+        raise ValueError("progress_interval must be non-negative")
 
     if corpus is None:
         import sys
@@ -244,81 +222,113 @@ def run_vlm_benchmark(
     )
     selected_attacks = tuple(attacks or DEFAULT_VLM_ATTACKS)
     client = client or VLMClient()
+    total_calls = len(selected_indices) * len(selected_attacks)
+    out = Path(output_dir) / DEFAULT_VLM_RESULT_FILE
+
+    def build_report(rows: list[dict], interrupted: bool = False) -> dict:
+        return {
+            "config": {
+                "model": getattr(client, "model", DEFAULT_VLM_MODEL),
+                "base_url": getattr(client, "base_url", DEFAULT_SILICONFLOW_BASE_URL),
+                "n": n,
+                "epsilon": epsilon,
+                "cycles": cycles,
+                "with_noise": with_noise,
+                "samples_per_category": samples_per_category,
+                "max_samples": max_samples,
+                "n_selected_samples": len(selected_indices),
+                "attacks": list(selected_attacks),
+                "planned_calls": total_calls,
+                "completed_calls": len(rows),
+                "interrupted": interrupted,
+                "leak_threshold_char_accuracy": 0.20,
+            },
+            "summary": summarize_vlm_rows(rows),
+            "samples": rows,
+        }
+
+    def write_report(rows: list[dict], interrupted: bool = False) -> dict:
+        report = build_report(rows, interrupted=interrupted)
+        if save:
+            out.parent.mkdir(parents=True, exist_ok=True)
+            with open(out, "w", encoding="utf-8") as f:
+                json.dump(report, f, ensure_ascii=False, indent=2)
+        return report
 
     sample_rows: list[dict] = []
-    for order, sample_idx in enumerate(selected_indices):
-        image = images[sample_idx]
-        truth = truths[sample_idx]
-        name = names[sample_idx]
-        attack_frames = build_vlm_attack_frames(
-            image,
-            n=n,
-            epsilon=epsilon,
-            cycles=cycles,
-            cycle_start=sample_idx * cycles,
-            attacks=selected_attacks,
-            with_noise=with_noise,
-        )
-        for attack_name, (frame, attack_meta) in attack_frames.items():
-            try:
-                result = client.analyze_image(frame, ground_truth=truth)
-                visible_text = str(result.get("visible_text", "") or "")
-                metrics = result.get("metrics") or text_recovery_metrics(visible_text, truth)
-                vlm_error = ""
-                confidence = float(result.get("confidence", 0.0) or 0.0)
-                can_read = bool(result.get("can_read_sensitive", False))
-                notes = str(result.get("notes", "") or "")
-            except Exception as exc:
-                visible_text = ""
-                metrics = text_recovery_metrics(visible_text, truth)
-                vlm_error = _sanitize_row_error(str(exc))
-                confidence = 0.0
-                can_read = False
-                notes = ""
+    try:
+        for order, sample_idx in enumerate(selected_indices):
+            image = images[sample_idx]
+            truth = truths[sample_idx]
+            name = names[sample_idx]
+            attack_frames = build_vlm_attack_frames(
+                image,
+                n=n,
+                epsilon=epsilon,
+                cycles=cycles,
+                cycle_start=sample_idx * cycles,
+                attacks=selected_attacks,
+                with_noise=with_noise,
+            )
+            for attack_name, (frame, attack_meta) in attack_frames.items():
+                call_number = len(sample_rows) + 1
+                if progress_interval and (
+                    call_number == 1
+                    or call_number % progress_interval == 0
+                    or call_number == total_calls
+                ):
+                    print(
+                        f"VLM call {call_number}/{total_calls}: "
+                        f"sample={name} attack={attack_name}",
+                        flush=True,
+                    )
+                try:
+                    result = client.analyze_image(frame, ground_truth=truth)
+                    visible_text = str(result.get("visible_text", "") or "")
+                    metrics = result.get("metrics") or text_recovery_metrics(
+                        visible_text, truth
+                    )
+                    vlm_error = ""
+                    confidence = float(result.get("confidence", 0.0) or 0.0)
+                    can_read = bool(result.get("can_read_sensitive", False))
+                    notes = str(result.get("notes", "") or "")
+                except Exception as exc:
+                    visible_text = ""
+                    metrics = text_recovery_metrics(visible_text, truth)
+                    vlm_error = _sanitize_row_error(str(exc))
+                    confidence = 0.0
+                    can_read = False
+                    notes = ""
 
-            sample_rows.append({
-                "name": name,
-                "sample_order": order,
-                "attack": attack_name,
-                "metadata": corpus_metadata.get(name, {}),
-                "char_accuracy": float(metrics["char_accuracy"]),
-                "word_accuracy": float(metrics["word_accuracy"]),
-                "exact_match": bool(metrics["exact_match"]),
-                "sensitive_token_recall": float(metrics["sensitive_token_recall"]),
-                "sensitive_token_count": int(metrics["sensitive_token_count"]),
-                "psnr_db": _psnr_db(image, frame),
-                "reconstruction_score": float(attack_meta.get("score", 0.0)),
-                "attack_metadata": attack_meta,
-                "visible_text": visible_text[:240],
-                "vlm_can_read_sensitive": can_read,
-                "vlm_confidence": confidence,
-                "vlm_notes": notes[:240],
-                "vlm_error": vlm_error,
-            })
+                sample_rows.append({
+                    "name": name,
+                    "sample_order": order,
+                    "attack": attack_name,
+                    "metadata": corpus_metadata.get(name, {}),
+                    "char_accuracy": float(metrics["char_accuracy"]),
+                    "word_accuracy": float(metrics["word_accuracy"]),
+                    "exact_match": bool(metrics["exact_match"]),
+                    "sensitive_token_recall": float(metrics["sensitive_token_recall"]),
+                    "sensitive_token_count": int(metrics["sensitive_token_count"]),
+                    "psnr_db": _psnr_db(image, frame),
+                    "reconstruction_score": float(attack_meta.get("score", 0.0)),
+                    "attack_metadata": attack_meta,
+                    "visible_text": visible_text[:240],
+                    "vlm_can_read_sensitive": can_read,
+                    "vlm_confidence": confidence,
+                    "vlm_notes": notes[:240],
+                    "vlm_error": vlm_error,
+                })
+                if partial_save:
+                    write_report(sample_rows)
+    except KeyboardInterrupt:
+        write_report(sample_rows, interrupted=True)
+        if save:
+            print(f"VLM partial result saved after interrupt: {out}")
+        raise
 
-    report = {
-        "config": {
-            "model": getattr(client, "model", DEFAULT_VLM_MODEL),
-            "base_url": getattr(client, "base_url", DEFAULT_SILICONFLOW_BASE_URL),
-            "n": n,
-            "epsilon": epsilon,
-            "cycles": cycles,
-            "with_noise": with_noise,
-            "samples_per_category": samples_per_category,
-            "max_samples": max_samples,
-            "n_selected_samples": len(selected_indices),
-            "attacks": list(selected_attacks),
-            "leak_threshold_char_accuracy": 0.20,
-        },
-        "summary": summarize_vlm_rows(sample_rows),
-        "samples": sample_rows,
-    }
-
+    report = write_report(sample_rows)
     if save:
-        out = Path(output_dir) / DEFAULT_VLM_RESULT_FILE
-        out.parent.mkdir(parents=True, exist_ok=True)
-        with open(out, "w", encoding="utf-8") as f:
-            json.dump(report, f, ensure_ascii=False, indent=2)
         print(f"VLM 可读性评测已保存: {out}")
 
     return report

@@ -1,0 +1,174 @@
+{
+  "config": {
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "n_samples": 9,
+    "leak": 0.75,
+    "leak_epsilon": 0.3764705882352941,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 16,
+      "samples_per_category": 1,
+      "n_selected": 9
+    }
+  },
+  "summary": {
+    "baseline": {
+      "mean": 0.928928619881001,
+      "std": 0.07587911424817326,
+      "count": 9,
+      "ci95": {
+        "low": 0.8775510204081632,
+        "high": 0.9721911884411885,
+        "half_width": 0.04732008401651261,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "single_mask_only": {
+      "mean": 0.002252252252252251,
+      "std": 0.006370331362040965,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.006756756756756753,
+        "half_width": 0.0033783783783783764,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "single_mask_noise": {
+      "mean": 0.0,
+      "std": 0.0,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.0,
+        "half_width": 0.0,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "inpaint_mask_only": {
+      "mean": 0.42813398989218154,
+      "std": 0.32154366405904194,
+      "count": 9,
+      "ci95": {
+        "low": 0.22165312328290315,
+        "high": 0.636957160241474,
+        "half_width": 0.2076520184792854,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "inpaint_noise_pedestal": {
+      "mean": 0.0,
+      "std": 0.0,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.0,
+        "half_width": 0.0,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "inpaint_noise_no_pedestal": {
+      "mean": 0.12395923054837782,
+      "std": 0.30459924689648266,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.3564455928797014,
+        "half_width": 0.1782227964398507,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "long_exposure_no_inv": {
+      "mean": 0.928928619881001,
+      "std": 0.07587911424817326,
+      "count": 9,
+      "ci95": {
+        "low": 0.8775510204081632,
+        "high": 0.9721911884411885,
+        "half_width": 0.04732008401651261,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "long_exposure_with_inv": {
+      "mean": 0.0,
+      "std": 0.0,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.0,
+        "half_width": 0.0,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "ae_real_subframe_no_black": {
+      "mean": 0.002252252252252251,
+      "std": 0.006370331362040965,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.006756756756756753,
+        "half_width": 0.0033783783783783764,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "ae_real_subframe_with_black": {
+      "mean": 0.002252252252252251,
+      "std": 0.006370331362040965,
+      "count": 9,
+      "ci95": {
+        "low": 0.0,
+        "high": 0.006756756756756753,
+        "half_width": 0.0033783783783783764,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "weak_mask_only": {
+      "mean": 0.43107142857142855,
+      "std": 0.48246356176956423,
+      "count": 9,
+      "ci95": {
+        "low": 0.111,
+        "high": 0.755515873015873,
+        "half_width": 0.3222579365079365,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    },
+    "weak_mask_noise": {
+      "mean": 0.378513596013596,
+      "std": 0.20305235132823682,
+      "count": 9,
+      "ci95": {
+        "low": 0.21924924924924924,
+        "high": 0.4904015774015774,
+        "half_width": 0.13557616407616407,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      }
+    }
+  }
+}

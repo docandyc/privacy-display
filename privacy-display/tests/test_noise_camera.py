@@ -237,3 +237,65 @@ def test_screen_camera_attack_rejects_invalid_inputs():
         cam.weighted_differential_accumulator_attack([frame])
     with pytest.raises(ValueError):
         cam.channel_selective_recovery_attack([frame], channel="alpha")
+
+
+def _mutually_exclusive_subframes(original: np.ndarray) -> list[np.ndarray]:
+    """Four mutually-exclusive complete masks for an 8x8 frame (each pixel lit once)."""
+    masks = [
+        np.tile(np.array([[1, 0], [0, 0]], dtype=bool), (4, 4)),
+        np.tile(np.array([[0, 1], [0, 0]], dtype=bool), (4, 4)),
+        np.tile(np.array([[0, 0], [1, 0]], dtype=bool), (4, 4)),
+        np.tile(np.array([[0, 0], [0, 1]], dtype=bool), (4, 4)),
+    ]
+    return [(original * mask[..., None]).astype(np.uint8) for mask in masks]
+
+
+def test_temporal_superresolution_recovers_complete_cycle():
+    cam = CameraSimulator()
+    original = np.zeros((8, 8, 3), dtype=np.uint8)
+    original[:, :4] = [180, 90, 40]
+    original[:, 4:] = [20, 150, 220]
+    subframes = _mutually_exclusive_subframes(original)
+
+    recovered, meta = cam.temporal_superresolution_attack(subframes, sharpen=False)
+
+    assert recovered.shape == original.shape
+    assert recovered.dtype == np.uint8
+    assert meta["attack"] == "temporal_superresolution"
+    assert meta["frames"] == 4
+    # Per-pixel max over mutually-exclusive subframes inverts the mask exactly.
+    assert np.mean(np.abs(recovered.astype(np.int16) - original.astype(np.int16))) < 1.0
+
+
+def test_rolling_shutter_row_alignment_aggregates_phases():
+    cam = CameraSimulator(CameraParams(readout_time=15e-6, exposure_time=1 / 480))
+    original = np.full((8, 8, 3), 200, dtype=np.uint8)
+    subframes = _mutually_exclusive_subframes(original)
+
+    recovered, meta = cam.rolling_shutter_row_alignment_attack(
+        subframes, display_rate=240.0, n_captures=8, method="max"
+    )
+
+    assert recovered.shape == original.shape
+    assert recovered.dtype == np.uint8
+    assert meta["attack"] == "rolling_shutter_row_alignment"
+    assert meta["n_captures"] == 8
+    # Multi-phase row alignment recovers far more than a single rolling capture.
+    single = cam.capture_rolling_shutter(subframes, 240.0, switch_time=0.0)
+    assert recovered.mean() > single.mean()
+
+
+def test_new_strong_attacks_reject_empty_inputs():
+    cam = CameraSimulator()
+    frame = np.zeros((2, 2, 3), dtype=np.uint8)
+
+    with pytest.raises(ValueError):
+        cam.temporal_superresolution_attack([])
+    with pytest.raises(ValueError):
+        cam.rolling_shutter_row_alignment_attack([], display_rate=240.0)
+    with pytest.raises(ValueError):
+        cam.rolling_shutter_row_alignment_attack([frame], display_rate=240.0, n_captures=0)
+    with pytest.raises(ValueError):
+        cam.rolling_shutter_row_alignment_attack([frame], display_rate=0.0)
+    with pytest.raises(ValueError):
+        cam.rolling_shutter_row_alignment_attack([frame], display_rate=240.0, method="mode")

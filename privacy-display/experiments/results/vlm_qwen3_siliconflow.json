@@ -19,51 +19,54 @@
       "differential_blue",
       "blue_channel_max"
     ],
+    "planned_calls": 72,
+    "completed_calls": 72,
+    "interrupted": false,
     "leak_threshold_char_accuracy": 0.2
   },
   "summary": {
     "call_status": {
       "total_calls": 72,
-      "successful_calls": 0,
-      "error_calls": 72,
-      "all_calls_failed": true
+      "successful_calls": 71,
+      "error_calls": 1,
+      "all_calls_failed": false
     },
     "attacks": {
       "blue_channel_max": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.8582136558327035,
+          "std": 0.3110562400565093,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6359914336104813,
+            "high": 0.9947089947089948,
+            "half_width": 0.17935878054925675,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6666666666666666,
+            "high": 1.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "exact_match": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6666666666666666,
+            "high": 1.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -72,13 +75,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.875,
+            "std": 0.33071891388307384,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
-              "half_width": 0.0,
+              "low": 0.625,
+              "high": 1.0,
+              "half_width": 0.1875,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -86,81 +89,81 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.88,
+          "std": 0.3111269837220809,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6599999999999999,
+            "high": 0.99,
+            "half_width": 0.16500000000000004,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6666666666666666,
+            "high": 1.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "psnr_db": {
-          "mean": 29.36724198965515,
-          "std": 0.6868061741878126,
+          "mean": 29.415441017519413,
+          "std": 0.6693871734525522,
           "count": 9,
           "ci95": {
-            "low": 28.904070495124188,
-            "high": 29.77918391032171,
-            "half_width": 0.43755670759876075,
+            "low": 28.940428402466466,
+            "high": 29.803451791020834,
+            "half_width": 0.4315116942771837,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 1
       },
       "differential_blue": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9681037657228134,
+          "std": 0.06887879640410888,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9182171444076206,
+            "high": 0.996924603174603,
+            "half_width": 0.03935372938349119,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9914529914529915,
+          "std": 0.024174590809796483,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9743589743589745,
+            "high": 1.0,
+            "half_width": 0.012820512820512775,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "exact_match": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6666666666666666,
+            "high": 1.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -169,13 +172,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.9875,
+            "std": 0.03307189138830738,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
-              "half_width": 0.0,
+              "low": 0.9624999999999999,
+              "high": 1.0,
+              "half_width": 0.018750000000000044,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -183,25 +186,25 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9544444444444444,
+          "std": 0.01257078722109419,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9499999999999998,
+            "high": 0.9633333333333334,
+            "half_width": 0.006666666666666765,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -209,55 +212,55 @@
           }
         },
         "psnr_db": {
-          "mean": 11.989092714268217,
-          "std": 0.8055459103263083,
+          "mean": 12.0178178014338,
+          "std": 0.8219032078484133,
           "count": 9,
           "ci95": {
-            "low": 11.436261347557242,
-            "high": 12.466208937912354,
-            "half_width": 0.5149737951775561,
+            "low": 11.443152112764341,
+            "high": 12.504671951394842,
+            "half_width": 0.5307599193152504,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       },
       "differential_luma": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9681037657228134,
+          "std": 0.06887879640410888,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9182171444076206,
+            "high": 0.996924603174603,
+            "half_width": 0.03935372938349119,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9914529914529915,
+          "std": 0.024174590809796483,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9743589743589745,
+            "high": 1.0,
+            "half_width": 0.012820512820512775,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "exact_match": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.6666666666666666,
+            "high": 1.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -266,13 +269,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.9875,
+            "std": 0.03307189138830738,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
-              "half_width": 0.0,
+              "low": 0.9624999999999999,
+              "high": 1.0,
+              "half_width": 0.018750000000000044,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -280,25 +283,25 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9544444444444444,
+          "std": 0.01257078722109419,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9499999999999998,
+            "high": 0.9633333333333334,
+            "half_width": 0.006666666666666765,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -306,19 +309,19 @@
           }
         },
         "psnr_db": {
-          "mean": 11.906322142212035,
-          "std": 0.9229625758093557,
+          "mean": 11.928677830638467,
+          "std": 0.9424701008001972,
           "count": 9,
           "ci95": {
-            "low": 11.260595711536313,
-            "high": 12.45426720107145,
-            "half_width": 0.596835744767569,
+            "low": 11.266696761766134,
+            "high": 12.494914772002614,
+            "half_width": 0.6141090051182401,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       },
       "global_shutter_slot0": {
         "char_accuracy": {
@@ -377,12 +380,12 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9499999999999998,
+          "std": 1.1102230246251565e-16,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 0.9499999999999998,
+            "high": 0.9499999999999998,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -403,41 +406,41 @@
           }
         },
         "psnr_db": {
-          "mean": 2.0072953603163572,
-          "std": 0.047134838321704925,
+          "mean": 2.007044055425349,
+          "std": 0.035902282551983855,
           "count": 9,
           "ci95": {
-            "low": 1.9768771866764032,
-            "high": 2.0369161820699513,
-            "half_width": 0.030019497696774033,
+            "low": 1.9842679751689123,
+            "high": 2.0303604510569726,
+            "half_width": 0.023046237944030157,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       },
       "original": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9693247669438146,
+          "std": 0.06933448518780094,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9194271227009322,
+            "high": 0.9973544973544973,
+            "half_width": 0.03896368732678257,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -445,12 +448,12 @@
           }
         },
         "exact_match": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -460,12 +463,12 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
+            "mean": 1.0,
             "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
+              "low": 1.0,
+              "high": 1.0,
               "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
@@ -474,25 +477,25 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9855555555555555,
+          "std": 0.01257078722109419,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9766666666666666,
+            "high": 0.99,
+            "half_width": 0.00666666666666671,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -512,29 +515,29 @@
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       },
       "phase_search_max": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9693247669438146,
+          "std": 0.06933448518780094,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9194271227009322,
+            "high": 0.9973544973544973,
+            "half_width": 0.03896368732678257,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -542,12 +545,12 @@
           }
         },
         "exact_match": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -557,12 +560,12 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
+            "mean": 1.0,
             "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
+              "low": 1.0,
+              "high": 1.0,
               "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
@@ -571,25 +574,25 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9855555555555555,
+          "std": 0.01257078722109419,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9766666666666666,
+            "high": 0.99,
+            "half_width": 0.00666666666666671,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -597,41 +600,41 @@
           }
         },
         "psnr_db": {
-          "mean": 30.116190349247656,
-          "std": 0.010179570909151253,
+          "mean": 30.11483324437836,
+          "std": 0.011128002461311907,
           "count": 9,
           "ci95": {
-            "low": 30.109582366389706,
-            "high": 30.122721202500617,
-            "half_width": 0.006569418055455856,
+            "low": 30.107849076425786,
+            "high": 30.12188857195802,
+            "half_width": 0.007019747766117135,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       },
       "phase_search_mean": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9693247669438146,
+          "std": 0.06933448518780094,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9194271227009322,
+            "high": 0.9973544973544973,
+            "half_width": 0.03896368732678257,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -639,12 +642,12 @@
           }
         },
         "exact_match": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -654,12 +657,12 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
+            "mean": 1.0,
             "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
+              "low": 1.0,
+              "high": 1.0,
               "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
@@ -668,25 +671,25 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9855555555555555,
+          "std": 0.01257078722109419,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9766666666666666,
+            "high": 0.99,
+            "half_width": 0.00666666666666671,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -706,29 +709,29 @@
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       },
       "temporal_average_cycle": {
         "char_accuracy": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9693247669438146,
+          "std": 0.06933448518780094,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9194271227009322,
+            "high": 0.9973544973544973,
+            "half_width": 0.03896368732678257,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -736,12 +739,12 @@
           }
         },
         "exact_match": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -751,12 +754,12 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.0,
+            "mean": 1.0,
             "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.0,
-              "high": 0.0,
+              "low": 1.0,
+              "high": 1.0,
               "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
@@ -765,25 +768,25 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.0,
-          "std": 0.0,
+          "mean": 0.9777777777777776,
+          "std": 0.015475986974649036,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
-            "half_width": 0.0,
+            "low": 0.9666666666666666,
+            "high": 0.9866666666666668,
+            "half_width": 0.01000000000000012,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -791,42 +794,42 @@
           }
         },
         "psnr_db": {
-          "mean": 3.36963063627903,
-          "std": 0.046253347165912395,
+          "mean": 3.3695975126019277,
+          "std": 0.046246811605444846,
           "count": 9,
           "ci95": {
-            "low": 3.3389190229636356,
-            "high": 3.398145707137551,
-            "half_width": 0.02961334208695776,
+            "low": 3.3389037794299834,
+            "high": 3.3980678936128776,
+            "half_width": 0.029582057091447123,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 9
+        "error_count": 0
       }
     },
     "best_attack_per_sample": {
       "char_accuracy": {
-        "mean": 0.0,
-        "std": 0.0,
+        "mean": 0.9693247669438146,
+        "std": 0.06933448518780094,
         "count": 9,
         "ci95": {
-          "low": 0.0,
-          "high": 0.0,
-          "half_width": 0.0,
+          "low": 0.9189972285210382,
+          "high": 0.9973544973544973,
+          "half_width": 0.039178634416729585,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "word_accuracy": {
-        "mean": 0.0,
+        "mean": 1.0,
         "std": 0.0,
         "count": 9,
         "ci95": {
-          "low": 0.0,
-          "high": 0.0,
+          "low": 1.0,
+          "high": 1.0,
           "half_width": 0.0,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
@@ -834,12 +837,12 @@
         }
       },
       "exact_match": {
-        "mean": 0.0,
+        "mean": 1.0,
         "std": 0.0,
         "count": 9,
         "ci95": {
-          "low": 0.0,
-          "high": 0.0,
+          "low": 1.0,
+          "high": 1.0,
           "half_width": 0.0,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
@@ -849,12 +852,12 @@
       "sensitive_token_recall": {
         "n_samples_with_sensitive_tokens": 8,
         "stats": {
-          "mean": 0.0,
+          "mean": 1.0,
           "std": 0.0,
           "count": 8,
           "ci95": {
-            "low": 0.0,
-            "high": 0.0,
+            "low": 1.0,
+            "high": 1.0,
             "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
@@ -863,12 +866,12 @@
         }
       },
       "vlm_read_success_rate": {
-        "mean": 0.0,
+        "mean": 1.0,
         "std": 0.0,
         "count": 9,
         "ci95": {
-          "low": 0.0,
-          "high": 0.0,
+          "low": 1.0,
+          "high": 1.0,
           "half_width": 0.0,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
@@ -902,9 +905,9 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
       "psnr_db": 99.0,
@@ -912,11 +915,11 @@
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly visible and legible. No sensitive information (e.g., passwords, keys) is present in the visible text. The code snippet is a simple function definition that hashes a password parameter, but no actual password or sensitive",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -937,16 +940,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 1.9209572719088432,
+      "psnr_db": 1.9514484949913948,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image is completely filled with noise or static, making no text legible. No characters or words can be discerned.",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -962,22 +965,22 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 3.2962641117243336,
+      "psnr_db": 3.2962381464197668,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.98,
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition that takes a password parameter and returns its hash. No actual passwords or sensitive data are present, only the function logic.",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -993,9 +996,9 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
       "psnr_db": 27.28280719066852,
@@ -1011,11 +1014,11 @@
         "coverage": 1.0,
         "saturation": 0.9771780303030303
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition for a login function that returns a hash of the password parameter. No actual passwords or sensitive data are present, only a placeholder 'pwd'.",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -1031,29 +1034,29 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 30.111783238231666,
-      "reconstruction_score": 305.34316107239385,
+      "psnr_db": 30.114492412124648,
+      "reconstruction_score": 305.4377112244115,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 305.34316107239385,
-        "contrast": 24.23569679260254,
-        "edge_energy": 6.815515518188477,
+        "score": 305.4377112244115,
+        "contrast": 24.26070785522461,
+        "edge_energy": 6.839095115661621,
         "coverage": 1.0,
-        "saturation": 0.12077020202020201
+        "saturation": 0.11983901515151515
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly visible and legible. No sensitive information (e.g., passwords, keys) is present in the visible text. The code snippet is a simple function definition that hashes a password, but no actual password or sensitive data is s",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -1069,28 +1072,28 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 10.254449991898554,
-      "reconstruction_score": 234.730621646149,
+      "psnr_db": 10.326874159826286,
+      "reconstruction_score": 235.70422417226465,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 234.730621646149,
-        "contrast": 61.05165100097656,
-        "edge_energy": 122.18592834472656,
-        "coverage": 0.9896622474747475,
-        "saturation": 0.010337752525252526
+        "score": 235.70422417226465,
+        "contrast": 60.275001525878906,
+        "edge_energy": 120.4593505859375,
+        "coverage": 0.9898200757575758,
+        "saturation": 0.01057449494949495
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly visible and legible. It appears to be a Python function definition for a login function that hashes a password. No actual passwords or sensitive data are present, only a placeholder parameter 'pwd'.",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -1106,28 +1109,28 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 10.540664072933232,
-      "reconstruction_score": 232.52328325522066,
+      "psnr_db": 10.636489899752702,
+      "reconstruction_score": 233.59091953316118,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 232.52328325522066,
-        "contrast": 62.74061965942383,
-        "edge_energy": 125.4903793334961,
-        "coverage": 0.9896938131313131,
-        "saturation": 0.016351010101010102
+        "score": 233.59091953316118,
+        "contrast": 61.95382308959961,
+        "edge_energy": 123.70539093017578,
+        "coverage": 0.9898674242424242,
+        "saturation": 0.016177398989898988
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly visible and legible. It appears to be a Python function definition for a login function that hashes a password. No actual passwords or sensitive data are present, only a placeholder 'pwd'.",
+      "vlm_error": ""
     },
     {
       "name": "code_00",
@@ -1143,29 +1146,29 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
+      "char_accuracy": 0.9722222222222222,
+      "word_accuracy": 1.0,
+      "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 28.07551849570686,
-      "reconstruction_score": 290.2844899784435,
+      "psnr_db": 28.07669623391672,
+      "reconstruction_score": 290.18987096921364,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 290.2844899784435,
-        "contrast": 30.68083953857422,
-        "edge_energy": 9.25998592376709,
-        "coverage": 0.9898200757575758,
-        "saturation": 0.28082386363636364
+        "score": 290.18987096921364,
+        "contrast": 30.675220489501953,
+        "edge_energy": 9.26218032836914,
+        "coverage": 0.9898516414141414,
+        "saturation": 0.28178661616161615
       },
-      "visible_text": "",
+      "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition for 'login' that takes a parameter 'pwd' and returns the hash of that parameter. No sensitive data (e.g., passwords, keys) is visible in the code itself.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1181,21 +1184,21 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All text is clearly legible. The image contains sensitive information including a full credit card number, CVV, and expiration date.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1216,16 +1219,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 5,
-      "psnr_db": 1.9878664688299577,
+      "psnr_db": 1.9951848823793523,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image is completely filled with noise or a pattern that obscures any readable text. No characters or words are discernible.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1241,22 +1244,22 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 3.358715259758725,
+      "psnr_db": 3.3586915909119304,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All text is clearly legible. The card number, CVV, and expiration date are fully visible and readable.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1272,10 +1275,10 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
       "psnr_db": 26.72445035848263,
       "reconstruction_score": 225.0443618915699,
@@ -1290,11 +1293,11 @@
         "coverage": 1.0,
         "saturation": 0.9590567129629629
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The full card number, CVV, and expiration date are clearly visible and legible in the image.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1310,29 +1313,29 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 30.11116950304041,
-      "reconstruction_score": 308.4093748022009,
+      "psnr_db": 30.107187184036306,
+      "reconstruction_score": 308.29069596749764,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 308.4093748022009,
-        "contrast": 33.39915466308594,
-        "edge_energy": 10.989490509033203,
+        "score": 308.29069596749764,
+        "contrast": 33.39375686645508,
+        "edge_energy": 10.994264602661133,
         "coverage": 1.0,
-        "saturation": 0.14000289351851852
+        "saturation": 0.14108796296296297
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The full card number, CVV, and expiration date are clearly visible and legible in the image.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1348,28 +1351,28 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 12.272816029871198,
-      "reconstruction_score": 248.06959519562898,
+      "psnr_db": 12.36275621461096,
+      "reconstruction_score": 248.89476507681388,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 248.06959519562898,
-        "contrast": 54.32399368286133,
-        "edge_energy": 101.75642395019531,
-        "coverage": 0.988527199074074,
-        "saturation": 0.010561342592592593
+        "score": 248.89476507681388,
+        "contrast": 54.00954055786133,
+        "edge_energy": 101.02044677734375,
+        "coverage": 0.9896846064814815,
+        "saturation": 0.009997106481481482
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The full card number, CVV, and expiration date are clearly visible and legible in the image. No parts of the text are obscured or pixelated beyond readability.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1385,28 +1388,28 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 12.545872028825723,
-      "reconstruction_score": 246.35351788556136,
+      "psnr_db": 12.64616450153294,
+      "reconstruction_score": 247.20063145955405,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 246.35351788556136,
-        "contrast": 55.73320007324219,
-        "edge_energy": 104.35508728027344,
-        "coverage": 0.988527199074074,
-        "saturation": 0.015827546296296298
+        "score": 247.20063145955405,
+        "contrast": 55.404911041259766,
+        "edge_energy": 103.52980041503906,
+        "coverage": 0.9896846064814815,
+        "saturation": 0.01579861111111111
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The full card number, CVV, and expiration date are clearly visible and legible in the image. No parts of the text are obscured or pixelated beyond readability.",
+      "vlm_error": ""
     },
     {
       "name": "account_00",
@@ -1422,29 +1425,29 @@
         "width": 720,
         "height": 96
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.9761904761904762,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 29.891738818799087,
-      "reconstruction_score": 293.1547437597204,
+      "psnr_db": 29.893151832537647,
+      "reconstruction_score": 293.17943177399815,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 293.1547437597204,
-        "contrast": 36.80587387084961,
-        "edge_energy": 12.932090759277344,
-        "coverage": 0.9890625,
-        "saturation": 0.27437789351851855
+        "score": 293.17943177399815,
+        "contrast": 36.8161735534668,
+        "edge_energy": 12.92782974243164,
+        "coverage": 0.9888888888888889,
+        "saturation": 0.273755787037037
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All text is clearly legible. The card number, CVV, and expiration date are fully visible and readable.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1460,21 +1463,21 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text, which are sensitive credentials. The text is fully legible with no obscured or hidden characters.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1495,16 +1498,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 2,
-      "psnr_db": 2.0654238557584885,
+      "psnr_db": 2.0591854668874783,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image is completely filled with noise (static), making no text readable. No characters or patterns are discernible.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1520,22 +1523,22 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 3.432212620399432,
+      "psnr_db": 3.4322017209403466,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image clearly shows an email address and a password in plain text. Both are fully legible and contain sensitive information.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1551,10 +1554,10 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
       "psnr_db": 26.16063488995527,
       "reconstruction_score": 231.66446825721312,
@@ -1569,11 +1572,11 @@
         "coverage": 1.0,
         "saturation": 0.9388318112633182
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The image clearly shows a username and password in plain text. The email address and password are fully visible and readable.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1589,29 +1592,29 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 30.123268945254473,
-      "reconstruction_score": 309.294360156473,
+      "psnr_db": 30.122626236644138,
+      "reconstruction_score": 309.15741773137944,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 309.294360156473,
-        "contrast": 41.46044921875,
-        "edge_energy": 14.414947509765625,
+        "score": 309.15741773137944,
+        "contrast": 41.46263122558594,
+        "edge_energy": 14.418988227844238,
         "coverage": 1.0,
-        "saturation": 0.17751141552511415
+        "saturation": 0.17886225266362252
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text. Both are fully legible and sensitive information is directly visible.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1627,28 +1630,28 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.654264664680355,
-      "reconstruction_score": 250.7054575857688,
+      "psnr_db": 12.693499135862814,
+      "reconstruction_score": 250.73329855862275,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 250.7054575857688,
-        "contrast": 56.8270263671875,
-        "edge_energy": 99.84493255615234,
-        "coverage": 0.9850456621004566,
-        "saturation": 0.017903348554033485
+        "score": 250.73329855862275,
+        "contrast": 56.69751739501953,
+        "edge_energy": 99.53157043457031,
+        "coverage": 0.9846841704718418,
+        "saturation": 0.018378995433789954
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text. The characters are legible despite some noise in the background. Sensitive information is directly visible.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1664,28 +1667,28 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.576162101142906,
-      "reconstruction_score": 250.66871921185128,
+      "psnr_db": 12.617140507060913,
+      "reconstruction_score": 250.6474240737056,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 250.66871921185128,
-        "contrast": 56.93258285522461,
-        "edge_energy": 99.99293518066406,
-        "coverage": 0.9850456621004566,
-        "saturation": 0.01784627092846271
+        "score": 250.6474240737056,
+        "contrast": 56.80759811401367,
+        "edge_energy": 99.74655151367188,
+        "coverage": 0.9846841704718418,
+        "saturation": 0.018188736681887367
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text. Both are fully legible and sensitive information is directly visible.",
+      "vlm_error": ""
     },
     {
       "name": "mixed_00",
@@ -1701,29 +1704,29 @@
         "width": 720,
         "height": 73
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 29.881225992248815,
-      "reconstruction_score": 292.8693677301276,
+      "psnr_db": 29.880067607413437,
+      "reconstruction_score": 292.51648708093836,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 292.8693677301276,
-        "contrast": 45.239532470703125,
-        "edge_energy": 16.15441131591797,
-        "coverage": 0.9812024353120243,
-        "saturation": 0.3057648401826484
+        "score": 292.51648708093836,
+        "contrast": 45.2254524230957,
+        "edge_energy": 16.19831085205078,
+        "coverage": 0.9809741248097412,
+        "saturation": 0.3080289193302892
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text. Both are fully legible and sensitive information is directly visible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1739,21 +1742,21 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text consists of a sequence of digits, a decimal number, and a hexadecimal value. No personally identifiable information or sensitive data is visible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1774,16 +1777,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 3,
-      "psnr_db": 2.0455235409673196,
+      "psnr_db": 2.043273287588154,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image appears to be completely corrupted or filled with noise, making no text readable. No characters or words are discernible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1799,22 +1802,22 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 3.41581413563539,
+      "psnr_db": 3.415811101890378,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All characters are clearly visible and legible. No sensitive information (e.g., passwords, personal identifiers) is present or implied.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1830,10 +1833,10 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
       "psnr_db": 26.369989259780805,
       "reconstruction_score": 232.9549256524624,
@@ -1848,11 +1851,11 @@
         "coverage": 1.0,
         "saturation": 0.9465014064697609
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text consists of a sequence of digits, a decimal number, and a hexadecimal value. No personally identifiable information or sensitive data is visible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1868,29 +1871,29 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 30.112872213868034,
-      "reconstruction_score": 312.09205944259793,
+      "psnr_db": 30.110427304740153,
+      "reconstruction_score": 312.04215921866074,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 312.09205944259793,
-        "contrast": 41.43611145019531,
-        "edge_energy": 12.237863540649414,
+        "score": 312.04215921866074,
+        "contrast": 41.423072814941406,
+        "edge_energy": 12.227256774902344,
         "coverage": 1.0,
-        "saturation": 0.1710618846694796
+        "saturation": 0.1715365682137834
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly legible and consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, personal identifiers) is visible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1906,28 +1909,28 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 12.607207366143209,
-      "reconstruction_score": 252.0467998112975,
+      "psnr_db": 12.656777977223816,
+      "reconstruction_score": 253.58889525852118,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 252.0467998112975,
-        "contrast": 56.87933349609375,
-        "edge_energy": 98.85327911376953,
-        "coverage": 0.9847398030942335,
-        "saturation": 0.014011954992967651
+        "score": 253.58889525852118,
+        "contrast": 56.88580322265625,
+        "edge_energy": 98.0859375,
+        "coverage": 0.9850386779184247,
+        "saturation": 0.007225738396624473
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible and consists of a sequence of numbers, a decimal, and a hexadecimal value. No sensitive information (e.g., personal identifiers, passwords, etc.) is visible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1943,28 +1946,28 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 12.531870504422841,
-      "reconstruction_score": 251.96168503580213,
+      "psnr_db": 12.583908791206342,
+      "reconstruction_score": 252.82358756514705,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 251.96168503580213,
-        "contrast": 56.96036911010742,
-        "edge_energy": 99.06513977050781,
-        "coverage": 0.9847398030942335,
-        "saturation": 0.013554852320675105
+        "score": 252.82358756514705,
+        "contrast": 56.98002243041992,
+        "edge_energy": 98.32485961914062,
+        "coverage": 0.9850386779184247,
+        "saturation": 0.013431786216596343
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible and consists of a sequence of numbers, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, personal identifiers) is visible.",
+      "vlm_error": ""
     },
     {
       "name": "digits_00",
@@ -1980,29 +1983,29 @@
         "width": 720,
         "height": 79
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 29.869734228224807,
-      "reconstruction_score": 295.6388600519773,
+      "psnr_db": 29.86696382599138,
+      "reconstruction_score": 295.46200750112195,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 295.6388600519773,
-        "contrast": 45.2066650390625,
-        "edge_energy": 13.859295845031738,
-        "coverage": 0.9806434599156119,
-        "saturation": 0.29901547116736993
+        "score": 295.46200750112195,
+        "contrast": 45.20326232910156,
+        "edge_energy": 13.862211227416992,
+        "coverage": 0.9805555555555555,
+        "saturation": 0.30045710267229253
       },
-      "visible_text": "",
+      "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly legible and consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, IDs, personal data) is visible.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2018,21 +2021,21 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and clearly visible. It contains sensitive information regarding confidential financial data and distribution restrictions.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2053,16 +2056,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 10,
-      "psnr_db": 2.048651371391938,
+      "psnr_db": 2.0233469104355417,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image consists entirely of noise or static with no discernible text or characters. No readable content is present.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2078,22 +2081,22 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 3.3753300956978425,
+      "psnr_db": 3.375338399012304,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.98,
+      "vlm_notes": "The text is clearly legible and contains sensitive information regarding confidential financial data and distribution restrictions.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2109,10 +2112,10 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
       "psnr_db": 26.578972096245096,
       "reconstruction_score": 224.0600648356184,
@@ -2127,11 +2130,11 @@
         "coverage": 1.0,
         "saturation": 0.953708071278826
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly legible and contains sensitive information regarding confidential financial data and distribution restrictions.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2147,29 +2150,29 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 30.099056819445487,
-      "reconstruction_score": 308.2955562903446,
+      "psnr_db": 30.097464661213888,
+      "reconstruction_score": 308.3256373975262,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 308.2955562903446,
-        "contrast": 33.831092834472656,
-        "edge_energy": 12.850788116455078,
+        "score": 308.3256373975262,
+        "contrast": 33.825469970703125,
+        "edge_energy": 12.842599868774414,
         "coverage": 1.0,
-        "saturation": 0.12684748427672957
+        "saturation": 0.12657232704402516
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and clearly visible. It contains a confidentiality notice and a restriction on external distribution, which are sensitive in nature.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2185,28 +2188,28 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
+      "char_accuracy": 0.989010989010989,
+      "word_accuracy": 0.9230769230769231,
       "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "sensitive_token_recall": 0.9,
       "sensitive_token_count": 10,
-      "psnr_db": 12.009930436426115,
-      "reconstruction_score": 246.08255279988862,
+      "psnr_db": 12.070718317658006,
+      "reconstruction_score": 246.26081178773126,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 246.08255279988862,
-        "contrast": 55.801025390625,
-        "edge_energy": 105.36181640625,
-        "coverage": 0.9888233752620545,
-        "saturation": 0.010036687631027254
+        "score": 246.26081178773126,
+        "contrast": 55.810176849365234,
+        "edge_energy": 105.25691223144531,
+        "coverage": 0.9890199161425577,
+        "saturation": 0.009984276729559748
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2020 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible despite some background noise. The content includes sensitive financial information and a distribution warning.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2222,28 +2225,28 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
+      "char_accuracy": 0.989010989010989,
+      "word_accuracy": 0.9230769230769231,
       "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "sensitive_token_recall": 0.9,
       "sensitive_token_count": 10,
-      "psnr_db": 12.255064924242095,
-      "reconstruction_score": 244.6712488858205,
+      "psnr_db": 12.324267964988433,
+      "reconstruction_score": 244.9044952072687,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 244.6712488858205,
-        "contrast": 57.32931900024414,
-        "edge_energy": 108.09439086914062,
-        "coverage": 0.9888233752620545,
-        "saturation": 0.012106918238993711
+        "score": 244.9044952072687,
+        "contrast": 57.28886413574219,
+        "edge_energy": 107.87834167480469,
+        "coverage": 0.9890330188679245,
+        "saturation": 0.012159329140461216
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2020 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible despite some background noise. Sensitive information (confidential financial data, Q4 2020) is visible and readable.",
+      "vlm_error": ""
     },
     {
       "name": "paragraph_00",
@@ -2259,29 +2262,29 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 29.515769471915792,
-      "reconstruction_score": 294.1180217231095,
+      "psnr_db": 29.522794384169472,
+      "reconstruction_score": 294.19105134120275,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 294.1180217231095,
-        "contrast": 38.53029251098633,
-        "edge_energy": 15.452627182006836,
-        "coverage": 0.9893867924528302,
-        "saturation": 0.25775681341719076
+        "score": 294.19105134120275,
+        "contrast": 38.52261734008789,
+        "edge_energy": 15.46888256072998,
+        "coverage": 0.9894392033542977,
+        "saturation": 0.2569444444444444
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and clearly visible. It contains a confidentiality notice and a restriction on external distribution, which are sensitive in nature.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2297,21 +2300,21 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully visible and legible. It is a common pangram used to test typography and does not contain any sensitive information.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2332,16 +2335,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 1,
-      "psnr_db": 2.051653689998354,
+      "psnr_db": 2.040594804249868,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image appears to be completely filled with noise or static, making no text legible. No characters or words can be discerned.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2357,22 +2360,22 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 3.411477742828329,
+      "psnr_db": 3.4113452380992833,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and contains no sensitive information. It is a common pangram used for testing fonts and typing.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2388,10 +2391,10 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
       "psnr_db": 26.326248690128185,
       "reconstruction_score": 229.60677396001205,
@@ -2406,11 +2409,11 @@
         "coverage": 1.0,
         "saturation": 0.9452660406885759
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and contains no sensitive information. It is a common pangram used for testing fonts and typing.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2426,29 +2429,29 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 30.133524235850576,
-      "reconstruction_score": 306.865542374493,
+      "psnr_db": 30.121141769977392,
+      "reconstruction_score": 306.4346968691114,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 306.865542374493,
-        "contrast": 39.386226654052734,
-        "edge_energy": 13.989776611328125,
+        "score": 306.4346968691114,
+        "contrast": 39.3950080871582,
+        "edge_energy": 14.01664924621582,
         "coverage": 1.0,
-        "saturation": 0.1853090766823161
+        "saturation": 0.18943661971830986
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and contains no sensitive information.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2464,28 +2467,28 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 12.665232454757845,
-      "reconstruction_score": 251.06187791779567,
+      "psnr_db": 12.637223633482071,
+      "reconstruction_score": 250.74746786484698,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 251.06187791779567,
-        "contrast": 55.82181167602539,
-        "edge_energy": 99.64256286621094,
-        "coverage": 0.9883998435054773,
-        "saturation": 0.016373239436619717
+        "score": 250.74746786484698,
+        "contrast": 55.90003204345703,
+        "edge_energy": 99.86500549316406,
+        "coverage": 0.9880086071987481,
+        "saturation": 0.016901408450704224
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible and appears to be a standard pangram. No sensitive information is present.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2501,28 +2504,28 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 12.581027127550566,
-      "reconstruction_score": 250.99535191973237,
+      "psnr_db": 12.547200002527068,
+      "reconstruction_score": 251.5609464331972,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 250.99535191973237,
-        "contrast": 55.924659729003906,
-        "edge_energy": 99.82563018798828,
-        "coverage": 0.9883998435054773,
-        "saturation": 0.016236306729264474
+        "score": 251.5609464331972,
+        "contrast": 55.967018127441406,
+        "edge_energy": 99.94010925292969,
+        "coverage": 0.9880086071987481,
+        "saturation": 0.00868544600938967
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and appears to be a standard pangram. No sensitive information is present.",
+      "vlm_error": ""
     },
     {
       "name": "en_sentence_00",
@@ -2538,29 +2541,29 @@
         "width": 720,
         "height": 71
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 29.89068920403011,
-      "reconstruction_score": 292.4918369776766,
+      "psnr_db": 29.905118684414028,
+      "reconstruction_score": 292.9669127964264,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 292.4918369776766,
-        "contrast": 43.012001037597656,
-        "edge_energy": 15.696220397949219,
+        "score": 292.9669127964264,
+        "contrast": 43.008792877197266,
+        "edge_energy": 15.648296356201172,
         "coverage": 0.9855046948356807,
-        "saturation": 0.3047535211267606
+        "saturation": 0.30044992175273866
       },
-      "visible_text": "",
+      "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and contains no sensitive information. It is a common pangram used for testing fonts and typing.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2576,21 +2579,21 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed and considered sensitive information.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2611,16 +2614,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 2,
-      "psnr_db": 2.0079076983451225,
+      "psnr_db": 2.010597396334489,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image is completely filled with noise or static, making no readable text visible. No characters, words, or patterns can be discerned.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2636,22 +2639,22 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 3.3846443664221493,
+      "psnr_db": 3.3846297918872126,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2667,10 +2670,10 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
       "psnr_db": 26.611056523196286,
       "reconstruction_score": 231.63271787431506,
@@ -2685,11 +2688,11 @@
         "coverage": 1.0,
         "saturation": 0.9550868055555556
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2705,29 +2708,29 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 30.11503257358479,
-      "reconstruction_score": 313.31237602233887,
+      "psnr_db": 30.116701394043726,
+      "reconstruction_score": 313.2723134358724,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 313.31237602233887,
-        "contrast": 38.72981262207031,
-        "edge_energy": 9.979936599731445,
+        "score": 313.2723134358724,
+        "contrast": 38.75226593017578,
+        "edge_energy": 9.985160827636719,
         "coverage": 1.0,
-        "saturation": 0.154375
+        "saturation": 0.15494791666666666
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2743,28 +2746,28 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.611584393607782,
-      "reconstruction_score": 252.51329506768124,
+      "psnr_db": 12.619083477018334,
+      "reconstruction_score": 253.01052559746637,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 252.51329506768124,
-        "contrast": 55.523983001708984,
-        "edge_energy": 97.49853515625,
-        "coverage": 0.9860069444444445,
-        "saturation": 0.013142361111111112
+        "score": 253.01052559746637,
+        "contrast": 55.50362777709961,
+        "edge_energy": 97.10594940185547,
+        "coverage": 0.9865972222222222,
+        "saturation": 0.013663194444444445
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is a sensitive credential and is fully readable.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2780,28 +2783,28 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.556125788402355,
-      "reconstruction_score": 252.39618894788958,
+      "psnr_db": 12.561658203198977,
+      "reconstruction_score": 252.90714094373917,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 252.39618894788958,
-        "contrast": 55.6021842956543,
-        "edge_energy": 97.71467590332031,
-        "coverage": 0.9860069444444445,
-        "saturation": 0.012934027777777777
+        "score": 252.90714094373917,
+        "contrast": 55.59064483642578,
+        "edge_energy": 97.36405944824219,
+        "coverage": 0.9865972222222222,
+        "saturation": 0.012986111111111111
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is a sensitive piece of information that is fully readable.",
+      "vlm_error": ""
     },
     {
       "name": "en_short_00",
@@ -2817,29 +2820,29 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 29.869066512999417,
-      "reconstruction_score": 295.1228178872003,
+      "psnr_db": 29.87865838282765,
+      "reconstruction_score": 295.4153997633193,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 295.1228178872003,
-        "contrast": 42.261478424072266,
-        "edge_energy": 11.595257759094238,
-        "coverage": 0.9821006944444445,
-        "saturation": 0.3017361111111111
+        "score": 295.4153997633193,
+        "contrast": 42.26456069946289,
+        "edge_energy": 11.576591491699219,
+        "coverage": 0.9820659722222222,
+        "saturation": 0.2989236111111111
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "PASSWORD admin123",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -2855,21 +2858,21 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All text is clearly legible. The data includes names (Alice, Bob) and salary figures (9500, 8200), which are considered sensitive personal information.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -2890,16 +2893,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 8,
-      "psnr_db": 1.9503067472019548,
+      "psnr_db": 1.960609839427507,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image is completely filled with noise (static or speckled pattern), making no text legible. No characters or words can be discerned.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -2915,22 +2918,22 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 3.2952400904207133,
+      "psnr_db": 3.295233053337689,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.98,
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and salary figures, which are sensitive data. All characters are visible and unobscured.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -2946,10 +2949,10 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
       "psnr_db": 27.27443958362889,
       "reconstruction_score": 218.38553141947813,
@@ -2964,11 +2967,11 @@
         "coverage": 1.0,
         "saturation": 0.976808176100629
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salary), which are sensitive. All characters are visible and unobscured.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -2984,29 +2987,29 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 30.10926663967797,
-      "reconstruction_score": 308.1801159046981,
+      "psnr_db": 30.10536285427786,
+      "reconstruction_score": 308.12025358691903,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 308.1801159046981,
-        "contrast": 24.189546585083008,
-        "edge_energy": 6.7706990242004395,
+        "score": 308.12025358691903,
+        "contrast": 24.16741180419922,
+        "edge_energy": 6.770428657531738,
         "coverage": 1.0,
-        "saturation": 0.09238731656184486
+        "saturation": 0.09276729559748427
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All text is clearly legible. The data includes names (Alice, Bob) and salary figures (9500, 8200), which are considered sensitive personal information.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -3022,28 +3025,28 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 10.275714118462826,
-      "reconstruction_score": 235.08324454765398,
+      "psnr_db": 10.163487963226281,
+      "reconstruction_score": 234.1934523672428,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 235.08324454765398,
-        "contrast": 60.56829071044922,
-        "edge_energy": 121.40223693847656,
-        "coverage": 0.9899109014675053,
-        "saturation": 0.010560796645702307
+        "score": 234.1934523672428,
+        "contrast": 61.14250183105469,
+        "edge_energy": 122.84527587890625,
+        "coverage": 0.9897405660377359,
+        "saturation": 0.01025943396226415
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salaries), which are sensitive. The image quality is sufficient to read all visible characters without ambiguity.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -3059,28 +3062,28 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 10.579915219215867,
-      "reconstruction_score": 233.38244354599925,
+      "psnr_db": 10.480886612646401,
+      "reconstruction_score": 233.35473011424705,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 233.38244354599925,
-        "contrast": 62.0080451965332,
-        "edge_energy": 124.2650146484375,
-        "coverage": 0.9898191823899372,
-        "saturation": 0.01306341719077568
+        "score": 233.35473011424705,
+        "contrast": 62.47079849243164,
+        "edge_energy": 125.53902435302734,
+        "coverage": 0.9899109014675053,
+        "saturation": 0.00550314465408805
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text is clearly legible despite some background noise. Sensitive information such as names and salary figures are visible and readable.",
+      "vlm_error": ""
     },
     {
       "name": "table_00",
@@ -3096,29 +3099,29 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 28.320620004995206,
-      "reconstruction_score": 291.08424520592524,
+      "psnr_db": 28.355454796328953,
+      "reconstruction_score": 290.77698814743974,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 291.08424520592524,
-        "contrast": 30.43267059326172,
-        "edge_energy": 10.211894989013672,
+        "score": 290.77698814743974,
+        "contrast": 30.384023666381836,
+        "edge_energy": 10.246448516845703,
         "coverage": 0.9897798742138365,
-        "saturation": 0.26070492662473793
+        "saturation": 0.2629454926624738
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salary), which are sensitive. All characters are visible and unobscured.",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3134,21 +3137,21 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
       "psnr_db": 99.0,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "original"
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be truncated, but the visible portion may still be sensitive. No additional context or hidden characters are visible.",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3169,16 +3172,16 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 1,
-      "psnr_db": 1.9873675984452364,
+      "psnr_db": 1.9791554165343526,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The image consists entirely of noise or static with no discernible text or characters. No readable content is present.",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3194,22 +3197,22 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 3.356977303624355,
+      "psnr_db": 3.3568885709184397,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
         "frames": 4
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The URL contains a token parameter with visible characters 'eyJhbGc', which may be part of a sensitive JWT or API key. The full token is not visible, but the partial string is readable and potentially sensitive.",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3225,10 +3228,10 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
       "psnr_db": 26.702772672315977,
       "reconstruction_score": 223.8175472846398,
@@ -3243,11 +3246,11 @@
         "coverage": 1.0,
         "saturation": 0.9586538461538462
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT header (typically 'eyJhbGciOiJIUzI1NiJ9')",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3263,29 +3266,29 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 30.129738974275497,
-      "reconstruction_score": 302.60064614124786,
+      "psnr_db": 30.13809538234714,
+      "reconstruction_score": 302.5005474335108,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 302.60064614124786,
-        "contrast": 32.29145812988281,
-        "edge_energy": 11.742094039916992,
+        "score": 302.5005474335108,
+        "contrast": 32.3692741394043,
+        "edge_energy": 11.778983116149902,
         "coverage": 1.0,
-        "saturation": 0.1794871794871795
+        "saturation": 0.1808974358974359
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT header (typically 'eyJhbGciOiJIUzI1NiJ9')",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3301,28 +3304,28 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 11.80569982406044,
-      "reconstruction_score": 244.84089660644534,
+      "psnr_db": 11.82767959683763,
+      "reconstruction_score": 245.08485764723557,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 244.84089660644534,
-        "contrast": 56.2794189453125,
-        "edge_energy": 106.43852233886719,
-        "coverage": 0.9896581196581197,
-        "saturation": 0.018974358974358976
+        "score": 245.08485764723557,
+        "contrast": 56.352447509765625,
+        "edge_energy": 107.09451293945312,
+        "coverage": 0.9892735042735042,
+        "saturation": 0.009551282051282051
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT (typically 'eyJhbGciOiJIUzI1NiJ9' for a s",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3338,28 +3341,28 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 11.735132661678378,
-      "reconstruction_score": 244.88760307507638,
+      "psnr_db": 11.762643729990415,
+      "reconstruction_score": 245.16361901698968,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 244.88760307507638,
-        "contrast": 56.345401763916016,
-        "edge_energy": 106.47061920166016,
-        "coverage": 0.9896581196581197,
-        "saturation": 0.018846153846153846
+        "score": 245.16361901698968,
+        "contrast": 56.39379119873047,
+        "edge_energy": 107.06991577148438,
+        "coverage": 0.9892735042735042,
+        "saturation": 0.009423076923076923
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The URL contains a visible token fragment 'eyJhbGc' which may be part of a JWT or similar sensitive credential. The text is clearly legible despite some background noise.",
+      "vlm_error": ""
     },
     {
       "name": "url_token_00",
@@ -3380,24 +3383,24 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 1,
-      "psnr_db": 28.990815177976287,
-      "reconstruction_score": 289.7498937101446,
+      "psnr_db": 29.360063410075444,
+      "reconstruction_score": 321.32203975090613,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 289.7498937101446,
-        "contrast": 37.792747497558594,
-        "edge_energy": 14.044990539550781,
-        "coverage": 0.9897863247863248,
-        "saturation": 0.30933760683760686
+        "score": 321.32203975090613,
+        "contrast": 37.63340377807617,
+        "edge_energy": 13.272902488708496,
+        "coverage": 0.9898717948717949,
+        "saturation": 0.0
       },
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.0,
       "vlm_notes": "",
-      "vlm_error": "VLM API request failed: <urlopen error [Errno 8] nodename nor servname provided, or not known>"
+      "vlm_error": "The read operation timed out"
     }
   ]
 }

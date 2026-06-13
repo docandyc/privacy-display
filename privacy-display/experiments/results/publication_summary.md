@@ -10,6 +10,16 @@ This file is generated from machine-readable experiment JSON artifacts.
 - view_attack: `view_attack.json`
 - vlm: `vlm_qwen3_siliconflow.json`
 - real_capture: `missing`
+- component_ablation: `component_ablation.json`
+- recognizer_generalization: `recognizer_generalization.json`
+- perceptual_ablation: `perceptual_ablation.json`
+- pareto_sweep: `pareto_sweep.json`
+- strong_attack_extra: `strong_attack_extra.json`
+- adaptive_attack_ablation: `adaptive_attack_ablation.json`
+- camera_pipeline_ablation: `camera_pipeline_ablation.json`
+- screen_privacy_baselines: `screen_privacy_baselines.json`
+- vlm_prompt_ablation: `missing`
+- usability_pilot: `missing`
 
 ## OCR Corpus
 
@@ -46,8 +56,25 @@ This file is generated from machine-readable experiment JSON artifacts.
 
 ## VLM Readability
 
-- Not available: VLM result file exists, but all live API calls failed; do not cite recovery metrics.
+- Model: `Qwen/Qwen3-VL-32B-Instruct`
+- Best attack char recovery: 96.9%
+- Best attack read success rate: 100.0%
 
 ## Real Camera Capture
 
 - Not available: Real camera capture analysis is implemented, but no real photo/video-frame result has been generated.
+
+## Supplemental Ablations
+
+| Experiment | Status | Highlight |
+|---|---|---|
+| component_ablation | available | baseline: char recovery 92.9%, leak 0.0%, errors 0 |
+| recognizer_generalization | available | tesseract/original: char recovery 92.9%, leak 100.0%, errors 0 |
+| perceptual_ablation | available | rgb_full: char recovery 0.0%, leak 0.0%, errors 0 |
+| pareto_sweep | available | recommended n=6 @ 360.0Hz, FPI 0.0333, MI 0.263 |
+| strong_attack_extra | available | single_subframe: char recovery 0.0%, leak 0.0%, errors 0 |
+| adaptive_attack_ablation | available | raw_subframe: char recovery 0.0%, leak 0.0%, errors 0 |
+| camera_pipeline_ablation | available | clean_subframe: char recovery 0.0%, leak 0.0%, errors 0 |
+| screen_privacy_baselines | available | unprotected: char recovery 92.9%, leak 100.0%, errors 0 |
+| vlm_prompt_ablation | missing | `vlm_prompt_ablation.json` |
+| usability_pilot | missing | `usability_pilot.json` |

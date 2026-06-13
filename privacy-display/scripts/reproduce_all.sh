@@ -17,6 +17,10 @@ if [[ -f "$ENV_FILE" ]]; then
   set +a
 fi
 
+MPLCONFIGDIR="${MPLCONFIGDIR:-${TMPDIR:-/tmp}/privacy-display-matplotlib}"
+export MPLCONFIGDIR
+mkdir -p "$MPLCONFIGDIR"
+
 RUN_TESTS=1
 RUN_FULL_OFFLINE=0
 RUN_VLM_LIVE=0
@@ -96,9 +100,18 @@ if [[ "$RUN_FULL_OFFLINE" -eq 1 ]]; then
   run_python experiments/detection_attack.py
   run_python experiments/view_attack.py
   run_python experiments/unet_reconstruction.py
+  run_python experiments/component_ablation.py --max-samples 24
+  run_python experiments/recognizer_generalization.py --engines tesseract --max-samples 24
+  run_python experiments/perceptual_ablation.py --max-samples 24
+  run_python experiments/pareto_sweep.py --max-samples 24
+  run_python experiments/strong_attack_extra.py --max-samples 24
+  run_python experiments/adaptive_attack_ablation.py --max-samples 24
+  run_python experiments/camera_pipeline_ablation.py --max-samples 24
+  run_python experiments/screen_privacy_baselines.py --max-samples 24
 fi
 
 run_python experiments/vlm_readability_analysis.py --dry-run --samples-per-category 1
+run_python experiments/vlm_prompt_ablation.py --dry-run --samples-per-category 1
 
 if [[ "$RUN_REAL_CAPTURE" -eq 1 ]]; then
   run_python experiments/real_capture_analysis.py --engines tesseract

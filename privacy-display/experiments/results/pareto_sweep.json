@@ -1,0 +1,484 @@
+{
+  "config": {
+    "ns": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "refreshes": [
+      144.0,
+      240.0,
+      360.0
+    ],
+    "epsilons": [
+      0.031372549
+    ],
+    "max_samples": 8,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 8,
+      "samples_per_category": 1,
+      "n_selected": 8
+    },
+    "axes": {
+      "usability": "fpi (lower better)",
+      "security": "entropy_ratio = single-frame normalized MI (lower better)"
+    }
+  },
+  "recommended": {
+    "n": 6,
+    "refresh_hz": 360.0,
+    "epsilon": 0.031372549,
+    "effective_fps": 60.0,
+    "fpi": 0.03333333333333333,
+    "fpi_safe": true,
+    "delta_e": 0.5974436829596315,
+    "ssim": 0.999142404592321,
+    "entropy_ratio": 0.26307814781239114,
+    "single_frame_ocr": 0.0,
+    "full_cycle_ocr": 0.920044697366126,
+    "pareto_optimal": true
+  },
+  "image_metrics_by_n_epsilon": {
+    "n2_eps0.0314": {
+      "delta_e": {
+        "mean": 0.8862223329152585,
+        "std": 0.40576722603094995,
+        "count": 8,
+        "ci95": {
+          "low": 0.6187904375782372,
+          "high": 1.1863646245635604,
+          "half_width": 0.2837870934926616,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9451789448276937,
+        "std": 0.040192575564015016,
+        "count": 8,
+        "ci95": {
+          "low": 0.9146082810642805,
+          "high": 0.9696070851589516,
+          "half_width": 0.02749940204733553,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.5695272565006331,
+        "std": 0.07190921147421596,
+        "count": 8,
+        "ci95": {
+          "low": 0.523686135755365,
+          "high": 0.6230483410610479,
+          "half_width": 0.049681102652841425,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.920044697366126,
+        "std": 0.07594095247770163,
+        "count": 8,
+        "ci95": {
+          "low": 0.8648774092970521,
+          "high": 0.9705865766178267,
+          "half_width": 0.052854583660387255,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "n4_eps0.0314": {
+      "delta_e": {
+        "mean": 0.3627294363770919,
+        "std": 0.178491910509482,
+        "count": 8,
+        "ci95": {
+          "low": 0.24604324572126376,
+          "high": 0.4934235359848905,
+          "half_width": 0.12369014513181338,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9932564257390053,
+        "std": 0.005349298397328442,
+        "count": 8,
+        "ci95": {
+          "low": 0.9891927090319101,
+          "high": 0.9964642921244703,
+          "half_width": 0.003635791546280076,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.4008072166159794,
+        "std": 0.09006285382331541,
+        "count": 8,
+        "ci95": {
+          "low": 0.3434886064159135,
+          "high": 0.467124668031063,
+          "half_width": 0.06181803080757475,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0033482142857142842,
+        "std": 0.00885854233615376,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.010044642857142853,
+          "half_width": 0.005022321428571426,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.920044697366126,
+        "std": 0.07594095247770163,
+        "count": 8,
+        "ci95": {
+          "low": 0.8648774092970521,
+          "high": 0.9705865766178267,
+          "half_width": 0.052854583660387255,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "n6_eps0.0314": {
+      "delta_e": {
+        "mean": 0.5974436829596315,
+        "std": 0.07648284678589858,
+        "count": 8,
+        "ci95": {
+          "low": 0.5376571832807854,
+          "high": 0.6301024733128857,
+          "half_width": 0.04622264501605017,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.999142404592321,
+        "std": 0.0013701460969801039,
+        "count": 8,
+        "ci95": {
+          "low": 0.9980836528976484,
+          "high": 0.9999111457463499,
+          "half_width": 0.0009137464243507143,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.26307814781239114,
+        "std": 0.05690716303372948,
+        "count": 8,
+        "ci95": {
+          "low": 0.22778986563587494,
+          "high": 0.30842292557116474,
+          "half_width": 0.0403165299676449,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.920044697366126,
+        "std": 0.07594095247770163,
+        "count": 8,
+        "ci95": {
+          "low": 0.8648774092970521,
+          "high": 0.9705865766178267,
+          "half_width": 0.052854583660387255,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "n8_eps0.0314": {
+      "delta_e": {
+        "mean": 0.5168643116862786,
+        "std": 0.4562723772529457,
+        "count": 8,
+        "ci95": {
+          "low": 0.22046601939665103,
+          "high": 0.8527034910722006,
+          "half_width": 0.3161187358377748,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9954720260257288,
+        "std": 0.003028236727206791,
+        "count": 8,
+        "ci95": {
+          "low": 0.9935052699923944,
+          "high": 0.9977332133678811,
+          "half_width": 0.0021139716877433545,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.2307897595334097,
+        "std": 0.05886709482481544,
+        "count": 8,
+        "ci95": {
+          "low": 0.1937025744856525,
+          "high": 0.2770126953797234,
+          "half_width": 0.041655060447035444,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.920044697366126,
+        "std": 0.07594095247770163,
+        "count": 8,
+        "ci95": {
+          "low": 0.8648774092970521,
+          "high": 0.9705865766178267,
+          "half_width": 0.052854583660387255,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    }
+  },
+  "configs": [
+    {
+      "n": 2,
+      "refresh_hz": 144.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 72.0,
+      "fpi": 0.013888888888888892,
+      "fpi_safe": true,
+      "delta_e": 0.8862223329152585,
+      "ssim": 0.9451789448276937,
+      "entropy_ratio": 0.5695272565006331,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 2,
+      "refresh_hz": 240.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 120.0,
+      "fpi": 0.005,
+      "fpi_safe": true,
+      "delta_e": 0.8862223329152585,
+      "ssim": 0.9451789448276937,
+      "entropy_ratio": 0.5695272565006331,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 2,
+      "refresh_hz": 360.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 180.0,
+      "fpi": 0.0022222222222222222,
+      "fpi_safe": true,
+      "delta_e": 0.8862223329152585,
+      "ssim": 0.9451789448276937,
+      "entropy_ratio": 0.5695272565006331,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": true
+    },
+    {
+      "n": 4,
+      "refresh_hz": 144.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 36.0,
+      "fpi": 0.30000000000000004,
+      "fpi_safe": false,
+      "delta_e": 0.3627294363770919,
+      "ssim": 0.9932564257390053,
+      "entropy_ratio": 0.4008072166159794,
+      "single_frame_ocr": 0.0033482142857142842,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 4,
+      "refresh_hz": 240.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 60.0,
+      "fpi": 0.03,
+      "fpi_safe": true,
+      "delta_e": 0.3627294363770919,
+      "ssim": 0.9932564257390053,
+      "entropy_ratio": 0.4008072166159794,
+      "single_frame_ocr": 0.0033482142857142842,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 4,
+      "refresh_hz": 360.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 90.0,
+      "fpi": 0.013333333333333332,
+      "fpi_safe": true,
+      "delta_e": 0.3627294363770919,
+      "ssim": 0.9932564257390053,
+      "entropy_ratio": 0.4008072166159794,
+      "single_frame_ocr": 0.0033482142857142842,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": true
+    },
+    {
+      "n": 6,
+      "refresh_hz": 144.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 24.0,
+      "fpi": 0.5,
+      "fpi_safe": false,
+      "delta_e": 0.5974436829596315,
+      "ssim": 0.999142404592321,
+      "entropy_ratio": 0.26307814781239114,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 6,
+      "refresh_hz": 240.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 40.0,
+      "fpi": 0.27777777777777785,
+      "fpi_safe": false,
+      "delta_e": 0.5974436829596315,
+      "ssim": 0.999142404592321,
+      "entropy_ratio": 0.26307814781239114,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 6,
+      "refresh_hz": 360.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 60.0,
+      "fpi": 0.03333333333333333,
+      "fpi_safe": true,
+      "delta_e": 0.5974436829596315,
+      "ssim": 0.999142404592321,
+      "entropy_ratio": 0.26307814781239114,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": true
+    },
+    {
+      "n": 8,
+      "refresh_hz": 144.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 18.0,
+      "fpi": 0.6124999999999999,
+      "fpi_safe": false,
+      "delta_e": 0.5168643116862786,
+      "ssim": 0.9954720260257288,
+      "entropy_ratio": 0.2307897595334097,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 8,
+      "refresh_hz": 240.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 30.0,
+      "fpi": 0.4375,
+      "fpi_safe": false,
+      "delta_e": 0.5168643116862786,
+      "ssim": 0.9954720260257288,
+      "entropy_ratio": 0.2307897595334097,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": false
+    },
+    {
+      "n": 8,
+      "refresh_hz": 360.0,
+      "epsilon": 0.031372549,
+      "effective_fps": 45.0,
+      "fpi": 0.21875,
+      "fpi_safe": false,
+      "delta_e": 0.5168643116862786,
+      "ssim": 0.9954720260257288,
+      "entropy_ratio": 0.2307897595334097,
+      "single_frame_ocr": 0.0,
+      "full_cycle_ocr": 0.920044697366126,
+      "pareto_optimal": true
+    }
+  ]
+}

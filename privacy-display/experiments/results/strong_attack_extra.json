@@ -1,0 +1,1408 @@
+{
+  "config": {
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "cycles": 2,
+    "display_rate_hz": 240.0,
+    "n_captures": 8,
+    "exposure_time_s": 0.0020833333333333333,
+    "n_samples": 9,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 40,
+      "samples_per_category": 1,
+      "n_selected": 9
+    }
+  },
+  "summary": {
+    "single_subframe": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "psnr_db": {
+        "mean": 2.0138588794017926,
+        "std": 0.05253422923378636,
+        "count": 9,
+        "ci95": {
+          "low": 1.982333282159733,
+          "high": 2.0492859348049004,
+          "half_width": 0.03347632632258368,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "rolling_shutter_single": {
+      "char_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 8,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "psnr_db": {
+        "mean": 2.0138588794017926,
+        "std": 0.05253422923378636,
+        "count": 9,
+        "ci95": {
+          "low": 1.982333282159733,
+          "high": 2.0492859348049004,
+          "half_width": 0.03347632632258368,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "rolling_shutter_row_alignment": {
+      "char_accuracy": {
+        "mean": 0.928928619881001,
+        "std": 0.07587911424817326,
+        "count": 9,
+        "ci95": {
+          "low": 0.8775510204081632,
+          "high": 0.9721911884411885,
+          "half_width": 0.04732008401651261,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.8888888888888888,
+        "std": 0.1756820922315766,
+        "count": 9,
+        "ci95": {
+          "low": 0.7592592592592593,
+          "high": 0.9814814814814815,
+          "half_width": 0.1111111111111111,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.6666666666666666,
+        "std": 0.4714045207910317,
+        "count": 9,
+        "ci95": {
+          "low": 0.3333333333333333,
+          "high": 0.8888888888888888,
+          "half_width": 0.2777777777777778,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.8958333333333333,
+        "std": 0.1851707170274081,
+        "count": 8,
+        "ci95": {
+          "low": 0.75,
+          "high": 1.0,
+          "half_width": 0.125,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "psnr_db": {
+        "mean": 29.108707469019325,
+        "std": 0.10641242472110923,
+        "count": 9,
+        "ci95": {
+          "low": 29.038396820888657,
+          "high": 29.179241451626773,
+          "half_width": 0.07042231536905774,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    },
+    "temporal_superresolution": {
+      "char_accuracy": {
+        "mean": 0.914020854973236,
+        "std": 0.09041239219928315,
+        "count": 9,
+        "ci95": {
+          "low": 0.8526629988177608,
+          "high": 0.9656927912999341,
+          "half_width": 0.05651489624108669,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "word_accuracy": {
+        "mean": 0.75,
+        "std": 0.35572912430182496,
+        "count": 9,
+        "ci95": {
+          "low": 0.5092592592592593,
+          "high": 0.9629629629629631,
+          "half_width": 0.22685185185185192,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "exact_match": {
+        "mean": 0.5555555555555556,
+        "std": 0.4969039949999533,
+        "count": 9,
+        "ci95": {
+          "low": 0.2222222222222222,
+          "high": 0.8888888888888888,
+          "half_width": 0.3333333333333333,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "sensitive_token_recall": {
+        "mean": 0.7708333333333333,
+        "std": 0.34295995069071517,
+        "count": 8,
+        "ci95": {
+          "low": 0.5208333333333333,
+          "high": 1.0,
+          "half_width": 0.23958333333333337,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "leak_rate_char_ge_20pct": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "psnr_db": {
+        "mean": 28.538089350877968,
+        "std": 0.2390678167609841,
+        "count": 9,
+        "ci95": {
+          "low": 28.374816285521607,
+          "high": 28.692469728278585,
+          "half_width": 0.15882672137848886,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "error_count": 0
+    }
+  },
+  "samples": [
+    {
+      "name": "code_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 1.940619544747026,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 1.940619544747026,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 29.292217311604105,
+      "reconstruction_score": 277.6098419343582,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 277.6098419343582,
+        "contrast": 24.07415771484375,
+        "edge_energy": 7.507560729980469,
+        "coverage": 1.0,
+        "saturation": 0.3895675505050505
+      },
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "psnr_db": 28.961718507791044,
+      "reconstruction_score": 276.76732144211275,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 276.76732144211275,
+        "contrast": 27.691665649414062,
+        "edge_energy": 9.210329055786133,
+        "coverage": 0.9937026515151515,
+        "saturation": 0.39824810606060607
+      },
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 1.964463400182004,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 1.964463400182004,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 29.058666909830745,
+      "reconstruction_score": 259.90733153731736,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 259.90733153731736,
+        "contrast": 33.213966369628906,
+        "edge_energy": 12.997028350830078,
+        "coverage": 1.0,
+        "saturation": 0.6030960648148148
+      },
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "psnr_db": 28.510514698144156,
+      "reconstruction_score": 257.4758976123951,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 257.4758976123951,
+        "contrast": 37.09123611450195,
+        "edge_energy": 15.311229705810547,
+        "coverage": 0.9860677083333333,
+        "saturation": 0.6012442129629629
+      },
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 2.1194064461021163,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 2.1194064461021163,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.8571428571428572,
+      "word_accuracy": 0.5,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "psnr_db": 28.94353531116035,
+      "reconstruction_score": 271.2738890306772,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 271.2738890306772,
+        "contrast": 41.22136306762695,
+        "edge_energy": 15.063531875610352,
+        "coverage": 1.0,
+        "saturation": 0.5488394216133942
+      },
+      "recognized_text": "FAP user@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.75,
+      "word_accuracy": 0.25,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "psnr_db": 28.266512291375644,
+      "reconstruction_score": 264.3700912394299,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 264.3700912394299,
+        "contrast": 45.402530670166016,
+        "edge_energy": 17.480308532714844,
+        "coverage": 0.9771879756468798,
+        "saturation": 0.5670852359208524
+      },
+      "recognized_text": "H\n\nI\n\nuser@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 2.0436058414356135,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "psnr_db": 2.0436058414356135,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "psnr_db": 29.17309510084099,
+      "reconstruction_score": 274.01788854800196,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 274.01788854800196,
+        "contrast": 41.198055267333984,
+        "edge_energy": 13.356327056884766,
+        "coverage": 1.0,
+        "saturation": 0.5382383966244726
+      },
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "psnr_db": 28.657844290171738,
+      "reconstruction_score": 271.6598046057335,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 271.6598046057335,
+        "contrast": 45.340965270996094,
+        "edge_energy": 15.33200454711914,
+        "coverage": 0.9782348804500703,
+        "saturation": 0.5181962025316456
+      },
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 2.064501901900902,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 2.064501901900902,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 29.05272094820496,
+      "reconstruction_score": 247.39667961632432,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 247.39667961632432,
+        "contrast": 33.64599609375,
+        "edge_energy": 15.645280838012695,
+        "coverage": 1.0,
+        "saturation": 0.70604035639413
+      },
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "psnr_db": 28.112869138687408,
+      "reconstruction_score": 243.5248721300681,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 243.5248721300681,
+        "contrast": 38.730709075927734,
+        "edge_energy": 18.95059585571289,
+        "coverage": 0.985809748427673,
+        "saturation": 0.7199816561844864
+      },
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 2.026194357314398,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 2.026194357314398,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 29.206403719835645,
+      "reconstruction_score": 280.87744108089635,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 280.87744108089635,
+        "contrast": 39.15420150756836,
+        "edge_energy": 14.237245559692383,
+        "coverage": 1.0,
+        "saturation": 0.44039514866979657
+      },
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 28.51469434215152,
+      "reconstruction_score": 275.39070550264887,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 275.39070550264887,
+        "contrast": 43.5299186706543,
+        "edge_energy": 16.42559814453125,
+        "coverage": 0.9802621283255086,
+        "saturation": 0.4579225352112676
+      },
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 2.002802014924403,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 2.002802014924403,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 29.062351676307955,
+      "reconstruction_score": 266.0887499915229,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 266.0887499915229,
+        "contrast": 38.55921173095703,
+        "edge_energy": 11.810739517211914,
+        "coverage": 1.0,
+        "saturation": 0.6065972222222222
+      },
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "psnr_db": 28.658101179317946,
+      "reconstruction_score": 262.5226853688558,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 262.5226853688558,
+        "contrast": 42.3498420715332,
+        "edge_energy": 13.785490036010742,
+        "coverage": 0.9807986111111111,
+        "saturation": 0.6028125
+      },
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 1.9750484783344768,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 1.9750484783344768,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 28.997005173312438,
+      "reconstruction_score": 263.2126371955472,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 263.2126371955472,
+        "contrast": 24.057004928588867,
+        "edge_energy": 8.10982894897461,
+        "coverage": 1.0,
+        "saturation": 0.5273453878406709
+      },
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "psnr_db": 28.733150282378155,
+      "reconstruction_score": 261.6633311257672,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 261.6633311257672,
+        "contrast": 27.422319412231445,
+        "edge_energy": 10.050130844116211,
+        "coverage": 0.9928459119496855,
+        "saturation": 0.5356263102725367
+      },
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 1.9880879296751939,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "global_shutter_slot0"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "attack": "rolling_shutter_single",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 1.9880879296751939,
+      "reconstruction_score": 0.0,
+      "attack_metadata": {
+        "attack": "rolling_shutter_single"
+      },
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "attack": "rolling_shutter_row_alignment",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 29.192371070076724,
+      "reconstruction_score": 264.5845819864518,
+      "attack_metadata": {
+        "attack": "rolling_shutter_row_alignment",
+        "n_captures": 8,
+        "method": "max",
+        "score": 264.5845819864518,
+        "contrast": 32.15013122558594,
+        "edge_energy": 12.821959495544434,
+        "coverage": 1.0,
+        "saturation": 0.5474358974358975
+      },
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGc",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "attack": "temporal_superresolution",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.972972972972973,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "psnr_db": 28.427399427884087,
+      "reconstruction_score": 265.6612890357645,
+      "attack_metadata": {
+        "attack": "temporal_superresolution",
+        "frames": 8,
+        "sharpen": true,
+        "score": 265.6612890357645,
+        "contrast": 36.74609375,
+        "edge_energy": 15.326257705688477,
+        "coverage": 0.9897863247863248,
+        "saturation": 0.5269444444444444
+      },
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGo",
+      "ocr_error": ""
+    }
+  ]
+}

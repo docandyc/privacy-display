@@ -1,0 +1,1296 @@
+{
+  "config": {
+    "engines": [
+      "tesseract"
+    ],
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "cycles": 2,
+    "n_samples": 9,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": null,
+      "samples_per_category": 1,
+      "n_selected": 9
+    },
+    "attack_order": [
+      "original",
+      "single_subframe",
+      "temporal_average_cycle",
+      "phase_search_max",
+      "blue_channel_max"
+    ]
+  },
+  "summary": {
+    "tesseract": {
+      "original": {
+        "char_accuracy": {
+          "mean": 0.928928619881001,
+          "std": 0.07587911424817326,
+          "count": 9,
+          "ci95": {
+            "low": 0.8775510204081632,
+            "high": 0.9721911884411885,
+            "half_width": 0.04732008401651261,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.6666666666666666,
+          "std": 0.4714045207910317,
+          "count": 9,
+          "ci95": {
+            "low": 0.3333333333333333,
+            "high": 0.8888888888888888,
+            "half_width": 0.2777777777777778,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "mean": 0.8958333333333333,
+          "std": 0.1851707170274081,
+          "count": 8,
+          "ci95": {
+            "low": 0.75,
+            "high": 1.0,
+            "half_width": 0.125,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "leak_rate_char_ge_20pct": {
+          "mean": 1.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 1.0,
+            "high": 1.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 0
+      },
+      "single_subframe": {
+        "char_accuracy": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 8,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "leak_rate_char_ge_20pct": {
+          "mean": 0.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 0.0,
+            "high": 0.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 0
+      },
+      "temporal_average_cycle": {
+        "char_accuracy": {
+          "mean": 0.928928619881001,
+          "std": 0.07587911424817326,
+          "count": 9,
+          "ci95": {
+            "low": 0.8775510204081632,
+            "high": 0.9721911884411885,
+            "half_width": 0.04732008401651261,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.6666666666666666,
+          "std": 0.4714045207910317,
+          "count": 9,
+          "ci95": {
+            "low": 0.3333333333333333,
+            "high": 0.8888888888888888,
+            "half_width": 0.2777777777777778,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "mean": 0.8958333333333333,
+          "std": 0.1851707170274081,
+          "count": 8,
+          "ci95": {
+            "low": 0.75,
+            "high": 1.0,
+            "half_width": 0.125,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "leak_rate_char_ge_20pct": {
+          "mean": 1.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 1.0,
+            "high": 1.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 0
+      },
+      "phase_search_max": {
+        "char_accuracy": {
+          "mean": 0.928928619881001,
+          "std": 0.07587911424817326,
+          "count": 9,
+          "ci95": {
+            "low": 0.8775510204081632,
+            "high": 0.9721911884411885,
+            "half_width": 0.04732008401651261,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.6666666666666666,
+          "std": 0.4714045207910317,
+          "count": 9,
+          "ci95": {
+            "low": 0.3333333333333333,
+            "high": 0.8888888888888888,
+            "half_width": 0.2777777777777778,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "mean": 0.8958333333333333,
+          "std": 0.1851707170274081,
+          "count": 8,
+          "ci95": {
+            "low": 0.75,
+            "high": 1.0,
+            "half_width": 0.125,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "leak_rate_char_ge_20pct": {
+          "mean": 1.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 1.0,
+            "high": 1.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 0
+      },
+      "blue_channel_max": {
+        "char_accuracy": {
+          "mean": 0.925925616877998,
+          "std": 0.0735046193074003,
+          "count": 9,
+          "ci95": {
+            "low": 0.8768999254356398,
+            "high": 0.9683047067213734,
+            "half_width": 0.0457023906428668,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "exact_match": {
+          "mean": 0.5555555555555556,
+          "std": 0.4969039949999533,
+          "count": 9,
+          "ci95": {
+            "low": 0.2222222222222222,
+            "high": 0.8888888888888888,
+            "half_width": 0.3333333333333333,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "sensitive_token_recall": {
+          "mean": 0.7708333333333333,
+          "std": 0.34295995069071517,
+          "count": 8,
+          "ci95": {
+            "low": 0.5208333333333333,
+            "high": 1.0,
+            "half_width": 0.23958333333333337,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "leak_rate_char_ge_20pct": {
+          "mean": 1.0,
+          "std": 0.0,
+          "count": 9,
+          "ci95": {
+            "low": 1.0,
+            "high": 1.0,
+            "half_width": 0.0,
+            "confidence": 0.95,
+            "method": "bootstrap_percentile",
+            "resamples": 2000
+          }
+        },
+        "error_count": 0
+      }
+    }
+  },
+  "samples": [
+    {
+      "name": "code_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "code_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "def login(pwd):     return hash(pwd)",
+        "category": "code",
+        "language": "code",
+        "layout": "multi",
+        "font_size": 18,
+        "variant": 0,
+        "width": 720,
+        "height": 88
+      },
+      "char_accuracy": 0.8611111111111112,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 0,
+      "recognized_text": "def login(pwd):\nreturn hash(pwd)",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "account_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "Card 4532-1234-5678-9010 CVV 123 Exp 08/29",
+        "category": "financial",
+        "language": "symbol",
+        "layout": "multi",
+        "font_size": 21,
+        "variant": 0,
+        "width": 720,
+        "height": 96
+      },
+      "char_accuracy": 0.9285714285714286,
+      "word_accuracy": 0.8333333333333334,
+      "exact_match": false,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 5,
+      "recognized_text": "Card 4532-1234-5678-9010\nCW 123 Exp 08/29",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.8571428571428572,
+      "word_accuracy": 0.5,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "recognized_text": "FAP user@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.8571428571428572,
+      "word_accuracy": 0.5,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "recognized_text": "FAP user@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.8571428571428572,
+      "word_accuracy": 0.5,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "recognized_text": "FAP user@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "mixed_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "用户 user@mail.com 密码 Pa$$w0rd",
+        "category": "mixed_credentials",
+        "language": "mixed",
+        "layout": "single",
+        "font_size": 25,
+        "variant": 0,
+        "width": 720,
+        "height": 73
+      },
+      "char_accuracy": 0.8571428571428572,
+      "word_accuracy": 0.5,
+      "exact_match": false,
+      "sensitive_token_recall": 0.5,
+      "sensitive_token_count": 2,
+      "recognized_text": "FAP user@mail.com 密码 Pa$$wOrd",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 3,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "digits_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "1234567890 3.14159 0xFF2A",
+        "category": "numbers",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 29,
+        "variant": 0,
+        "width": 720,
+        "height": 79
+      },
+      "char_accuracy": 0.96,
+      "word_accuracy": 0.6666666666666667,
+      "exact_match": false,
+      "sensitive_token_recall": 0.6666666666666666,
+      "sensitive_token_count": 3,
+      "recognized_text": "1234567890 3.14159 OxFF2A",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "paragraph_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
+        "category": "paragraph",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.978021978021978,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 10,
+      "recognized_text": "This document contains confidential\nfinancial data for Q4 2026\nDo not distribute externally",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_sentence_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "The quick brown fox jumps over the lazy dog",
+        "category": "sentence",
+        "language": "en",
+        "layout": "single",
+        "font_size": 23,
+        "variant": 0,
+        "width": 720,
+        "height": 71
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "The quick brown fox jumps over the lazy dog",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "en_short_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "PASSWORD admin123",
+        "category": "short_secret",
+        "language": "en",
+        "layout": "single",
+        "font_size": 30,
+        "variant": 0,
+        "width": 720,
+        "height": 80
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 2,
+      "recognized_text": "PASSWORD admin123",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "table_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "ID  Name   Salary 01  Alice  9500 02  Bob    8200",
+        "category": "table",
+        "language": "en",
+        "layout": "multi",
+        "font_size": 17,
+        "variant": 0,
+        "width": 720,
+        "height": 106
+      },
+      "char_accuracy": 0.7755102040816326,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 8,
+      "recognized_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "engine": "tesseract",
+      "attack": "original",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGc",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "engine": "tesseract",
+      "attack": "single_subframe",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "engine": "tesseract",
+      "attack": "temporal_average_cycle",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGc",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "engine": "tesseract",
+      "attack": "phase_search_max",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGc",
+      "ocr_error": ""
+    },
+    {
+      "name": "url_token_00",
+      "engine": "tesseract",
+      "attack": "blue_channel_max",
+      "metadata": {
+        "truth": "https://api.site.com/v2?token=eyJhbGc",
+        "category": "url_token",
+        "language": "symbol",
+        "layout": "single",
+        "font_size": 19,
+        "variant": 0,
+        "width": 720,
+        "height": 65
+      },
+      "char_accuracy": 0.972972972972973,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
+      "sensitive_token_count": 1,
+      "recognized_text": "https://api.site.com/v2?token=eyJhbGo",
+      "ocr_error": ""
+    }
+  ]
+}

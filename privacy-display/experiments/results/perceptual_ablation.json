@@ -1,0 +1,341 @@
+{
+  "config": {
+    "n": 4,
+    "n_samples": 9,
+    "variants": [
+      "rgb_full",
+      "blue_residual_0.5",
+      "blue_kept",
+      "green_kept"
+    ],
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 12,
+      "samples_per_category": 1,
+      "n_selected": 9
+    }
+  },
+  "summary": {
+    "rgb_full": {
+      "delta_e": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_modulation": {
+        "mean": 1.7320146030849881,
+        "std": 3.83949790682816e-06,
+        "count": 9,
+        "ci95": {
+          "low": 1.732012192408244,
+          "high": 1.7320170005162556,
+          "half_width": 2.4040540058667403e-06,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "blue_diff_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_blue_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "blue_residual_0.5": {
+      "delta_e": {
+        "mean": 5.562153108373119,
+        "std": 0.1713280127309963,
+        "count": 9,
+        "ci95": {
+          "low": 5.446938834650791,
+          "high": 5.670758843491816,
+          "half_width": 0.11191000442051235,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9974825685921418,
+        "std": 0.0005532213168916122,
+        "count": 9,
+        "ci95": {
+          "low": 0.9971254724002888,
+          "high": 0.9978528637687617,
+          "half_width": 0.0003636956842364425,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_modulation": {
+        "mean": 1.5072089698579576,
+        "std": 1.169990276666289e-05,
+        "count": 9,
+        "ci95": {
+          "low": 1.5072020954555936,
+          "high": 1.5072170502609676,
+          "half_width": 7.477402687028345e-06,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "blue_diff_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_blue_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "blue_kept": {
+      "delta_e": {
+        "mean": 5.730474378478843,
+        "std": 0.2224195366447779,
+        "count": 9,
+        "ci95": {
+          "low": 5.580867337476997,
+          "high": 5.8682439816465335,
+          "half_width": 0.14368832208476823,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9960845564189166,
+        "std": 0.000876986890989581,
+        "count": 9,
+        "ci95": {
+          "low": 0.9955187321349707,
+          "high": 0.9966746746241034,
+          "half_width": 0.0005779712445663776,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_modulation": {
+        "mean": 1.3208688497543335,
+        "std": 2.4209890702132886e-06,
+        "count": 9,
+        "ci95": {
+          "low": 1.3208673265245225,
+          "high": 1.3208703597386677,
+          "half_width": 1.516607072593601e-06,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "blue_diff_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_blue_ocr": {
+        "mean": 0.928928619881001,
+        "std": 0.07587911424817326,
+        "count": 9,
+        "ci95": {
+          "low": 0.8775510204081632,
+          "high": 0.9721911884411885,
+          "half_width": 0.04732008401651261,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "green_kept": {
+      "delta_e": {
+        "mean": 8.412793951896182,
+        "std": 0.3077690689370008,
+        "count": 9,
+        "ci95": {
+          "low": 8.202888308829095,
+          "high": 8.60371448986534,
+          "half_width": 0.20041309051812206,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9960845564189166,
+        "std": 0.000876986890989581,
+        "count": 9,
+        "ci95": {
+          "low": 0.9955187321349707,
+          "high": 0.9966746746241034,
+          "half_width": 0.0005779712445663776,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_modulation": {
+        "mean": 0.15681741138299307,
+        "std": 1.1413420531229235e-07,
+        "count": 9,
+        "ci95": {
+          "low": 0.15681734018855625,
+          "high": 0.1568174825774299,
+          "half_width": 7.119443681813387e-08,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "blue_diff_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_blue_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 9,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    }
+  }
+}

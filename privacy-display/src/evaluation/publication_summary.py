@@ -19,6 +19,18 @@ DETECTION_FILE = "detection_attack_yolo.json"
 VIEW_ATTACK_FILE = "view_attack.json"
 VLM_FILE = "vlm_qwen3_siliconflow.json"
 REAL_CAPTURE_FILE = "real_capture_ocr.json"
+SUPPLEMENTAL_FILES = {
+    "component_ablation": "component_ablation.json",
+    "recognizer_generalization": "recognizer_generalization.json",
+    "perceptual_ablation": "perceptual_ablation.json",
+    "pareto_sweep": "pareto_sweep.json",
+    "strong_attack_extra": "strong_attack_extra.json",
+    "adaptive_attack_ablation": "adaptive_attack_ablation.json",
+    "camera_pipeline_ablation": "camera_pipeline_ablation.json",
+    "screen_privacy_baselines": "screen_privacy_baselines.json",
+    "vlm_prompt_ablation": "vlm_prompt_ablation.json",
+    "usability_pilot": "usability_pilot.json",
+}
 SUMMARY_JSON = "publication_summary.json"
 SUMMARY_MD = "publication_summary.md"
 
@@ -48,6 +60,10 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
     view_attack = _load_optional(root / VIEW_ATTACK_FILE)
     vlm = _load_optional(root / VLM_FILE)
     real_capture = _load_optional(root / REAL_CAPTURE_FILE)
+    supplemental = {
+        name: _load_optional(root / filename)
+        for name, filename in SUPPLEMENTAL_FILES.items()
+    }
 
     summary = {
         "source_files": {
@@ -57,6 +73,10 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
             "view_attack": VIEW_ATTACK_FILE if view_attack is not None else None,
             "vlm": VLM_FILE if vlm is not None else None,
             "real_capture": REAL_CAPTURE_FILE if real_capture is not None else None,
+            **{
+                name: filename if supplemental[name] is not None else None
+                for name, filename in SUPPLEMENTAL_FILES.items()
+            },
         },
         "ocr": summarize_ocr(ocr),
         "strong_camera": summarize_strong_camera(strong),
@@ -64,6 +84,10 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
         "view_attack": summarize_view_attack(view_attack),
         "vlm": summarize_vlm(vlm),
         "real_capture": summarize_real_capture(real_capture),
+        "supplemental_ablations": {
+            name: summarize_supplemental_ablation(payload, SUPPLEMENTAL_FILES[name])
+            for name, payload in supplemental.items()
+        },
     }
     return summary
 
@@ -241,6 +265,20 @@ def summarize_real_capture(report: dict | None) -> dict:
     }
 
 
+def summarize_supplemental_ablation(report: dict | None, expected_file: str) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": expected_file,
+        }
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "rows": _supplemental_rows(report),
+    }
+
+
 def render_markdown(summary: dict) -> str:
     """Render a compact Markdown report suitable for thesis/paper table checks."""
     lines = [
@@ -344,6 +382,27 @@ def render_markdown(summary: dict) -> str:
     else:
         lines.append(f"- Not available: {real['interpretation']}")
 
+    supplemental = summary.get("supplemental_ablations", {})
+    lines.extend(["", "## Supplemental Ablations", ""])
+    if supplemental:
+        lines.extend([
+            "| Experiment | Status | Highlight |",
+            "|---|---|---|",
+        ])
+        for name, entry in supplemental.items():
+            if not entry.get("available"):
+                lines.append(f"| {name} | missing | `{entry.get('expected_file', '')}` |")
+                continue
+            rows = entry.get("rows", [])
+            if rows:
+                first = rows[0]
+                highlight = _format_supplemental_row(first)
+            else:
+                highlight = "available"
+            lines.append(f"| {name} | available | {highlight} |")
+    else:
+        lines.append("- No supplemental ablation section in summary input.")
+
     lines.append("")
     return "\n".join(lines)
 
@@ -399,6 +458,83 @@ def _detection_row(value: dict) -> dict:
         "prediction_boxes": int(value.get("prediction_boxes", 0)),
         "status": value.get("status", ""),
     }
+
+
+def _supplemental_rows(report: dict) -> list[dict]:
+    summary = report.get("summary", {})
+    if isinstance(summary, dict):
+        rows = []
+        for key, value in summary.items():
+            if not isinstance(value, dict):
+                continue
+            if "char_accuracy" in value:
+                rows.append({
+                    "name": key,
+                    "char_accuracy": _stat_mean(value.get("char_accuracy")),
+                    "leak_rate_char_ge_20pct": _stat_mean(value.get("leak_rate_char_ge_20pct")),
+                    "error_count": int(value.get("error_count", 0)),
+                })
+            elif "single_frame_ocr" in value:
+                rows.append({
+                    "name": key,
+                    "char_accuracy": _stat_mean(value.get("single_frame_ocr")),
+                    "leak_rate_char_ge_20pct": _stat_mean(value.get("leak_rate_char_ge_20pct")),
+                    "error_count": int(value.get("error_count", 0)),
+                })
+            elif "mean" in value:
+                rows.append({
+                    "name": key,
+                    "char_accuracy": _stat_mean(value),
+                    "leak_rate_char_ge_20pct": 0.0,
+                    "error_count": 0,
+                })
+            elif "reading_time_s" in value:
+                rows.append({
+                    "name": key,
+                    "readability_1_5": _stat_mean(value.get("readability_1_5")),
+                    "flicker_1_5": _stat_mean(value.get("flicker_1_5")),
+                    "fatigue_1_5": _stat_mean(value.get("fatigue_1_5")),
+                })
+            else:
+                for nested_key, nested_value in value.items():
+                    if isinstance(nested_value, dict) and "char_accuracy" in nested_value:
+                        rows.append({
+                            "name": f"{key}/{nested_key}",
+                            "char_accuracy": _stat_mean(nested_value.get("char_accuracy")),
+                            "leak_rate_char_ge_20pct": _stat_mean(nested_value.get("leak_rate_char_ge_20pct")),
+                            "error_count": int(nested_value.get("error_count", 0)),
+                        })
+        if rows:
+            return rows[:12]
+    if "recommended" in report:
+        rec = report["recommended"]
+        return [{
+            "name": "recommended",
+            "n": rec.get("n"),
+            "refresh_hz": rec.get("refresh_hz"),
+            "fpi": _num(rec.get("fpi")),
+            "entropy_ratio": _num(rec.get("entropy_ratio")),
+        }]
+    return []
+
+
+def _format_supplemental_row(row: dict) -> str:
+    if "char_accuracy" in row:
+        return (
+            f"{row['name']}: char recovery {_pct(row['char_accuracy'])}, "
+            f"leak {_pct(row['leak_rate_char_ge_20pct'])}, errors {row['error_count']}"
+        )
+    if "readability_1_5" in row:
+        return (
+            f"{row['name']}: readability {row['readability_1_5']:.2f}, "
+            f"flicker {row['flicker_1_5']:.2f}"
+        )
+    if "fpi" in row:
+        return (
+            f"recommended n={row.get('n')} @ {row.get('refresh_hz')}Hz, "
+            f"FPI {row['fpi']:.4f}, MI {row['entropy_ratio']:.3f}"
+        )
+    return str(row.get("name", "available"))
 
 
 def _pct(value: float) -> str:

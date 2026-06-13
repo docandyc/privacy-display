@@ -571,6 +571,98 @@ class CameraSimulator:
         return np.clip(out, 0, 255).astype(np.uint8)
 
     # ------------------------------------------------------------------
+    # 卷帘快门行对齐重构 / 时域超分（强攻击者，边界分析补强）
+    # ------------------------------------------------------------------
+
+    def rolling_shutter_row_alignment_attack(
+        self,
+        subframes: list[np.ndarray],
+        display_rate: float,
+        n_captures: int = 8,
+        method: str = "max",
+    ) -> tuple[np.ndarray, dict]:
+        """
+        多相位卷帘快门行对齐重构。
+
+        单张卷帘帧只混合了部分子帧的行片段；强攻击者用不同触发相位多次拍摄，
+        让每个像素在某些帧的曝光行内落在"已点亮子帧"上，再做逐像素聚合
+        （max/median）即可跨完整周期重构内容。这是"卷帘快门不构成额外保护"
+        的边界证据：行级混合可被多帧相位对齐撤销。
+
+        Args:
+            subframes: 一个或多个周期的子帧序列
+            display_rate: 子帧显示刷新率（Hz）
+            n_captures: 不同相位的卷帘帧数量
+            method: 逐像素聚合方式 "max"/"median"/"mean"
+
+        Returns:
+            (reconstructed_frame, metadata)
+        """
+        if not subframes:
+            raise ValueError("subframes must not be empty")
+        if display_rate <= 0:
+            raise ValueError("display_rate must be positive")
+        if n_captures <= 0:
+            raise ValueError("n_captures must be positive")
+        if method not in {"mean", "max", "median"}:
+            raise ValueError("method must be one of {'mean', 'max', 'median'}")
+        delta_t = 1.0 / display_rate
+        span = delta_t * len(subframes)
+        captures = [
+            self.capture_rolling_shutter(
+                subframes, display_rate, switch_time=(i / n_captures) * span
+            )
+            for i in range(n_captures)
+        ]
+        recovered = self._combine_frames(
+            captures, method=method, restore_brightness=(method != "max")
+        )
+        score, metrics = self._reconstruction_score(recovered)
+        metadata = {
+            "attack": "rolling_shutter_row_alignment",
+            "n_captures": int(n_captures),
+            "method": method,
+            "score": float(score),
+            **metrics,
+        }
+        return recovered, metadata
+
+    def temporal_superresolution_attack(
+        self,
+        frame_sequence: list[np.ndarray],
+        sharpen: bool = True,
+    ) -> tuple[np.ndarray, dict]:
+        """
+        时域超分重构。
+
+        攻击者把覆盖 ≥1 个完整周期的多张稀疏帧逐像素取最大值聚合，恢复每个
+        像素被点亮时的真实值（每像素在周期内恰好点亮一次），可选反锐化增强
+        笔画边缘。进一步坐实：任何覆盖完整周期的逐像素聚合（max/median/mean）
+        都能反演互斥完备掩模——与时域平均/相位搜索同属线性时间分片的边界。
+        """
+        if not frame_sequence:
+            raise ValueError("frame_sequence must not be empty")
+        recovered = self._combine_frames(
+            frame_sequence, method="max", restore_brightness=False
+        )
+        if sharpen:
+            import cv2
+            blur = cv2.GaussianBlur(recovered, (0, 0), 1.0)
+            recovered = np.clip(
+                recovered.astype(np.float32) * 1.5 - blur.astype(np.float32) * 0.5,
+                0, 255,
+            ).astype(np.uint8)
+        score, metrics = self._reconstruction_score(recovered)
+        metadata = {
+            "attack": "temporal_superresolution",
+            "frames": len(frame_sequence),
+            "sharpen": bool(sharpen),
+            "score": float(score),
+            **metrics,
+        }
+        return recovered, metadata
+
+    # ------------------------------------------------------------------
     # 长曝光攻击
     # ------------------------------------------------------------------
 

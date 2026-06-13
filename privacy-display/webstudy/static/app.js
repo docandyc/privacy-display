@@ -13,39 +13,39 @@
   const SAFE_FLICKER_HZ = 50;
 
   const STEPS = [
-    ["welcome", "Consent"],
-    ["identity", "Participant"],
-    ["refresh", "Refresh check"],
-    ["typing", "Typing trial"],
-    ["ratings", "Ablation ratings"],
-    ["submit", "Submit"]
+    ["welcome", "知情同意"],
+    ["identity", "被试信息"],
+    ["refresh", "刷新率检查"],
+    ["typing", "打字试次"],
+    ["ratings", "消融评分"],
+    ["submit", "提交"]
   ];
 
   const CONDITIONS = [
     {
       id: "n2_mask_noise",
-      label: "n=2, mask + noise",
+      label: "层数 2，遮罩 + 噪声",
       n: 2,
       components: "mask+noise",
       useNoise: true
     },
     {
       id: "n4_mask_noise",
-      label: "n=4, mask + noise",
+      label: "层数 4，遮罩 + 噪声",
       n: 4,
       components: "mask+noise",
       useNoise: true
     },
     {
       id: "n8_mask_noise",
-      label: "n=8, mask + noise",
+      label: "层数 8，遮罩 + 噪声",
       n: 8,
       components: "mask+noise",
       useNoise: true
     },
     {
       id: "n4_mask_only",
-      label: "n=4, mask only",
+      label: "层数 4，仅遮罩",
       n: 4,
       components: "mask-only",
       useNoise: false
@@ -130,15 +130,15 @@
     return `
       <aside class="sidebar">
         <div class="brand">
-          <div class="brand-mark">PD</div>
+          <div class="brand-mark">隐</div>
           <div>
-            <div class="brand-title">Privacy Display<br>User Study</div>
-            <div class="brand-subtitle">${ASSUMED_MONITOR_HZ}Hz lab demo</div>
+            <div class="brand-title">隐私显示<br>用户研究</div>
+            <div class="brand-subtitle">${ASSUMED_MONITOR_HZ} 赫兹 实验演示</div>
           </div>
         </div>
         <div class="steps">${steps}</div>
         <div class="sidebar-note">
-          Session data is stored locally by the study server. Refresh rate is recorded as an analysis covariate.
+          会话数据保存在本地研究服务器中。刷新率会作为分析协变量记录。
         </div>
       </aside>
     `;
@@ -148,8 +148,8 @@
     const latestControl = state.typing.find((row) => row.condition === "control");
     const latestMasked = state.typing.find((row) => row.condition === "masked");
     const refreshLabel = state.refresh.hz
-      ? `${formatNumber(state.refresh.hz, 1)} Hz`
-      : "not checked";
+      ? `${formatNumber(state.refresh.hz, 1)} 赫兹`
+      : "未检查";
     const refreshClass = state.refresh.hz
       ? (state.refresh.ok ? "pill-ok" : "pill-warn")
       : "";
@@ -157,22 +157,22 @@
     return `
       <aside class="side-panel">
         <section class="side-section">
-          <h2 class="side-title">Session</h2>
-          <div class="metric"><span>Student ID</span><strong>${escapeHtml(state.participant.student_id || "-")}</strong></div>
-          <div class="metric"><span>Name</span><strong>${escapeHtml(state.participant.name || "-")}</strong></div>
-          <div class="metric"><span>Refresh</span><strong class="${refreshClass}">${refreshLabel}</strong></div>
-          <div class="metric"><span>Assumed panel</span><strong>${ASSUMED_MONITOR_HZ} Hz</strong></div>
+          <h2 class="side-title">会话</h2>
+          <div class="metric"><span>学号</span><strong>${escapeHtml(state.participant.student_id || "-")}</strong></div>
+          <div class="metric"><span>姓名</span><strong>${escapeHtml(state.participant.name || "-")}</strong></div>
+          <div class="metric"><span>刷新率</span><strong class="${refreshClass}">${refreshLabel}</strong></div>
+          <div class="metric"><span>假定屏幕</span><strong>${ASSUMED_MONITOR_HZ} 赫兹</strong></div>
         </section>
         <section class="side-section">
-          <h2 class="side-title">Typing</h2>
-          <div class="metric"><span>Original WPM</span><strong>${latestControl ? formatNumber(latestControl.wpm, 1) : "-"}</strong></div>
-          <div class="metric"><span>Masked WPM</span><strong>${latestMasked ? formatNumber(latestMasked.wpm, 1) : "-"}</strong></div>
-          <div class="metric"><span>Trials</span><strong>${state.typing.length}/2</strong></div>
+          <h2 class="side-title">打字</h2>
+          <div class="metric"><span>原文词速</span><strong>${latestControl ? formatNumber(latestControl.wpm, 1) : "-"}</strong></div>
+          <div class="metric"><span>遮罩词速</span><strong>${latestMasked ? formatNumber(latestMasked.wpm, 1) : "-"}</strong></div>
+          <div class="metric"><span>试次</span><strong>${state.typing.length}/2</strong></div>
         </section>
         <section class="side-section">
-          <h2 class="side-title">Ratings</h2>
-          <div class="metric"><span>Completed</span><strong>${state.ratings.length}/4</strong></div>
-          <div class="metric"><span>Duration</span><strong>${TRIAL_DURATION_S}s each</strong></div>
+          <h2 class="side-title">评分</h2>
+          <div class="metric"><span>已完成</span><strong>${state.ratings.length}/4</strong></div>
+          <div class="metric"><span>时长</span><strong>${TRIAL_DURATION_S} 秒/次</strong></div>
         </section>
       </aside>
     `;
@@ -203,19 +203,19 @@
   function renderWelcome() {
     shell(`
       ${renderHeader(
-        "Privacy Display User Study",
-        "This session records typing performance and 1-5 subjective ratings for original and masked text displays.",
-        "Step 1"
+        "隐私显示用户研究",
+        "本次会话会记录原文与遮罩文本的打字表现，以及 1 到 5 分的主观评分。",
+        "第 1 步"
       )}
       <div class="warning">
-        Photosensitive safety notice: the masked display uses rapid temporal flicker. Stop immediately if you feel discomfort, eye strain, dizziness, nausea, or headache.
+        光敏安全提示：遮罩显示会使用快速时间闪烁。若出现不适、眼睛疲劳、头晕、恶心或头痛，请立即停止。
       </div>
       <label class="check-row">
         <input type="checkbox" id="consentCheck">
-        <span>I have read the notice and agree to participate in this local study session.</span>
+        <span>我已阅读提示，并同意参加本地研究会话。</span>
       </label>
       <div class="actions">
-        <button class="button" id="continueWelcome" disabled>Continue</button>
+        <button class="button" id="continueWelcome" disabled>继续</button>
       </div>
     `);
     const check = document.getElementById("consentCheck");
@@ -229,36 +229,36 @@
   function renderIdentity() {
     shell(`
       ${renderHeader(
-        "Participant",
-        "Enter the identifiers needed to match the study record with the experiment roster.",
-        "Step 2"
+        "被试信息",
+        "填写用于将研究记录与实验名单对应起来的信息。",
+        "第 2 步"
       )}
       <form id="identityForm" class="form-grid">
         <div class="field">
-          <label for="studentId">Student ID</label>
+          <label for="studentId">学号</label>
           <input id="studentId" name="student_id" autocomplete="off" required value="${escapeHtml(state.participant.student_id || "")}">
         </div>
         <div class="field">
-          <label for="studentName">Name</label>
+          <label for="studentName">姓名</label>
           <input id="studentName" name="name" autocomplete="name" required value="${escapeHtml(state.participant.name || "")}">
         </div>
         <div class="field">
-          <label for="glasses">Vision correction</label>
+          <label for="glasses">视力矫正</label>
           <select id="glasses" name="glasses">
-            <option value="">Not specified</option>
-            <option value="none">No glasses / contacts</option>
-            <option value="glasses">Glasses</option>
-            <option value="contacts">Contacts</option>
+            <option value="">未填写</option>
+            <option value="none">不戴眼镜 / 隐形眼镜</option>
+            <option value="glasses">戴眼镜</option>
+            <option value="contacts">戴隐形眼镜</option>
           </select>
         </div>
         <div class="field">
-          <label for="major">Major or class</label>
+          <label for="major">专业或班级</label>
           <input id="major" name="major" autocomplete="off" value="${escapeHtml(state.participant.major || "")}">
         </div>
       </form>
       <div class="actions">
-        <button class="button secondary" id="backIdentity">Back</button>
-        <button class="button" form="identityForm">Continue</button>
+        <button class="button secondary" id="backIdentity">返回</button>
+        <button class="button" form="identityForm">继续</button>
       </div>
     `);
     if (state.participant.glasses) {
@@ -283,43 +283,43 @@
 
   function renderRefresh() {
     const status = state.refresh.hz
-      ? `${formatNumber(state.refresh.hz, 1)} Hz from ${state.refresh.samples} rAF samples`
-      : "not measured";
+      ? `${formatNumber(state.refresh.hz, 1)} 赫兹，来自 ${state.refresh.samples} 个动画帧样本`
+      : "尚未测量";
     const detail = state.refresh.hz
       ? (state.refresh.ok
-        ? "Refresh check passed for the temporal masking condition."
-        : "Refresh is below the preferred threshold; this session will be flagged.")
-      : "Run the browser refresh-rate measurement before starting the trials.";
+        ? "刷新率检查通过，可进入时间遮罩条件。"
+        : "刷新率低于建议阈值，本次会话会被标记。")
+      : "请先运行浏览器刷新率测量，再开始试次。";
 
     shell(`
       ${renderHeader(
-        "Refresh check",
-        "The masking playback is driven by requestAnimationFrame and follows the display vsync cadence.",
-        "Step 3"
+        "刷新率检查",
+        "遮罩播放由动画帧回调驱动，并跟随显示器的垂直同步节奏。",
+        "第 3 步"
       )}
       <div class="score-grid">
         <div class="score-cell">
           <div class="score-value">${state.refresh.hz ? formatNumber(state.refresh.hz, 1) : "-"}</div>
-          <div class="score-label">Measured Hz</div>
+          <div class="score-label">实测赫兹</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${ASSUMED_MONITOR_HZ}</div>
-          <div class="score-label">Assumed lab Hz</div>
+          <div class="score-label">假定实验赫兹</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${MIN_REFRESH_HZ}</div>
-          <div class="score-label">Minimum accepted Hz</div>
+          <div class="score-label">最低接受赫兹</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${state.refresh.mean_frame_ms ? formatNumber(state.refresh.mean_frame_ms, 2) : "-"}</div>
-          <div class="score-label">Frame interval ms</div>
+          <div class="score-label">帧间隔毫秒</div>
         </div>
       </div>
       <div class="status-line" id="refreshStatus">${status}. ${detail}</div>
       <div class="actions">
-        <button class="button secondary" id="backRefresh">Back</button>
-        <button class="button secondary" id="runRefresh">Run check</button>
-        <button class="button" id="continueRefresh" ${state.refresh.hz ? "" : "disabled"}>Start trials</button>
+        <button class="button secondary" id="backRefresh">返回</button>
+        <button class="button secondary" id="runRefresh">重新检测</button>
+        <button class="button" id="continueRefresh" ${state.refresh.hz ? "" : "disabled"}>开始试次</button>
       </div>
     `);
 
@@ -332,7 +332,7 @@
       const button = document.getElementById("runRefresh");
       const statusLine = document.getElementById("refreshStatus");
       button.disabled = true;
-      statusLine.textContent = "Measuring display cadence...";
+      statusLine.textContent = "正在测量显示节奏……";
       const result = await global.PrivacyMask.estimateRefreshRate(DEBUG ? 500 : 900);
       state.refresh = {
         hz: result.hz,
@@ -362,7 +362,7 @@
     state.trials = [
       {
         condition: "control",
-        label: "Original text",
+        label: "原文文本",
         n: 0,
         components: "none",
         target_text: pair.control,
@@ -370,7 +370,7 @@
       },
       {
         condition: "masked",
-        label: "Masked condition",
+        label: "遮罩条件",
         n: 4,
         requested_n: 4,
         components: "mask+noise",
@@ -390,7 +390,7 @@
       return;
     }
     const isMasked = trial.condition === "masked";
-    const progressLabel = `Trial ${state.trialCursor + 1} of ${state.trials.length}`;
+    const progressLabel = `试次 ${state.trialCursor + 1} / ${state.trials.length}`;
     const stimulus = isMasked
       ? `
         <div class="masked-canvas-wrap">
@@ -402,28 +402,28 @@
     shell(`
       ${renderHeader(
         trial.label,
-        "Copy the visible source text into the input box. The input locks automatically when the timer ends.",
+        "将可见文本输入到输入框中。计时结束后输入框会自动锁定。",
         progressLabel
       )}
       <div class="trial-layout">
         <div class="stimulus">
           <div class="stimulus-head">
-            <span>${isMasked ? "Masked source text" : "Original source text"}</span>
-            <span>${isMasked ? `n=${trial.n}, ${trial.components}` : "unmasked baseline"}</span>
+            <span>${isMasked ? "遮罩源文本" : "原文源文本"}</span>
+            <span>${isMasked ? `层数 ${trial.n}，${trial.components}` : "无遮罩基线"}</span>
           </div>
           ${stimulus}
         </div>
         <div class="timer-row">
-          <div class="timer" id="timerValue">${TRIAL_DURATION_S.toFixed(0)}s</div>
+          <div class="timer" id="timerValue">${TRIAL_DURATION_S.toFixed(0)}秒</div>
           <div class="meter"><div class="meter-fill" id="timerFill"></div></div>
-          <button class="button" id="startTrial">Start</button>
+          <button class="button" id="startTrial">开始</button>
         </div>
         <textarea id="typingInput" class="typing-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled></textarea>
         <div id="trialResult"></div>
       </div>
       <div class="actions">
-        <button class="button secondary" id="backToRefresh" ${state.trialCursor === 0 ? "" : "disabled"}>Back</button>
-        <button class="button secondary" id="debugFinish" style="${DEBUG ? "" : "display:none"}">End trial</button>
+        <button class="button secondary" id="backToRefresh" ${state.trialCursor === 0 ? "" : "disabled"}>返回</button>
+        <button class="button secondary" id="debugFinish" style="${DEBUG ? "" : "display:none"}">结束试次</button>
       </div>
     `);
 
@@ -514,23 +514,23 @@
       <div class="score-grid">
         <div class="score-cell">
           <div class="score-value">${formatNumber(result.wpm, 1)}</div>
-          <div class="score-label">WPM</div>
+          <div class="score-label">词/分</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${formatNumber(result.cpm, 0)}</div>
-          <div class="score-label">Correct chars/min</div>
+          <div class="score-label">正确字符/分钟</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${formatNumber(result.accuracy * 100, 1)}%</div>
-          <div class="score-label">Typed accuracy</div>
+          <div class="score-label">输入准确率</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${result.correct_chars}/${result.total_chars}</div>
-          <div class="score-label">Correct / target</div>
+          <div class="score-label">正确 / 目标</div>
         </div>
       </div>
       <div class="actions">
-        <button class="button" id="nextTrial">${state.trialCursor + 1 < state.trials.length ? "Next trial" : "Continue to ratings"}</button>
+        <button class="button" id="nextTrial">${state.trialCursor + 1 < state.trials.length ? "下一试次" : "进入评分"}</button>
       </div>
     `;
     document.getElementById("nextTrial").addEventListener("click", () => {
@@ -551,31 +551,31 @@
     }
     const displayN = condition.n;
     const text = global.Pseudoword.generateText(`${state.seed}:rating:${condition.id}`, 170);
-    const orderLabel = `Condition ${state.ratingCursor + 1} of ${state.ratingOrder.length}`;
+    const orderLabel = `条件 ${state.ratingCursor + 1} / ${state.ratingOrder.length}`;
 
     shell(`
       ${renderHeader(
-        "Ablation ratings",
-        "View the masked sample and rate the display on each 1-5 scale.",
+        "消融评分",
+        "查看遮罩样本，并在每个 1 到 5 分量表上进行评分。",
         orderLabel
       )}
       <div class="stimulus">
         <div class="stimulus-head">
           <span>${escapeHtml(condition.label)}</span>
-          <span>shown as n=${displayN}, ${escapeHtml(condition.components)}</span>
+          <span>显示为层数 ${displayN}，${escapeHtml(condition.components)}</span>
         </div>
         <div class="masked-canvas-wrap">
           <canvas id="ratingCanvas" class="masked-canvas"></canvas>
         </div>
       </div>
       <form id="ratingForm" class="ratings">
-        ${ratingGroup("readability", "Readability", "1 = unreadable, 5 = very readable")}
-        ${ratingGroup("flicker", "Flicker", "1 = severe, 5 = barely noticeable")}
-        ${ratingGroup("fatigue", "Fatigue", "1 = severe, 5 = comfortable")}
-        ${ratingGroup("privacy", "Privacy", "1 = weak, 5 = strong")}
+        ${ratingGroup("readability", "可读性", "1 = 难以阅读，5 = 非常清晰")}
+        ${ratingGroup("flicker", "闪烁感", "1 = 很强，5 = 几乎察觉不到")}
+        ${ratingGroup("fatigue", "疲劳感", "1 = 很强，5 = 很舒适")}
+        ${ratingGroup("privacy", "隐私感", "1 = 很弱，5 = 很强")}
       </form>
       <div class="actions">
-        <button class="button" id="saveRating" disabled>${state.ratingCursor + 1 < state.ratingOrder.length ? "Next condition" : "Review submission"}</button>
+        <button class="button" id="saveRating" disabled>${state.ratingCursor + 1 < state.ratingOrder.length ? "下一条件" : "查看提交"}</button>
       </div>
     `);
 
@@ -634,7 +634,7 @@
     return `
       <fieldset class="rating-group">
         <legend class="group-label">${title}</legend>
-        <div class="status-line">${hint}</div>
+      <div class="status-line">${hint}</div>
         <div class="rating-options">${options}</div>
       </fieldset>
     `;
@@ -647,34 +647,34 @@
     const status = state.submitStatus;
     shell(`
       ${renderHeader(
-        "Submit",
-        "Review the collected records, then write this session to the local SQLite database.",
-        "Final step"
+        "提交",
+        "确认已收集的记录后，将本次会话写入本地数据库。",
+        "最后一步"
       )}
       <div class="score-grid">
         <div class="score-cell">
           <div class="score-value">${control ? formatNumber(control.wpm, 1) : "-"}</div>
-          <div class="score-label">Original WPM</div>
+          <div class="score-label">原文词速</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${masked ? formatNumber(masked.wpm, 1) : "-"}</div>
-          <div class="score-label">Masked WPM</div>
+          <div class="score-label">遮罩词速</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${delta === null ? "-" : formatNumber(delta, 1)}</div>
-          <div class="score-label">Masked minus original</div>
+          <div class="score-label">遮罩减原文</div>
         </div>
         <div class="score-cell">
           <div class="score-value">${state.ratings.length}/4</div>
-          <div class="score-label">Rating rows</div>
+          <div class="score-label">评分行数</div>
         </div>
       </div>
       <div id="submitMessage" class="status-line ${status && status.error ? "error" : ""}">
-        ${status ? escapeHtml(status.message) : "Ready to submit."}
+        ${status ? escapeHtml(status.message) : "已准备提交。"}
       </div>
       <div class="actions">
-        <button class="button secondary" id="backSubmit">Back to ratings</button>
-        <button class="button" id="submitStudy">Submit session</button>
+        <button class="button secondary" id="backSubmit">返回评分</button>
+        <button class="button" id="submitStudy">提交会话</button>
       </div>
     `);
     document.getElementById("backSubmit").addEventListener("click", () => {
@@ -718,7 +718,7 @@
     const message = document.getElementById("submitMessage");
     button.disabled = true;
     message.classList.remove("error");
-    message.textContent = "Submitting...";
+    message.textContent = "正在提交……";
     try {
       const response = await fetch("/api/submit", {
         method: "POST",
@@ -727,11 +727,11 @@
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || `HTTP ${response.status}`);
+        throw new Error(data.error || `请求失败 ${response.status}`);
       }
       state.submitStatus = {
         error: false,
-        message: `Saved participant #${data.participant_id}: ${data.typing_rows} typing rows, ${data.rating_rows} rating rows.`
+        message: `已保存被试 #${data.participant_id}：${data.typing_rows} 条打字记录，${data.rating_rows} 条评分记录。`
       };
       renderComplete();
     } catch (error) {
@@ -745,14 +745,14 @@
   function renderComplete() {
     shell(`
       ${renderHeader(
-        "Session saved",
-        "The local study database now contains this participant record.",
-        "Complete"
+        "会话已保存",
+        "本地研究数据库中已写入该被试记录。",
+        "完成"
       )}
       <div class="complete-mark">✓</div>
       <div class="status-line">${escapeHtml(state.submitStatus.message)}</div>
       <div class="actions">
-        <button class="button" id="newSession">Start next participant</button>
+        <button class="button" id="newSession">开始下一位被试</button>
       </div>
     `);
     document.getElementById("newSession").addEventListener("click", () => {

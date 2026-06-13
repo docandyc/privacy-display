@@ -38,6 +38,8 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
     assert manifest["source_files"][0]["exists"] is True
     assert any(command["name"] == "vlm_live" for command in manifest["commands"])
     assert any(command["name"] == "reproduce_quick" for command in manifest["commands"])
+    assert any(command["name"] == "component_ablation" for command in manifest["commands"])
+    assert any(command["name"] == "adaptive_attack_ablation" for command in manifest["commands"])
     vlm_live = next(command for command in manifest["commands"] if command["name"] == "vlm_live")
     reproduce_live = next(command for command in manifest["commands"] if command["name"] == "reproduce_with_vlm_live")
     assert vlm_live["requires_env"] == ["SILICONFLOW_API_KEY"]

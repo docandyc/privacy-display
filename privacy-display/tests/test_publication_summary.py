@@ -80,6 +80,16 @@ def test_publication_summary_builds_tables_and_marks_missing_vlm(tmp_path):
             "temporal_average": {"precision": 1.0, "recall": 1.0, "f1": 1.0, "map50": 1.0, "prediction_boxes": 5, "status": "ok"},
         },
     )
+    _write_json(
+        tmp_path / "component_ablation.json",
+        {
+            "config": {"n_samples": 2},
+            "summary": {
+                "single_mask_only": {"mean": 0.0, "std": 0.0},
+                "long_exposure_no_inv": {"mean": 0.9, "std": 0.1},
+            },
+        },
+    )
 
     summary = build_publication_summary(tmp_path)
     markdown = render_markdown(summary)
@@ -90,8 +100,11 @@ def test_publication_summary_builds_tables_and_marks_missing_vlm(tmp_path):
     assert summary["view_attack"]["available"] is False
     assert summary["vlm"]["available"] is False
     assert summary["real_capture"]["available"] is False
+    assert summary["supplemental_ablations"]["component_ablation"]["available"] is True
+    assert summary["supplemental_ablations"]["perceptual_ablation"]["available"] is False
     assert "VLM Readability" in markdown
     assert "Real Camera Capture" in markdown
+    assert "Supplemental Ablations" in markdown
     assert "Not available" in markdown
     assert "90.0%" in markdown
 
@@ -111,6 +124,7 @@ def test_write_publication_summary_emits_json_and_markdown(tmp_path):
         "view_attack": {"available": False},
         "vlm": {"available": False, "interpretation": "missing"},
         "real_capture": {"available": False, "interpretation": "missing"},
+        "supplemental_ablations": {},
     }
 
     write_publication_summary(tmp_path, summary=summary)

@@ -5,7 +5,17 @@
     "detection": "detection_attack_yolo.json",
     "view_attack": "view_attack.json",
     "vlm": "vlm_qwen3_siliconflow.json",
-    "real_capture": null
+    "real_capture": null,
+    "component_ablation": "component_ablation.json",
+    "recognizer_generalization": "recognizer_generalization.json",
+    "perceptual_ablation": "perceptual_ablation.json",
+    "pareto_sweep": "pareto_sweep.json",
+    "strong_attack_extra": "strong_attack_extra.json",
+    "adaptive_attack_ablation": "adaptive_attack_ablation.json",
+    "camera_pipeline_ablation": "camera_pipeline_ablation.json",
+    "screen_privacy_baselines": "screen_privacy_baselines.json",
+    "vlm_prompt_ablation": null,
+    "usability_pilot": null
   },
   "ocr": {
     "engines": [
@@ -265,9 +275,7 @@
     "conclusion": "离轴朴素捕获后 OCR 已与正视同为 100% → 视角差异化掩模对全周期对齐攻击者无 OCR 级保护；SSIM 的小幅下降仅为不影响可读性的可逆物理畸变（整周期平均时各区域各自还原，掩模差异化不参与）。真正不可逆的物理视角响应建模属 PoC 范围外。"
   },
   "vlm": {
-    "available": false,
-    "reason": "all_calls_failed",
-    "expected_file": "vlm_qwen3_siliconflow.json",
+    "available": true,
     "config": {
       "model": "Qwen/Qwen3-VL-32B-Instruct",
       "base_url": "https://api.siliconflow.cn/v1",
@@ -288,19 +296,536 @@
         "differential_blue",
         "blue_channel_max"
       ],
+      "planned_calls": 72,
+      "completed_calls": 72,
+      "interrupted": false,
       "leak_threshold_char_accuracy": 0.2
     },
     "call_status": {
       "total_calls": 72,
-      "successful_calls": 0,
-      "error_calls": 72
+      "successful_calls": 71,
+      "error_calls": 1
     },
-    "interpretation": "VLM result file exists, but all live API calls failed; do not cite recovery metrics."
+    "best_attack_per_sample": {
+      "char_accuracy": 0.9693247669438146,
+      "exact_match": 1.0,
+      "sensitive_token_recall": 1.0,
+      "vlm_read_success_rate": 1.0,
+      "attack_wins": {
+        "blue_channel_max": 0,
+        "differential_blue": 0,
+        "differential_luma": 0,
+        "global_shutter_slot0": 0,
+        "original": 9,
+        "phase_search_max": 0,
+        "phase_search_mean": 0,
+        "temporal_average_cycle": 0
+      }
+    }
   },
   "real_capture": {
     "available": false,
     "reason": "missing_result_file",
     "expected_file": "real_capture_ocr.json",
     "interpretation": "Real camera capture analysis is implemented, but no real photo/video-frame result has been generated."
+  },
+  "supplemental_ablations": {
+    "component_ablation": {
+      "available": true,
+      "config": {
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "n_samples": 9,
+        "leak": 0.75,
+        "leak_epsilon": 0.3764705882352941,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 16,
+          "samples_per_category": 1,
+          "n_selected": 9
+        }
+      },
+      "rows": [
+        {
+          "name": "baseline",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "single_mask_only",
+          "char_accuracy": 0.002252252252252251,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "single_mask_noise",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "inpaint_mask_only",
+          "char_accuracy": 0.42813398989218154,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "inpaint_noise_pedestal",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "inpaint_noise_no_pedestal",
+          "char_accuracy": 0.12395923054837782,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "long_exposure_no_inv",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "long_exposure_with_inv",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "ae_real_subframe_no_black",
+          "char_accuracy": 0.002252252252252251,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "ae_real_subframe_with_black",
+          "char_accuracy": 0.002252252252252251,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "weak_mask_only",
+          "char_accuracy": 0.43107142857142855,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "weak_mask_noise",
+          "char_accuracy": 0.378513596013596,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "recognizer_generalization": {
+      "available": true,
+      "config": {
+        "engines": [
+          "tesseract"
+        ],
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "cycles": 2,
+        "n_samples": 9,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": null,
+          "samples_per_category": 1,
+          "n_selected": 9
+        },
+        "attack_order": [
+          "original",
+          "single_subframe",
+          "temporal_average_cycle",
+          "phase_search_max",
+          "blue_channel_max"
+        ]
+      },
+      "rows": [
+        {
+          "name": "tesseract/original",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        },
+        {
+          "name": "tesseract/single_subframe",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "tesseract/temporal_average_cycle",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        },
+        {
+          "name": "tesseract/phase_search_max",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        },
+        {
+          "name": "tesseract/blue_channel_max",
+          "char_accuracy": 0.925925616877998,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "perceptual_ablation": {
+      "available": true,
+      "config": {
+        "n": 4,
+        "n_samples": 9,
+        "variants": [
+          "rgb_full",
+          "blue_residual_0.5",
+          "blue_kept",
+          "green_kept"
+        ],
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 12,
+          "samples_per_category": 1,
+          "n_selected": 9
+        }
+      },
+      "rows": [
+        {
+          "name": "rgb_full",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "blue_residual_0.5",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "blue_kept",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "green_kept",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "pareto_sweep": {
+      "available": true,
+      "config": {
+        "ns": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "refreshes": [
+          144.0,
+          240.0,
+          360.0
+        ],
+        "epsilons": [
+          0.031372549
+        ],
+        "max_samples": 8,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 8,
+          "samples_per_category": 1,
+          "n_selected": 8
+        },
+        "axes": {
+          "usability": "fpi (lower better)",
+          "security": "entropy_ratio = single-frame normalized MI (lower better)"
+        }
+      },
+      "rows": [
+        {
+          "name": "recommended",
+          "n": 6,
+          "refresh_hz": 360.0,
+          "fpi": 0.03333333333333333,
+          "entropy_ratio": 0.26307814781239114
+        }
+      ]
+    },
+    "strong_attack_extra": {
+      "available": true,
+      "config": {
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "cycles": 2,
+        "display_rate_hz": 240.0,
+        "n_captures": 8,
+        "exposure_time_s": 0.0020833333333333333,
+        "n_samples": 9,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 40,
+          "samples_per_category": 1,
+          "n_selected": 9
+        }
+      },
+      "rows": [
+        {
+          "name": "single_subframe",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "rolling_shutter_single",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "rolling_shutter_row_alignment",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        },
+        {
+          "name": "temporal_superresolution",
+          "char_accuracy": 0.914020854973236,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "adaptive_attack_ablation": {
+      "available": true,
+      "config": {
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "n_samples": 9,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 24,
+          "samples_per_category": 1,
+          "n_selected": 9
+        },
+        "preprocessors": [
+          "raw_subframe",
+          "otsu_binarize",
+          "adaptive_threshold",
+          "clahe_luma",
+          "unsharp_mask",
+          "denoise",
+          "upscale_2x"
+        ]
+      },
+      "rows": [
+        {
+          "name": "raw_subframe",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "otsu_binarize",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "adaptive_threshold",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "clahe_luma",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "unsharp_mask",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "denoise",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "upscale_2x",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "camera_pipeline_ablation": {
+      "available": true,
+      "config": {
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "cycles": 2,
+        "display_rate_hz": 240.0,
+        "n_samples": 9,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 24,
+          "samples_per_category": 1,
+          "n_selected": 9
+        },
+        "pipelines": [
+          "clean_subframe",
+          "jpeg_q50",
+          "sensor_noise_iso_high",
+          "motion_blur",
+          "digital_zoom_2x",
+          "auto_contrast",
+          "rolling_shutter_single",
+          "temporal_average_boundary"
+        ]
+      },
+      "rows": [
+        {
+          "name": "clean_subframe",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "jpeg_q50",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "sensor_noise_iso_high",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "motion_blur",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "digital_zoom_2x",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "auto_contrast",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "rolling_shutter_single",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "temporal_average_boundary",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "screen_privacy_baselines": {
+      "available": true,
+      "config": {
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "n_samples": 9,
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": 24,
+          "samples_per_category": 1,
+          "n_selected": 9
+        },
+        "baselines": [
+          "unprotected",
+          "dim_50pct",
+          "gaussian_blur",
+          "pixelate_12px",
+          "privacy_filter_offaxis_proxy",
+          "temporal_mask_single_subframe"
+        ],
+        "scope_note": "Software/off-axis proxy baselines; physical privacy film requires real_capture condition data."
+      },
+      "rows": [
+        {
+          "name": "unprotected",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        },
+        {
+          "name": "dim_50pct",
+          "char_accuracy": 0.928928619881001,
+          "leak_rate_char_ge_20pct": 1.0,
+          "error_count": 0
+        },
+        {
+          "name": "gaussian_blur",
+          "char_accuracy": 0.5263663244615625,
+          "leak_rate_char_ge_20pct": 0.7777777777777778,
+          "error_count": 0
+        },
+        {
+          "name": "pixelate_12px",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "privacy_filter_offaxis_proxy",
+          "char_accuracy": 0.8465605375129184,
+          "leak_rate_char_ge_20pct": 0.8888888888888888,
+          "error_count": 0
+        },
+        {
+          "name": "temporal_mask_single_subframe",
+          "char_accuracy": 0.0,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        }
+      ]
+    },
+    "vlm_prompt_ablation": {
+      "available": false,
+      "reason": "missing_result_file",
+      "expected_file": "vlm_prompt_ablation.json"
+    },
+    "usability_pilot": {
+      "available": false,
+      "reason": "missing_result_file",
+      "expected_file": "usability_pilot.json"
+    }
   }
 }
