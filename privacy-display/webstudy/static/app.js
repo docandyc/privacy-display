@@ -8,7 +8,7 @@
   const TRIAL_DURATION_S = DEBUG ? 5 : 20;
   const TARGET_CHARS = DEBUG ? 100 : 220;
   const ASSUMED_MONITOR_HZ = 240;
-  const MIN_REFRESH_HZ = 100;
+  const MIN_REFRESH_HZ = 144;
   // Subframe cycle (refresh / n) below this falls back to a static subframe.
   const SAFE_FLICKER_HZ = 50;
 
@@ -288,7 +288,7 @@
     const detail = state.refresh.hz
       ? (state.refresh.ok
         ? "刷新率检查通过，可进入时间遮罩条件。"
-        : "刷新率低于建议阈值，本次会话会被标记。")
+        : `刷新率低于技术交底书最低要求 ${MIN_REFRESH_HZ} 赫兹，不能开始测试。请切换到 144Hz 或更高的显示模式后重新检测。`)
       : "请先运行浏览器刷新率测量，再开始试次。";
 
     shell(`
@@ -315,16 +315,20 @@
           <div class="score-label">帧间隔毫秒</div>
         </div>
       </div>
-      <div class="status-line" id="refreshStatus">${status}. ${detail}</div>
+      <div class="status-line ${state.refresh.hz && !state.refresh.ok ? "error" : ""}" id="refreshStatus">${status}. ${detail}</div>
       <div class="actions">
         <button class="button secondary" id="backRefresh">返回</button>
         <button class="button secondary" id="runRefresh">重新检测</button>
-        <button class="button" id="continueRefresh" ${state.refresh.hz ? "" : "disabled"}>开始试次</button>
+        <button class="button" id="continueRefresh" ${state.refresh.ok ? "" : "disabled"}>开始试次</button>
       </div>
     `);
 
     document.getElementById("backRefresh").addEventListener("click", () => setStep("identity"));
     document.getElementById("continueRefresh").addEventListener("click", () => {
+      if (!state.refresh.ok) {
+        renderRefresh();
+        return;
+      }
       prepareExperiment();
       setStep("typing");
     });

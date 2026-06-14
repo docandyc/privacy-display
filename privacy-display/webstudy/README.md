@@ -37,7 +37,8 @@ console.
 
 1. Consent and photosensitive safety notice.
 2. Student ID, name, and optional vision/class fields.
-3. Browser refresh-rate check using `requestAnimationFrame`.
+3. Browser refresh-rate check using `requestAnimationFrame`; the test cannot
+   start unless the measured rate is at least 144 Hz.
 4. 20-second original-text typing trial.
 5. 20-second masked-text typing trial with `n=4, mask+noise`.
 6. Four randomized ablation rating conditions:
@@ -47,11 +48,13 @@ console.
    - `n=4, mask-only`
 7. Submit to SQLite.
 
-The first version assumes the lab machines use 240 Hz monitors, but each
-submission still records the measured refresh rate and flags low-refresh
-sessions. The requested `n` is kept unchanged. If the measured subframe cycle
-`refresh_hz / n` is below 50 Hz, the masking player uses `static_fallback`
-instead of temporal animation and stores that mode in `mask_meta_json`.
+The demo assumes the lab machines use 240 Hz monitors. Before any typing or
+rating trial starts, the browser check must measure at least 144 Hz, matching
+the minimum in the technology disclosure. Each submission still records the
+measured refresh rate. The requested `n` is kept unchanged after the global
+gate passes. If the measured subframe cycle `refresh_hz / n` is below 50 Hz,
+the masking player uses `static_fallback` instead of temporal animation and
+stores that mode in `mask_meta_json`.
 
 ## Data
 

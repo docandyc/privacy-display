@@ -14,7 +14,7 @@
     "adaptive_attack_ablation": "adaptive_attack_ablation.json",
     "camera_pipeline_ablation": "camera_pipeline_ablation.json",
     "screen_privacy_baselines": "screen_privacy_baselines.json",
-    "vlm_prompt_ablation": null,
+    "vlm_prompt_ablation": "vlm_prompt_ablation.json",
     "usability_pilot": null
   },
   "ocr": {
@@ -307,16 +307,16 @@
       "error_calls": 1
     },
     "best_attack_per_sample": {
-      "char_accuracy": 0.9693247669438146,
-      "exact_match": 1.0,
+      "char_accuracy": 0.9631519274376418,
+      "exact_match": 0.8888888888888888,
       "sensitive_token_recall": 1.0,
       "vlm_read_success_rate": 1.0,
       "attack_wins": {
         "blue_channel_max": 0,
         "differential_blue": 0,
-        "differential_luma": 0,
+        "differential_luma": 1,
         "global_shutter_slot0": 0,
-        "original": 9,
+        "original": 8,
         "phase_search_max": 0,
         "phase_search_mean": 0,
         "temporal_average_cycle": 0
@@ -818,9 +818,56 @@
       ]
     },
     "vlm_prompt_ablation": {
-      "available": false,
-      "reason": "missing_result_file",
-      "expected_file": "vlm_prompt_ablation.json"
+      "available": true,
+      "config": {
+        "model": "Qwen/Qwen3-VL-32B-Instruct",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "n": 4,
+        "epsilon": 0.03137254901960784,
+        "cycles": 2,
+        "attacks": [
+          "original",
+          "global_shutter_slot0",
+          "temporal_average_cycle",
+          "phase_search_max"
+        ],
+        "prompt_presets": [
+          "strict_transcription",
+          "relaxed_readability",
+          "sensitive_field_extraction"
+        ],
+        "sample_policy": {
+          "strategy": "stratified_samples_per_category",
+          "field": "category",
+          "max_samples": null,
+          "samples_per_category": 1,
+          "n_selected": 9
+        },
+        "n_selected_samples": 9,
+        "planned_calls": 108,
+        "completed_calls": 108,
+        "interrupted": false
+      },
+      "rows": [
+        {
+          "name": "strict_transcription",
+          "char_accuracy": 0.726993575207861,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "relaxed_readability",
+          "char_accuracy": 0.726993575207861,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        },
+        {
+          "name": "sensitive_field_extraction",
+          "char_accuracy": 0.7283163265306123,
+          "leak_rate_char_ge_20pct": 0.0,
+          "error_count": 0
+        }
+      ]
     },
     "usability_pilot": {
       "available": false,

@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-06-13T14:17:05.723237+00:00",
+  "generated_at_utc": "2026-06-14T03:27:08.876695+00:00",
   "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
   "git": {
-    "commit": "7699c74c0d25eb1bde5b84282cad567170be201c",
+    "commit": "dae94a6d7f128a740623614f0c9fc0a1ba625007",
     "branch": "master",
     "dirty": true
   },
@@ -320,9 +320,9 @@
     },
     {
       "path": "experiments/results/vlm_prompt_ablation.json",
-      "exists": false,
-      "sha256": "",
-      "bytes": 0
+      "exists": true,
+      "sha256": "286fce076d680620aad8632bde7e79a44f2093080367e8d16e1b98c69f120284",
+      "bytes": 113751
     },
     {
       "path": "experiments/results/usability_pilot.json",
@@ -339,20 +339,20 @@
     {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "777d100e268feb54313f7699991138734704be4defd1fd4ef83047822b142030",
-      "bytes": 23548
+      "sha256": "9b351be5885e87c725cf5875d1d8bd9e99f88347426c21b54aca6e140e075fa5",
+      "bytes": 24904
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "28aa3a2390c1728364063ea1f6e77d33487c6045ddae6a5c24d94aa0cb8bf19a",
-      "bytes": 3517
+      "sha256": "15d39fc237719fbf63795c3666165918207b7397ba08a7e090039b7f38ed24b2",
+      "bytes": 3572
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
       "exists": true,
-      "sha256": "21e966756a760d9137f895a00b618554dd5d80e5d7316137275ca3af6a3137ce",
-      "bytes": 109841
+      "sha256": "9560451d8579a647e8fbe6224bce9d64af0f7629940d619dee8ccb69f95ece68",
+      "bytes": 110103
     }
   ],
   "source_files": [
@@ -473,8 +473,8 @@
     {
       "path": "experiments/vlm_prompt_ablation.py",
       "exists": true,
-      "sha256": "7d237897181d0a21b1d44f0531d570ded7fdde0c8f45d17891685d60a1e08f64",
-      "bytes": 7813
+      "sha256": "857f43206cc4b756904e34a757ce36fed59cfa7706cc5b1f23012db96f72576e",
+      "bytes": 12821
     },
     {
       "path": "experiments/usability_pilot.py",

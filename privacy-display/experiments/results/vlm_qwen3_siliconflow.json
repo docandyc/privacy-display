@@ -34,39 +34,39 @@
     "attacks": {
       "blue_channel_max": {
         "char_accuracy": {
-          "mean": 0.8582136558327035,
-          "std": 0.3110562400565093,
+          "mean": 0.9693247669438146,
+          "std": 0.06933448518780094,
           "count": 9,
           "ci95": {
-            "low": 0.6359914336104813,
-            "high": 0.9947089947089948,
-            "half_width": 0.17935878054925675,
+            "low": 0.9194271227009322,
+            "high": 0.9973544973544973,
+            "half_width": 0.03896368732678257,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.8888888888888888,
-          "std": 0.3142696805273545,
+          "mean": 1.0,
+          "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.6666666666666666,
+            "low": 1.0,
             "high": 1.0,
-            "half_width": 0.16666666666666669,
+            "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "exact_match": {
-          "mean": 0.8888888888888888,
-          "std": 0.3142696805273545,
+          "mean": 1.0,
+          "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.6666666666666666,
+            "low": 1.0,
             "high": 1.0,
-            "half_width": 0.16666666666666669,
+            "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -75,13 +75,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.875,
-            "std": 0.33071891388307384,
+            "mean": 1.0,
+            "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.625,
+              "low": 1.0,
               "high": 1.0,
-              "half_width": 0.1875,
+              "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -89,68 +89,68 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.88,
-          "std": 0.3111269837220809,
+          "mean": 0.99,
+          "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.6599999999999999,
+            "low": 0.99,
             "high": 0.99,
-            "half_width": 0.16500000000000004,
+            "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 0.8888888888888888,
-          "std": 0.3142696805273545,
+          "mean": 1.0,
+          "std": 0.0,
           "count": 9,
           "ci95": {
-            "low": 0.6666666666666666,
+            "low": 1.0,
             "high": 1.0,
-            "half_width": 0.16666666666666669,
+            "half_width": 0.0,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "psnr_db": {
-          "mean": 29.415441017519413,
-          "std": 0.6693871734525522,
+          "mean": 29.40767869561684,
+          "std": 0.6812827808810383,
           "count": 9,
           "ci95": {
-            "low": 28.940428402466466,
-            "high": 29.803451791020834,
-            "half_width": 0.4315116942771837,
+            "low": 28.926695898508804,
+            "high": 29.800313815716013,
+            "half_width": 0.4368089586036046,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
-        "error_count": 1
+        "error_count": 0
       },
       "differential_blue": {
         "char_accuracy": {
-          "mean": 0.9681037657228134,
-          "std": 0.06887879640410888,
+          "mean": 0.9631519274376418,
+          "std": 0.07124837797444435,
           "count": 9,
           "ci95": {
-            "low": 0.9182171444076206,
-            "high": 0.996924603174603,
-            "half_width": 0.03935372938349119,
+            "low": 0.9132653061224489,
+            "high": 0.9973544973544973,
+            "half_width": 0.042044595616024194,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.9914529914529915,
-          "std": 0.024174590809796483,
+          "mean": 0.9722222222222222,
+          "std": 0.07856742013183862,
           "count": 9,
           "ci95": {
-            "low": 0.9743589743589745,
+            "low": 0.9166666666666666,
             "high": 1.0,
-            "half_width": 0.012820512820512775,
+            "half_width": 0.041666666666666685,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -172,13 +172,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.9875,
-            "std": 0.03307189138830738,
+            "mean": 1.0,
+            "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.9624999999999999,
+              "low": 1.0,
               "high": 1.0,
-              "half_width": 0.018750000000000044,
+              "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -212,13 +212,13 @@
           }
         },
         "psnr_db": {
-          "mean": 12.0178178014338,
-          "std": 0.8219032078484133,
+          "mean": 11.97995695806212,
+          "std": 0.8627783591415984,
           "count": 9,
           "ci95": {
-            "low": 11.443152112764341,
-            "high": 12.504671951394842,
-            "half_width": 0.5307599193152504,
+            "low": 11.372390577354194,
+            "high": 12.484914902374591,
+            "half_width": 0.5562621625101984,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -228,26 +228,26 @@
       },
       "differential_luma": {
         "char_accuracy": {
-          "mean": 0.9681037657228134,
-          "std": 0.06887879640410888,
+          "mean": 0.9631519274376418,
+          "std": 0.07124837797444435,
           "count": 9,
           "ci95": {
-            "low": 0.9182171444076206,
-            "high": 0.996924603174603,
-            "half_width": 0.03935372938349119,
+            "low": 0.9132653061224489,
+            "high": 0.9973544973544973,
+            "half_width": 0.042044595616024194,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 0.9914529914529915,
-          "std": 0.024174590809796483,
+          "mean": 0.9722222222222222,
+          "std": 0.07856742013183862,
           "count": 9,
           "ci95": {
-            "low": 0.9743589743589745,
+            "low": 0.9166666666666666,
             "high": 1.0,
-            "half_width": 0.012820512820512775,
+            "half_width": 0.041666666666666685,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -269,13 +269,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 0.9875,
-            "std": 0.03307189138830738,
+            "mean": 1.0,
+            "std": 0.0,
             "count": 8,
             "ci95": {
-              "low": 0.9624999999999999,
+              "low": 1.0,
               "high": 1.0,
-              "half_width": 0.018750000000000044,
+              "half_width": 0.0,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -283,13 +283,13 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.9544444444444444,
-          "std": 0.01257078722109419,
+          "mean": 0.9588888888888888,
+          "std": 0.016629588385661975,
           "count": 9,
           "ci95": {
             "low": 0.9499999999999998,
-            "high": 0.9633333333333334,
-            "half_width": 0.006666666666666765,
+            "high": 0.9722222222222222,
+            "half_width": 0.011111111111111183,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -309,13 +309,13 @@
           }
         },
         "psnr_db": {
-          "mean": 11.928677830638467,
-          "std": 0.9424701008001972,
+          "mean": 11.896332292464312,
+          "std": 0.9755707552606454,
           "count": 9,
           "ci95": {
-            "low": 11.266696761766134,
-            "high": 12.494914772002614,
-            "half_width": 0.6141090051182401,
+            "low": 11.215287819644127,
+            "high": 12.47337660110885,
+            "half_width": 0.6290443907323615,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -406,13 +406,13 @@
           }
         },
         "psnr_db": {
-          "mean": 2.007044055425349,
-          "std": 0.035902282551983855,
+          "mean": 1.9985972205543554,
+          "std": 0.04380270331048986,
           "count": 9,
           "ci95": {
-            "low": 1.9842679751689123,
-            "high": 2.0303604510569726,
-            "half_width": 0.023046237944030157,
+            "low": 1.9709670155535244,
+            "high": 2.0266239759617557,
+            "half_width": 0.027828480204115658,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -600,13 +600,13 @@
           }
         },
         "psnr_db": {
-          "mean": 30.11483324437836,
-          "std": 0.011128002461311907,
+          "mean": 30.111734603930593,
+          "std": 0.014922382531043934,
           "count": 9,
           "ci95": {
-            "low": 30.107849076425786,
-            "high": 30.12188857195802,
-            "half_width": 0.007019747766117135,
+            "low": 30.101522794627364,
+            "high": 30.120848531028205,
+            "half_width": 0.009662868200420505,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -616,39 +616,39 @@
       },
       "phase_search_mean": {
         "char_accuracy": {
-          "mean": 0.9693247669438146,
-          "std": 0.06933448518780094,
+          "mean": 0.8582136558327035,
+          "std": 0.3110562400565093,
           "count": 9,
           "ci95": {
-            "low": 0.9194271227009322,
-            "high": 0.9973544973544973,
-            "half_width": 0.03896368732678257,
+            "low": 0.6355505165028975,
+            "high": 0.9969135802469135,
+            "half_width": 0.18068153187200797,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "word_accuracy": {
-          "mean": 1.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 1.0,
+            "low": 0.6666666666666666,
             "high": 1.0,
-            "half_width": 0.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "exact_match": {
-          "mean": 1.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 1.0,
+            "low": 0.6666666666666666,
             "high": 1.0,
-            "half_width": 0.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -657,13 +657,13 @@
         "sensitive_token_recall": {
           "n_samples_with_sensitive_tokens": 8,
           "stats": {
-            "mean": 1.0,
-            "std": 0.0,
+            "mean": 0.875,
+            "std": 0.33071891388307384,
             "count": 8,
             "ci95": {
-              "low": 1.0,
+              "low": 0.625,
               "high": 1.0,
-              "half_width": 0.0,
+              "half_width": 0.1875,
               "confidence": 0.95,
               "method": "bootstrap_percentile",
               "resamples": 2000
@@ -671,26 +671,26 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.9855555555555555,
-          "std": 0.01257078722109419,
+          "mean": 0.8755555555555555,
+          "std": 0.3098067896505502,
           "count": 9,
           "ci95": {
-            "low": 0.9766666666666666,
+            "low": 0.6555555555555556,
             "high": 0.99,
-            "half_width": 0.00666666666666671,
+            "half_width": 0.16722222222222222,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
           }
         },
         "vlm_read_success_rate": {
-          "mean": 1.0,
-          "std": 0.0,
+          "mean": 0.8888888888888888,
+          "std": 0.3142696805273545,
           "count": 9,
           "ci95": {
-            "low": 1.0,
+            "low": 0.6666666666666666,
             "high": 1.0,
-            "half_width": 0.0,
+            "half_width": 0.16666666666666669,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -709,7 +709,7 @@
             "resamples": 2000
           }
         },
-        "error_count": 0
+        "error_count": 1
       },
       "temporal_average_cycle": {
         "char_accuracy": {
@@ -768,13 +768,13 @@
           }
         },
         "vlm_confidence": {
-          "mean": 0.9777777777777776,
-          "std": 0.015475986974649036,
+          "mean": 0.9833333333333333,
+          "std": 0.012472191289246483,
           "count": 9,
           "ci95": {
-            "low": 0.9666666666666666,
-            "high": 0.9866666666666668,
-            "half_width": 0.01000000000000012,
+            "low": 0.9744444444444444,
+            "high": 0.9888888888888889,
+            "half_width": 0.007222222222222241,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -794,13 +794,13 @@
           }
         },
         "psnr_db": {
-          "mean": 3.3695975126019277,
-          "std": 0.046246811605444846,
+          "mean": 3.3696043414336074,
+          "std": 0.04629282880161912,
           "count": 9,
           "ci95": {
-            "low": 3.3389037794299834,
-            "high": 3.3980678936128776,
-            "half_width": 0.029582057091447123,
+            "low": 3.3388846060089112,
+            "high": 3.398108683830116,
+            "half_width": 0.02961203891060249,
             "confidence": 0.95,
             "method": "bootstrap_percentile",
             "resamples": 2000
@@ -811,39 +811,39 @@
     },
     "best_attack_per_sample": {
       "char_accuracy": {
-        "mean": 0.9693247669438146,
-        "std": 0.06933448518780094,
+        "mean": 0.9631519274376418,
+        "std": 0.07124837797444435,
         "count": 9,
         "ci95": {
-          "low": 0.9189972285210382,
+          "low": 0.9106150793650793,
           "high": 0.9973544973544973,
-          "half_width": 0.039178634416729585,
+          "half_width": 0.04336970899470899,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "word_accuracy": {
-        "mean": 1.0,
-        "std": 0.0,
+        "mean": 0.9722222222222222,
+        "std": 0.07856742013183862,
         "count": 9,
         "ci95": {
-          "low": 1.0,
+          "low": 0.9166666666666666,
           "high": 1.0,
-          "half_width": 0.0,
+          "half_width": 0.041666666666666685,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "exact_match": {
-        "mean": 1.0,
-        "std": 0.0,
+        "mean": 0.8888888888888888,
+        "std": 0.3142696805273545,
         "count": 9,
         "ci95": {
-          "low": 1.0,
+          "low": 0.6666666666666666,
           "high": 1.0,
-          "half_width": 0.0,
+          "half_width": 0.16666666666666669,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -881,9 +881,9 @@
       "attack_wins": {
         "blue_channel_max": 0,
         "differential_blue": 0,
-        "differential_luma": 0,
+        "differential_luma": 1,
         "global_shutter_slot0": 0,
-        "original": 9,
+        "original": 8,
         "phase_search_max": 0,
         "phase_search_mean": 0,
         "temporal_average_cycle": 0
@@ -918,7 +918,7 @@
       "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly visible and legible. No sensitive information (e.g., passwords, keys) is present in the visible text. The code snippet is a simple function definition that hashes a password parameter, but no actual password or sensitive",
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition for 'login' that takes a parameter 'pwd' and returns its hash. No sensitive data (e.g., passwords, keys) is present in the visible text.",
       "vlm_error": ""
     },
     {
@@ -940,7 +940,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 1.9514484949913948,
+      "psnr_db": 1.9280191561735016,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -948,7 +948,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image is completely filled with noise or static, making no text legible. No characters or words can be discerned.",
+      "vlm_notes": "The image is completely filled with noise (static) and no discernible text is visible. No characters can be read or inferred.",
       "vlm_error": ""
     },
     {
@@ -970,7 +970,7 @@
       "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 3.2962381464197668,
+      "psnr_db": 3.2961811942738146,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -978,8 +978,8 @@
       },
       "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.98,
-      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition that takes a password parameter and returns its hash. No actual passwords or sensitive data are present, only the function logic.",
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition that takes a password parameter and returns its hash. No actual passwords or sensitive data are present, only a function signature.",
       "vlm_error": ""
     },
     {
@@ -1017,7 +1017,7 @@
       "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition for a login function that returns a hash of the password parameter. No actual passwords or sensitive data are present, only a placeholder 'pwd'.",
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition for 'login' that takes a parameter 'pwd' and returns its hash. No sensitive data (e.g., passwords, keys) is present in the visible text.",
       "vlm_error": ""
     },
     {
@@ -1039,23 +1039,23 @@
       "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 30.114492412124648,
-      "reconstruction_score": 305.4377112244115,
+      "psnr_db": 30.10593931540764,
+      "reconstruction_score": 305.12173889622545,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 305.4377112244115,
-        "contrast": 24.26070785522461,
-        "edge_energy": 6.839095115661621,
+        "score": 305.12173889622545,
+        "contrast": 24.24787139892578,
+        "edge_energy": 6.829730987548828,
         "coverage": 1.0,
-        "saturation": 0.11983901515151515
+        "saturation": 0.12296401515151516
       },
       "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly visible and legible. No sensitive information (e.g., passwords, keys) is present in the visible text. The code snippet is a simple function definition that hashes a password, but no actual password or sensitive data is s",
+      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition that takes a password parameter and returns its hash. No actual sensitive data (like passwords or hashes) is present, only the function logic.",
       "vlm_error": ""
     },
     {
@@ -1072,27 +1072,27 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.9722222222222222,
-      "word_accuracy": 1.0,
-      "exact_match": true,
+      "char_accuracy": 0.9166666666666666,
+      "word_accuracy": 0.75,
+      "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 10.326874159826286,
-      "reconstruction_score": 235.70422417226465,
+      "psnr_db": 10.264596130086993,
+      "reconstruction_score": 234.73570355502042,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 235.70422417226465,
-        "contrast": 60.275001525878906,
-        "edge_energy": 120.4593505859375,
-        "coverage": 0.9898200757575758,
-        "saturation": 0.01057449494949495
+        "score": 234.73570355502042,
+        "contrast": 60.72800064086914,
+        "edge_energy": 121.95820617675781,
+        "coverage": 0.989804292929293,
+        "saturation": 0.00975378787878788
       },
-      "visible_text": "def login(pwd):\n    return hash(pwd)",
-      "vlm_can_read_sensitive": false,
+      "visible_text": "def login(pwa)\n    return hash(pwd)",
+      "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly visible and legible. It appears to be a Python function definition for a login function that hashes a password. No actual passwords or sensitive data are present, only a placeholder parameter 'pwd'.",
+      "vlm_notes": "The text is clearly visible and legible. It contains a function definition that appears to handle a password (pwa/pwd) and returns its hash, which is sensitive due to potential exposure of authentication logic. The variable names 'pwa' and ",
       "vlm_error": ""
     },
     {
@@ -1109,27 +1109,27 @@
         "width": 720,
         "height": 88
       },
-      "char_accuracy": 0.9722222222222222,
-      "word_accuracy": 1.0,
-      "exact_match": true,
+      "char_accuracy": 0.9166666666666666,
+      "word_accuracy": 0.75,
+      "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 10.636489899752702,
-      "reconstruction_score": 233.59091953316118,
+      "psnr_db": 10.55612937194395,
+      "reconstruction_score": 232.93223371409405,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 233.59091953316118,
-        "contrast": 61.95382308959961,
-        "edge_energy": 123.70539093017578,
-        "coverage": 0.9898674242424242,
-        "saturation": 0.016177398989898988
+        "score": 232.93223371409405,
+        "contrast": 62.47955322265625,
+        "edge_energy": 125.48797607421875,
+        "coverage": 0.9897253787878788,
+        "saturation": 0.009769570707070708
       },
-      "visible_text": "def login(pwd):\n    return hash(pwd)",
+      "visible_text": "def login(pwa)\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly visible and legible. It appears to be a Python function definition for a login function that hashes a password. No actual passwords or sensitive data are present, only a placeholder 'pwd'.",
+      "vlm_notes": "The text appears to be Python code with a function named 'login' that takes a parameter 'pwa' and returns the hash of 'pwd'. The parameter name 'pwa' and the variable 'pwd' may be intended to represent passwords, but no actual sensitive dat",
       "vlm_error": ""
     },
     {
@@ -1151,23 +1151,23 @@
       "exact_match": true,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 0,
-      "psnr_db": 28.07669623391672,
-      "reconstruction_score": 290.18987096921364,
+      "psnr_db": 28.07290559895212,
+      "reconstruction_score": 290.1177703491365,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 290.18987096921364,
-        "contrast": 30.675220489501953,
-        "edge_energy": 9.26218032836914,
-        "coverage": 0.9898516414141414,
-        "saturation": 0.28178661616161615
+        "score": 290.1177703491365,
+        "contrast": 30.68136215209961,
+        "edge_energy": 9.277291297912598,
+        "coverage": 0.9898674242424242,
+        "saturation": 0.2824652777777778
       },
       "visible_text": "def login(pwd):\n    return hash(pwd)",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly visible and legible. It shows a Python function definition for 'login' that takes a parameter 'pwd' and returns the hash of that parameter. No sensitive data (e.g., passwords, keys) is visible in the code itself.",
+      "vlm_notes": "The text is clearly visible and legible. It appears to be a Python function definition for a login function that returns a hash of the password. No actual passwords or sensitive data are present, only a placeholder 'pwd'.",
       "vlm_error": ""
     },
     {
@@ -1219,7 +1219,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 5,
-      "psnr_db": 1.9951848823793523,
+      "psnr_db": 1.994985446097381,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -1227,7 +1227,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image is completely filled with noise or a pattern that obscures any readable text. No characters or words are discernible.",
+      "vlm_notes": "The image is completely filled with noise or static, making no text legible. No characters or words can be discerned.",
       "vlm_error": ""
     },
     {
@@ -1249,7 +1249,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 3.3586915909119304,
+      "psnr_db": 3.3587117837595786,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -1296,7 +1296,7 @@
       "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The full card number, CVV, and expiration date are clearly visible and legible in the image.",
+      "vlm_notes": "All text is clearly legible. The image contains a full credit card number, CVV, and expiration date, which are sensitive financial details.",
       "vlm_error": ""
     },
     {
@@ -1318,18 +1318,18 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 30.107187184036306,
-      "reconstruction_score": 308.29069596749764,
+      "psnr_db": 30.106938926116364,
+      "reconstruction_score": 308.44101587931317,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 308.29069596749764,
-        "contrast": 33.39375686645508,
-        "edge_energy": 10.994264602661133,
+        "score": 308.44101587931317,
+        "contrast": 33.36733627319336,
+        "edge_energy": 10.967987060546875,
         "coverage": 1.0,
-        "saturation": 0.14108796296296297
+        "saturation": 0.13958333333333334
       },
       "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
       "vlm_can_read_sensitive": true,
@@ -1356,17 +1356,17 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 12.36275621461096,
-      "reconstruction_score": 248.89476507681388,
+      "psnr_db": 12.27483747913986,
+      "reconstruction_score": 248.0885757163719,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 248.89476507681388,
-        "contrast": 54.00954055786133,
-        "edge_energy": 101.02044677734375,
-        "coverage": 0.9896846064814815,
-        "saturation": 0.009997106481481482
+        "score": 248.0885757163719,
+        "contrast": 54.44517135620117,
+        "edge_energy": 101.80075073242188,
+        "coverage": 0.9882523148148148,
+        "saturation": 0.010315393518518519
       },
       "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
       "vlm_can_read_sensitive": true,
@@ -1393,17 +1393,17 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 12.64616450153294,
-      "reconstruction_score": 247.20063145955405,
+      "psnr_db": 12.556017162420437,
+      "reconstruction_score": 246.37169435289172,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 247.20063145955405,
-        "contrast": 55.404911041259766,
-        "edge_energy": 103.52980041503906,
-        "coverage": 0.9896846064814815,
-        "saturation": 0.01579861111111111
+        "score": 246.37169435289172,
+        "contrast": 55.88016128540039,
+        "edge_energy": 104.38259887695312,
+        "coverage": 0.9882523148148148,
+        "saturation": 0.016015625
       },
       "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
       "vlm_can_read_sensitive": true,
@@ -1430,23 +1430,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 5,
-      "psnr_db": 29.893151832537647,
-      "reconstruction_score": 293.17943177399815,
+      "psnr_db": 29.894652072030063,
+      "reconstruction_score": 293.12866507636176,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 293.17943177399815,
-        "contrast": 36.8161735534668,
-        "edge_energy": 12.92782974243164,
-        "coverage": 0.9888888888888889,
-        "saturation": 0.273755787037037
+        "score": 293.12866507636176,
+        "contrast": 36.79789352416992,
+        "edge_energy": 12.931381225585938,
+        "coverage": 0.9889756944444444,
+        "saturation": 0.2743055555555556
       },
       "visible_text": "Card 4532-1234-5678-9010\nCVV 123 Exp 08/29",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "All text is clearly legible. The card number, CVV, and expiration date are fully visible and readable.",
+      "vlm_notes": "The full card number, CVV, and expiration date are clearly visible and legible in the image.",
       "vlm_error": ""
     },
     {
@@ -1476,7 +1476,7 @@
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text, which are sensitive credentials. The text is fully legible with no obscured or hidden characters.",
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text, which are sensitive credentials. All characters are legible and no parts are obscured.",
       "vlm_error": ""
     },
     {
@@ -1498,7 +1498,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 2,
-      "psnr_db": 2.0591854668874783,
+      "psnr_db": 2.06400916170837,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -1506,7 +1506,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image is completely filled with noise (static), making no text readable. No characters or patterns are discernible.",
+      "vlm_notes": "The image appears to be completely corrupted or filled with noise, making no text readable. No characters or words are discernible.",
       "vlm_error": ""
     },
     {
@@ -1528,7 +1528,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 3.4322017209403466,
+      "psnr_db": 3.4322284034248156,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -1536,8 +1536,8 @@
       },
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
-      "vlm_confidence": 0.95,
-      "vlm_notes": "The image clearly shows an email address and a password in plain text. Both are fully legible and contain sensitive information.",
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text, which are sensitive credentials. The text is fully legible with no obfuscation or partial characters.",
       "vlm_error": ""
     },
     {
@@ -1575,7 +1575,7 @@
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The image clearly shows a username and password in plain text. The email address and password are fully visible and readable.",
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text, which are sensitive credentials. The text is fully legible with no obfuscation or partial characters.",
       "vlm_error": ""
     },
     {
@@ -1597,18 +1597,18 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 30.122626236644138,
-      "reconstruction_score": 309.15741773137944,
+      "psnr_db": 30.11472194965407,
+      "reconstruction_score": 309.13610592062616,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 309.15741773137944,
-        "contrast": 41.46263122558594,
-        "edge_energy": 14.418988227844238,
+        "score": 309.13610592062616,
+        "contrast": 41.426422119140625,
+        "edge_energy": 14.390772819519043,
         "coverage": 1.0,
-        "saturation": 0.17886225266362252
+        "saturation": 0.17899543378995433
       },
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
@@ -1635,17 +1635,17 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.693499135862814,
-      "reconstruction_score": 250.73329855862275,
+      "psnr_db": 12.675075920284096,
+      "reconstruction_score": 252.06461516544334,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 250.73329855862275,
-        "contrast": 56.69751739501953,
-        "edge_energy": 99.53157043457031,
-        "coverage": 0.9846841704718418,
-        "saturation": 0.018378995433789954
+        "score": 252.06461516544334,
+        "contrast": 56.798614501953125,
+        "edge_energy": 99.46192932128906,
+        "coverage": 0.9851598173515982,
+        "saturation": 0.008200152207001522
       },
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
@@ -1672,22 +1672,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.617140507060913,
-      "reconstruction_score": 250.6474240737056,
+      "psnr_db": 12.599340270580779,
+      "reconstruction_score": 251.10808411689652,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 250.6474240737056,
-        "contrast": 56.80759811401367,
-        "edge_energy": 99.74655151367188,
-        "coverage": 0.9846841704718418,
-        "saturation": 0.018188736681887367
+        "score": 251.10808411689652,
+        "contrast": 56.898983001708984,
+        "edge_energy": 99.64363861083984,
+        "coverage": 0.9851598173515982,
+        "saturation": 0.016952054794520548
       },
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text. Both are fully legible and sensitive information is directly visible.",
+      "vlm_notes": "The image clearly shows a username and password in plain text. The email address 'user@mail.com' and password 'Pa$$w0rd' are fully legible. The text is in Chinese characters and Latin script, with no obscured or pixelated parts affecting re",
       "vlm_error": ""
     },
     {
@@ -1709,23 +1709,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 29.880067607413437,
-      "reconstruction_score": 292.51648708093836,
+      "psnr_db": 29.897745226549453,
+      "reconstruction_score": 292.92342621151533,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 292.51648708093836,
-        "contrast": 45.2254524230957,
-        "edge_energy": 16.19831085205078,
-        "coverage": 0.9809741248097412,
-        "saturation": 0.3080289193302892
+        "score": 292.92342621151533,
+        "contrast": 45.220436096191406,
+        "edge_energy": 16.187801361083984,
+        "coverage": 0.9810692541856926,
+        "saturation": 0.30429984779299846
       },
       "visible_text": "用户 user@mail.com 密码 Pa$$w0rd",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text. Both are fully legible and sensitive information is directly visible.",
+      "vlm_notes": "The image clearly shows a username (user@mail.com) and password (Pa$$w0rd) in plain text, which are sensitive credentials. All characters are legible and no parts are obscured.",
       "vlm_error": ""
     },
     {
@@ -1777,7 +1777,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 3,
-      "psnr_db": 2.043273287588154,
+      "psnr_db": 2.048236394984199,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -1785,7 +1785,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image appears to be completely corrupted or filled with noise, making no text readable. No characters or words are discernible.",
+      "vlm_notes": "The image consists entirely of noise or static with no discernible text or characters. No readable content is present.",
       "vlm_error": ""
     },
     {
@@ -1807,7 +1807,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 3.415811101890378,
+      "psnr_db": 3.4159230519227646,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -1816,7 +1816,7 @@
       "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "All characters are clearly visible and legible. No sensitive information (e.g., passwords, personal identifiers) is present or implied.",
+      "vlm_notes": "All visible text is clearly legible. The content consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, IDs, personal data) is present or readable.",
       "vlm_error": ""
     },
     {
@@ -1876,23 +1876,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 30.110427304740153,
-      "reconstruction_score": 312.04215921866074,
+      "psnr_db": 30.133398909983026,
+      "reconstruction_score": 312.4258625886276,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 312.04215921866074,
-        "contrast": 41.423072814941406,
-        "edge_energy": 12.227256774902344,
+        "score": 312.4258625886276,
+        "contrast": 41.455528259277344,
+        "edge_energy": 12.222352027893066,
         "coverage": 1.0,
-        "saturation": 0.1715365682137834
+        "saturation": 0.1680731364275668
       },
       "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly legible and consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, personal identifiers) is visible.",
+      "vlm_notes": "The text is clearly legible and consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, IDs, personal data) is visible.",
       "vlm_error": ""
     },
     {
@@ -1914,22 +1914,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 12.656777977223816,
-      "reconstruction_score": 253.58889525852118,
+      "psnr_db": 12.65167790341926,
+      "reconstruction_score": 252.50815463703225,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 253.58889525852118,
-        "contrast": 56.88580322265625,
-        "edge_energy": 98.0859375,
-        "coverage": 0.9850386779184247,
-        "saturation": 0.007225738396624473
+        "score": 252.50815463703225,
+        "contrast": 56.95357894897461,
+        "edge_energy": 98.37826538085938,
+        "coverage": 0.984423347398031,
+        "saturation": 0.013941631504922645
       },
       "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly legible and consists of a sequence of numbers, a decimal, and a hexadecimal value. No sensitive information (e.g., personal identifiers, passwords, etc.) is visible.",
+      "vlm_confidence": 0.99,
+      "vlm_notes": "All visible text is clearly legible. The content consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, IDs, personal data) is present or readable.",
       "vlm_error": ""
     },
     {
@@ -1951,22 +1951,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 12.583908791206342,
-      "reconstruction_score": 252.82358756514705,
+      "psnr_db": 12.581486677351794,
+      "reconstruction_score": 252.49195795287227,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 252.82358756514705,
-        "contrast": 56.98002243041992,
-        "edge_energy": 98.32485961914062,
-        "coverage": 0.9850386779184247,
-        "saturation": 0.013431786216596343
+        "score": 252.49195795287227,
+        "contrast": 57.028900146484375,
+        "edge_energy": 98.53659057617188,
+        "coverage": 0.984423347398031,
+        "saturation": 0.013273558368495078
       },
       "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly legible and consists of a sequence of numbers, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, personal identifiers) is visible.",
+      "vlm_notes": "The text is clearly legible and consists of a sequence of numbers, a decimal value, and a hexadecimal value. No sensitive information (e.g., passwords, IDs, personal data) is present or readable.",
       "vlm_error": ""
     },
     {
@@ -1988,23 +1988,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 3,
-      "psnr_db": 29.86696382599138,
-      "reconstruction_score": 295.46200750112195,
+      "psnr_db": 29.862850215217417,
+      "reconstruction_score": 295.5635276062076,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 295.46200750112195,
-        "contrast": 45.20326232910156,
-        "edge_energy": 13.862211227416992,
-        "coverage": 0.9805555555555555,
-        "saturation": 0.30045710267229253
+        "score": 295.5635276062076,
+        "contrast": 45.229583740234375,
+        "edge_energy": 13.853819847106934,
+        "coverage": 0.9802742616033755,
+        "saturation": 0.2989451476793249
       },
       "visible_text": "1234567890 3.14159 0xFF2A",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly legible and consists of a sequence of digits, a decimal number, and a hexadecimal value. No sensitive information (e.g., passwords, IDs, personal data) is visible.",
+      "vlm_notes": "The text consists of a sequence of digits, a decimal number, and a hexadecimal value. No personally identifiable information or sensitive data is visible.",
       "vlm_error": ""
     },
     {
@@ -2056,7 +2056,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 10,
-      "psnr_db": 2.0233469104355417,
+      "psnr_db": 2.012327890361937,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -2064,7 +2064,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image consists entirely of noise or static with no discernible text or characters. No readable content is present.",
+      "vlm_notes": "The image is completely filled with noise (static) and no discernible text is visible. No characters can be read or inferred.",
       "vlm_error": ""
     },
     {
@@ -2086,7 +2086,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 3.375338399012304,
+      "psnr_db": 3.375256419944951,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -2155,23 +2155,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 30.097464661213888,
-      "reconstruction_score": 308.3256373975262,
+      "psnr_db": 30.083973864929202,
+      "reconstruction_score": 308.10981794873123,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 308.3256373975262,
-        "contrast": 33.825469970703125,
-        "edge_energy": 12.842599868774414,
+        "score": 308.10981794873123,
+        "contrast": 33.807037353515625,
+        "edge_energy": 12.827722549438477,
         "coverage": 1.0,
-        "saturation": 0.12657232704402516
+        "saturation": 0.12869496855345913
       },
       "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is fully legible and clearly visible. It contains a confidentiality notice and a restriction on external distribution, which are sensitive in nature.",
+      "vlm_notes": "The text is clearly legible and fully visible. It contains sensitive information regarding confidential financial data and distribution restrictions.",
       "vlm_error": ""
     },
     {
@@ -2188,27 +2188,27 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.989010989010989,
-      "word_accuracy": 0.9230769230769231,
-      "exact_match": false,
-      "sensitive_token_recall": 0.9,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 12.070718317658006,
-      "reconstruction_score": 246.26081178773126,
+      "psnr_db": 12.083117645534918,
+      "reconstruction_score": 246.3090873814229,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 246.26081178773126,
-        "contrast": 55.810176849365234,
-        "edge_energy": 105.25691223144531,
-        "coverage": 0.9890199161425577,
+        "score": 246.3090873814229,
+        "contrast": 55.81923294067383,
+        "edge_energy": 105.17445373535156,
+        "coverage": 0.988875786163522,
         "saturation": 0.009984276729559748
       },
-      "visible_text": "This document contains confidential financial data for Q4 2020 Do not distribute externally",
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly legible despite some background noise. The content includes sensitive financial information and a distribution warning.",
+      "vlm_notes": "The text is clearly legible despite some noise in the background. The sensitive information includes a reference to confidential financial data for Q4 2026, which is a specific and potentially sensitive time period for financial reporting.",
       "vlm_error": ""
     },
     {
@@ -2225,27 +2225,27 @@
         "width": 720,
         "height": 106
       },
-      "char_accuracy": 0.989010989010989,
-      "word_accuracy": 0.9230769230769231,
-      "exact_match": false,
-      "sensitive_token_recall": 0.9,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 12.324267964988433,
-      "reconstruction_score": 244.9044952072687,
+      "psnr_db": 12.336754964338025,
+      "reconstruction_score": 244.91408170144263,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 244.9044952072687,
-        "contrast": 57.28886413574219,
-        "edge_energy": 107.87834167480469,
-        "coverage": 0.9890330188679245,
-        "saturation": 0.012159329140461216
+        "score": 244.91408170144263,
+        "contrast": 57.36433792114258,
+        "edge_energy": 107.974365234375,
+        "coverage": 0.9891902515723271,
+        "saturation": 0.012329664570230608
       },
-      "visible_text": "This document contains confidential financial data for Q4 2020 Do not distribute externally",
+      "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly legible despite some background noise. Sensitive information (confidential financial data, Q4 2020) is visible and readable.",
+      "vlm_notes": "The text is clearly legible despite some background noise. The content includes sensitive information about confidential financial data and a distribution restriction.",
       "vlm_error": ""
     },
     {
@@ -2267,23 +2267,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 10,
-      "psnr_db": 29.522794384169472,
-      "reconstruction_score": 294.19105134120275,
+      "psnr_db": 29.51446320009761,
+      "reconstruction_score": 294.0232845362377,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 294.19105134120275,
-        "contrast": 38.52261734008789,
-        "edge_energy": 15.46888256072998,
-        "coverage": 0.9894392033542977,
-        "saturation": 0.2569444444444444
+        "score": 294.0232845362377,
+        "contrast": 38.52922058105469,
+        "edge_energy": 15.466365814208984,
+        "coverage": 0.9894261006289308,
+        "saturation": 0.2586740041928721
       },
       "visible_text": "This document contains confidential financial data for Q4 2026 Do not distribute externally",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is fully legible and clearly visible. It contains a confidentiality notice and a restriction on external distribution, which are sensitive in nature.",
+      "vlm_notes": "The text is fully legible and clearly visible. It contains sensitive information regarding confidential financial data and distribution restrictions.",
       "vlm_error": ""
     },
     {
@@ -2335,7 +2335,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 1,
-      "psnr_db": 2.040594804249868,
+      "psnr_db": 2.02333587851925,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -2343,7 +2343,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image appears to be completely filled with noise or static, making no text legible. No characters or words can be discerned.",
+      "vlm_notes": "The image is completely filled with noise (static) and no discernible text is visible. No characters can be read or inferred.",
       "vlm_error": ""
     },
     {
@@ -2365,7 +2365,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 3.4113452380992833,
+      "psnr_db": 3.4114160547906645,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -2412,7 +2412,7 @@
       "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is fully legible and contains no sensitive information. It is a common pangram used for testing fonts and typing.",
+      "vlm_notes": "The text is fully visible and legible. No sensitive information is present.",
       "vlm_error": ""
     },
     {
@@ -2434,23 +2434,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 30.121141769977392,
-      "reconstruction_score": 306.4346968691114,
+      "psnr_db": 30.12467697673967,
+      "reconstruction_score": 306.5982316588759,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 306.4346968691114,
-        "contrast": 39.3950080871582,
-        "edge_energy": 14.01664924621582,
+        "score": 306.5982316588759,
+        "contrast": 39.38880157470703,
+        "edge_energy": 14.024920463562012,
         "coverage": 1.0,
-        "saturation": 0.18943661971830986
+        "saturation": 0.1876564945226917
       },
       "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is fully legible and contains no sensitive information.",
+      "vlm_notes": "The text is fully legible and clearly visible. No sensitive information is present.",
       "vlm_error": ""
     },
     {
@@ -2472,22 +2472,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 12.637223633482071,
-      "reconstruction_score": 250.74746786484698,
+      "psnr_db": 12.657090896418953,
+      "reconstruction_score": 250.75876121938882,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 250.74746786484698,
-        "contrast": 55.90003204345703,
-        "edge_energy": 99.86500549316406,
-        "coverage": 0.9880086071987481,
-        "saturation": 0.016901408450704224
+        "score": 250.75876121938882,
+        "contrast": 55.879974365234375,
+        "edge_energy": 99.9666748046875,
+        "coverage": 0.9883998435054773,
+        "saturation": 0.01674491392801252
       },
       "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly legible and appears to be a standard pangram. No sensitive information is present.",
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The text is fully legible and appears to be a standard pangram. No sensitive information is present.",
       "vlm_error": ""
     },
     {
@@ -2509,17 +2509,17 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 12.547200002527068,
-      "reconstruction_score": 251.5609464331972,
+      "psnr_db": 12.571962758155276,
+      "reconstruction_score": 250.6826145548216,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 251.5609464331972,
-        "contrast": 55.967018127441406,
-        "edge_energy": 99.94010925292969,
-        "coverage": 0.9880086071987481,
-        "saturation": 0.00868544600938967
+        "score": 250.6826145548216,
+        "contrast": 55.98569107055664,
+        "edge_energy": 100.1622314453125,
+        "coverage": 0.9883998435054773,
+        "saturation": 0.016607981220657278
       },
       "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
@@ -2546,23 +2546,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 29.905118684414028,
-      "reconstruction_score": 292.9669127964264,
+      "psnr_db": 29.889805112376024,
+      "reconstruction_score": 292.5305634649333,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 292.9669127964264,
-        "contrast": 43.008792877197266,
-        "edge_energy": 15.648296356201172,
-        "coverage": 0.9855046948356807,
-        "saturation": 0.30044992175273866
+        "score": 292.5305634649333,
+        "contrast": 43.01420593261719,
+        "edge_energy": 15.685129165649414,
+        "coverage": 0.9854655712050078,
+        "saturation": 0.30438184663536777
       },
       "visible_text": "The quick brown fox jumps over the lazy dog",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is fully legible and contains no sensitive information. It is a common pangram used for testing fonts and typing.",
+      "vlm_notes": "The text is fully legible and contains no sensitive information.",
       "vlm_error": ""
     },
     {
@@ -2592,7 +2592,7 @@
       "visible_text": "PASSWORD admin123",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed and considered sensitive information.",
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive credential.",
       "vlm_error": ""
     },
     {
@@ -2614,7 +2614,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 2,
-      "psnr_db": 2.010597396334489,
+      "psnr_db": 2.0077596358365715,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -2622,7 +2622,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image is completely filled with noise or static, making no readable text visible. No characters, words, or patterns can be discerned.",
+      "vlm_notes": "The image is completely filled with noise (static) and no discernible text is visible. No characters can be read or inferred.",
       "vlm_error": ""
     },
     {
@@ -2644,7 +2644,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 3.3846297918872126,
+      "psnr_db": 3.384658939320779,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -2653,7 +2653,7 @@
       "visible_text": "PASSWORD admin123",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed and considered sensitive information.",
       "vlm_error": ""
     },
     {
@@ -2670,10 +2670,10 @@
         "width": 720,
         "height": 80
       },
-      "char_accuracy": 1.0,
-      "word_accuracy": 1.0,
-      "exact_match": true,
-      "sensitive_token_recall": 1.0,
+      "char_accuracy": 0.0,
+      "word_accuracy": 0.0,
+      "exact_match": false,
+      "sensitive_token_recall": 0.0,
       "sensitive_token_count": 2,
       "psnr_db": 26.611056523196286,
       "reconstruction_score": 231.63271787431506,
@@ -2688,11 +2688,11 @@
         "coverage": 1.0,
         "saturation": 0.9550868055555556
       },
-      "visible_text": "PASSWORD admin123",
-      "vlm_can_read_sensitive": true,
-      "vlm_confidence": 0.99,
-      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
-      "vlm_error": ""
+      "visible_text": "",
+      "vlm_can_read_sensitive": false,
+      "vlm_confidence": 0.0,
+      "vlm_notes": "",
+      "vlm_error": "The read operation timed out"
     },
     {
       "name": "en_short_00",
@@ -2713,23 +2713,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 30.116701394043726,
-      "reconstruction_score": 313.2723134358724,
+      "psnr_db": 30.113118824303562,
+      "reconstruction_score": 313.2414552900526,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 313.2723134358724,
-        "contrast": 38.75226593017578,
-        "edge_energy": 9.985160827636719,
+        "score": 313.2414552900526,
+        "contrast": 38.72455978393555,
+        "edge_energy": 9.976160049438477,
         "coverage": 1.0,
-        "saturation": 0.15494791666666666
+        "saturation": 0.15506944444444445
       },
       "visible_text": "PASSWORD admin123",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly visible and legible. The password 'admin123' is exposed in plain text, which is a sensitive piece of information.",
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed and considered sensitive information.",
       "vlm_error": ""
     },
     {
@@ -2751,22 +2751,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.619083477018334,
-      "reconstruction_score": 253.01052559746637,
+      "psnr_db": 12.601649993269648,
+      "reconstruction_score": 252.0913874308268,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 253.01052559746637,
-        "contrast": 55.50362777709961,
-        "edge_energy": 97.10594940185547,
-        "coverage": 0.9865972222222222,
-        "saturation": 0.013663194444444445
+        "score": 252.0913874308268,
+        "contrast": 55.64372253417969,
+        "edge_energy": 98.06275177001953,
+        "coverage": 0.98640625,
+        "saturation": 0.014114583333333333
       },
       "visible_text": "PASSWORD admin123",
       "vlm_can_read_sensitive": true,
-      "vlm_confidence": 0.99,
-      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is a sensitive credential and is fully readable.",
+      "vlm_confidence": 0.95,
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed and considered sensitive information.",
       "vlm_error": ""
     },
     {
@@ -2788,22 +2788,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 12.561658203198977,
-      "reconstruction_score": 252.90714094373917,
+      "psnr_db": 12.545843448771212,
+      "reconstruction_score": 252.0335807800293,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 252.90714094373917,
-        "contrast": 55.59064483642578,
-        "edge_energy": 97.36405944824219,
-        "coverage": 0.9865972222222222,
-        "saturation": 0.012986111111111111
+        "score": 252.0335807800293,
+        "contrast": 55.710384368896484,
+        "edge_energy": 98.23930358886719,
+        "coverage": 0.98640625,
+        "saturation": 0.01359375
       },
       "visible_text": "PASSWORD admin123",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is a sensitive piece of information that is fully readable.",
+      "vlm_notes": "The text 'PASSWORD admin123' is clearly visible and legible. The password 'admin123' is exposed and considered sensitive information.",
       "vlm_error": ""
     },
     {
@@ -2825,18 +2825,18 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 2,
-      "psnr_db": 29.87865838282765,
-      "reconstruction_score": 295.4153997633193,
+      "psnr_db": 29.879454527169507,
+      "reconstruction_score": 295.26468912760413,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 295.4153997633193,
-        "contrast": 42.26456069946289,
-        "edge_energy": 11.576591491699219,
-        "coverage": 0.9820659722222222,
-        "saturation": 0.2989236111111111
+        "score": 295.26468912760413,
+        "contrast": 42.25319290161133,
+        "edge_energy": 11.577045440673828,
+        "coverage": 0.9820486111111111,
+        "saturation": 0.30026041666666664
       },
       "visible_text": "PASSWORD admin123",
       "vlm_can_read_sensitive": true,
@@ -2871,7 +2871,7 @@
       "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "All text is clearly legible. The data includes names (Alice, Bob) and salary figures (9500, 8200), which are considered sensitive personal information.",
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salary), which are sensitive. All characters are visible and unobscured.",
       "vlm_error": ""
     },
     {
@@ -2893,7 +2893,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 8,
-      "psnr_db": 1.960609839427507,
+      "psnr_db": 1.935232342995192,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -2901,7 +2901,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image is completely filled with noise (static or speckled pattern), making no text legible. No characters or words can be discerned.",
+      "vlm_notes": "The image appears to be completely filled with noise or static, making no text legible. No characters or words can be discerned.",
       "vlm_error": ""
     },
     {
@@ -2923,7 +2923,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 3.295233053337689,
+      "psnr_db": 3.2951571904941583,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -2970,7 +2970,7 @@
       "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salary), which are sensitive. All characters are visible and unobscured.",
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and salary figures, which are sensitive data. All characters are visible and unobscured.",
       "vlm_error": ""
     },
     {
@@ -2992,18 +2992,18 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 30.10536285427786,
-      "reconstruction_score": 308.12025358691903,
+      "psnr_db": 30.095158320380552,
+      "reconstruction_score": 307.9628690623637,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 308.12025358691903,
-        "contrast": 24.16741180419922,
-        "edge_energy": 6.770428657531738,
+        "score": 307.9628690623637,
+        "contrast": 24.160018920898438,
+        "edge_energy": 6.782841682434082,
         "coverage": 1.0,
-        "saturation": 0.09276729559748427
+        "saturation": 0.09414308176100629
       },
       "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
       "vlm_can_read_sensitive": true,
@@ -3030,22 +3030,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 10.163487963226281,
-      "reconstruction_score": 234.1934523672428,
+      "psnr_db": 10.034465312504368,
+      "reconstruction_score": 233.03383826809613,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 234.1934523672428,
-        "contrast": 61.14250183105469,
-        "edge_energy": 122.84527587890625,
-        "coverage": 0.9897405660377359,
-        "saturation": 0.01025943396226415
+        "score": 233.03383826809613,
+        "contrast": 62.052024841308594,
+        "edge_energy": 124.9393081665039,
+        "coverage": 0.9897798742138365,
+        "saturation": 0.010128406708595388
       },
       "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salaries), which are sensitive. The image quality is sufficient to read all visible characters without ambiguity.",
+      "vlm_notes": "The text is clearly legible despite some background noise. Sensitive information such as names and salary figures are visible and readable.",
       "vlm_error": ""
     },
     {
@@ -3067,17 +3067,17 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 10.480886612646401,
-      "reconstruction_score": 233.35473011424705,
+      "psnr_db": 10.323680598098154,
+      "reconstruction_score": 231.05209960777557,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 233.35473011424705,
-        "contrast": 62.47079849243164,
-        "edge_energy": 125.53902435302734,
-        "coverage": 0.9899109014675053,
-        "saturation": 0.00550314465408805
+        "score": 231.05209960777557,
+        "contrast": 63.744808197021484,
+        "edge_energy": 128.3111572265625,
+        "coverage": 0.9897405660377359,
+        "saturation": 0.013037211740041929
       },
       "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
       "vlm_can_read_sensitive": true,
@@ -3104,23 +3104,23 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 8,
-      "psnr_db": 28.355454796328953,
-      "reconstruction_score": 290.77698814743974,
+      "psnr_db": 28.292817992259604,
+      "reconstruction_score": 290.6577006845854,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 290.77698814743974,
-        "contrast": 30.384023666381836,
-        "edge_energy": 10.246448516845703,
-        "coverage": 0.9897798742138365,
-        "saturation": 0.2629454926624738
+        "score": 290.6577006845854,
+        "contrast": 30.45150375366211,
+        "edge_energy": 10.23536491394043,
+        "coverage": 0.9896619496855346,
+        "saturation": 0.2645702306079665
       },
       "visible_text": "ID Name Salary\n01 Alice 9500\n02 Bob 8200",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.99,
-      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salary), which are sensitive. All characters are visible and unobscured.",
+      "vlm_notes": "The text is clearly legible and includes personal identifiers (names) and financial data (salary), which are considered sensitive. All characters are visible and unobscured.",
       "vlm_error": ""
     },
     {
@@ -3150,7 +3150,7 @@
       "visible_text": "https://api.site.com/v2?token=eyJhbGc",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be truncated, but the visible portion may still be sensitive. No additional context or hidden characters are visible.",
+      "vlm_notes": "The URL contains a visible token fragment 'eyJhbGc', which may be part of a sensitive JWT or API key. The full token is not visible, but the partial string is readable and potentially sensitive.",
       "vlm_error": ""
     },
     {
@@ -3172,7 +3172,7 @@
       "exact_match": false,
       "sensitive_token_recall": 0.0,
       "sensitive_token_count": 1,
-      "psnr_db": 1.9791554165343526,
+      "psnr_db": 1.9734690783127946,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "global_shutter"
@@ -3180,7 +3180,7 @@
       "visible_text": "",
       "vlm_can_read_sensitive": false,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The image consists entirely of noise or static with no discernible text or characters. No readable content is present.",
+      "vlm_notes": "The image appears to be completely filled with noise or static, making no text readable. No characters or discernible patterns are visible.",
       "vlm_error": ""
     },
     {
@@ -3202,7 +3202,7 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 3.3568885709184397,
+      "psnr_db": 3.3569060349709394,
       "reconstruction_score": 0.0,
       "attack_metadata": {
         "attack": "temporal_average",
@@ -3211,7 +3211,7 @@
       "visible_text": "https://api.site.com/v2?token=eyJhbGc",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The URL contains a token parameter with visible characters 'eyJhbGc', which may be part of a sensitive JWT or API key. The full token is not visible, but the partial string is readable and potentially sensitive.",
+      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT header. This is sensitive information as ",
       "vlm_error": ""
     },
     {
@@ -3249,7 +3249,7 @@
       "visible_text": "https://api.site.com/v2?token=eyJhbGc",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT header (typically 'eyJhbGciOiJIUzI1NiJ9')",
+      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT (typically 'eyJhbGciOiJIUzI1NiIsInR5cCI6I",
       "vlm_error": ""
     },
     {
@@ -3271,18 +3271,18 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 30.13809538234714,
-      "reconstruction_score": 302.5005474335108,
+      "psnr_db": 30.12768434786124,
+      "reconstruction_score": 302.59744168958093,
       "attack_metadata": {
         "attack": "phase_search_recovery",
         "method": "max",
         "window_size": 4,
         "best_offset": 0,
-        "score": 302.5005474335108,
-        "contrast": 32.3692741394043,
-        "edge_energy": 11.778983116149902,
+        "score": 302.59744168958093,
+        "contrast": 32.31784439086914,
+        "edge_energy": 11.74390697479248,
         "coverage": 1.0,
-        "saturation": 0.1808974358974359
+        "saturation": 0.17976495726495725
       },
       "visible_text": "https://api.site.com/v2?token=eyJhbGc",
       "vlm_can_read_sensitive": true,
@@ -3309,22 +3309,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 11.82767959683763,
-      "reconstruction_score": 245.08485764723557,
+      "psnr_db": 11.824479351520697,
+      "reconstruction_score": 244.53013261974365,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "luma",
         "frames": 8,
-        "score": 245.08485764723557,
-        "contrast": 56.352447509765625,
-        "edge_energy": 107.09451293945312,
-        "coverage": 0.9892735042735042,
-        "saturation": 0.009551282051282051
+        "score": 244.53013261974365,
+        "contrast": 56.24283981323242,
+        "edge_energy": 106.68279266357422,
+        "coverage": 0.989508547008547,
+        "saturation": 0.018824786324786326
       },
       "visible_text": "https://api.site.com/v2?token=eyJhbGc",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The URL contains a token parameter with a partially visible value. The token appears to be a JWT or similar encoded string, and the visible portion 'eyJhbGc' is the beginning of a Base64-encoded JWT (typically 'eyJhbGciOiJIUzI1NiJ9' for a s",
+      "vlm_notes": "The URL contains a visible token fragment 'eyJhbGc' which may be part of a JWT or similar authentication token. The full token is not visible, but the partial string is readable and potentially sensitive.",
       "vlm_error": ""
     },
     {
@@ -3346,22 +3346,22 @@
       "exact_match": true,
       "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 11.762643729990415,
-      "reconstruction_score": 245.16361901698968,
+      "psnr_db": 11.748397370899461,
+      "reconstruction_score": 244.46507556621845,
       "attack_metadata": {
         "attack": "weighted_differential_accumulator",
         "channel": "blue",
         "frames": 8,
-        "score": 245.16361901698968,
-        "contrast": 56.39379119873047,
-        "edge_energy": 107.06991577148438,
-        "coverage": 0.9892735042735042,
-        "saturation": 0.009423076923076923
+        "score": 244.46507556621845,
+        "contrast": 56.39360046386719,
+        "edge_energy": 106.90929412841797,
+        "coverage": 0.989508547008547,
+        "saturation": 0.01871794871794872
       },
       "visible_text": "https://api.site.com/v2?token=eyJhbGc",
       "vlm_can_read_sensitive": true,
       "vlm_confidence": 0.95,
-      "vlm_notes": "The URL contains a visible token fragment 'eyJhbGc' which may be part of a JWT or similar sensitive credential. The text is clearly legible despite some background noise.",
+      "vlm_notes": "The URL is partially visible, including a token that starts with 'eyJhbGc', which is likely the beginning of a JWT (JSON Web Token). The token is partially obscured by noise, but the visible portion is readable. The domain 'api.site.com' is",
       "vlm_error": ""
     },
     {
@@ -3378,29 +3378,29 @@
         "width": 720,
         "height": 65
       },
-      "char_accuracy": 0.0,
-      "word_accuracy": 0.0,
-      "exact_match": false,
-      "sensitive_token_recall": 0.0,
+      "char_accuracy": 1.0,
+      "word_accuracy": 1.0,
+      "exact_match": true,
+      "sensitive_token_recall": 1.0,
       "sensitive_token_count": 1,
-      "psnr_db": 29.360063410075444,
-      "reconstruction_score": 321.32203975090613,
+      "psnr_db": 29.364414315899765,
+      "reconstruction_score": 321.3105759742933,
       "attack_metadata": {
         "attack": "channel_selective_recovery",
         "channel": "blue",
         "method": "max",
         "frames": 8,
-        "score": 321.32203975090613,
-        "contrast": 37.63340377807617,
-        "edge_energy": 13.272902488708496,
-        "coverage": 0.9898717948717949,
+        "score": 321.3105759742933,
+        "contrast": 37.621402740478516,
+        "edge_energy": 13.265954971313477,
+        "coverage": 0.9898504273504274,
         "saturation": 0.0
       },
-      "visible_text": "",
-      "vlm_can_read_sensitive": false,
-      "vlm_confidence": 0.0,
-      "vlm_notes": "",
-      "vlm_error": "The read operation timed out"
+      "visible_text": "https://api.site.com/v2?token=eyJhbGc",
+      "vlm_can_read_sensitive": true,
+      "vlm_confidence": 0.99,
+      "vlm_notes": "The URL contains a visible token fragment 'eyJhbGc' which may be part of a sensitive JWT or API key. The full token is not visible, but the exposed portion is potentially sensitive.",
+      "vlm_error": ""
     }
   ]
 }

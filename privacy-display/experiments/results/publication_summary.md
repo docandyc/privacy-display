@@ -18,7 +18,7 @@ This file is generated from machine-readable experiment JSON artifacts.
 - adaptive_attack_ablation: `adaptive_attack_ablation.json`
 - camera_pipeline_ablation: `camera_pipeline_ablation.json`
 - screen_privacy_baselines: `screen_privacy_baselines.json`
-- vlm_prompt_ablation: `missing`
+- vlm_prompt_ablation: `vlm_prompt_ablation.json`
 - usability_pilot: `missing`
 
 ## OCR Corpus
@@ -57,7 +57,7 @@ This file is generated from machine-readable experiment JSON artifacts.
 ## VLM Readability
 
 - Model: `Qwen/Qwen3-VL-32B-Instruct`
-- Best attack char recovery: 96.9%
+- Best attack char recovery: 96.3%
 - Best attack read success rate: 100.0%
 
 ## Real Camera Capture
@@ -76,5 +76,5 @@ This file is generated from machine-readable experiment JSON artifacts.
 | adaptive_attack_ablation | available | raw_subframe: char recovery 0.0%, leak 0.0%, errors 0 |
 | camera_pipeline_ablation | available | clean_subframe: char recovery 0.0%, leak 0.0%, errors 0 |
 | screen_privacy_baselines | available | unprotected: char recovery 92.9%, leak 100.0%, errors 0 |
-| vlm_prompt_ablation | missing | `vlm_prompt_ablation.json` |
+| vlm_prompt_ablation | available | strict_transcription: char recovery 72.7%, leak 0.0%, errors 0 |
 | usability_pilot | missing | `usability_pilot.json` |
