@@ -1,0 +1,80 @@
+{
+  "config": {
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "n_seeds": 10,
+    "n_samples": 45,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 60,
+      "samples_per_category": 5,
+      "n_selected": 45
+    },
+    "note": "mean_across_seed_std ~ 0 indicates seed-invariant results."
+  },
+  "summary": {
+    "single_frame_ocr": {
+      "mean": 0.00038515521284652993,
+      "std": 0.0027604649189440634,
+      "count": 450,
+      "ci95": {
+        "low": 0.00015480749765247153,
+        "high": 0.0006757875772039536,
+        "half_width": 0.00026049003977574107,
+        "confidence": 0.95,
+        "method": "bootstrap_percentile",
+        "resamples": 2000
+      },
+      "mean_across_seed_std": 0.0010907395711194957,
+      "max_across_seed_std": 0.008823529411764707
+    },
+    "perceptual_invariance": {
+      "delta_e": {
+        "mean": 0.3584436715459284,
+        "std": 0.17532133307900372,
+        "count": 450,
+        "ci95": {
+          "low": 0.34221295932171225,
+          "high": 0.3744056430656246,
+          "half_width": 0.016096341871956188,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        },
+        "mean_across_seed_std": 0.0003785011679208899,
+        "max_across_seed_std": 0.0017900032640158917
+      },
+      "ssim": {
+        "mean": 0.9961516740327168,
+        "std": 0.004400010061461437,
+        "count": 450,
+        "ci95": {
+          "low": 0.9957143186608073,
+          "high": 0.9965492294900584,
+          "half_width": 0.0004174554146255671,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        },
+        "mean_across_seed_std": 4.382123667888855e-06,
+        "max_across_seed_std": 1.857735662131557e-05
+      },
+      "entropy_ratio": {
+        "mean": 0.39093629914090544,
+        "std": 0.08402408130566755,
+        "count": 450,
+        "ci95": {
+          "low": 0.38279960367985205,
+          "high": 0.39833831577735224,
+          "half_width": 0.007769356048750092,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        },
+        "mean_across_seed_std": 0.00046127508234779674,
+        "max_across_seed_std": 0.0013421252393319765
+      }
+    }
+  }
+}

@@ -29,10 +29,17 @@ SUPPLEMENTAL_FILES = {
     "camera_pipeline_ablation": "camera_pipeline_ablation.json",
     "screen_privacy_baselines": "screen_privacy_baselines.json",
     "vlm_prompt_ablation": "vlm_prompt_ablation.json",
+    "noise_epsilon_sweep": "noise_epsilon_sweep.json",
+    "vlm_model_ablation": "vlm_model_ablation.json",
+    "brightness_compensation_ablation": "brightness_compensation_ablation.json",
+    "mask_granularity_ablation": "mask_granularity_ablation.json",
+    "seed_sensitivity": "seed_sensitivity.json",
     "usability_pilot": "usability_pilot.json",
 }
 SUMMARY_JSON = "publication_summary.json"
 SUMMARY_MD = "publication_summary.md"
+
+STRATA_FIELDS = ["category", "language", "layout", "font_size"]
 
 STRONG_ATTACK_ORDER = [
     "global_shutter_slot0",
@@ -79,10 +86,13 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
             },
         },
         "ocr": summarize_ocr(ocr),
+        "ocr_strata": summarize_ocr_strata(ocr),
+        "pareto_security": summarize_pareto_security(supplemental.get("pareto_sweep")),
         "strong_camera": summarize_strong_camera(strong),
         "detection": summarize_detection(detection),
         "view_attack": summarize_view_attack(view_attack),
         "vlm": summarize_vlm(vlm),
+        "vlm_model_cross": summarize_vlm_model_ablation(supplemental.get("vlm_model_ablation")),
         "real_capture": summarize_real_capture(real_capture),
         "supplemental_ablations": {
             name: summarize_supplemental_ablation(payload, SUPPLEMENTAL_FILES[name])
@@ -136,6 +146,133 @@ def summarize_ocr(report: dict) -> dict:
             ),
         })
     return {"engines": engines}
+
+
+def summarize_ocr_strata(report: dict) -> dict:
+    """Surface the per-stratum OCR defense already computed by the benchmark.
+
+    ``run_corpus_multi_engine`` stores ``report[engine]['strata'][field][value]``
+    with original/subframe/reduction ``_mean_std`` dicts. This presents them so a
+    reviewer can see the defense holds across content type, language, layout, and
+    font size. Returns ``available: False`` when no strata were recorded.
+    """
+    if not isinstance(report, dict) or not report:
+        return {"available": False, "reason": "missing_ocr_result"}
+    ordered = [name for name in OCR_ENGINE_ORDER if name in report]
+    ordered.extend(sorted(name for name in report if name not in ordered))
+    engine = ordered[0]
+    strata = report.get(engine, {}).get("strata", {})
+    if not strata:
+        return {"available": False, "reason": "no_strata_in_result", "engine": engine}
+    fields: dict[str, list[dict]] = {}
+    for field in STRATA_FIELDS:
+        groups = strata.get(field)
+        if not groups:
+            continue
+        rows = []
+        for value, stats in sorted(groups.items()):
+            original = stats.get("original", {})
+            subframe = stats.get("subframe", {})
+            rows.append({
+                "value": str(value),
+                "count": int(original.get("count", 0)),
+                "original_mean": _stat_mean(original),
+                "original_ci95": _ci(original.get("ci95", {})),
+                "subframe_mean": _stat_mean(subframe),
+                "subframe_ci95": _ci(subframe.get("ci95", {})),
+                "reduction_mean": _stat_mean(stats.get("reduction")),
+            })
+        fields[field] = rows
+    return {"available": bool(fields), "engine": engine, "fields": fields}
+
+
+def summarize_pareto_security(report: dict | None) -> dict:
+    """Surface the n-vs-security/usability table from the Pareto sweep configs.
+
+    The sweep already computes, per (n, refresh), the single-frame OCR, full-cycle
+    OCR, single-frame mutual information (entropy_ratio ~ 1/n), and FPI. This groups
+    them by n (image metrics are constant across refresh for a fixed epsilon) and
+    lists FPI per refresh.
+    """
+    if not isinstance(report, dict):
+        return {"available": False, "reason": "missing_pareto_result"}
+    configs = report.get("configs", [])
+    if not configs:
+        return {"available": False, "reason": "no_configs"}
+    by_n: dict[int, dict] = {}
+    for cfg in configs:
+        n = int(cfg.get("n", 0))
+        bucket = by_n.setdefault(n, {
+            "entropy_ratio": _num(cfg.get("entropy_ratio")),
+            "single_frame_ocr": _num(cfg.get("single_frame_ocr")),
+            "full_cycle_ocr": _num(cfg.get("full_cycle_ocr")),
+            "refresh": [],
+        })
+        bucket["refresh"].append({
+            "refresh_hz": _num(cfg.get("refresh_hz")),
+            "fpi": _num(cfg.get("fpi")),
+            "fpi_safe": bool(cfg.get("fpi_safe")),
+        })
+    rows = []
+    for n in sorted(by_n):
+        bucket = by_n[n]
+        rows.append({
+            "n": n,
+            "entropy_ratio": bucket["entropy_ratio"],
+            "single_frame_ocr": bucket["single_frame_ocr"],
+            "full_cycle_ocr": bucket["full_cycle_ocr"],
+            "refresh": sorted(bucket["refresh"], key=lambda r: r["refresh_hz"]),
+        })
+    rec = report.get("recommended", {})
+    return {
+        "available": True,
+        "rows": rows,
+        "recommended": {
+            "n": rec.get("n"),
+            "refresh_hz": rec.get("refresh_hz"),
+            "fpi": _num(rec.get("fpi")),
+            "entropy_ratio": _num(rec.get("entropy_ratio")),
+        },
+    }
+
+
+def summarize_vlm_model_ablation(report: dict | None) -> dict:
+    """Cross-model x attack verbatim-recovery matrix from the multi-VLM ablation.
+
+    Reports exact line-match recovery (the privacy-relevant question: did the VLM
+    reproduce the actual text). A single captured subframe yields 0 across every
+    VLM family, while full-cycle/temporal attacks recover text on all of them, so
+    the boundary is not model-specific. Character-level overlap is intentionally
+    omitted from this table because it overstates recovery on near-blank frames.
+    """
+    if not isinstance(report, dict):
+        return {"available": False, "reason": "missing_vlm_model_result"}
+    per_model = report.get("models", {})
+    models = report.get("config", {}).get("models") or list(per_model.keys())
+    attacks = report.get("config", {}).get("attacks", [])
+    if not models or not attacks or not per_model:
+        return {"available": False, "reason": "no_models_or_attacks"}
+    rows = []
+    for attack in attacks:
+        cells = []
+        for model in models:
+            stats = (
+                per_model.get(model, {})
+                .get("summary", {})
+                .get("attacks", {})
+                .get(attack, {})
+            )
+            cells.append({
+                "model": model,
+                "exact_match": _num(stats.get("exact_match", {}).get("mean")),
+            })
+        rows.append({"attack": attack, "cells": cells})
+    return {
+        "available": True,
+        "metric": "exact_match",
+        "models": list(models),
+        "rows": rows,
+    }
 
 
 def summarize_strong_camera(report: dict) -> dict:
@@ -310,6 +447,8 @@ def render_markdown(summary: dict) -> str:
             f"{_pct(row['subframe_sensitive_token_recall'])} |"
         )
 
+    _render_ocr_strata(lines, summary.get("ocr_strata", {}))
+
     lines.extend([
         "",
         "## Strong Camera Attacks",
@@ -364,6 +503,8 @@ def render_markdown(summary: dict) -> str:
     else:
         lines.append(f"- Not available: {vlm['interpretation']}")
 
+    _render_vlm_model_cross(lines, summary.get("vlm_model_cross", {}))
+
     real = summary["real_capture"]
     lines.extend(["", "## Real Camera Capture", ""])
     if real["available"]:
@@ -381,6 +522,8 @@ def render_markdown(summary: dict) -> str:
             )
     else:
         lines.append(f"- Not available: {real['interpretation']}")
+
+    _render_pareto_security(lines, summary.get("pareto_security", {}))
 
     supplemental = summary.get("supplemental_ablations", {})
     lines.extend(["", "## Supplemental Ablations", ""])
@@ -403,8 +546,104 @@ def render_markdown(summary: dict) -> str:
     else:
         lines.append("- No supplemental ablation section in summary input.")
 
+    _render_supplemental_details(lines, supplemental)
+
     lines.append("")
     return "\n".join(lines)
+
+
+def _render_ocr_strata(lines: list[str], strata: dict) -> None:
+    lines.extend(["", "## Stratified OCR Defense", ""])
+    if not strata.get("available"):
+        lines.append("- Stratified breakdown not available (no per-stratum data in OCR result).")
+        return
+    lines.append(f"Primary engine: `{strata.get('engine', '')}`")
+    for field, rows in strata.get("fields", {}).items():
+        lines.extend([
+            "",
+            f"### By {field}",
+            "",
+            "| Value | Rows | Original char acc | Subframe char acc | Reduction |",
+            "|---|---:|---:|---:|---:|",
+        ])
+        for row in rows:
+            lines.append(
+                f"| {row['value']} | {row['count']} | "
+                f"{_pct_ci(row['original_mean'], row['original_ci95'])} | "
+                f"{_pct_ci(row['subframe_mean'], row['subframe_ci95'])} | "
+                f"{_pct(row['reduction_mean'])} |"
+            )
+
+
+def _render_vlm_model_cross(lines: list[str], cross: dict) -> None:
+    lines.extend(["", "## Multi-VLM Cross-Attack Recovery", ""])
+    if not cross.get("available"):
+        lines.append("- Multi-VLM ablation not available (run vlm_model_ablation.py).")
+        return
+    models = cross.get("models", [])
+    short = [m.split("/")[-1] for m in models]
+    lines.extend([
+        "Verbatim recovery (exact line-match rate) per VLM family and attack frame.",
+        "",
+        "| Attack frame | " + " | ".join(short) + " |",
+        "|---|" + "|".join(["---:"] * len(short)) + "|",
+    ])
+    for row in cross.get("rows", []):
+        cells = " | ".join(_pct(c["exact_match"]) for c in row["cells"])
+        lines.append(f"| {row['attack']} | {cells} |")
+
+
+def _render_pareto_security(lines: list[str], psec: dict) -> None:
+    lines.extend(["", "## n vs Security / Usability", ""])
+    if not psec.get("available"):
+        lines.append("- n-vs-security table not available (run pareto_sweep).")
+        return
+    lines.extend([
+        "| n | Single-frame OCR | Full-cycle OCR | Single-frame MI | FPI @ refresh |",
+        "|---:|---:|---:|---:|---|",
+    ])
+    for row in psec.get("rows", []):
+        fpis = ", ".join(
+            f"{r['refresh_hz']:.0f}Hz:{r['fpi']:.4f}{'✓' if r['fpi_safe'] else '✗'}"
+            for r in row["refresh"]
+        )
+        lines.append(
+            f"| {row['n']} | {_pct(row['single_frame_ocr'])} | {_pct(row['full_cycle_ocr'])} | "
+            f"{row['entropy_ratio']:.3f} | {fpis} |"
+        )
+    rec = psec.get("recommended", {})
+    if rec.get("n") is not None:
+        lines.append(
+            f"\nRecommended: n={rec['n']} @ {rec['refresh_hz']}Hz "
+            f"(FPI {rec['fpi']:.4f}, single-frame MI {rec['entropy_ratio']:.3f})"
+        )
+
+
+def _render_supplemental_details(lines: list[str], supplemental: dict) -> None:
+    detail = {
+        name: entry for name, entry in supplemental.items()
+        if entry.get("available")
+        and any("char_accuracy" in row for row in entry.get("rows", []))
+    }
+    if not detail:
+        return
+    lines.extend(["", "### Supplemental Ablation Detail", ""])
+    for name, entry in detail.items():
+        rows = [row for row in entry.get("rows", []) if "char_accuracy" in row]
+        lines.extend([
+            "",
+            f"#### {name}",
+            "",
+            "| Condition | Char recovery | Leak rate char>=20% | Errors |",
+            "|---|---:|---:|---:|",
+        ])
+        for row in rows:
+            lines.append(
+                f"| {row['name']} | "
+                f"{_pct_ci(row['char_accuracy'], row.get('char_accuracy_ci95', {}))} | "
+                f"{_pct(row.get('leak_rate_char_ge_20pct', 0.0))} | "
+                f"{row.get('error_count', 0)} |"
+            )
 
 
 def write_publication_summary(
@@ -471,6 +710,7 @@ def _supplemental_rows(report: dict) -> list[dict]:
                 rows.append({
                     "name": key,
                     "char_accuracy": _stat_mean(value.get("char_accuracy")),
+                    "char_accuracy_ci95": _ci(value.get("char_accuracy", {}).get("ci95", {})),
                     "leak_rate_char_ge_20pct": _stat_mean(value.get("leak_rate_char_ge_20pct")),
                     "error_count": int(value.get("error_count", 0)),
                 })
@@ -478,6 +718,7 @@ def _supplemental_rows(report: dict) -> list[dict]:
                 rows.append({
                     "name": key,
                     "char_accuracy": _stat_mean(value.get("single_frame_ocr")),
+                    "char_accuracy_ci95": _ci(value.get("single_frame_ocr", {}).get("ci95", {})),
                     "leak_rate_char_ge_20pct": _stat_mean(value.get("leak_rate_char_ge_20pct")),
                     "error_count": int(value.get("error_count", 0)),
                 })
@@ -485,6 +726,7 @@ def _supplemental_rows(report: dict) -> list[dict]:
                 rows.append({
                     "name": key,
                     "char_accuracy": _stat_mean(value),
+                    "char_accuracy_ci95": _ci(value.get("ci95", {})),
                     "leak_rate_char_ge_20pct": 0.0,
                     "error_count": 0,
                 })
@@ -501,6 +743,7 @@ def _supplemental_rows(report: dict) -> list[dict]:
                         rows.append({
                             "name": f"{key}/{nested_key}",
                             "char_accuracy": _stat_mean(nested_value.get("char_accuracy")),
+                            "char_accuracy_ci95": _ci(nested_value.get("char_accuracy", {}).get("ci95", {})),
                             "leak_rate_char_ge_20pct": _stat_mean(nested_value.get("leak_rate_char_ge_20pct")),
                             "error_count": int(nested_value.get("error_count", 0)),
                         })
@@ -521,7 +764,8 @@ def _supplemental_rows(report: dict) -> list[dict]:
 def _format_supplemental_row(row: dict) -> str:
     if "char_accuracy" in row:
         return (
-            f"{row['name']}: char recovery {_pct(row['char_accuracy'])}, "
+            f"{row['name']}: char recovery "
+            f"{_pct_ci(row['char_accuracy'], row.get('char_accuracy_ci95', {}))}, "
             f"leak {_pct(row['leak_rate_char_ge_20pct'])}, errors {row['error_count']}"
         )
     if "readability_1_5" in row:

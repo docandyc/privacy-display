@@ -74,6 +74,49 @@ def test_vlm_client_sends_openai_compatible_image_payload_without_ground_truth()
     assert result["usage"]["total_tokens"] == 12
 
 
+def test_vlm_client_falls_back_when_model_rejects_json_mode():
+    """GLM-4.5V style models reject response_format; client must retry plainly."""
+    calls = []
+
+    def fake_transport(url, payload, headers, timeout):
+        calls.append("json" if "response_format" in payload else "plain")
+        if "response_format" in payload:
+            raise RuntimeError(
+                "VLM API request failed with status 400: "
+                '{"code":20024,"message":"Json mode is not supported for this model."}'
+            )
+        return {
+            "choices": [
+                {"message": {"content": '<|begin_of_box|>{"visible_text": "HELLO"}<|end_of_box|>'}}
+            ],
+            "usage": {},
+        }
+
+    client = VLMClient(api_key="test-key", transport=fake_transport)
+    first = client.analyze_image(np.full((8, 8, 3), 255, dtype=np.uint8), ground_truth="HELLO")
+    second = client.analyze_image(np.full((8, 8, 3), 255, dtype=np.uint8), ground_truth="HELLO")
+
+    # First call attempts JSON mode, gets rejected, retries plainly and succeeds.
+    assert calls == ["json", "plain", "plain"]
+    # The decision is cached: the second call skips the doomed JSON attempt.
+    assert client._send_json_mode is False
+    assert first["visible_text"] == "HELLO"
+    assert second["visible_text"] == "HELLO"
+
+
+def test_vlm_client_forced_json_mode_off_never_sends_response_format():
+    captured = {}
+
+    def fake_transport(url, payload, headers, timeout):
+        captured["payload"] = payload
+        return {"choices": [{"message": {"content": '{"visible_text": "X"}'}}], "usage": {}}
+
+    client = VLMClient(api_key="test-key", transport=fake_transport, json_mode=False)
+    client.analyze_image(np.zeros((4, 4, 3), dtype=np.uint8))
+
+    assert "response_format" not in captured["payload"]
+
+
 def test_vlm_client_requires_env_api_key_without_leaking_secret(monkeypatch):
     monkeypatch.delenv("SILICONFLOW_API_KEY", raising=False)
     client = VLMClient(transport=lambda *_args: {})

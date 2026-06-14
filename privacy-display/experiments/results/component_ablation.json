@@ -2,104 +2,104 @@
   "config": {
     "n": 4,
     "epsilon": 0.03137254901960784,
-    "n_samples": 9,
+    "n_samples": 120,
     "leak": 0.75,
     "leak_epsilon": 0.3764705882352941,
     "sample_policy": {
       "strategy": "stratified_samples_per_category",
       "field": "category",
-      "max_samples": 16,
-      "samples_per_category": 1,
-      "n_selected": 9
+      "max_samples": 120,
+      "samples_per_category": 20,
+      "n_selected": 120
     }
   },
   "summary": {
     "baseline": {
-      "mean": 0.928928619881001,
-      "std": 0.07587911424817326,
-      "count": 9,
+      "mean": 0.939721619430126,
+      "std": 0.09063123336915065,
+      "count": 120,
       "ci95": {
-        "low": 0.8775510204081632,
-        "high": 0.9721911884411885,
-        "half_width": 0.04732008401651261,
+        "low": 0.9229871434561528,
+        "high": 0.9561324619879588,
+        "half_width": 0.016572659265902956,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "single_mask_only": {
-      "mean": 0.002252252252252251,
-      "std": 0.006370331362040965,
-      "count": 9,
+      "mean": 0.00048591029108773474,
+      "std": 0.0023726119589606597,
+      "count": 120,
       "ci95": {
-        "low": 0.0,
-        "high": 0.006756756756756753,
-        "half_width": 0.0033783783783783764,
+        "low": 0.00011163664514179961,
+        "high": 0.0009721872893386527,
+        "half_width": 0.0004302753220984265,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "single_mask_noise": {
-      "mean": 0.0,
-      "std": 0.0,
-      "count": 9,
+      "mean": 0.00041869061145386746,
+      "std": 0.002132534287679114,
+      "count": 120,
       "ci95": {
-        "low": 0.0,
-        "high": 0.0,
-        "half_width": 0.0,
+        "low": 8.460897636155355e-05,
+        "high": 0.0008401381187279844,
+        "half_width": 0.0003777645711832154,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "inpaint_mask_only": {
-      "mean": 0.42813398989218154,
-      "std": 0.32154366405904194,
-      "count": 9,
+      "mean": 0.5086301054612267,
+      "std": 0.3356778196771958,
+      "count": 120,
       "ci95": {
-        "low": 0.22165312328290315,
-        "high": 0.636957160241474,
-        "half_width": 0.2076520184792854,
+        "low": 0.4469793014946694,
+        "high": 0.5680662751981644,
+        "half_width": 0.06054348685174751,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "inpaint_noise_pedestal": {
-      "mean": 0.0,
-      "std": 0.0,
-      "count": 9,
+      "mean": 0.0004336846728151073,
+      "std": 0.003376750842346694,
+      "count": 120,
       "ci95": {
         "low": 0.0,
-        "high": 0.0,
-        "half_width": 0.0,
+        "high": 0.001120855292050938,
+        "half_width": 0.000560427646025469,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "inpaint_noise_no_pedestal": {
-      "mean": 0.12395923054837782,
-      "std": 0.30459924689648266,
-      "count": 9,
+      "mean": 0.09567713381580364,
+      "std": 0.26121772404869925,
+      "count": 120,
       "ci95": {
-        "low": 0.0,
-        "high": 0.3564455928797014,
-        "half_width": 0.1782227964398507,
+        "low": 0.049433720738188754,
+        "high": 0.14725915406336754,
+        "half_width": 0.048912716662589395,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "long_exposure_no_inv": {
-      "mean": 0.928928619881001,
-      "std": 0.07587911424817326,
-      "count": 9,
+      "mean": 0.943090936820825,
+      "std": 0.08699781515873588,
+      "count": 120,
       "ci95": {
-        "low": 0.8775510204081632,
-        "high": 0.9721911884411885,
-        "half_width": 0.04732008401651261,
+        "low": 0.9266637583504804,
+        "high": 0.9589929908599296,
+        "half_width": 0.016164616254724595,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
@@ -108,7 +108,7 @@
     "long_exposure_with_inv": {
       "mean": 0.0,
       "std": 0.0,
-      "count": 9,
+      "count": 120,
       "ci95": {
         "low": 0.0,
         "high": 0.0,
@@ -119,52 +119,52 @@
       }
     },
     "ae_real_subframe_no_black": {
-      "mean": 0.002252252252252251,
-      "std": 0.006370331362040965,
-      "count": 9,
+      "mean": 0.0006723137998596644,
+      "std": 0.0031185689539909873,
+      "count": 120,
       "ci95": {
-        "low": 0.0,
-        "high": 0.006756756756756753,
-        "half_width": 0.0033783783783783764,
+        "low": 0.00019664189862125917,
+        "high": 0.0013038610497692346,
+        "half_width": 0.0005536095755739877,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "ae_real_subframe_with_black": {
-      "mean": 0.002252252252252251,
-      "std": 0.006370331362040965,
-      "count": 9,
+      "mean": 0.00020705932526117788,
+      "std": 0.0012047150265936655,
+      "count": 120,
       "ci95": {
-        "low": 0.0,
-        "high": 0.006756756756756753,
-        "half_width": 0.0033783783783783764,
+        "low": 2.1477663230240474e-05,
+        "high": 0.000449683857663743,
+        "half_width": 0.00021410309721675127,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "weak_mask_only": {
-      "mean": 0.43107142857142855,
-      "std": 0.48246356176956423,
-      "count": 9,
+      "mean": 0.32202040735322474,
+      "std": 0.44987007942945795,
+      "count": 120,
       "ci95": {
-        "low": 0.111,
-        "high": 0.755515873015873,
-        "half_width": 0.3222579365079365,
+        "low": 0.24207987078406487,
+        "high": 0.40426752588799797,
+        "half_width": 0.08109382755196655,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000
       }
     },
     "weak_mask_noise": {
-      "mean": 0.378513596013596,
-      "std": 0.20305235132823682,
-      "count": 9,
+      "mean": 0.2683470304083683,
+      "std": 0.24520792401587693,
+      "count": 120,
       "ci95": {
-        "low": 0.21924924924924924,
-        "high": 0.4904015774015774,
-        "half_width": 0.13557616407616407,
+        "low": 0.2245278384236161,
+        "high": 0.31061614434323603,
+        "half_width": 0.04304415295980997,
         "confidence": 0.95,
         "method": "bootstrap_percentile",
         "resamples": 2000

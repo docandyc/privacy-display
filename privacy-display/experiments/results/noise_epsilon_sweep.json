@@ -1,0 +1,784 @@
+{
+  "config": {
+    "n": 4,
+    "epsilons": [
+      0.0,
+      0.007843,
+      0.015686,
+      0.031373,
+      0.062745,
+      0.12549,
+      0.25098,
+      0.376471
+    ],
+    "refresh_hz": 240.0,
+    "fpi": 0.03,
+    "leak": 0.75,
+    "n_samples": 45,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 60,
+      "samples_per_category": 5,
+      "n_selected": 45
+    },
+    "axes": {
+      "usability": "delta_e/ssim/temporal_mod (lower delta_e/temporal_mod = better)",
+      "security": "weak_mask_noise_ocr (lower = safer); noise_margin = mask_only - mask_noise"
+    }
+  },
+  "summary": {
+    "eps_0.0000": {
+      "epsilon": 0.0,
+      "delta_e": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 45,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.39689661860466,
+        "std": 0.007916692678089773,
+        "count": 45,
+        "ci95": {
+          "low": 0.39456366022427874,
+          "high": 0.3992238759001096,
+          "half_width": 0.0023301078379154294,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.0078": {
+      "epsilon": 0.007843,
+      "delta_e": {
+        "mean": 0.8356187668002243,
+        "std": 0.1716752977074213,
+        "count": 45,
+        "ci95": {
+          "low": 0.7871618541538181,
+          "high": 0.8853138255648337,
+          "half_width": 0.04907598570550781,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9969650589444865,
+        "std": 0.0031281616759744404,
+        "count": 45,
+        "ci95": {
+          "low": 0.9960214017586186,
+          "high": 0.9978653000401816,
+          "half_width": 0.000921949140781475,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.39690515134069654,
+        "std": 0.007914900179018997,
+        "count": 45,
+        "ci95": {
+          "low": 0.3945728203488721,
+          "high": 0.3992318516638544,
+          "half_width": 0.002329515657491149,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0003623188405797099,
+        "std": 0.002403351297358983,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0010869565217391298,
+          "half_width": 0.0005434782608695649,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.3168431399850389,
+        "std": 0.44118715370780076,
+        "count": 45,
+        "ci95": {
+          "low": 0.19884223985890653,
+          "high": 0.4482977748701821,
+          "half_width": 0.12472776750563777,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": -0.022674603174603174,
+        "std": 0.08846706031567314,
+        "count": 45,
+        "ci95": {
+          "low": -0.050507936507936516,
+          "high": -0.00045099206349207336,
+          "half_width": 0.025028472222222223,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.0157": {
+      "epsilon": 0.015686,
+      "delta_e": {
+        "mean": 0.8346438487042526,
+        "std": 0.17032009182021504,
+        "count": 45,
+        "ci95": {
+          "low": 0.786562603202971,
+          "high": 0.8844820063790293,
+          "half_width": 0.04895970158802915,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9973769525115822,
+        "std": 0.0026416259814602827,
+        "count": 45,
+        "ci95": {
+          "low": 0.9965739359148804,
+          "high": 0.99812617274393,
+          "half_width": 0.0007761184145247957,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.39693740672535366,
+        "std": 0.007909419631733692,
+        "count": 45,
+        "ci95": {
+          "low": 0.39460652669270835,
+          "high": 0.3992606374952528,
+          "half_width": 0.002327055401272232,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0010121997277420859,
+        "std": 0.004953410231705344,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0025772158308016674,
+          "half_width": 0.0012886079154008337,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.317918614619337,
+        "std": 0.44272441667955736,
+        "count": 45,
+        "ci95": {
+          "low": 0.19882608932461876,
+          "high": 0.44959375972611276,
+          "half_width": 0.125383835200747,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": -0.023750077808901343,
+        "std": 0.08854870525585594,
+        "count": 45,
+        "ci95": {
+          "low": -0.05192966853408029,
+          "high": -0.0015899354186118928,
+          "half_width": 0.025169866557734198,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.0314": {
+      "epsilon": 0.031373,
+      "delta_e": {
+        "mean": 0.5468538008331911,
+        "std": 0.16994017554994015,
+        "count": 45,
+        "ci95": {
+          "low": 0.49701621370125854,
+          "high": 0.5959446143806856,
+          "half_width": 0.04946420033971352,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9961237966019114,
+        "std": 0.004395967916244055,
+        "count": 45,
+        "ci95": {
+          "low": 0.9948092269101289,
+          "high": 0.9973253129178926,
+          "half_width": 0.0012580430038818813,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.3967038439379798,
+        "std": 0.007643774351082183,
+        "count": 45,
+        "ci95": {
+          "low": 0.3944784198204676,
+          "high": 0.39896148486269845,
+          "half_width": 0.002241532521115419,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.00027777777777777805,
+        "std": 0.0018425693279752236,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.000833333333333334,
+          "half_width": 0.000416666666666667,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.3064804986322014,
+        "std": 0.4185227759684082,
+        "count": 45,
+        "ci95": {
+          "low": 0.18809912854030503,
+          "high": 0.4355681530214425,
+          "half_width": 0.12373451224056872,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": -0.012311961821765744,
+        "std": 0.1547763399522959,
+        "count": 45,
+        "ci95": {
+          "low": -0.055821208112874776,
+          "high": 0.0326120123975516,
+          "half_width": 0.04421661025521319,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.0627": {
+      "epsilon": 0.062745,
+      "delta_e": {
+        "mean": 2.074777939489119,
+        "std": 0.6865265912169837,
+        "count": 45,
+        "ci95": {
+          "low": 1.8785136555816901,
+          "high": 2.2794587491026173,
+          "half_width": 0.20047254676046355,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9017080530122408,
+        "std": 0.12253773693670998,
+        "count": 45,
+        "ci95": {
+          "low": 0.8659215284041873,
+          "high": 0.9336437114442547,
+          "half_width": 0.03386109152003369,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.3923233542177412,
+        "std": 0.005206092903284477,
+        "count": 45,
+        "ci95": {
+          "low": 0.39076763389839064,
+          "high": 0.3938404874669181,
+          "half_width": 0.001536426784263717,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0013624338624338625,
+        "std": 0.005153572241689462,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0030029761904761883,
+          "half_width": 0.0015014880952380941,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.28908889640726587,
+        "std": 0.38357965446146197,
+        "count": 45,
+        "ci95": {
+          "low": 0.18555673266457584,
+          "high": 0.4084739692368175,
+          "half_width": 0.11145861828612083,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": 0.005079640403169812,
+        "std": 0.2044844873499936,
+        "count": 45,
+        "ci95": {
+          "low": -0.05094091461370873,
+          "high": 0.06666557734204792,
+          "half_width": 0.058803245977878324,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.1255": {
+      "epsilon": 0.12549,
+      "delta_e": {
+        "mean": 6.397735441287305,
+        "std": 1.8223401851761785,
+        "count": 45,
+        "ci95": {
+          "low": 5.875652821812538,
+          "high": 6.916405322086105,
+          "half_width": 0.5203762501367835,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.5756173548904415,
+        "std": 0.20064463936835847,
+        "count": 45,
+        "ci95": {
+          "low": 0.516505736036721,
+          "high": 0.6355531362696579,
+          "half_width": 0.05952370011646846,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.3718845115767585,
+        "std": 0.0031240544314032025,
+        "count": 45,
+        "ci95": {
+          "low": 0.37096328026718567,
+          "high": 0.37277929743131,
+          "half_width": 0.0009080085820621642,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.22829112037677565,
+        "std": 0.2862712644217461,
+        "count": 45,
+        "ci95": {
+          "low": 0.15054608430116687,
+          "high": 0.31630459987113757,
+          "half_width": 0.08287925778498535,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": 0.06587741643365998,
+        "std": 0.28248172834330515,
+        "count": 45,
+        "ci95": {
+          "low": -0.01234528950056556,
+          "high": 0.15308494778928214,
+          "half_width": 0.08271511864492385,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.2510": {
+      "epsilon": 0.25098,
+      "delta_e": {
+        "mean": 14.50555130319617,
+        "std": 2.375600573813977,
+        "count": 45,
+        "ci95": {
+          "low": 13.82489317823761,
+          "high": 15.17287190865491,
+          "half_width": 0.6739893652086497,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.3861384824890215,
+        "std": 0.20982494181045858,
+        "count": 45,
+        "ci95": {
+          "low": 0.32396752893192876,
+          "high": 0.4497148190286755,
+          "half_width": 0.06287364504837337,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.32906821701261735,
+        "std": 0.004636211140007522,
+        "count": 45,
+        "ci95": {
+          "low": 0.32772132014234856,
+          "high": 0.33047670561406345,
+          "half_width": 0.0013776927358574442,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0002923976608187137,
+        "std": 0.0019395466610265517,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0008771929824561412,
+          "half_width": 0.0004385964912280706,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.3045827734055472,
+        "std": 0.23750636582612097,
+        "count": 45,
+        "ci95": {
+          "low": 0.2294968070497639,
+          "high": 0.37115852631572066,
+          "half_width": 0.07083085963297837,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": -0.01041423659511153,
+        "std": 0.375843727080901,
+        "count": 45,
+        "ci95": {
+          "low": -0.11497381510983902,
+          "high": 0.09874386381176475,
+          "half_width": 0.10685883946080188,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "eps_0.3765": {
+      "epsilon": 0.376471,
+      "delta_e": {
+        "mean": 23.52635647467795,
+        "std": 2.3074299723333347,
+        "count": 45,
+        "ci95": {
+          "low": 22.858247791317265,
+          "high": 24.185597236194184,
+          "half_width": 0.6636747224384596,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.29310263833578226,
+        "std": 0.19191844485646176,
+        "count": 45,
+        "ci95": {
+          "low": 0.23700429063698858,
+          "high": 0.35296855459052895,
+          "half_width": 0.057982131976770185,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "temporal_mod": {
+        "mean": 0.2908861464924283,
+        "std": 0.012919853749837795,
+        "count": 45,
+        "ci95": {
+          "low": 0.28712117181883917,
+          "high": 0.2946983736919032,
+          "half_width": 0.0037886009365320217,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.00030864197530864213,
+        "std": 0.0020472992533058032,
+        "count": 45,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0009259259259259263,
+          "half_width": 0.00046296296296296314,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_only_ocr": {
+        "mean": 0.2941685368104357,
+        "std": 0.44018854092654536,
+        "count": 45,
+        "ci95": {
+          "low": 0.18045193628133516,
+          "high": 0.4258277145068553,
+          "half_width": 0.12268788911276007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "weak_mask_noise_ocr": {
+        "mean": 0.26156037332919824,
+        "std": 0.24498023956791398,
+        "count": 45,
+        "ci95": {
+          "low": 0.18763395318705847,
+          "high": 0.33038035181987424,
+          "half_width": 0.07137319931640788,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "noise_margin": {
+        "mean": 0.032608163481237434,
+        "std": 0.3437020025387332,
+        "count": 45,
+        "ci95": {
+          "low": -0.06015483006369295,
+          "high": 0.13214480815075721,
+          "half_width": 0.09614981910722509,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    }
+  }
+}

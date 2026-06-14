@@ -1,0 +1,229 @@
+{
+  "config": {
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "gammas": [
+      1.0,
+      2.0,
+      4.0
+    ],
+    "n_samples": 120,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 120,
+      "samples_per_category": 20,
+      "n_selected": 120
+    },
+    "note": "gamma=1.0 is the deployed backlight-only model (integration boost=n)."
+  },
+  "summary": {
+    "gamma_1.00": {
+      "gamma": 1.0,
+      "integration_boost": 4.0,
+      "delta_e": {
+        "mean": 0.3533813567442301,
+        "std": 0.20061355926458946,
+        "count": 120,
+        "ci95": {
+          "low": 0.31890312014881905,
+          "high": 0.39092868437641154,
+          "half_width": 0.03601278211379624,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.9963103359048977,
+        "std": 0.004696774968412951,
+        "count": 120,
+        "ci95": {
+          "low": 0.9954699049821638,
+          "high": 0.9971298049374276,
+          "half_width": 0.0008299499776319164,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "clip_fraction": {
+        "mean": 0.025039058818636033,
+        "std": 0.044227186272068446,
+        "count": 120,
+        "ci95": {
+          "low": 0.01729190488574776,
+          "high": 0.032950073798924714,
+          "half_width": 0.007829084456588477,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0003757119118459345,
+        "std": 0.0020975491495633363,
+        "count": 120,
+        "ci95": {
+          "low": 5.482456140350871e-05,
+          "high": 0.0008062608353331071,
+          "half_width": 0.0003757181369647992,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.9433488733287615,
+        "std": 0.08822748103556763,
+        "count": 120,
+        "ci95": {
+          "low": 0.9266875086409515,
+          "high": 0.9596016755526148,
+          "half_width": 0.016457083455831634,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "gamma_2.00": {
+      "gamma": 2.0,
+      "integration_boost": 2.0,
+      "delta_e": {
+        "mean": 27.06129500760343,
+        "std": 0.8283648790372049,
+        "count": 120,
+        "ci95": {
+          "low": 26.907799860745417,
+          "high": 27.208466267219382,
+          "half_width": 0.15033320323698263,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.7393521572306858,
+        "std": 0.06412850180155573,
+        "count": 120,
+        "ci95": {
+          "low": 0.7274296242429449,
+          "high": 0.7509028815202183,
+          "half_width": 0.011736628638636726,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "clip_fraction": {
+        "mean": 0.24248261813226515,
+        "std": 0.002596707479201068,
+        "count": 120,
+        "ci95": {
+          "low": 0.2420156918603188,
+          "high": 0.24292327766034846,
+          "half_width": 0.00045379290001483497,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0005107477773718184,
+        "std": 0.003627001783871073,
+        "count": 120,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0013131774448909993,
+          "half_width": 0.0006565887224454996,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.8968180051441054,
+        "std": 0.18677210612243156,
+        "count": 120,
+        "ci95": {
+          "low": 0.8626238262468799,
+          "high": 0.9283997576407779,
+          "half_width": 0.03288796569694896,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "gamma_4.00": {
+      "gamma": 4.0,
+      "integration_boost": 1.0,
+      "delta_e": {
+        "mean": 49.28343700212972,
+        "std": 0.8589571900989331,
+        "count": 120,
+        "ci95": {
+          "low": 49.128078991793814,
+          "high": 49.432683135178415,
+          "half_width": 0.1523020716923007,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 0.4826849759315568,
+        "std": 0.04984058615856665,
+        "count": 120,
+        "ci95": {
+          "low": 0.47375351948118943,
+          "high": 0.49154739829030886,
+          "half_width": 0.008896939404559712,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "clip_fraction": {
+        "mean": 0.24468963806876348,
+        "std": 0.0021094020556164475,
+        "count": 120,
+        "ci95": {
+          "low": 0.24431262065626225,
+          "high": 0.24505080149273648,
+          "half_width": 0.0003690904182371141,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "single_frame_ocr": {
+        "mean": 0.0005526724419745015,
+        "std": 0.003621022847098202,
+        "count": 120,
+        "ci95": {
+          "low": 5.482456140350871e-05,
+          "high": 0.0013551967554756446,
+          "half_width": 0.000650186097036068,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "full_cycle_ocr": {
+        "mean": 0.5776337670658687,
+        "std": 0.41704451808892323,
+        "count": 120,
+        "ci95": {
+          "low": 0.5001770297005258,
+          "high": 0.6542264714971322,
+          "half_width": 0.0770247208983032,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    }
+  }
+}

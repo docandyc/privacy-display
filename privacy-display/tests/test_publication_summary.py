@@ -5,6 +5,9 @@ from src.evaluation.publication_summary import (
     SUMMARY_MD,
     build_publication_summary,
     render_markdown,
+    summarize_ocr_strata,
+    summarize_pareto_security,
+    summarize_vlm_model_ablation,
     write_publication_summary,
 )
 
@@ -167,3 +170,87 @@ def test_publication_summary_marks_all_error_vlm_result_uncitable(tmp_path):
     assert summary["vlm"]["available"] is False
     assert summary["vlm"]["reason"] == "all_calls_failed"
     assert "all live API calls failed" in markdown
+
+
+def test_summarize_ocr_strata_surfaces_per_stratum_rows():
+    report = {
+        "tesseract": {
+            "strata": {
+                "category": {
+                    "code": {
+                        "original": {"mean": 0.9, "count": 10, "ci95": {"low": 0.85, "high": 0.95, "method": "bootstrap"}},
+                        "subframe": {"mean": 0.0, "count": 10, "ci95": {"low": 0.0, "high": 0.0, "method": "bootstrap"}},
+                        "reduction": {"mean": 0.9},
+                    }
+                }
+            }
+        }
+    }
+    out = summarize_ocr_strata(report)
+    assert out["available"] is True
+    assert out["engine"] == "tesseract"
+    row = out["fields"]["category"][0]
+    assert row["value"] == "code"
+    assert row["original_mean"] == 0.9
+    assert row["subframe_mean"] == 0.0
+    assert row["original_ci95"]["method"] == "bootstrap"
+
+
+def test_summarize_ocr_strata_handles_missing_strata():
+    assert summarize_ocr_strata({"tesseract": {}})["available"] is False
+    assert summarize_ocr_strata({})["available"] is False
+
+
+def test_summarize_pareto_security_groups_by_n():
+    report = {
+        "configs": [
+            {"n": 4, "refresh_hz": 240, "single_frame_ocr": 0.0, "full_cycle_ocr": 0.92, "entropy_ratio": 0.4, "fpi": 0.03, "fpi_safe": True},
+            {"n": 4, "refresh_hz": 144, "single_frame_ocr": 0.0, "full_cycle_ocr": 0.92, "entropy_ratio": 0.4, "fpi": 0.30, "fpi_safe": False},
+            {"n": 2, "refresh_hz": 240, "single_frame_ocr": 0.0, "full_cycle_ocr": 0.92, "entropy_ratio": 0.57, "fpi": 0.005, "fpi_safe": True},
+        ],
+        "recommended": {"n": 4, "refresh_hz": 240, "fpi": 0.03, "entropy_ratio": 0.4},
+    }
+    out = summarize_pareto_security(report)
+    assert out["available"] is True
+    assert [r["n"] for r in out["rows"]] == [2, 4]
+    row4 = next(r for r in out["rows"] if r["n"] == 4)
+    assert len(row4["refresh"]) == 2
+    assert out["recommended"]["n"] == 4
+
+
+def test_summarize_pareto_security_handles_missing():
+    assert summarize_pareto_security(None)["available"] is False
+    assert summarize_pareto_security({})["available"] is False
+
+
+def test_summarize_vlm_model_ablation_builds_exact_match_matrix():
+    report = {
+        "config": {
+            "models": ["org/A", "org/B"],
+            "attacks": ["global_shutter_slot0", "temporal_average_cycle"],
+        },
+        "models": {
+            "org/A": {"summary": {"attacks": {
+                "global_shutter_slot0": {"exact_match": {"mean": 0.0}},
+                "temporal_average_cycle": {"exact_match": {"mean": 0.93}},
+            }}},
+            "org/B": {"summary": {"attacks": {
+                # char-acc on a blank frame would be nonzero here, but exact_match is 0
+                "global_shutter_slot0": {"exact_match": {"mean": 0.0}},
+                "temporal_average_cycle": {"exact_match": {"mean": 1.0}},
+            }}},
+        },
+    }
+    out = summarize_vlm_model_ablation(report)
+    assert out["available"] is True
+    assert out["metric"] == "exact_match"
+    assert out["models"] == ["org/A", "org/B"]
+    single = next(r for r in out["rows"] if r["attack"] == "global_shutter_slot0")
+    assert [c["exact_match"] for c in single["cells"]] == [0.0, 0.0]
+    full = next(r for r in out["rows"] if r["attack"] == "temporal_average_cycle")
+    assert [c["exact_match"] for c in full["cells"]] == [0.93, 1.0]
+
+
+def test_summarize_vlm_model_ablation_handles_missing():
+    assert summarize_vlm_model_ablation(None)["available"] is False
+    assert summarize_vlm_model_ablation({})["available"] is False

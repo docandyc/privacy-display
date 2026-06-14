@@ -1,0 +1,295 @@
+{
+  "config": {
+    "n": 4,
+    "block_sizes": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "pool": 25,
+    "n_samples": 120,
+    "sample_policy": {
+      "strategy": "stratified_samples_per_category",
+      "field": "category",
+      "max_samples": 120,
+      "samples_per_category": 20,
+      "n_selected": 120
+    },
+    "note": "block_size=1 is the deployed per-pixel assignment."
+  },
+  "summary": {
+    "block_1": {
+      "block_size": 1,
+      "single_frame_ocr": {
+        "mean": 0.0003457995047413037,
+        "std": 0.001565227517257613,
+        "count": 120,
+        "ci95": {
+          "low": 9.030963302752298e-05,
+          "high": 0.0006548259917560788,
+          "half_width": 0.0002822581793642779,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.25023187836959926,
+        "std": 7.748645864492206e-05,
+        "count": 120,
+        "ci95": {
+          "low": 0.2502181724423461,
+          "high": 0.25024538482808867,
+          "half_width": 1.3606192871273848e-05,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "pooled_flicker": {
+        "mean": 0.015628914436255425,
+        "std": 0.0004910764044516356,
+        "count": 120,
+        "ci95": {
+          "low": 0.015542514938199019,
+          "high": 0.01571644359432266,
+          "half_width": 8.69643280618209e-05,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "delta_e": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "block_2": {
+      "block_size": 2,
+      "single_frame_ocr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.2502872766281825,
+        "std": 0.00010058328071113216,
+        "count": 120,
+        "ci95": {
+          "low": 0.250270158687826,
+          "high": 0.2503040832955431,
+          "half_width": 1.696230385855868e-05,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "pooled_flicker": {
+        "mean": 0.030478065393703086,
+        "std": 0.0009793948137371926,
+        "count": 120,
+        "ci95": {
+          "low": 0.030310077011097027,
+          "high": 0.030654983450388102,
+          "half_width": 0.00017245321964553736,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "delta_e": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "block_4": {
+      "block_size": 4,
+      "single_frame_ocr": {
+        "mean": 0.001220008022506902,
+        "std": 0.005856992487329721,
+        "count": 120,
+        "ci95": {
+          "low": 0.0003205128205128205,
+          "high": 0.0023365603821635305,
+          "half_width": 0.001008023780825355,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.25038072051736576,
+        "std": 0.0001306050862624483,
+        "count": 120,
+        "ci95": {
+          "low": 0.2503586548672357,
+          "high": 0.25040341323644955,
+          "half_width": 2.237918460692989e-05,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "pooled_flicker": {
+        "mean": 0.05882302839146468,
+        "std": 0.0017631691968750848,
+        "count": 120,
+        "ci95": {
+          "low": 0.05851566137320586,
+          "high": 0.05912503916712664,
+          "half_width": 0.00030468889696039225,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "delta_e": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    },
+    "block_8": {
+      "block_size": 8,
+      "single_frame_ocr": {
+        "mean": 0.008077917008269203,
+        "std": 0.020254667597127157,
+        "count": 120,
+        "ci95": {
+          "low": 0.004842354750857823,
+          "high": 0.011701228562828021,
+          "half_width": 0.003429436905985099,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "entropy_ratio": {
+        "mean": 0.2505555929965333,
+        "std": 0.00023445158854004617,
+        "count": 120,
+        "ci95": {
+          "low": 0.250515226540537,
+          "high": 0.2505972602048714,
+          "half_width": 4.101683216720109e-05,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "pooled_flicker": {
+        "mean": 0.11133855946419993,
+        "std": 0.004062439004075216,
+        "count": 120,
+        "ci95": {
+          "low": 0.11064325515439435,
+          "high": 0.11209107571018587,
+          "half_width": 0.0007239102778957562,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "delta_e": {
+        "mean": 0.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 0.0,
+          "high": 0.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      },
+      "ssim": {
+        "mean": 1.0,
+        "std": 0.0,
+        "count": 120,
+        "ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "half_width": 0.0,
+          "confidence": 0.95,
+          "method": "bootstrap_percentile",
+          "resamples": 2000
+        }
+      }
+    }
+  }
+}

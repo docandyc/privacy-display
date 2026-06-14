@@ -84,6 +84,17 @@ def extract_json_object(text: str) -> dict:
     raise ValueError("VLM response does not contain a JSON object")
 
 
+# Markers SiliconFlow returns when a model cannot honour response_format JSON
+# mode (e.g. zai-org/GLM-4.5V -> HTTP 400 code 20024). Matched against the
+# sanitized error text raised by the transport.
+_JSON_MODE_UNSUPPORTED_MARKERS = ("json mode is not supported", "20024")
+
+
+def _is_json_mode_unsupported(error: Exception) -> bool:
+    text = str(error).casefold()
+    return any(marker in text for marker in _JSON_MODE_UNSUPPORTED_MARKERS)
+
+
 def _coerce_bool(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -111,12 +122,19 @@ class VLMClient:
         model: str = DEFAULT_VLM_MODEL,
         timeout: float = 60.0,
         transport: Transport | None = None,
+        json_mode: bool | None = None,
     ):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout = float(timeout)
         self.transport = transport or self._urllib_transport
+        # Whether to send response_format={"type":"json_object"}. None means
+        # auto-detect: try JSON mode, and if the model rejects it (e.g.
+        # SiliconFlow GLM-4.5V returns code 20024 "Json mode is not supported"),
+        # transparently retry without it and remember the decision for this
+        # client so the remaining calls skip the doomed first attempt.
+        self._send_json_mode: bool | None = json_mode
 
     @property
     def endpoint(self) -> str:
@@ -175,9 +193,8 @@ class VLMClient:
             ],
             "temperature": 0,
             "max_tokens": int(max_tokens),
-            "response_format": {"type": "json_object"},
         }
-        response = self.transport(self.endpoint, payload, self._headers(), self.timeout)
+        response = self._request_chat(payload)
         content = self._message_content(response)
         parsed = extract_json_object(content)
         visible_text = str(parsed.get("visible_text", "") or "").strip()
@@ -193,6 +210,29 @@ class VLMClient:
             "metrics": metrics,
             "usage": response.get("usage", {}),
         }
+
+    def _request_chat(self, payload: dict) -> dict:
+        """POST a chat payload, adding JSON mode unless the model rejects it."""
+        if self._send_json_mode is False:
+            return self.transport(self.endpoint, payload, self._headers(), self.timeout)
+
+        json_payload = dict(payload)
+        json_payload["response_format"] = {"type": "json_object"}
+        try:
+            response = self.transport(
+                self.endpoint, json_payload, self._headers(), self.timeout
+            )
+        except RuntimeError as exc:
+            if self._send_json_mode is None and _is_json_mode_unsupported(exc):
+                # Model does not support JSON mode; remember and retry plainly.
+                self._send_json_mode = False
+                return self.transport(
+                    self.endpoint, payload, self._headers(), self.timeout
+                )
+            raise
+        if self._send_json_mode is None:
+            self._send_json_mode = True
+        return response
 
     @staticmethod
     def _message_content(response: dict) -> str:

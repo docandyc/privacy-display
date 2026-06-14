@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-06-14T03:27:08.876695+00:00",
+  "generated_at_utc": "2026-06-14T09:33:45.138975+00:00",
   "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
   "git": {
-    "commit": "dae94a6d7f128a740623614f0c9fc0a1ba625007",
+    "commit": "ff3d64a790554ebdad2255ea3b8c24aafd445c00",
     "branch": "master",
     "dirty": true
   },
@@ -105,51 +105,91 @@
     },
     {
       "name": "component_ablation",
-      "command": "python experiments/component_ablation.py --max-samples 24",
+      "command": "python experiments/component_ablation.py --samples-per-category 20 --max-samples 120",
       "purpose": "Run systematic component contribution ablation.",
       "expected": "experiments/results/component_ablation.json"
     },
     {
       "name": "recognizer_generalization",
-      "command": "python experiments/recognizer_generalization.py --engines tesseract --max-samples 24",
+      "command": "python experiments/recognizer_generalization.py --engines tesseract --samples-per-category 20 --max-samples 120",
       "purpose": "Run recognizer/attack-frame matrix with offline-safe OCR engines.",
       "expected": "experiments/results/recognizer_generalization.json"
     },
     {
       "name": "perceptual_ablation",
-      "command": "python experiments/perceptual_ablation.py --max-samples 24",
+      "command": "python experiments/perceptual_ablation.py --samples-per-category 20 --max-samples 120",
       "purpose": "Run channel/perceptual side-channel ablation.",
       "expected": "experiments/results/perceptual_ablation.json"
     },
     {
       "name": "pareto_sweep",
-      "command": "python experiments/pareto_sweep.py --max-samples 24",
+      "command": "python experiments/pareto_sweep.py --samples-per-category 20 --max-samples 120",
       "purpose": "Run security/usability Pareto sweep.",
       "expected": "experiments/results/pareto_sweep.json and pareto_sweep.png"
     },
     {
       "name": "strong_attack_extra",
-      "command": "python experiments/strong_attack_extra.py --max-samples 24",
+      "command": "python experiments/strong_attack_extra.py --samples-per-category 20 --max-samples 120",
       "purpose": "Run rolling-shutter row-alignment and temporal-superresolution boundary checks.",
       "expected": "experiments/results/strong_attack_extra.json"
     },
     {
       "name": "adaptive_attack_ablation",
-      "command": "python experiments/adaptive_attack_ablation.py --max-samples 24",
+      "command": "python experiments/adaptive_attack_ablation.py --samples-per-category 20 --max-samples 120",
       "purpose": "Run adaptive single-frame OCR preprocessing attacks.",
       "expected": "experiments/results/adaptive_attack_ablation.json"
     },
     {
       "name": "camera_pipeline_ablation",
-      "command": "python experiments/camera_pipeline_ablation.py --max-samples 24",
+      "command": "python experiments/camera_pipeline_ablation.py --samples-per-category 20 --max-samples 120",
       "purpose": "Run simulated camera pipeline perturbation ablation.",
       "expected": "experiments/results/camera_pipeline_ablation.json"
     },
     {
       "name": "screen_privacy_baselines",
-      "command": "python experiments/screen_privacy_baselines.py --max-samples 24",
+      "command": "python experiments/screen_privacy_baselines.py --samples-per-category 20 --max-samples 120",
       "purpose": "Compare temporal masking against software baseline controls.",
       "expected": "experiments/results/screen_privacy_baselines.json"
+    },
+    {
+      "name": "noise_epsilon_sweep",
+      "command": "python experiments/noise_epsilon_sweep.py --samples-per-category 5 --max-samples 60",
+      "purpose": "Sweep the adversarial noise budget epsilon (perceptual cost vs weak-mask leakage margin).",
+      "expected": "experiments/results/noise_epsilon_sweep.json"
+    },
+    {
+      "name": "brightness_compensation_ablation",
+      "command": "python experiments/brightness_compensation_ablation.py --samples-per-category 20 --max-samples 120",
+      "purpose": "Ablate the brightness-compensation factor (backlight vs pixel-space compensation).",
+      "expected": "experiments/results/brightness_compensation_ablation.json"
+    },
+    {
+      "name": "mask_granularity_ablation",
+      "command": "python experiments/mask_granularity_ablation.py --samples-per-category 20 --max-samples 120",
+      "purpose": "Ablate mask spatial granularity (per-pixel vs b×b blocks): flicker vs leakage.",
+      "expected": "experiments/results/mask_granularity_ablation.json"
+    },
+    {
+      "name": "seed_sensitivity",
+      "command": "python experiments/seed_sensitivity.py --seeds 10 --samples-per-category 5 --max-samples 60",
+      "purpose": "Confirm metrics are PRNG-seed-invariant across independent keys.",
+      "expected": "experiments/results/seed_sensitivity.json"
+    },
+    {
+      "name": "vlm_model_ablation_dry_run",
+      "command": "python experiments/vlm_model_ablation.py --dry-run --samples-per-category 3",
+      "purpose": "Estimate multi-VLM model-ablation call count without requiring secrets.",
+      "expected": "Print model list, selected samples, attacks, and call count."
+    },
+    {
+      "name": "vlm_model_ablation_live",
+      "command": "python experiments/vlm_model_ablation.py --samples-per-category 3",
+      "purpose": "Run multi-VLM model-robustness ablation across VLM families.",
+      "expected": "experiments/results/vlm_model_ablation.json",
+      "requires_env": [
+        "SILICONFLOW_API_KEY"
+      ],
+      "secret_policy": "Do not record or commit the API key value."
     },
     {
       "name": "vlm_prompt_ablation_dry_run",
@@ -267,32 +307,32 @@
     {
       "path": "experiments/results/component_ablation.json",
       "exists": true,
-      "sha256": "3ff12c6d16979b7c1ac8e0674a4d41ae2217bf9bd7451faa5d13b2ed70e01bd0",
-      "bytes": 4341
+      "sha256": "cdeaf4eeda39e2d6b5bf71884e10d9fc4c48bb5a0256aa44be2ae1e33090068a",
+      "bytes": 4637
     },
     {
       "path": "experiments/results/recognizer_generalization.json",
       "exists": true,
-      "sha256": "141aca4aeb7f4bc52f6a49aca0927cb9911541f11a4d86e0a50f16e31a1e78dc",
-      "bytes": 36331
+      "sha256": "302eeeb0d5867ac420078901512f051df3c1a7a6915efc861c191f0a565acc73",
+      "bytes": 388068
     },
     {
       "path": "experiments/results/perceptual_ablation.json",
       "exists": true,
-      "sha256": "6b19e798e7506149aead244842b02f1f7a83a2c3511f70a3a59564ff1d65fdcf",
-      "bytes": 8524
+      "sha256": "dc3ee6f90be717124439ccee32e3606a2cb3adbae84e83650cd1dbd27266b6ef",
+      "bytes": 9079
     },
     {
       "path": "experiments/results/pareto_sweep.json",
       "exists": true,
-      "sha256": "6b4979ca802d95a3bd3db90649187e0ee33be968314ce24598f3b7efad37a0cc",
-      "bytes": 12979
+      "sha256": "a11467f921e28f0aafeab9c70d927066fab55c89bdec14708c3d739dc7b04e10",
+      "bytes": 13060
     },
     {
       "path": "experiments/results/pareto_sweep.png",
       "exists": true,
-      "sha256": "20f4678696fbdc03e05b271d0582785e397ad7ce2027b8b37a663834bdc56b7e",
-      "bytes": 57158
+      "sha256": "c28972f626103d0443ac2a1ff24b40969b6bb38fa5888740db9db125950b529d",
+      "bytes": 57996
     },
     {
       "path": "experiments/results/strong_attack_extra.json",
@@ -303,14 +343,14 @@
     {
       "path": "experiments/results/adaptive_attack_ablation.json",
       "exists": true,
-      "sha256": "01772f5f905cd96421876edf2c9ee1a671622e4abbc65587a0e7566061cfd038",
-      "bytes": 46425
+      "sha256": "a87833f0ffc2dcabdf1482b52ebfeb1d2ed90b7bf2f7177f1d354cf3599f484c",
+      "bytes": 484413
     },
     {
       "path": "experiments/results/camera_pipeline_ablation.json",
       "exists": true,
-      "sha256": "1eb74b442a6f686bd100910324b4e43ef01d012b9c66437909a67aac5f189f46",
-      "bytes": 53889
+      "sha256": "4e6ca028940f0f0fb15c6f1604d29e2e934385a2800cbd7e19262eeceaf6044a",
+      "bytes": 560783
     },
     {
       "path": "experiments/results/screen_privacy_baselines.json",
@@ -323,6 +363,36 @@
       "exists": true,
       "sha256": "286fce076d680620aad8632bde7e79a44f2093080367e8d16e1b98c69f120284",
       "bytes": 113751
+    },
+    {
+      "path": "experiments/results/noise_epsilon_sweep.json",
+      "exists": true,
+      "sha256": "97e309d0e80f57271988ff4b998f8d0123095d52e813050ad9f5976b89f41fc3",
+      "bytes": 21841
+    },
+    {
+      "path": "experiments/results/vlm_model_ablation.json",
+      "exists": true,
+      "sha256": "29b522567fbbf543173069020afba65d90fd720736b36cfc965f8a75efcb1d0b",
+      "bytes": 51833
+    },
+    {
+      "path": "experiments/results/brightness_compensation_ablation.json",
+      "exists": true,
+      "sha256": "7156db9a001a8581eb64913ab6337a55a937949758d1d37d6559a91616b09534",
+      "bytes": 6356
+    },
+    {
+      "path": "experiments/results/mask_granularity_ablation.json",
+      "exists": true,
+      "sha256": "9678417f880f784ccbdf66c89456f7c6a052625422c89db2a274ebf435891a9f",
+      "bytes": 7503
+    },
+    {
+      "path": "experiments/results/seed_sensitivity.json",
+      "exists": true,
+      "sha256": "389c291091dc810fb6727a123881f1d7555a365ca5297e7fe5b093672afae7aa",
+      "bytes": 2360
     },
     {
       "path": "experiments/results/usability_pilot.json",
@@ -339,14 +409,14 @@
     {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "9b351be5885e87c725cf5875d1d8bd9e99f88347426c21b54aca6e140e075fa5",
-      "bytes": 24904
+      "sha256": "10eb73607580c2ba2a1845bcf29b5448abe4c31d0da11658835d941a422959bc",
+      "bytes": 70460
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "15d39fc237719fbf63795c3666165918207b7397ba08a7e090039b7f38ed24b2",
-      "bytes": 3572
+      "sha256": "55411d39cfc8fc87bc65ed83c42559aa8bd478f85f85c267d582a9c30cf69237",
+      "bytes": 13305
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
@@ -377,8 +447,8 @@
     {
       "path": "scripts/reproduce_all.sh",
       "exists": true,
-      "sha256": "440c3c56c17d1a4b36de42d95e7fd8e6108806a3d2b978bf0bba5a794b33fd5a",
-      "bytes": 3810
+      "sha256": "8292a9a96bbba23c704d11fb0f2c3831b2b5c10457ab38669066ecfff6b495b4",
+      "bytes": 4859
     },
     {
       "path": "experiments/build_corpus.py",
@@ -477,6 +547,36 @@
       "bytes": 12821
     },
     {
+      "path": "experiments/noise_epsilon_sweep.py",
+      "exists": true,
+      "sha256": "87f54f7682a4c7a28066b3a71d0ac25974b1ae0796696cffec4dac47019030db",
+      "bytes": 8566
+    },
+    {
+      "path": "experiments/vlm_model_ablation.py",
+      "exists": true,
+      "sha256": "d7fdd636847c6d95a6904613532a632d055cfce4da03357ca8ace86a662ba761",
+      "bytes": 9433
+    },
+    {
+      "path": "experiments/brightness_compensation_ablation.py",
+      "exists": true,
+      "sha256": "ff94bd8597d03c4f6f039c265006f76a49ef5f5845e9133598f251e4484193f8",
+      "bytes": 8208
+    },
+    {
+      "path": "experiments/mask_granularity_ablation.py",
+      "exists": true,
+      "sha256": "26989f686ba1135fa30d9add0f6742038390775a2258170dbfe2a047059a64ef",
+      "bytes": 7934
+    },
+    {
+      "path": "experiments/seed_sensitivity.py",
+      "exists": true,
+      "sha256": "a02de4fc100e018f677948bb1c98591612a45d2e1433f71ca1de21aa5a042fb6",
+      "bytes": 7873
+    },
+    {
       "path": "experiments/usability_pilot.py",
       "exists": true,
       "sha256": "b5daf621013b5b662d2dcf79b15254681602cadfa60c03705457c14ff25d1d40",
@@ -515,8 +615,8 @@
     {
       "path": "src/evaluation/publication_summary.py",
       "exists": true,
-      "sha256": "c6d3382bec46193451fc03d6c4155e71b381485941f87e3e2daaa8127a89df8e",
-      "bytes": 21671
+      "sha256": "29af751d6073dfc6765b8a29a131a3c3bbb7e158773f09bd40ff2e27589c9fe6",
+      "bytes": 31958
     },
     {
       "path": "src/evaluation/vlm_benchmark.py",
@@ -539,8 +639,8 @@
     {
       "path": "src/evaluation/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "5d4f689f3be0a62f97b939eca4d33318e525f1d68c0cbc42e0def7c3f0e00b45",
-      "bytes": 15713
+      "sha256": "be4d41909ab0cba99d3b953aa672757d500a8bac26c0d481603bbedf295e9a54",
+      "bytes": 18551
     },
     {
       "path": "src/attack/camera_simulator.py",
@@ -557,8 +657,8 @@
     {
       "path": "src/attack/vlm_evaluator.py",
       "exists": true,
-      "sha256": "4be9066167d98404400feb8a3e0b8fc5f263b63fdac6886c0eeeebda9a87a2f2",
-      "bytes": 8350
+      "sha256": "97ab30085a3ea907c902483f700f7ccd0e037d86793471fcbf733c32ddf993a2",
+      "bytes": 10171
     }
   ],
   "secret_policy": {

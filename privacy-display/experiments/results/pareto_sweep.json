@@ -14,13 +14,13 @@
     "epsilons": [
       0.031372549
     ],
-    "max_samples": 8,
+    "max_samples": 120,
     "sample_policy": {
       "strategy": "stratified_samples_per_category",
       "field": "category",
-      "max_samples": 8,
-      "samples_per_category": 1,
-      "n_selected": 8
+      "max_samples": 120,
+      "samples_per_category": 20,
+      "n_selected": 120
     },
     "axes": {
       "usability": "fpi (lower better)",
@@ -34,49 +34,49 @@
     "effective_fps": 60.0,
     "fpi": 0.03333333333333333,
     "fpi_safe": true,
-    "delta_e": 0.5974436829596315,
-    "ssim": 0.999142404592321,
-    "entropy_ratio": 0.26307814781239114,
+    "delta_e": 0.6039429413995404,
+    "ssim": 0.9994634401121432,
+    "entropy_ratio": 0.2494912178398886,
     "single_frame_ocr": 0.0,
-    "full_cycle_ocr": 0.920044697366126,
+    "full_cycle_ocr": 0.9419905175426775,
     "pareto_optimal": true
   },
   "image_metrics_by_n_epsilon": {
     "n2_eps0.0314": {
       "delta_e": {
-        "mean": 0.8862223329152585,
-        "std": 0.40576722603094995,
-        "count": 8,
+        "mean": 0.41392804695225593,
+        "std": 0.3762779889527214,
+        "count": 120,
         "ci95": {
-          "low": 0.6187904375782372,
-          "high": 1.1863646245635604,
-          "half_width": 0.2837870934926616,
+          "low": 0.3483165250380799,
+          "high": 0.4834111594893853,
+          "half_width": 0.06754731722565269,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "ssim": {
-        "mean": 0.9451789448276937,
-        "std": 0.040192575564015016,
-        "count": 8,
+        "mean": 0.9843061386539418,
+        "std": 0.02908140643147278,
+        "count": 120,
         "ci95": {
-          "low": 0.9146082810642805,
-          "high": 0.9696070851589516,
-          "half_width": 0.02749940204733553,
+          "low": 0.9787383550386212,
+          "high": 0.9894396917320198,
+          "half_width": 0.005350668346699339,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "entropy_ratio": {
-        "mean": 0.5695272565006331,
-        "std": 0.07190921147421596,
-        "count": 8,
+        "mean": 0.5657140509665697,
+        "std": 0.06520717030842135,
+        "count": 120,
         "ci95": {
-          "low": 0.523686135755365,
-          "high": 0.6230483410610479,
-          "half_width": 0.049681102652841425,
+          "low": 0.5539658303866023,
+          "high": 0.576987550921672,
+          "half_width": 0.01151086026753484,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -85,7 +85,7 @@
       "single_frame_ocr": {
         "mean": 0.0,
         "std": 0.0,
-        "count": 8,
+        "count": 120,
         "ci95": {
           "low": 0.0,
           "high": 0.0,
@@ -96,13 +96,13 @@
         }
       },
       "full_cycle_ocr": {
-        "mean": 0.920044697366126,
-        "std": 0.07594095247770163,
-        "count": 8,
+        "mean": 0.9433798226819827,
+        "std": 0.08781600207020919,
+        "count": 120,
         "ci95": {
-          "low": 0.8648774092970521,
-          "high": 0.9705865766178267,
-          "half_width": 0.052854583660387255,
+          "low": 0.9264762015894655,
+          "high": 0.9594159464388398,
+          "half_width": 0.016469872424687115,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -111,65 +111,65 @@
     },
     "n4_eps0.0314": {
       "delta_e": {
-        "mean": 0.3627294363770919,
-        "std": 0.178491910509482,
-        "count": 8,
+        "mean": 0.34482213664964784,
+        "std": 0.20869835555643404,
+        "count": 120,
         "ci95": {
-          "low": 0.24604324572126376,
-          "high": 0.4934235359848905,
-          "half_width": 0.12369014513181338,
+          "low": 0.307328029278388,
+          "high": 0.38103524871581296,
+          "half_width": 0.03685360971871249,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "ssim": {
-        "mean": 0.9932564257390053,
-        "std": 0.005349298397328442,
-        "count": 8,
+        "mean": 0.9972280907327904,
+        "std": 0.0035545526402164214,
+        "count": 120,
         "ci95": {
-          "low": 0.9891927090319101,
-          "high": 0.9964642921244703,
-          "half_width": 0.003635791546280076,
+          "low": 0.9965600022092448,
+          "high": 0.9978545108746069,
+          "half_width": 0.0006472543326810354,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "entropy_ratio": {
-        "mean": 0.4008072166159794,
-        "std": 0.09006285382331541,
-        "count": 8,
+        "mean": 0.3773753714001284,
+        "std": 0.07844188350488661,
+        "count": 120,
         "ci95": {
-          "low": 0.3434886064159135,
-          "high": 0.467124668031063,
-          "half_width": 0.06181803080757475,
+          "low": 0.3627999455689528,
+          "high": 0.39126706485990326,
+          "half_width": 0.014233559645475236,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "single_frame_ocr": {
-        "mean": 0.0033482142857142842,
-        "std": 0.00885854233615376,
-        "count": 8,
+        "mean": 0.00018668257334747255,
+        "std": 0.001578052496756443,
+        "count": 120,
         "ci95": {
           "low": 0.0,
-          "high": 0.010044642857142853,
-          "half_width": 0.005022321428571426,
+          "high": 0.0005092347119123364,
+          "half_width": 0.0002546173559561682,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "full_cycle_ocr": {
-        "mean": 0.920044697366126,
-        "std": 0.07594095247770163,
-        "count": 8,
+        "mean": 0.9454355852064951,
+        "std": 0.08720675452154629,
+        "count": 120,
         "ci95": {
-          "low": 0.8648774092970521,
-          "high": 0.9705865766178267,
-          "half_width": 0.052854583660387255,
+          "low": 0.9288898262479586,
+          "high": 0.9612901949336259,
+          "half_width": 0.016200184342833657,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -178,39 +178,39 @@
     },
     "n6_eps0.0314": {
       "delta_e": {
-        "mean": 0.5974436829596315,
-        "std": 0.07648284678589858,
-        "count": 8,
+        "mean": 0.6039429413995404,
+        "std": 0.0967740163157109,
+        "count": 120,
         "ci95": {
-          "low": 0.5376571832807854,
-          "high": 0.6301024733128857,
-          "half_width": 0.04622264501605017,
+          "low": 0.5867352153408908,
+          "high": 0.6210517283778485,
+          "half_width": 0.017158256518478854,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "ssim": {
-        "mean": 0.999142404592321,
-        "std": 0.0013701460969801039,
-        "count": 8,
+        "mean": 0.9994634401121432,
+        "std": 0.0009882428681598106,
+        "count": 120,
         "ci95": {
-          "low": 0.9980836528976484,
-          "high": 0.9999111457463499,
-          "half_width": 0.0009137464243507143,
+          "low": 0.9992681551975667,
+          "high": 0.9996376604765316,
+          "half_width": 0.0001847526394824217,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "entropy_ratio": {
-        "mean": 0.26307814781239114,
-        "std": 0.05690716303372948,
-        "count": 8,
+        "mean": 0.2494912178398886,
+        "std": 0.05085855148051915,
+        "count": 120,
         "ci95": {
-          "low": 0.22778986563587494,
-          "high": 0.30842292557116474,
-          "half_width": 0.0403165299676449,
+          "low": 0.24035574794483539,
+          "high": 0.25835759769346633,
+          "half_width": 0.009000924874315475,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -219,7 +219,7 @@
       "single_frame_ocr": {
         "mean": 0.0,
         "std": 0.0,
-        "count": 8,
+        "count": 120,
         "ci95": {
           "low": 0.0,
           "high": 0.0,
@@ -230,13 +230,13 @@
         }
       },
       "full_cycle_ocr": {
-        "mean": 0.920044697366126,
-        "std": 0.07594095247770163,
-        "count": 8,
+        "mean": 0.9419905175426775,
+        "std": 0.09008107694018892,
+        "count": 120,
         "ci95": {
-          "low": 0.8648774092970521,
-          "high": 0.9705865766178267,
-          "half_width": 0.052854583660387255,
+          "low": 0.9247431009904112,
+          "high": 0.9579929905285888,
+          "half_width": 0.016624944769088768,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -245,39 +245,39 @@
     },
     "n8_eps0.0314": {
       "delta_e": {
-        "mean": 0.5168643116862786,
-        "std": 0.4562723772529457,
-        "count": 8,
+        "mean": 0.6301380795328484,
+        "std": 0.4424996108730934,
+        "count": 120,
         "ci95": {
-          "low": 0.22046601939665103,
-          "high": 0.8527034910722006,
-          "half_width": 0.3161187358377748,
+          "low": 0.5527898080203255,
+          "high": 0.7078856877975057,
+          "half_width": 0.0775479398885901,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "ssim": {
-        "mean": 0.9954720260257288,
-        "std": 0.003028236727206791,
-        "count": 8,
+        "mean": 0.994174060053706,
+        "std": 0.005314711449862444,
+        "count": 120,
         "ci95": {
-          "low": 0.9935052699923944,
-          "high": 0.9977332133678811,
-          "half_width": 0.0021139716877433545,
+          "low": 0.9931986150730516,
+          "high": 0.9951479778217751,
+          "half_width": 0.0009746813743617411,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
         }
       },
       "entropy_ratio": {
-        "mean": 0.2307897595334097,
-        "std": 0.05886709482481544,
-        "count": 8,
+        "mean": 0.2166131161758771,
+        "std": 0.05234745393145406,
+        "count": 120,
         "ci95": {
-          "low": 0.1937025744856525,
-          "high": 0.2770126953797234,
-          "half_width": 0.041655060447035444,
+          "low": 0.20713269016589114,
+          "high": 0.2256814815812102,
+          "half_width": 0.009274395707659533,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -286,7 +286,7 @@
       "single_frame_ocr": {
         "mean": 0.0,
         "std": 0.0,
-        "count": 8,
+        "count": 120,
         "ci95": {
           "low": 0.0,
           "high": 0.0,
@@ -297,13 +297,13 @@
         }
       },
       "full_cycle_ocr": {
-        "mean": 0.920044697366126,
-        "std": 0.07594095247770163,
-        "count": 8,
+        "mean": 0.9450061307710567,
+        "std": 0.08722024525798178,
+        "count": 120,
         "ci95": {
-          "low": 0.8648774092970521,
-          "high": 0.9705865766178267,
-          "half_width": 0.052854583660387255,
+          "low": 0.9283818592784477,
+          "high": 0.9606953129096268,
+          "half_width": 0.01615672681558955,
           "confidence": 0.95,
           "method": "bootstrap_percentile",
           "resamples": 2000
@@ -319,11 +319,11 @@
       "effective_fps": 72.0,
       "fpi": 0.013888888888888892,
       "fpi_safe": true,
-      "delta_e": 0.8862223329152585,
-      "ssim": 0.9451789448276937,
-      "entropy_ratio": 0.5695272565006331,
+      "delta_e": 0.41392804695225593,
+      "ssim": 0.9843061386539418,
+      "entropy_ratio": 0.5657140509665697,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9433798226819827,
       "pareto_optimal": false
     },
     {
@@ -333,11 +333,11 @@
       "effective_fps": 120.0,
       "fpi": 0.005,
       "fpi_safe": true,
-      "delta_e": 0.8862223329152585,
-      "ssim": 0.9451789448276937,
-      "entropy_ratio": 0.5695272565006331,
+      "delta_e": 0.41392804695225593,
+      "ssim": 0.9843061386539418,
+      "entropy_ratio": 0.5657140509665697,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9433798226819827,
       "pareto_optimal": false
     },
     {
@@ -347,11 +347,11 @@
       "effective_fps": 180.0,
       "fpi": 0.0022222222222222222,
       "fpi_safe": true,
-      "delta_e": 0.8862223329152585,
-      "ssim": 0.9451789448276937,
-      "entropy_ratio": 0.5695272565006331,
+      "delta_e": 0.41392804695225593,
+      "ssim": 0.9843061386539418,
+      "entropy_ratio": 0.5657140509665697,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9433798226819827,
       "pareto_optimal": true
     },
     {
@@ -361,11 +361,11 @@
       "effective_fps": 36.0,
       "fpi": 0.30000000000000004,
       "fpi_safe": false,
-      "delta_e": 0.3627294363770919,
-      "ssim": 0.9932564257390053,
-      "entropy_ratio": 0.4008072166159794,
-      "single_frame_ocr": 0.0033482142857142842,
-      "full_cycle_ocr": 0.920044697366126,
+      "delta_e": 0.34482213664964784,
+      "ssim": 0.9972280907327904,
+      "entropy_ratio": 0.3773753714001284,
+      "single_frame_ocr": 0.00018668257334747255,
+      "full_cycle_ocr": 0.9454355852064951,
       "pareto_optimal": false
     },
     {
@@ -375,11 +375,11 @@
       "effective_fps": 60.0,
       "fpi": 0.03,
       "fpi_safe": true,
-      "delta_e": 0.3627294363770919,
-      "ssim": 0.9932564257390053,
-      "entropy_ratio": 0.4008072166159794,
-      "single_frame_ocr": 0.0033482142857142842,
-      "full_cycle_ocr": 0.920044697366126,
+      "delta_e": 0.34482213664964784,
+      "ssim": 0.9972280907327904,
+      "entropy_ratio": 0.3773753714001284,
+      "single_frame_ocr": 0.00018668257334747255,
+      "full_cycle_ocr": 0.9454355852064951,
       "pareto_optimal": false
     },
     {
@@ -389,11 +389,11 @@
       "effective_fps": 90.0,
       "fpi": 0.013333333333333332,
       "fpi_safe": true,
-      "delta_e": 0.3627294363770919,
-      "ssim": 0.9932564257390053,
-      "entropy_ratio": 0.4008072166159794,
-      "single_frame_ocr": 0.0033482142857142842,
-      "full_cycle_ocr": 0.920044697366126,
+      "delta_e": 0.34482213664964784,
+      "ssim": 0.9972280907327904,
+      "entropy_ratio": 0.3773753714001284,
+      "single_frame_ocr": 0.00018668257334747255,
+      "full_cycle_ocr": 0.9454355852064951,
       "pareto_optimal": true
     },
     {
@@ -403,11 +403,11 @@
       "effective_fps": 24.0,
       "fpi": 0.5,
       "fpi_safe": false,
-      "delta_e": 0.5974436829596315,
-      "ssim": 0.999142404592321,
-      "entropy_ratio": 0.26307814781239114,
+      "delta_e": 0.6039429413995404,
+      "ssim": 0.9994634401121432,
+      "entropy_ratio": 0.2494912178398886,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9419905175426775,
       "pareto_optimal": false
     },
     {
@@ -417,11 +417,11 @@
       "effective_fps": 40.0,
       "fpi": 0.27777777777777785,
       "fpi_safe": false,
-      "delta_e": 0.5974436829596315,
-      "ssim": 0.999142404592321,
-      "entropy_ratio": 0.26307814781239114,
+      "delta_e": 0.6039429413995404,
+      "ssim": 0.9994634401121432,
+      "entropy_ratio": 0.2494912178398886,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9419905175426775,
       "pareto_optimal": false
     },
     {
@@ -431,11 +431,11 @@
       "effective_fps": 60.0,
       "fpi": 0.03333333333333333,
       "fpi_safe": true,
-      "delta_e": 0.5974436829596315,
-      "ssim": 0.999142404592321,
-      "entropy_ratio": 0.26307814781239114,
+      "delta_e": 0.6039429413995404,
+      "ssim": 0.9994634401121432,
+      "entropy_ratio": 0.2494912178398886,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9419905175426775,
       "pareto_optimal": true
     },
     {
@@ -445,11 +445,11 @@
       "effective_fps": 18.0,
       "fpi": 0.6124999999999999,
       "fpi_safe": false,
-      "delta_e": 0.5168643116862786,
-      "ssim": 0.9954720260257288,
-      "entropy_ratio": 0.2307897595334097,
+      "delta_e": 0.6301380795328484,
+      "ssim": 0.994174060053706,
+      "entropy_ratio": 0.2166131161758771,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9450061307710567,
       "pareto_optimal": false
     },
     {
@@ -459,11 +459,11 @@
       "effective_fps": 30.0,
       "fpi": 0.4375,
       "fpi_safe": false,
-      "delta_e": 0.5168643116862786,
-      "ssim": 0.9954720260257288,
-      "entropy_ratio": 0.2307897595334097,
+      "delta_e": 0.6301380795328484,
+      "ssim": 0.994174060053706,
+      "entropy_ratio": 0.2166131161758771,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9450061307710567,
       "pareto_optimal": false
     },
     {
@@ -473,11 +473,11 @@
       "effective_fps": 45.0,
       "fpi": 0.21875,
       "fpi_safe": false,
-      "delta_e": 0.5168643116862786,
-      "ssim": 0.9954720260257288,
-      "entropy_ratio": 0.2307897595334097,
+      "delta_e": 0.6301380795328484,
+      "ssim": 0.994174060053706,
+      "entropy_ratio": 0.2166131161758771,
       "single_frame_ocr": 0.0,
-      "full_cycle_ocr": 0.920044697366126,
+      "full_cycle_ocr": 0.9450061307710567,
       "pareto_optimal": true
     }
   ]
