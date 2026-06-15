@@ -553,8 +553,8 @@ def build_playback_frames(
         glyph_alpha,
     )
     anti_ocr_enabled = anti_ocr_profile != "off"
-    effective_insert_inversion = insert_inversion and not anti_ocr_enabled
-    inversion_suppressed = bool(insert_inversion and not effective_insert_inversion)
+    # 反色帧（长曝光防御）与 anti-OCR 叠加层互补、可共存：前者把长曝光积分推向
+    # 灰场以挫败积分攻击，后者压制单帧/拍照 OCR。两者作用维度不同，按请求如实生效。
 
     h, w = image.shape[:2]
     gen = MaskGenerator(w, h, n, key=key)
@@ -631,7 +631,7 @@ def build_playback_frames(
                     profile=anti_ocr_profile,
                 )
             frames.append((frame, "subframe"))
-        if effective_insert_inversion:
+        if insert_inversion:
             frames.append((composer.compose_inversion_frame(image), "inversion"))
 
     meta = {
@@ -640,10 +640,8 @@ def build_playback_frames(
         "epsilon": epsilon,
         "pedestal": pedestal,
         "use_noise": use_noise,
-        "requested_inversion": insert_inversion,
-        "insert_inversion": effective_insert_inversion,
-        "inversion_suppressed": inversion_suppressed,
-        "per_cycle_slots": n + (1 if effective_insert_inversion else 0),
+        "insert_inversion": insert_inversion,
+        "per_cycle_slots": n + (1 if insert_inversion else 0),
         "permutations": permutations,
         "noise_schedule": noise_schedule,
         "anti_ocr": {
@@ -795,12 +793,6 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         f"refresh={target_refresh}Hz  vsync={int(vsync_enabled)}  "
         f"noise={int(cfg.use_noise)}  inversion={int(meta['insert_inversion'])}",
     ))
-    if meta.get("inversion_suppressed"):
-        static_surfs.append(_render_hud_line(
-            pygame,
-            font,
-            "inversion requested but suppressed for readable playback",
-        ))
     anti = meta["anti_ocr"]
     if anti["profile"] != "off":
         static_surfs.append(_render_hud_line(

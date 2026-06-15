@@ -242,7 +242,7 @@ def test_vlm_profile_uses_stronger_defaults_and_records_metadata():
 
 
 @pytest.mark.parametrize("profile", ["strong", "vlm"])
-def test_anti_ocr_profiles_suppress_equal_duration_inversion_for_readability(profile):
+def test_anti_ocr_profiles_coexist_with_inversion(profile):
     img = make_demo_document(320, 180)
     frames, meta = build_playback_frames(
         img,
@@ -254,12 +254,14 @@ def test_anti_ocr_profiles_suppress_equal_duration_inversion_for_readability(pro
         anti_ocr_profile=profile,
     )
 
-    assert meta["requested_inversion"] is True
-    assert meta["insert_inversion"] is False
-    assert meta["inversion_suppressed"] is True
-    assert meta["per_cycle_slots"] == 4
-    assert len(frames) == 2 * 4
-    assert all(kind == "subframe" for _, kind in frames)
+    # 反色帧（长曝光防御）与 anti-OCR 叠加层共存：每周期 n 个子帧 + 1 个反色帧。
+    assert meta["insert_inversion"] is True
+    assert meta["per_cycle_slots"] == 5
+    kinds = [kind for _, kind in frames]
+    assert kinds.count("subframe") == 2 * 4
+    assert kinds.count("inversion") == 2
+    # 反色帧位于每周期末尾，且自身不叠加 anti-OCR 伪迹（保持灰场中和能力）。
+    assert kinds == ["subframe"] * 4 + ["inversion"] + ["subframe"] * 4 + ["inversion"]
 
 
 def test_strong_profile_disrupts_integrated_glyph_regions():
