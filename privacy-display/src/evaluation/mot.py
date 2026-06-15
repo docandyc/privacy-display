@@ -486,14 +486,19 @@ def run_trackeval_hota(
     if not script.exists():
         return {"available": False, "reason": f"script_not_found:{script}", "trackers": {}}
 
+    # TrackEval's run_mot_challenge.py parses any None-default arg (e.g.
+    # --SEQMAP_FILE) with nargs='+', leaving it a *list* that later breaks
+    # os.path.isfile(). We therefore do NOT pass --SEQMAP_FILE and instead rely on
+    # TrackEval's default discovery at GT_FOLDER/seqmaps/BENCHMARK-SPLIT.txt, which
+    # is exactly where prepare_trackeval_workspace writes the seqmap.
+    interpreter = python_bin or os.environ.get("TRACKEVAL_PYTHON") or sys.executable
     cmd = [
-        python_bin or sys.executable,
+        interpreter,
         str(script),
         "--GT_FOLDER", workspace_info["gt_folder"],
         "--TRACKERS_FOLDER", workspace_info["trackers_folder"],
         "--BENCHMARK", workspace_info["benchmark"],
         "--SPLIT_TO_EVAL", workspace_info["split"],
-        "--SEQMAP_FILE", workspace_info["seqmap_file"],
         "--DO_PREPROC", "False",
         "--METRICS", *metrics,
         "--USE_PARALLEL", "False",
