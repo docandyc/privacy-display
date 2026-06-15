@@ -11,6 +11,33 @@
   const MIN_REFRESH_HZ = 144;
   // Subframe cycle (refresh / n) below this falls back to a static subframe.
   const SAFE_FLICKER_HZ = 50;
+  // Number of distinct mask/noise/stripe cycles looped for the masked stimulus.
+  // More cycles stop a long-exposure phone camera from integrating one
+  // repeating pattern back into readable text.
+  const ANTI_CAPTURE_CYCLES = 6;
+  // Best anti-capture artefacts measured on a 240 Hz panel, equivalent to the
+  // CLI `playback --anti-ocr-profile strong --stripe-alpha 0.10 --glyph-alpha 0.12`.
+  const ANTI_OCR_STRONG = {
+    stripeWidth: 10,
+    stripeAlpha: 0.1,
+    glyphAlpha: 0.12
+  };
+  // Subframe count that gives the best anti-capture strength (240 Hz panel).
+  const MASKED_TARGET_N = 4;
+  // Refresh needed to run the target n in temporal mode: n must satisfy
+  // refresh / n >= SAFE_FLICKER_HZ, so the full-strength config needs
+  // MASKED_TARGET_N * SAFE_FLICKER_HZ = 200 Hz.
+  const TEMPORAL_MIN_REFRESH_HZ = MASKED_TARGET_N * SAFE_FLICKER_HZ;
+
+  // Largest subframe count that still keeps the cycle (refresh / n) at or above
+  // the flicker-fusion threshold, capped at the target. Below 200 Hz this drops
+  // n to 2-3 so the masked trial stays temporal (and safe) instead of falling
+  // back to a static, unprotected frame -- at the cost of weaker privacy.
+  function maskedSubframeCount(refreshHz) {
+    const hz = Number(refreshHz) || ASSUMED_MONITOR_HZ;
+    const maxTemporalN = Math.floor(hz / SAFE_FLICKER_HZ);
+    return Math.max(2, Math.min(MASKED_TARGET_N, maxTemporalN));
+  }
 
   const STEPS = [
     ["welcome", "知情同意"],
@@ -282,12 +309,16 @@
   }
 
   function renderRefresh() {
+    const degraded = state.refresh.ok && state.refresh.hz < TEMPORAL_MIN_REFRESH_HZ;
+    const plannedN = maskedSubframeCount(state.refresh.hz);
     const status = state.refresh.hz
       ? `${formatNumber(state.refresh.hz, 1)} 赫兹，来自 ${state.refresh.samples} 个动画帧样本`
       : "尚未测量";
     const detail = state.refresh.hz
       ? (state.refresh.ok
-        ? "刷新率检查通过，可进入时间遮罩条件。"
+        ? (degraded
+          ? `刷新率检查通过，但低于 ${TEMPORAL_MIN_REFRESH_HZ}Hz：遮罩条件会自动把子帧数从 ${MASKED_TARGET_N} 降到 ${plannedN} 层以避免闪烁，防偷拍效果明显变差。`
+          : "刷新率检查通过，可进入时间遮罩条件。")
         : `刷新率低于技术交底书最低要求 ${MIN_REFRESH_HZ} 赫兹，不能开始测试。请切换到 144Hz 或更高的显示模式后重新检测。`)
       : "请先运行浏览器刷新率测量，再开始试次。";
 
@@ -316,6 +347,10 @@
         </div>
       </div>
       <div class="status-line ${state.refresh.hz && !state.refresh.ok ? "error" : ""}" id="refreshStatus">${status}. ${detail}</div>
+      ${degraded ? `
+      <div class="warning">
+        低于 ${TEMPORAL_MIN_REFRESH_HZ}Hz：为避免闪烁与光敏风险，遮罩条件会自动降到 ${plannedN} 层子帧（最优为 ${ASSUMED_MONITOR_HZ}Hz 下的 ${MASKED_TARGET_N} 层），防偷拍效果明显变差；若刷新率过低仍无法满足安全频率，会退回单张静态帧（等同相机视图，无防偷拍）。建议切换到 ≥${TEMPORAL_MIN_REFRESH_HZ}Hz 的显示模式。
+      </div>` : ""}
       <div class="actions">
         <button class="button secondary" id="backRefresh">返回</button>
         <button class="button secondary" id="runRefresh">重新检测</button>
@@ -348,9 +383,10 @@
     });
   }
 
-  // n is kept at its requested value on every device. Safety on low-refresh
-  // panels is handled by the static-fallback gate in PrivacyMask (cycle<50Hz),
-  // not by silently shrinking n while still flickering.
+  // The masked trial targets n=4 (best anti-capture), but below 200 Hz that
+  // would drop below the flicker-fusion threshold and fall back to a static,
+  // unprotected frame. There we shrink n (to 2-3) so it stays temporal and
+  // flicker-safe, recording both the requested and the effective n.
   function prepareExperiment() {
     if (state.trials.length) {
       return;
@@ -362,6 +398,7 @@
       Math.round(state.refresh.hz || ASSUMED_MONITOR_HZ)
     ].join(":");
 
+    const maskedN = maskedSubframeCount(state.refresh.hz);
     const pair = global.Pseudoword.makePair(state.seed, TARGET_CHARS);
     state.trials = [
       {
@@ -375,11 +412,12 @@
       {
         condition: "masked",
         label: "遮罩条件",
-        n: 4,
-        requested_n: 4,
-        components: "mask+noise",
+        n: maskedN,
+        requested_n: MASKED_TARGET_N,
+        components: "mask+noise+anti-ocr",
         target_text: pair.masked,
-        useNoise: true
+        useNoise: true,
+        antiOcr: ANTI_OCR_STRONG
       }
     ];
 
@@ -394,9 +432,14 @@
       return;
     }
     const isMasked = trial.condition === "masked";
+    const degraded = isMasked && trial.n < (trial.requested_n || MASKED_TARGET_N);
     const progressLabel = `试次 ${state.trialCursor + 1} / ${state.trials.length}`;
     const stimulus = isMasked
       ? `
+        ${degraded ? `
+        <div class="warning">
+          检测到刷新率 ${formatNumber(state.refresh.hz, 1)}Hz，低于 ${TEMPORAL_MIN_REFRESH_HZ}Hz：遮罩条件已自动把子帧数从 ${trial.requested_n} 降到 ${trial.n} 层以避免闪烁与光敏风险，防偷拍效果明显低于 ${ASSUMED_MONITOR_HZ}Hz 的最优配置。
+        </div>` : ""}
         <div class="masked-canvas-wrap">
           <canvas id="maskedCanvas" class="masked-canvas"></canvas>
         </div>
@@ -413,7 +456,7 @@
         <div class="stimulus">
           <div class="stimulus-head">
             <span>${isMasked ? "遮罩源文本" : "原文源文本"}</span>
-            <span>${isMasked ? `层数 ${trial.n}，${trial.components}` : "无遮罩基线"}</span>
+            <span>${isMasked ? `层数 ${trial.n}${degraded ? `（请求 ${trial.requested_n}）` : ""}，${trial.components}` : "无遮罩基线"}</span>
           </div>
           ${stimulus}
         </div>
@@ -443,7 +486,12 @@
         epsilonPixels: 8,
         gammaFactor: 1.1,
         refreshHz: state.refresh.hz,
-        safeFlickerHz: SAFE_FLICKER_HZ
+        safeFlickerHz: SAFE_FLICKER_HZ,
+        // Anti-capture profile tuned on a 240 Hz panel: strong anti-OCR
+        // artefacts (stripe 0.10 / glyph 0.12) over multiple mask cycles defeat
+        // a real phone camera while staying readable to the eye.
+        cycles: ANTI_CAPTURE_CYCLES,
+        antiOcr: trial.antiOcr || null
       });
       trial.mask_meta = meta;
       currentPlayer.start();
