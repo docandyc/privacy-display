@@ -144,53 +144,59 @@ def _tracking_with_motmetrics(
     except Exception:
         return "motmetrics_unavailable", None
 
-    accumulators = []
-    names = []
-    for sequence, frames in gt_by_frame.items():
-        acc = mm.MOTAccumulator(auto_id=False)
-        for frame_id in sorted(frames):
-            gt_rows = frames[frame_id]
-            pred_rows = tracks_by_frame.get(sequence, {}).get(frame_id, [])
-            gt_ids = [obj.track_id for obj in gt_rows]
-            pred_ids = [obj.track_id for obj in pred_rows]
-            gt_boxes = np.array([_box_xywh(obj.box) for obj in gt_rows], dtype=float).reshape(-1, 4)
-            pred_boxes = np.array([_box_xywh(obj.box) for obj in pred_rows], dtype=float).reshape(-1, 4)
-            distances = mm.distances.iou_matrix(gt_boxes, pred_boxes, max_iou=0.5)
-            acc.update(gt_ids, pred_ids, distances, frameid=int(frame_id))
-        accumulators.append(acc)
-        names.append(sequence)
+    # motmetrics 1.4.0 still calls removed NumPy aliases (e.g. np.asfarray under
+    # NumPy >= 2.0), and other version skews can fail at runtime. Any failure here
+    # must fall back to the scipy implementation rather than crash the experiment.
+    try:
+        accumulators = []
+        names = []
+        for sequence, frames in gt_by_frame.items():
+            acc = mm.MOTAccumulator(auto_id=False)
+            for frame_id in sorted(frames):
+                gt_rows = frames[frame_id]
+                pred_rows = tracks_by_frame.get(sequence, {}).get(frame_id, [])
+                gt_ids = [obj.track_id for obj in gt_rows]
+                pred_ids = [obj.track_id for obj in pred_rows]
+                gt_boxes = np.array([_box_xywh(obj.box) for obj in gt_rows], dtype=float).reshape(-1, 4)
+                pred_boxes = np.array([_box_xywh(obj.box) for obj in pred_rows], dtype=float).reshape(-1, 4)
+                distances = mm.distances.iou_matrix(gt_boxes, pred_boxes, max_iou=0.5)
+                acc.update(gt_ids, pred_ids, distances, frameid=int(frame_id))
+            accumulators.append(acc)
+            names.append(sequence)
 
-    if not accumulators:
-        return "motmetrics", _empty_tracking_metrics()
+        if not accumulators:
+            return "motmetrics", _empty_tracking_metrics()
 
-    mh = mm.metrics.create()
-    summary = mh.compute_many(
-        accumulators,
-        names=names,
-        metrics=[
-            "mota",
-            "motp",
-            "idf1",
-            "num_switches",
-            "num_false_positives",
-            "num_misses",
-            "num_frames",
-        ],
-        generate_overall=True,
-    )
-    row = summary.loc["OVERALL"]
-    motp_distance = _as_float(row.get("motp"), default=1.0)
-    return "motmetrics", {
-        "mota": _as_float(row.get("mota")),
-        # py-motmetrics MOTP is the mean (1 - IoU) distance of matches; report as
-        # mean IoU overlap so the column stays "higher is better".
-        "motp": max(0.0, 1.0 - motp_distance),
-        "idf1": _as_float(row.get("idf1")),
-        "fp": int(_as_float(row.get("num_false_positives"))),
-        "fn": int(_as_float(row.get("num_misses"))),
-        "id_switches": int(_as_float(row.get("num_switches"))),
-        "n_frames": int(_as_float(row.get("num_frames"))),
-    }
+        mh = mm.metrics.create()
+        summary = mh.compute_many(
+            accumulators,
+            names=names,
+            metrics=[
+                "mota",
+                "motp",
+                "idf1",
+                "num_switches",
+                "num_false_positives",
+                "num_misses",
+                "num_frames",
+            ],
+            generate_overall=True,
+        )
+        row = summary.loc["OVERALL"]
+        motp_distance = _as_float(row.get("motp"), default=1.0)
+        return "motmetrics", {
+            "mota": _as_float(row.get("mota")),
+            # py-motmetrics MOTP is the mean (1 - IoU) distance of matches; report as
+            # mean IoU overlap so the column stays "higher is better".
+            "motp": max(0.0, 1.0 - motp_distance),
+            "idf1": _as_float(row.get("idf1")),
+            "fp": int(_as_float(row.get("num_false_positives"))),
+            "fn": int(_as_float(row.get("num_misses"))),
+            "id_switches": int(_as_float(row.get("num_switches"))),
+            "n_frames": int(_as_float(row.get("num_frames"))),
+        }
+    except Exception as exc:  # pragma: no cover - depends on motmetrics/numpy skew
+        return f"motmetrics_failed:{type(exc).__name__}", None
 
 
 def _empty_tracking_metrics() -> dict:

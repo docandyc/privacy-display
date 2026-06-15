@@ -61,6 +61,44 @@ def test_perfect_tracker_scores_one():
     assert metrics["id_switches"] == 0
 
 
+def test_motmetrics_runtime_failure_falls_back_to_scipy(monkeypatch):
+    """A motmetrics runtime error (e.g. np.asfarray removed under NumPy 2.0) must
+    fall back to the scipy backend instead of crashing the experiment."""
+    import sys
+    import types
+
+    fake = types.ModuleType("motmetrics")
+    distances = types.ModuleType("motmetrics.distances")
+
+    def _boom(*_args, **_kwargs):
+        raise AttributeError("`np.asfarray` was removed in the NumPy 2.0 release.")
+
+    distances.iou_matrix = _boom
+    fake.distances = distances
+
+    class _Acc:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def update(self, *_args, **_kwargs):
+            pass
+
+    fake.MOTAccumulator = _Acc
+    monkeypatch.setitem(sys.modules, "motmetrics", fake)
+    monkeypatch.setitem(sys.modules, "motmetrics.distances", distances)
+
+    seq = "S"
+    box = (0.0, 0.0, 10.0, 10.0)
+    gt = {seq: {fid: [MOTObject(seq, fid, 10, box, 1.0)] for fid in (1, 2, 3)}}
+    tracks = {seq: {fid: [MOTObject(seq, fid, 7, box, 0.9)] for fid in (1, 2, 3)}}
+
+    metrics = compute_tracking_metrics(gt, tracks)
+
+    assert metrics["metric_backend"] == "approximate_scipy"
+    assert metrics["idf1"] == 1.0
+    assert metrics["mota"] == 1.0
+
+
 def test_attack_variants_are_reproducible_per_seed_and_identifier():
     rng = np.random.default_rng(0)
     image = rng.integers(0, 256, size=(24, 32, 3), dtype=np.uint8)
