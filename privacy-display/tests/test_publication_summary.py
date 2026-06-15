@@ -94,6 +94,60 @@ def test_publication_summary_builds_tables_and_marks_missing_vlm(tmp_path):
             },
         },
     )
+    _write_json(
+        tmp_path / "coco_detection_attack.json",
+        {
+            "config": {"models": ["fake"], "attacks": ["clean"]},
+            "results": {
+                "fake": {
+                    "clean": {
+                        "map": 0.75,
+                        "map50": 0.9,
+                        "map75": 0.8,
+                        "ap_small": 0.4,
+                        "ap_medium": 0.7,
+                        "ap_large": 0.85,
+                        "ar": 0.8,
+                        "n_images": 2,
+                    }
+                }
+            },
+        },
+    )
+    _write_json(
+        tmp_path / "mot_video_detection.json",
+        {
+            "config": {"sequences": ["MOT17-02"]},
+            "results": {
+                "fake": {
+                    "clean": {
+                        "map": 0.6,
+                        "map50": 0.8,
+                        "recall": 0.7,
+                        "precision": 0.9,
+                        "n_frames": 3,
+                    }
+                }
+            },
+        },
+    )
+    _write_json(
+        tmp_path / "mot_tracking_attack.json",
+        {
+            "config": {"sequences": ["MOT17-02"], "tracker": "greedy_bytetrack_fallback"},
+            "results": {
+                "fake": {
+                    "clean": {
+                        "mota": 0.5,
+                        "motp": 0.75,
+                        "idf1": 0.65,
+                        "hota": None,
+                        "n_frames": 3,
+                    }
+                }
+            },
+        },
+    )
 
     summary = build_publication_summary(tmp_path)
     markdown = render_markdown(summary)
@@ -101,6 +155,10 @@ def test_publication_summary_builds_tables_and_marks_missing_vlm(tmp_path):
     assert summary["ocr"]["engines"][0]["engine"] == "tesseract"
     assert summary["strong_camera"]["best_attack_per_sample"]["char_accuracy"] == 0.96
     assert summary["detection"]["single_subframe"]["map50"] == 0.4
+    assert summary["coco_detection"]["available"] is True
+    assert summary["coco_detection"]["rows"][0]["map"] == 0.75
+    assert summary["mot_video_detection"]["rows"][0]["recall"] == 0.7
+    assert summary["mot_tracking"]["rows"][0]["idf1"] == 0.65
     assert summary["view_attack"]["available"] is False
     assert summary["vlm"]["available"] is False
     assert summary["real_capture"]["available"] is False
@@ -109,6 +167,9 @@ def test_publication_summary_builds_tables_and_marks_missing_vlm(tmp_path):
     assert "VLM Readability" in markdown
     assert "Real Camera Capture" in markdown
     assert "Supplemental Ablations" in markdown
+    assert "COCO Detection Suite" in markdown
+    assert "MOT17 Video Detection" in markdown
+    assert "MOT17 Tracking" in markdown
     assert "Not available" in markdown
     assert "90.0%" in markdown
 
@@ -125,6 +186,9 @@ def test_write_publication_summary_emits_json_and_markdown(tmp_path):
             "leak_rate_char_ge_20pct": 0.0,
         }},
         "detection": {"available": False},
+        "coco_detection": {"available": False},
+        "mot_video_detection": {"available": False},
+        "mot_tracking": {"available": False},
         "view_attack": {"available": False},
         "vlm": {"available": False, "interpretation": "missing"},
         "real_capture": {"available": False, "interpretation": "missing"},

@@ -16,6 +16,9 @@ from typing import Any
 OCR_FILE = "corpus_multi_engine.json"
 STRONG_ATTACK_FILE = "corpus_strong_camera_attack.json"
 DETECTION_FILE = "detection_attack_yolo.json"
+COCO_DETECTION_FILE = "coco_detection_attack.json"
+MOT_VIDEO_DETECTION_FILE = "mot_video_detection.json"
+MOT_TRACKING_FILE = "mot_tracking_attack.json"
 VIEW_ATTACK_FILE = "view_attack.json"
 VLM_FILE = "vlm_qwen3_siliconflow.json"
 REAL_CAPTURE_FILE = "real_capture_ocr.json"
@@ -80,6 +83,9 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
     ocr = load_json(root / OCR_FILE)
     strong = load_json(root / STRONG_ATTACK_FILE)
     detection = _load_optional(root / DETECTION_FILE)
+    coco_detection = _load_optional(root / COCO_DETECTION_FILE)
+    mot_video_detection = _load_optional(root / MOT_VIDEO_DETECTION_FILE)
+    mot_tracking = _load_optional(root / MOT_TRACKING_FILE)
     view_attack = _load_optional(root / VIEW_ATTACK_FILE)
     vlm = _load_optional(root / VLM_FILE)
     real_capture = _load_optional(root / REAL_CAPTURE_FILE)
@@ -93,6 +99,9 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
             "ocr": OCR_FILE,
             "strong_camera": STRONG_ATTACK_FILE,
             "detection": DETECTION_FILE if detection is not None else None,
+            "coco_detection": COCO_DETECTION_FILE if coco_detection is not None else None,
+            "mot_video_detection": MOT_VIDEO_DETECTION_FILE if mot_video_detection is not None else None,
+            "mot_tracking": MOT_TRACKING_FILE if mot_tracking is not None else None,
             "view_attack": VIEW_ATTACK_FILE if view_attack is not None else None,
             "vlm": VLM_FILE if vlm is not None else None,
             "real_capture": REAL_CAPTURE_FILE if real_capture is not None else None,
@@ -106,6 +115,9 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
         "pareto_security": summarize_pareto_security(supplemental.get("pareto_sweep")),
         "strong_camera": summarize_strong_camera(strong),
         "detection": summarize_detection(detection),
+        "coco_detection": summarize_coco_detection(coco_detection),
+        "mot_video_detection": summarize_mot_video_detection(mot_video_detection),
+        "mot_tracking": summarize_mot_tracking(mot_tracking),
         "view_attack": summarize_view_attack(view_attack),
         "vlm": summarize_vlm(vlm),
         "vlm_model_cross": summarize_vlm_model_ablation(supplemental.get("vlm_model_ablation")),
@@ -336,6 +348,57 @@ def summarize_detection(report: dict | None) -> dict:
     }
 
 
+def summarize_coco_detection(report: dict | None) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": COCO_DETECTION_FILE,
+        }
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "rows": _model_attack_rows(
+            report,
+            ["map", "map50", "map75", "ap_small", "ap_medium", "ap_large", "ar", "n_images"],
+        ),
+    }
+
+
+def summarize_mot_video_detection(report: dict | None) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": MOT_VIDEO_DETECTION_FILE,
+        }
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "rows": _model_attack_rows(
+            report,
+            ["map", "map50", "recall", "precision", "n_frames"],
+        ),
+    }
+
+
+def summarize_mot_tracking(report: dict | None) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": MOT_TRACKING_FILE,
+        }
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "rows": _model_attack_rows(
+            report,
+            ["mota", "motp", "idf1", "hota", "deta", "assa", "n_frames"],
+        ),
+    }
+
+
 def summarize_view_attack(report: dict | None) -> dict:
     if report is None:
         return {"available": False, "reason": "missing_result_file"}
@@ -437,6 +500,25 @@ def summarize_supplemental_ablation(report: dict | None, expected_file: str) -> 
     }
 
 
+def _model_attack_rows(report: dict, fields: list[str]) -> list[dict]:
+    rows = []
+    config = report.get("config", {})
+    model_order = config.get("models") or list(report.get("results", {}).keys())
+    for model in model_order:
+        attacks = report.get("results", {}).get(model, {})
+        attack_order = config.get("attacks") or list(attacks.keys())
+        for attack in attack_order:
+            metrics = attacks.get(attack)
+            if not isinstance(metrics, dict):
+                continue
+            row = {"model": model, "attack": attack}
+            for field in fields:
+                value = metrics.get(field)
+                row[field] = _num(value) if isinstance(value, (int, float)) else value
+            rows.append(row)
+    return rows
+
+
 def render_markdown(summary: dict) -> str:
     """Render a compact Markdown report suitable for thesis/paper table checks."""
     lines = [
@@ -500,6 +582,10 @@ def render_markdown(summary: dict) -> str:
         ])
     else:
         lines.append("- Missing detection result file.")
+
+    _render_coco_detection(lines, summary.get("coco_detection", {}))
+    _render_mot_video_detection(lines, summary.get("mot_video_detection", {}))
+    _render_mot_tracking(lines, summary.get("mot_tracking", {}))
 
     view = summary["view_attack"]
     lines.extend(["", "## View Attack", ""])
@@ -594,6 +680,65 @@ def _render_ocr_strata(lines: list[str], strata: dict) -> None:
                 f"{_pct_ci(row['subframe_mean'], row['subframe_ci95'])} | "
                 f"{_pct(row['reduction_mean'])} |"
             )
+
+
+def _render_coco_detection(lines: list[str], section: dict) -> None:
+    lines.extend(["", "## COCO Detection Suite", ""])
+    if not section.get("available"):
+        lines.append("- COCO detection suite not available (run coco_detection_attack.py).")
+        return
+    lines.extend([
+        "| Model | Attack | mAP | mAP50 | mAP75 | AP_S | AP_M | AP_L | AR | Images |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for row in section.get("rows", []):
+        lines.append(
+            f"| {row['model']} | {row['attack']} | {_pct(row.get('map'))} | "
+            f"{_pct(row.get('map50'))} | {_pct(row.get('map75'))} | "
+            f"{_pct(row.get('ap_small'))} | {_pct(row.get('ap_medium'))} | "
+            f"{_pct(row.get('ap_large'))} | {_pct(row.get('ar'))} | "
+            f"{int(row.get('n_images') or 0)} |"
+        )
+
+
+def _render_mot_video_detection(lines: list[str], section: dict) -> None:
+    lines.extend(["", "## MOT17 Video Detection", ""])
+    if not section.get("available"):
+        lines.append("- MOT17 video detection not available (run mot_video_detection.py).")
+        return
+    lines.extend([
+        "| Model | Attack | mAP | mAP50 | Recall | Precision | Frames |",
+        "|---|---|---:|---:|---:|---:|---:|",
+    ])
+    for row in section.get("rows", []):
+        lines.append(
+            f"| {row['model']} | {row['attack']} | {_pct(row.get('map'))} | "
+            f"{_pct(row.get('map50'))} | {_pct(row.get('recall'))} | "
+            f"{_pct(row.get('precision'))} | {int(row.get('n_frames') or 0)} |"
+        )
+
+
+def _render_mot_tracking(lines: list[str], section: dict) -> None:
+    lines.extend(["", "## MOT17 Tracking", ""])
+    if not section.get("available"):
+        lines.append("- MOT17 tracking not available (run mot_tracking_attack.py).")
+        return
+    tracker = section.get("config", {}).get("tracker")
+    if tracker:
+        lines.append(f"Tracker: `{tracker}`")
+        lines.append("")
+    lines.extend([
+        "| Model | Attack | MOTA | MOTP | IDF1 | HOTA | Frames |",
+        "|---|---|---:|---:|---:|---:|---:|",
+    ])
+    for row in section.get("rows", []):
+        hota = row.get("hota")
+        hota_text = "n/a" if hota is None else _pct(hota)
+        lines.append(
+            f"| {row['model']} | {row['attack']} | {_pct(row.get('mota'))} | "
+            f"{_pct(row.get('motp'))} | {_pct(row.get('idf1'))} | "
+            f"{hota_text} | {int(row.get('n_frames') or 0)} |"
+        )
 
 
 def _render_vlm_model_cross(lines: list[str], cross: dict) -> None:

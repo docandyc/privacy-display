@@ -25,6 +25,7 @@ RUN_TESTS=1
 RUN_FULL_OFFLINE=0
 RUN_VLM_LIVE=0
 RUN_REAL_CAPTURE=0
+RUN_DETECTION_SUITE=0
 
 usage() {
   cat <<'EOF'
@@ -40,6 +41,7 @@ Default safe path:
 
 Options:
   --full-offline   Also rerun heavier offline experiments and benchmarks.
+  --detection-suite  Also run the COCO/MOT17 multi-detector suite if datasets exist.
   --real-capture   Also analyze manually collected real camera captures.
   --with-vlm-live  Also run the live online VLM benchmark. Requires SILICONFLOW_API_KEY.
   --skip-tests     Skip pytest in this orchestration run.
@@ -55,6 +57,9 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --full-offline)
       RUN_FULL_OFFLINE=1
+      ;;
+    --detection-suite)
+      RUN_DETECTION_SUITE=1
       ;;
     --real-capture)
       RUN_REAL_CAPTURE=1
@@ -116,6 +121,24 @@ if [[ "$RUN_FULL_OFFLINE" -eq 1 ]]; then
   # multiplier, so use a stratified subset to keep runtime bounded.
   run_python experiments/noise_epsilon_sweep.py --samples-per-category 5 --max-samples 60
   run_python experiments/seed_sensitivity.py --seeds 10 --samples-per-category 5 --max-samples 60
+fi
+
+if [[ "$RUN_DETECTION_SUITE" -eq 1 ]]; then
+  # Heavy, GPU-oriented; device auto-detected. Each block is skipped when its
+  # dataset is absent so the offline reproduction path never hard-fails.
+  COCO_ROOT="${COCO_ROOT:-data/coco}"
+  MOT17_ROOT="${MOT17_ROOT:-data/MOT17}"
+  if [[ -f "$COCO_ROOT/annotations/instances_val2017.json" ]]; then
+    run_python experiments/coco_detection_attack.py --coco-root "$COCO_ROOT"
+  else
+    echo "[reproduce] skip COCO suite: $COCO_ROOT/annotations/instances_val2017.json not found" >&2
+  fi
+  if [[ -d "$MOT17_ROOT/train" ]]; then
+    run_python experiments/mot_video_detection.py --mot-root "$MOT17_ROOT"
+    run_python experiments/mot_tracking_attack.py --mot-root "$MOT17_ROOT"
+  else
+    echo "[reproduce] skip MOT suite: $MOT17_ROOT/train not found" >&2
+  fi
 fi
 
 run_python experiments/vlm_readability_analysis.py --dry-run --samples-per-category 1

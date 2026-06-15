@@ -1,0 +1,4 @@
+pycocotools>=2.0.7
+motmetrics>=1.4
+boxmot>=10.0
+lap>=0.4

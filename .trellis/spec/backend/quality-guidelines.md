@@ -206,6 +206,56 @@ if self._paddleocr_reader is None:
 return self._parse_paddleocr_text(self._paddleocr_reader.predict(image))
 ```
 
+## Scenario: Detection Suite Server Experiments
+
+### 1. Scope / Trigger
+- Trigger: adding or changing COCO/MOT object-detection, video-detection, or tracking experiment scripts and their server runner.
+
+### 2. Signatures
+- Command: `python experiments/coco_detection_attack.py --coco-root data/coco --models yolo26x,rtdetr-x,faster_rcnn,retinanet --device cuda:0`
+- Command: `python experiments/mot_video_detection.py --mot-root data/MOT17 --device cuda:1`
+- Command: `python experiments/mot_tracking_attack.py --mot-root data/MOT17 --device cuda:0`
+- Command: `bash scripts/run_detection_suite.sh`
+- Dataset paths: `data/coco/val2017`, `data/coco/annotations/instances_val2017.json`, `data/MOT17/train/MOT17-*/img1`, `data/MOT17/train/MOT17-*/gt/gt.txt`
+
+### 3. Contracts
+- Experiment JSON files must be written under `experiments/results/` unless `--output-dir` or `RESULTS_DIR` overrides it.
+- `COCO_ROOT`, `MOT17_ROOT`, `RESULTS_DIR`, `MODELS`, `ATTACKS`, `COCO_DEVICE`, `MOT_DEVICE`, `TRACK_DEVICE`, `SMOKE`, `COCO_MAX_IMAGES`, `MOT_MAX_FRAMES`, `MOT_SEQUENCES`, and `NO_EXTERNAL_TRACKER` are supported server-runner environment keys.
+- Each experiment result is shaped as `{config, detectors, results}`, with `results[model][attack]` holding scalar metrics.
+- MOT tracking should prefer BoxMOT ByteTrack when available and fall back to a deterministic tracker for local tests.
+
+### 4. Validation & Error Matrix
+- Missing COCO annotations -> `FileNotFoundError` naming `instances_<split>.json`.
+- Missing MOT split/image directory -> `FileNotFoundError` naming the missing MOT path.
+- Unknown detector spec -> `ValueError`.
+- Missing optional heavy evaluator dependency in local tests -> fall back to deterministic simple metrics or tracker instead of failing the unit path.
+
+### 5. Good/Base/Bad Cases
+- Good: run `SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh` after datasets are placed to verify server setup cheaply.
+- Good: run full suite with `COCO_DEVICE=cuda:0 MOT_DEVICE=cuda:1 TRACK_DEVICE=cuda:0 bash scripts/run_detection_suite.sh`.
+- Base: local tests inject fake detectors and tiny COCO/MOT fixtures without downloading weights or datasets.
+- Bad: writing separate result schemas per script, because publication summary and manifest cannot consume them uniformly.
+- Bad: requiring BoxMOT in unit tests, because local machines may not have compiled tracker dependencies.
+
+### 6. Tests Required
+- Assert detector adapters normalize YOLO/RT-DETR and torchvision outputs to `DetectionBox`.
+- Assert COCO, MOT detection, and MOT tracking scripts emit the expected `model -> attack -> metrics` schema on tiny fixtures.
+- Assert publication summary renders COCO, MOT video detection, and MOT tracking rows when result JSON files exist.
+- Assert reproducibility manifest records the detection result files, scripts, and server commands.
+
+### 7. Wrong vs Correct
+#### Wrong
+```bash
+python experiments/mot_tracking_attack.py --mot-root /tmp/MOT17
+# assumes boxmot is always installed and crashes local tests if it is not
+```
+
+#### Correct
+```bash
+SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
+# uses BoxMOT ByteTrack on the server when available, with a local fallback for tests
+```
+
 ## Scenario: Publication Corpus and Stratified OCR Reports
 
 ### 1. Scope / Trigger

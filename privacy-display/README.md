@@ -105,6 +105,23 @@ python experiments/vlm_readability_analysis.py --dry-run --samples-per-category 
 python experiments/vlm_readability_analysis.py --samples-per-category 1
 ```
 
+### 3.1 服务器多检测器 / 视频 / 跟踪套件（COCO + MOT17）
+
+GPU 服务器（如 2× RTX 4090）上对 YOLO26x、RT-DETR-x、Faster R-CNN、RetinaNet 四个检测器统一跑
+clean / 单子帧 / 时间平均三种攻击帧，产出真实 COCO mAP（含 AP_S/M/L）、MOT17 逐帧检测与
+ByteTrack 跟踪指标（MOTA/MOTP/IDF1，HOTA 经 TrackEval 可选）。完整步骤见
+[`docs/detection_suite_server.md`](docs/detection_suite_server.md)。
+
+```bash
+pip install -U ultralytics && pip install -r requirements-detection.txt  # 服务器额外依赖
+bash scripts/download_coco_val2017.sh                                     # 下载 COCO val2017
+bash scripts/download_mot17.sh                                            # 下载 MOT17
+SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh        # 小样冒烟
+COCO_DEVICE=cuda:0 MOT_DEVICE=cuda:1 bash scripts/run_detection_suite.sh  # 双卡全量
+# 产物：experiments/results/{coco_detection_attack,mot_video_detection,mot_tracking_attack}.json
+# 并自动刷新 publication_summary.{json,md} 与 reproducibility_manifest.json
+```
+
 > **改进路线见 [`改进文档.md`](改进文档.md)**：已实现 HDR 补偿(ICtCp/PQ/HLG 与 HDR 感知积分回归)、黑帧+AE 攻击、
 > 多显示器同步、性能实测、真实对抗噪声+消融、去混淆/重构攻击、视角差异化掩模、
 > 掩模取模偏置修复、多样本多引擎评测、YOLOv8n 目标检测评测、离轴攻击、

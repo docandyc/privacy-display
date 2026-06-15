@@ -32,7 +32,10 @@ DEFAULT_TARGET_MODELS: tuple[TargetModelSpec, ...] = (
     TargetModelSpec("easyocr", "ocr", "pgd", "y", 13.0, (0.9, 1.1, 1.0)),
     TargetModelSpec("paddleocr", "ocr", "pgd", "laplace", 17.0, (1.1, 0.9, 1.0)),
     TargetModelSpec("yolov8", "detector", "pgd", "magnitude", 7.0, (1.0, 0.85, 1.15)),
+    TargetModelSpec("yolo26", "detector", "pgd", "magnitude", 7.0, (1.0, 0.85, 1.15)),
+    TargetModelSpec("rtdetr", "detector", "pgd", "magnitude", 6.5, (1.0, 0.9, 1.1)),
     TargetModelSpec("faster_rcnn", "detector", "pgd", "coarse", 5.0, (1.15, 1.0, 0.85)),
+    TargetModelSpec("retinanet", "detector", "pgd", "coarse", 5.5, (1.1, 1.0, 0.9)),
 )
 
 

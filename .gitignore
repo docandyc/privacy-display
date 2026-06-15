@@ -45,3 +45,8 @@ Thumbs.db
 # Shell 历史
 .bash_history
 .zsh_history
+
+# 检测套件：下载的数据集与 TrackEval 生成工作区（体积大，不入库）
+privacy-display/data/coco/
+privacy-display/data/MOT17/
+**/experiments/results/trackeval_workspace/

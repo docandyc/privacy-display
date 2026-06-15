@@ -46,8 +46,20 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
         "mask_granularity_ablation",
         "seed_sensitivity",
         "vlm_model_ablation_live",
+        "detection_suite_setup",
+        "download_coco_val2017",
+        "download_mot17",
+        "run_detection_suite",
     ):
         assert any(command["name"] == new_command for command in manifest["commands"])
+    default_manifest = build_reproducibility_manifest(
+        tmp_path,
+        timestamp="2026-06-13T00:00:00+00:00",
+    )
+    result_paths = {record["path"] for record in default_manifest["result_files"]}
+    assert "experiments/results/coco_detection_attack.json" in result_paths
+    assert "experiments/results/mot_video_detection.json" in result_paths
+    assert "experiments/results/mot_tracking_attack.json" in result_paths
     model_live = next(c for c in manifest["commands"] if c["name"] == "vlm_model_ablation_live")
     assert model_live["requires_env"] == ["SILICONFLOW_API_KEY"]
     vlm_live = next(command for command in manifest["commands"] if command["name"] == "vlm_live")
