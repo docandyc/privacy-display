@@ -74,19 +74,25 @@ def test_build_playback_frames_counts_without_inversion():
 
 def test_build_playback_frames_inserts_inversion_at_cycle_end():
     img = _small_test_image()
+    alpha = 0.3
     frames, meta = build_playback_frames(
-        img, n=2, cycles=3, insert_inversion=True, key=KEY
+        img, n=2, cycles=3, insert_inversion=True, inversion_alpha=alpha, key=KEY
     )
 
     slots = meta["per_cycle_slots"]
     assert slots == 3
+    assert meta["inversion_alpha"] == alpha
     assert len(frames) == 3 * slots
+    # 回放反色帧为振幅缩放的弱反色 α·(255−I)，而非整帧 255−I（避免压垮可读性）。
+    expected = np.clip(
+        np.rint(alpha * (255.0 - img.astype(np.float32))), 0, 255
+    ).astype(np.uint8)
     for cycle in range(3):
         cycle_frames = frames[cycle * slots:(cycle + 1) * slots]
         kinds = [kind for _, kind in cycle_frames]
         assert kinds == ["subframe", "subframe", "inversion"]
         inversion = cycle_frames[-1][0]
-        assert np.array_equal(inversion, 255 - img)
+        assert np.array_equal(inversion, expected)
 
 
 def test_each_cycle_integrates_back_to_original():
@@ -262,6 +268,33 @@ def test_anti_ocr_profiles_coexist_with_inversion(profile):
     assert kinds.count("inversion") == 2
     # 反色帧位于每周期末尾，且自身不叠加 anti-OCR 伪迹（保持灰场中和能力）。
     assert kinds == ["subframe"] * 4 + ["inversion"] + ["subframe"] * 4 + ["inversion"]
+    # 反色帧为弱反色：其均值显著低于整帧反色 255−I 的均值。
+    inv = next(f for f, kind in frames if kind == "inversion")
+    assert float(inv.mean()) < float((255 - img).mean())
+
+
+def test_partial_inversion_preserves_readability():
+    """弱反色 α=0.2 比整帧反色更可读：积分后文本区与原图差异更小。"""
+    img = make_demo_document(320, 180)
+    composer = SubframeComposer(n=2, gamma=1.0)
+    saliency = extract_text_saliency_mask(img)
+
+    frames, meta = build_playback_frames(
+        img, n=2, cycles=1, key=KEY, use_noise=False,
+        insert_inversion=True, inversion_alpha=0.2,
+    )
+    subframes = [f for f, kind in frames if kind == "subframe"]
+    partial_inv = next(f for f, kind in frames if kind == "inversion")
+    full_inv = composer.compose_inversion_frame(img)
+
+    def text_drift(inv_frame):
+        integrated = composer.integrate_subframes(
+            subframes + [inv_frame], pedestal=meta["pedestal"]
+        )
+        diff = np.abs(integrated.astype(np.int16) - img.astype(np.int16))
+        return float(diff[saliency].mean())
+
+    assert text_drift(partial_inv) < text_drift(full_inv)
 
 
 def test_strong_profile_disrupts_integrated_glyph_regions():

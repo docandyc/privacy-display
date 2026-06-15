@@ -31,6 +31,7 @@ from src.demo.privacy_window import (
     detect_display_capabilities,
     minimum_refresh_rate,
     sub_noises_to_pixel_space,
+    validate_inversion_alpha,
 )
 
 
@@ -505,6 +506,7 @@ def build_playback_frames(
     cycles: int,
     epsilon: float = 8 / 255,
     insert_inversion: bool = False,
+    inversion_alpha: float = 0.2,
     use_noise: bool = True,
     key: bytes | None = None,
     anti_ocr_profile: str = "off",
@@ -555,6 +557,10 @@ def build_playback_frames(
     anti_ocr_enabled = anti_ocr_profile != "off"
     # 反色帧（长曝光防御）与 anti-OCR 叠加层互补、可共存：前者把长曝光积分推向
     # 灰场以挫败积分攻击，后者压制单帧/拍照 OCR。两者作用维度不同，按请求如实生效。
+    # 固定 vsync 回放无法变帧时长，故用振幅缩放 α·(255−I) 复现实时端 α·Δt 短时全反色，
+    # 避免整帧反色压垮人眼可读性；α 越小越清晰、防长曝光越弱。
+    if insert_inversion:
+        validate_inversion_alpha(inversion_alpha)
 
     h, w = image.shape[:2]
     gen = MaskGenerator(w, h, n, key=key)
@@ -632,7 +638,10 @@ def build_playback_frames(
                 )
             frames.append((frame, "subframe"))
         if insert_inversion:
-            frames.append((composer.compose_inversion_frame(image), "inversion"))
+            frames.append(
+                (composer.compose_partial_inversion_frame(image, inversion_alpha),
+                 "inversion")
+            )
 
     meta = {
         "n": n,
@@ -641,6 +650,7 @@ def build_playback_frames(
         "pedestal": pedestal,
         "use_noise": use_noise,
         "insert_inversion": insert_inversion,
+        "inversion_alpha": inversion_alpha if insert_inversion else None,
         "per_cycle_slots": n + (1 if insert_inversion else 0),
         "permutations": permutations,
         "noise_schedule": noise_schedule,
@@ -672,6 +682,7 @@ class PlaybackConfig:
     epsilon: float = 8 / 255
     use_noise: bool = True
     insert_inversion: bool = False
+    inversion_alpha: float = 0.2
     image_path: str | None = None
     demo_name: str = "document"
     pdf_page: int = 1
@@ -758,6 +769,7 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         cycles=cfg.cycles,
         epsilon=cfg.epsilon,
         insert_inversion=cfg.insert_inversion,
+        inversion_alpha=cfg.inversion_alpha,
         use_noise=cfg.use_noise,
         anti_ocr_profile=cfg.anti_ocr_profile,
         mask_cell_size=cfg.mask_cell_size,
@@ -791,7 +803,8 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         font,
         f"n={cfg.n}  cycles={cfg.cycles}  slots/cycle={per_cycle_slots}  "
         f"refresh={target_refresh}Hz  vsync={int(vsync_enabled)}  "
-        f"noise={int(cfg.use_noise)}  inversion={int(meta['insert_inversion'])}",
+        f"noise={int(cfg.use_noise)}  inversion={int(meta['insert_inversion'])}"
+        + (f" (α={meta['inversion_alpha']:.2f})" if meta["insert_inversion"] else ""),
     ))
     anti = meta["anti_ocr"]
     if anti["profile"] != "off":
@@ -950,6 +963,9 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
                         help="关闭对抗噪声（pedestal=0）")
     parser.add_argument("--inversion", action="store_true",
                         help="每周期末插入反色帧（长曝光防御）")
+    parser.add_argument("--inversion-alpha", type=float, default=0.2,
+                        help="反色帧振幅系数 α∈[0.2,0.5]：越小越清晰、防长曝光越弱"
+                             "（默认 0.2 偏可读）")
     parser.add_argument("--benchmark", type=float, default=0.0,
                         metavar="SECONDS",
                         help="运行指定秒数后自动退出并打印 JSON 统计")
@@ -991,6 +1007,7 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         cycles=args.cycles,
         use_noise=not args.no_noise,
         insert_inversion=args.inversion,
+        inversion_alpha=args.inversion_alpha,
         image_path=args.image,
         demo_name=args.demo,
         pdf_page=args.pdf_page,

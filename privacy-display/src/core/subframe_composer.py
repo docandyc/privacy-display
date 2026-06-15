@@ -107,6 +107,14 @@ class SubframeComposer:
         """生成反色帧：I_inv(x,y) = 255 - I(x,y)，用于长曝光防御。"""
         return (255 - image.astype(np.int16)).clip(0, 255).astype(np.uint8)
 
+    def compose_partial_inversion_frame(
+        self, image: np.ndarray, alpha: float
+    ) -> np.ndarray:
+        """振幅按 α 缩放的反色帧 α·(255−I)：固定 vsync 回放下复现实时端
+        α·Δt 短时全反色的能量等效，避免整帧反色压垮人眼可读性。"""
+        arr = float(alpha) * (255.0 - image.astype(np.float32))
+        return np.clip(np.rint(arr), 0, 255).astype(np.uint8)
+
     def compose_black_frame(self, shape: tuple) -> np.ndarray:
         """
         生成全黑帧（交底书 3.2.4 / 5.4 步骤17）。
