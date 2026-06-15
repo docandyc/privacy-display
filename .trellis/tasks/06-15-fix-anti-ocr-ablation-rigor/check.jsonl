@@ -1,0 +1,9 @@
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python -m py_compile experiments/anti_ocr_profile_ablation.py src/evaluation/publication_summary.py","result":"passed"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python -m pytest tests/test_anti_ocr_profile_ablation.py tests/test_publication_summary.py -q","result":"19 passed"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python experiments/anti_ocr_profile_ablation.py --max-samples 4","result":"passed; deployed DeltaE fell to 1.40 with brightness alignment; inversion-frame attack char recovery measured at 0.902 for alpha=0.2 smoke sample"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python experiments/publication_summary.py --results-dir experiments/results","result":"passed; publication summary regenerated with metric/exact/worst-case/inversion-frame columns"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python -m pytest tests -q","result":"224 passed"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python experiments/reproducibility_manifest.py","result":"passed; manifest regenerated with secret_values_recorded=false"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python experiments/anti_ocr_profile_ablation.py --max-samples 16","result":"passed; full result regenerated with deployed DeltaE=1.46, temporal_char=0.879, inv_frame_char=0.930"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python experiments/publication_summary.py --results-dir experiments/results && .venv/bin/python experiments/reproducibility_manifest.py","result":"passed; publication summary and manifest regenerated from full 16-sample result"}
+{"date":"2026-06-15","actor":"codex","command":".venv/bin/python -m pytest tests -q","result":"224 passed"}

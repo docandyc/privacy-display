@@ -1,0 +1,1 @@
+{"date":"2026-06-15","actor":"codex","summary":"Fixed anti-OCR profile ablation rigor gaps: brightness-aligned readability integration for n+1 deployed cycles, explicit inversion-frame recovery attack, temporal/long-exposure headline metric fields with best-observed caveats, deterministic RNG seed in config, and regenerated publication artifacts plus reproducibility manifest."}

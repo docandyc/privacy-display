@@ -5,6 +5,7 @@ from src.evaluation.publication_summary import (
     SUMMARY_MD,
     build_publication_summary,
     render_markdown,
+    summarize_supplemental_ablation,
     summarize_ocr_strata,
     summarize_pareto_security,
     summarize_vlm_model_ablation,
@@ -170,6 +171,66 @@ def test_publication_summary_marks_all_error_vlm_result_uncitable(tmp_path):
     assert summary["vlm"]["available"] is False
     assert summary["vlm"]["reason"] == "all_calls_failed"
     assert "all live API calls failed" in markdown
+
+
+def test_anti_ocr_supplemental_rows_prioritize_profile_and_alpha_sweep():
+    report = {
+        "summary": {
+            "block1/off": {
+                "headline_metric": "temporal_average",
+                "char_accuracy": {"mean": 0.90, "ci95": {"low": 0.80, "high": 1.0, "method": "bootstrap"}},
+                "exact_match": {"mean": 0.50, "ci95": {"low": 0.25, "high": 0.75, "method": "bootstrap"}},
+                "best_observed_char": {"mean": 0.95},
+                "single_frame_char": {"mean": 0.0},
+            },
+            "block1/strong@overlay": {"char_accuracy": {"mean": 0.88}},
+            "block1/strong@deployed": {"char_accuracy": {"mean": 0.82}},
+            "block1/vlm": {"char_accuracy": {"mean": 0.55}},
+            "block2/s0.00_g0.00": {"char_accuracy": {"mean": 0.91}},
+            "block2/s0.00_g0.12": {"char_accuracy": {"mean": 0.90}},
+            "block2/s0.00_g0.22": {"char_accuracy": {"mean": 0.89}},
+            "block2/s0.10_g0.00": {"char_accuracy": {"mean": 0.90}},
+            "block2/s0.10_g0.12": {"char_accuracy": {"mean": 0.87}},
+            "block2/s0.10_g0.22": {"char_accuracy": {"mean": 0.86}},
+            "block2/s0.18_g0.00": {"char_accuracy": {"mean": 0.89}},
+            "block2/s0.18_g0.12": {"char_accuracy": {"mean": 0.86}},
+            "block2/s0.18_g0.22": {"char_accuracy": {"mean": 0.84}},
+            "block2/s0.30_g0.00": {"char_accuracy": {"mean": 0.88}},
+            "block2/s0.30_g0.12": {"char_accuracy": {"mean": 0.83}},
+            "block2/s0.30_g0.22": {"char_accuracy": {"mean": 0.80}},
+            "block3/alpha_0.0": {"char_accuracy": {"mean": 0.87}},
+            "block3/alpha_0.2": {
+                "headline_metric": "long_exposure",
+                "char_accuracy": {"mean": 0.82},
+                "inversion_frame_attack_char": {"mean": 0.72},
+            },
+            "block3/alpha_0.5": {"char_accuracy": {"mean": 0.70}},
+            "block3/alpha_1.0": {"char_accuracy": {"mean": 0.58}},
+        }
+    }
+
+    rows = summarize_supplemental_ablation(
+        report,
+        "anti_ocr_profile_ablation.json",
+    )["rows"]
+    names = [row["name"] for row in rows]
+
+    assert len(rows) == 12
+    assert names[:4] == [
+        "block1/off",
+        "block1/strong@overlay",
+        "block1/strong@deployed",
+        "block1/vlm",
+    ]
+    assert rows[0]["headline_metric"] == "temporal_average"
+    assert rows[0]["exact_match"] == 0.50
+    assert rows[0]["best_observed_char"] == 0.95
+    assert "block2/s0.10_g0.12" in names
+    assert "block3/alpha_0.2" in names
+    assert "block3/alpha_1.0" in names
+    alpha_row = rows[names.index("block3/alpha_0.2")]
+    assert alpha_row["headline_metric"] == "long_exposure"
+    assert alpha_row["inversion_frame_attack_char"] == 0.72
 
 
 def test_summarize_ocr_strata_surfaces_per_stratum_rows():

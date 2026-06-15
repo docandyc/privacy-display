@@ -23,17 +23,19 @@ playback's [0.2,0.5] validation.
 Three blocks (security headline = exact-match recovery, per memory; char-accuracy
 kept as a secondary signal):
 
-  Block 1  profile: off / strong@deployed (0.10·0.12) / vlm — single-frame,
-           temporal-average, strongest screen-camera attack; readability drift +
-           ΔE + SSIM (overlay perceptual cost).
+  Block 1  profile: off / strong@overlay (0.10·0.12) /
+           strong@deployed (0.10·0.12 + α=0.2) / vlm — single-frame,
+           temporal-average, screen-camera-suite best, and best-observed
+           measured attack; readability drift + ΔE + SSIM.
   Block 2  stripe_alpha × glyph_alpha grid (profile=strong) — temporal-average
            recovery vs readability drift; locates the 0.10/0.12 operating point.
   Block 3  inversion α∈{0, 0.2, 0.3, 0.5, 1.0} (profile=strong@deployed) —
            long-exposure recovery (defence) vs readability drift (cost);
            justifies α=0.2.
 
-Optional Block V (``--vlm`` + ``SILICONFLOW_API_KEY``): VLM exact-match on
-off vs strong@deployed (the hardest attacker). Skipped without a key.
+Optional Block V (``--vlm`` + ``SILICONFLOW_API_KEY``): VLM recovery on
+off vs strong@deployed temporal averages. Skipped without a key; failed calls
+are counted and not converted into zero-recovery evidence.
 
 Run:
     python experiments/anti_ocr_profile_ablation.py --max-samples 16
@@ -66,13 +68,26 @@ from src.evaluation.sampling import select_publication_subset, take_indices  # n
 
 
 ABLATION_KEY = b"anti-ocr-profile-ablation-key-00"
+RNG_SEED = 20260615
 
-# Block 1 profiles. ``stripe``/``glyph`` are overrides (None → profile default);
-# strong@deployed pins the user's measured operating point.
+DEPLOYED_STRIPE_ALPHA = 0.10
+DEPLOYED_GLYPH_ALPHA = 0.12
+DEPLOYED_INVERSION_ALPHA = 0.2
+
+# Block 1 profiles. ``stripe``/``glyph`` are overrides (None → profile default).
+# ``strong@overlay`` is the anti-OCR layer alone; ``strong@deployed`` is the
+# actual shipped playback stream (overlay + weak inversion frame).
 PROFILE_CONDITIONS = [
-    ("off", None, None),
-    ("strong@deployed", 0.10, 0.12),
-    ("vlm", None, None),
+    ("off", "off", None, None, None),
+    ("strong@overlay", "strong", DEPLOYED_STRIPE_ALPHA, DEPLOYED_GLYPH_ALPHA, None),
+    (
+        "strong@deployed",
+        "strong",
+        DEPLOYED_STRIPE_ALPHA,
+        DEPLOYED_GLYPH_ALPHA,
+        DEPLOYED_INVERSION_ALPHA,
+    ),
+    ("vlm", "vlm", None, None, None),
 ]
 
 # Block 2 grid (profile=strong). Includes the deployed (0.10, 0.12) cell and the
@@ -110,6 +125,39 @@ def build_subframes(img, *, n, cycles, epsilon, profile, stripe_alpha, glyph_alp
     return subframes, float(meta["pedestal"])
 
 
+def build_frame_sequence(
+    img,
+    *,
+    n,
+    cycles,
+    epsilon,
+    profile,
+    stripe_alpha,
+    glyph_alpha,
+    inversion_alpha=None,
+):
+    """Return deployment-ordered frames plus separated subframes and metadata."""
+    frames, meta = build_playback_frames(
+        img,
+        n=n,
+        cycles=cycles,
+        epsilon=epsilon,
+        insert_inversion=inversion_alpha is not None,
+        inversion_alpha=(
+            DEPLOYED_INVERSION_ALPHA
+            if inversion_alpha is None
+            else inversion_alpha
+        ),
+        anti_ocr_profile=profile,
+        stripe_alpha=stripe_alpha,
+        glyph_alpha=glyph_alpha,
+        key=ABLATION_KEY,
+    )
+    sequence = [f for f, _ in frames]
+    subframes = [f for f, kind in frames if kind == "subframe"]
+    return sequence, subframes, float(meta["pedestal"]), meta
+
+
 def inversion_frame_for(composer, img, alpha):
     """α=0 → None; 0<α<1 → partial; α≥1 → full inverse (255−I)."""
     if alpha <= 0.0:
@@ -119,12 +167,69 @@ def inversion_frame_for(composer, img, alpha):
     return composer.compose_partial_inversion_frame(img, alpha)
 
 
+def frame_sequence_with_inversion(subframes, n, inv_frame):
+    """Interleave one optional inversion frame after every n-subframe cycle."""
+    sequence = []
+    for start in range(0, len(subframes), n):
+        cycle = subframes[start:start + n]
+        if len(cycle) != n:
+            raise ValueError("subframes length must be a multiple of n")
+        sequence.extend(cycle)
+        if inv_frame is not None:
+            sequence.append(inv_frame)
+    return sequence
+
+
+def average_frame_sequence(frames):
+    """Long-exposure / full-sequence integration without reusing only cycle 0."""
+    if not frames:
+        raise ValueError("frames must not be empty")
+    stacked = np.mean([f.astype(np.float64) for f in frames], axis=0)
+    return stacked.clip(0, 255).astype(np.uint8)
+
+
+def brightness_aligned_boost(composer, frame_count):
+    """Use the actually displayed slot count when integrating readability frames."""
+    if composer.hdr_mode:
+        return None
+    return frame_count / composer.gamma
+
+
+def contrast_stretch(frame, low=1.0, high=99.0):
+    """Per-channel percentile stretch for low-contrast recovered attack frames."""
+    arr = frame.astype(np.float32)
+    lo = np.percentile(arr, low, axis=(0, 1), keepdims=True)
+    hi = np.percentile(arr, high, axis=(0, 1), keepdims=True)
+    span = hi - lo
+    scale = np.where(span > 1e-6, 255.0 / span, 1.0)
+    return np.clip((arr - lo) * scale, 0, 255).astype(np.uint8)
+
+
+def inversion_frame_recovery_attack(inv_frame):
+    """Natural attack on α·(255-I): invert the frame, then stretch contrast."""
+    inverted = 255 - inv_frame.astype(np.uint8)
+    return contrast_stretch(inverted)
+
+
 def readability_drift(composer, cycle_subframes, inv_frame, pedestal, img, saliency):
-    """Human-perceived integration drift on text pixels (lower = more readable)."""
+    """Human-perceived integration drift on text pixels (lower = more readable).
+
+    When a weak inversion slot is appended, the deployed cycle has n+1 displayed
+    slots. For perceptual cost we brightness-align that cycle by using
+    boost=per_cycle_slots/gamma instead of the composer default n/gamma; otherwise
+    ΔE is dominated by a global dimming artefact rather than the overlay/inversion
+    distortion itself.
+    """
     frames = list(cycle_subframes)
     if inv_frame is not None:
         frames = frames + [inv_frame]
-    integrated = composer.integrate_subframes(frames, pedestal=pedestal)
+    boost = brightness_aligned_boost(composer, len(frames))
+    effective_pedestal = pedestal * (len(cycle_subframes) / len(frames))
+    integrated = composer.integrate_subframes(
+        frames,
+        boost=boost,
+        pedestal=effective_pedestal,
+    )
     diff = np.abs(integrated.astype(np.int16) - img.astype(np.int16))
     return float(diff[saliency].mean()), integrated
 
@@ -136,9 +241,9 @@ def ocr_recovery(ev, frame, gt):
     return float(rec["exact_match"]), float(res.char_accuracy)
 
 
-def strongest_screen_camera(ev, cam, subframes, n, gt):
-    """Max recovery over the screen-camera attack suite (the strongest attacker)."""
-    suite = cam.screen_camera_attack_suite(subframes, cycle_length=n)
+def screen_camera_suite_best(ev, cam, frame_sequence, cycle_length, gt):
+    """Max recovery over the screen-camera suite only."""
+    suite = cam.screen_camera_attack_suite(frame_sequence, cycle_length=cycle_length)
     best_exact, best_char = 0.0, 0.0
     for entry in suite.values():
         em, ca = ocr_recovery(ev, entry["frame"], gt)
@@ -153,21 +258,41 @@ def strongest_screen_camera(ev, cam, subframes, n, gt):
 
 
 def run_block1_profile(acc, *, ev, cam, composer, img, gt, saliency, n, cycles, eps):
-    for label, s_alpha, g_alpha in PROFILE_CONDITIONS:
-        profile = "off" if label == "off" else ("vlm" if label == "vlm" else "strong")
-        subframes, pedestal = build_subframes(
+    for label, profile, s_alpha, g_alpha, inv_alpha in PROFILE_CONDITIONS:
+        sequence, subframes, pedestal, meta = build_frame_sequence(
             img, n=n, cycles=cycles, epsilon=eps,
             profile=profile, stripe_alpha=s_alpha, glyph_alpha=g_alpha,
+            inversion_alpha=inv_alpha,
         )
-        one_cycle = subframes[:n]
+        per_cycle_slots = int(meta["per_cycle_slots"])
+        one_cycle_subframes = subframes[:n]
+        one_cycle_sequence = sequence[:per_cycle_slots]
+        one_cycle_inv = (
+            one_cycle_sequence[-1]
+            if meta["insert_inversion"]
+            else None
+        )
 
-        sf_exact, sf_char = ocr_recovery(ev, one_cycle[0], gt)
-        ta = cam.temporal_averaging_attack(subframes, k=n, randomize_order=False)
+        sf_exact, sf_char = ocr_recovery(ev, one_cycle_subframes[0], gt)
+        ta = cam.temporal_averaging_attack(
+            one_cycle_sequence,
+            k=per_cycle_slots,
+            randomize_order=False,
+        )
         ta_exact, ta_char = ocr_recovery(ev, ta, gt)
-        cam_exact, cam_char = strongest_screen_camera(ev, cam, subframes, n, gt)
+        suite_exact, suite_char = screen_camera_suite_best(
+            ev, cam, sequence, per_cycle_slots, gt
+        )
+        if one_cycle_inv is None:
+            inv_exact, inv_char = 0.0, 0.0
+        else:
+            inv_attack = inversion_frame_recovery_attack(one_cycle_inv)
+            inv_exact, inv_char = ocr_recovery(ev, inv_attack, gt)
+        best_exact = max(sf_exact, ta_exact, suite_exact, inv_exact)
+        best_char = max(sf_char, ta_char, suite_char, inv_char)
 
         drift, integrated = readability_drift(
-            composer, one_cycle, None, pedestal, img, saliency
+            composer, one_cycle_subframes, one_cycle_inv, pedestal, img, saliency
         )
         delta_e = compute_delta_e(img, integrated)
         ssim = compute_ssim(img, integrated)
@@ -176,8 +301,12 @@ def run_block1_profile(acc, *, ev, cam, composer, img, gt, saliency, n, cycles, 
         acc[f"block1/{label}"]["single_frame_char"].append(sf_char)
         acc[f"block1/{label}"]["temporal_avg_exact"].append(ta_exact)
         acc[f"block1/{label}"]["temporal_avg_char"].append(ta_char)
-        acc[f"block1/{label}"]["strong_camera_exact"].append(cam_exact)
-        acc[f"block1/{label}"]["strong_camera_char"].append(cam_char)
+        acc[f"block1/{label}"]["screen_camera_suite_exact"].append(suite_exact)
+        acc[f"block1/{label}"]["screen_camera_suite_char"].append(suite_char)
+        acc[f"block1/{label}"]["inversion_frame_attack_exact"].append(inv_exact)
+        acc[f"block1/{label}"]["inversion_frame_attack_char"].append(inv_char)
+        acc[f"block1/{label}"]["best_observed_exact"].append(best_exact)
+        acc[f"block1/{label}"]["best_observed_char"].append(best_char)
         acc[f"block1/{label}"]["readability_drift"].append(drift)
         acc[f"block1/{label}"]["delta_e"].append(delta_e)
         acc[f"block1/{label}"]["ssim"].append(ssim)
@@ -205,25 +334,37 @@ def run_block3_inversion(acc, *, ev, cam, composer, img, gt, saliency, n, cycles
     # Strong@deployed subframes are identical across α (inversion is a separate frame).
     subframes, pedestal = build_subframes(
         img, n=n, cycles=cycles, epsilon=eps,
-        profile="strong", stripe_alpha=0.10, glyph_alpha=0.12,
+        profile="strong",
+        stripe_alpha=DEPLOYED_STRIPE_ALPHA,
+        glyph_alpha=DEPLOYED_GLYPH_ALPHA,
     )
     one_cycle = subframes[:n]
     for alpha in INVERSION_ALPHAS:
         inv = inversion_frame_for(composer, img, alpha)
-        inv_frames = [inv] if inv is not None else None
-        le = cam.long_exposure_attack(one_cycle, inv_frames, n_cycles=4)
+        playback_sequence = frame_sequence_with_inversion(subframes, n, inv)
+        le = average_frame_sequence(playback_sequence)
         le_exact, le_char = ocr_recovery(ev, le, gt)
+        if inv is None:
+            inv_exact, inv_char = 0.0, 0.0
+        else:
+            inv_attack = inversion_frame_recovery_attack(inv)
+            inv_exact, inv_char = ocr_recovery(ev, inv_attack, gt)
         drift, _ = readability_drift(composer, one_cycle, inv, pedestal, img, saliency)
 
         key = f"block3/alpha_{alpha:.1f}"
         acc[key]["long_exposure_exact"].append(le_exact)
         acc[key]["long_exposure_char"].append(le_char)
+        acc[key]["inversion_frame_attack_exact"].append(inv_exact)
+        acc[key]["inversion_frame_attack_char"].append(inv_char)
         acc[key]["readability_drift"].append(drift)
 
 
 def run_block_vlm(acc, *, client, cam, img, gt, n, cycles, eps):
-    """Optional: VLM exact-match on the strongest attacker frame, off vs strong."""
-    for label, s_alpha, g_alpha in (("off", None, None), ("strong@deployed", 0.10, 0.12)):
+    """Optional: VLM recovery on temporal averages, with explicit error counts."""
+    for label, s_alpha, g_alpha in (
+        ("off", None, None),
+        ("strong@deployed", DEPLOYED_STRIPE_ALPHA, DEPLOYED_GLYPH_ALPHA),
+    ):
         profile = "off" if label == "off" else "strong"
         subframes, _ = build_subframes(
             img, n=n, cycles=cycles, epsilon=eps,
@@ -235,9 +376,13 @@ def run_block_vlm(acc, *, client, cam, img, gt, n, cycles, eps):
             visible = str(result.get("visible_text", "") or "")
             rec = result.get("metrics") or text_recovery_metrics(visible, gt)
         except Exception:
-            rec = text_recovery_metrics("", gt)
+            acc[f"vlm/{label}"]["call_success"].append(0.0)
+            acc[f"vlm/{label}"]["error_count"].append(1.0)
+            continue
         acc[f"vlm/{label}"]["temporal_avg_exact"].append(float(rec["exact_match"]))
         acc[f"vlm/{label}"]["temporal_avg_char"].append(float(rec["char_accuracy"]))
+        acc[f"vlm/{label}"]["call_success"].append(1.0)
+        acc[f"vlm/{label}"]["error_count"].append(0.0)
 
 
 # ----------------------------------------------------------------------
@@ -247,24 +392,72 @@ def run_block_vlm(acc, *, client, cam, img, gt, n, cycles, eps):
 
 def summarize(acc):
     """Per-condition {metric: mean_std}. Block prefix kept in the key."""
-    return {cond: {m: _mean_std(v) for m, v in metrics.items()}
-            for cond, metrics in acc.items()}
+    summary = {}
+    for cond, metrics in acc.items():
+        summary[cond] = {}
+        for metric, values in metrics.items():
+            if metric == "error_count":
+                summary[cond][metric] = int(sum(values))
+            else:
+                summary[cond][metric] = _mean_std(values)
+    return summary
 
 
 def headline_summary(detail):
     """Flat ``summary`` for publication_summary auto-pickup.
 
-    Security headline char-accuracy per condition (lower = safer): strongest
-    attacker for profiles, temporal-average for the grid, long-exposure for α.
+    Paper-facing recovery per condition (lower = safer): Block 1 reports the
+    temporal-average attack as the headline and carries single-frame plus
+    best-observed strong-camera values as explicit caveats; the grid uses
+    temporal-average; the α sweep uses long exposure and carries the natural
+    inversion-frame attack separately. Rows with zero successful VLM calls are
+    omitted from citation summary.
     """
     summary = {}
     for cond, metrics in detail.items():
-        if "strong_camera_char" in metrics:
-            summary[cond] = {"char_accuracy": metrics["strong_camera_char"]}
+        if "best_observed_char" in metrics and "temporal_avg_char" in metrics:
+            row = {
+                "headline_metric": "temporal_average",
+                "char_accuracy": metrics["temporal_avg_char"],
+                "exact_match": metrics["temporal_avg_exact"],
+                "single_frame_char": metrics["single_frame_char"],
+                "single_frame_exact": metrics["single_frame_exact"],
+                "best_observed_char": metrics["best_observed_char"],
+                "best_observed_exact": metrics["best_observed_exact"],
+            }
+            if "inversion_frame_attack_char" in metrics:
+                row["inversion_frame_attack_char"] = metrics["inversion_frame_attack_char"]
+                row["inversion_frame_attack_exact"] = metrics["inversion_frame_attack_exact"]
+            summary[cond] = row
+        elif "best_observed_char" in metrics:
+            summary[cond] = {
+                "headline_metric": "best_observed",
+                "char_accuracy": metrics["best_observed_char"],
+                "exact_match": metrics["best_observed_exact"],
+            }
         elif "long_exposure_char" in metrics:
-            summary[cond] = {"char_accuracy": metrics["long_exposure_char"]}
-        elif "temporal_avg_char" in metrics:
-            summary[cond] = {"char_accuracy": metrics["temporal_avg_char"]}
+            row = {
+                "headline_metric": "long_exposure",
+                "char_accuracy": metrics["long_exposure_char"],
+                "exact_match": metrics["long_exposure_exact"],
+            }
+            if "inversion_frame_attack_char" in metrics:
+                row["inversion_frame_attack_char"] = metrics["inversion_frame_attack_char"]
+                row["inversion_frame_attack_exact"] = metrics["inversion_frame_attack_exact"]
+            summary[cond] = row
+        elif (
+            "temporal_avg_char" in metrics
+            and metrics["temporal_avg_char"].get("count", 0) > 0
+        ):
+            row = {
+                "headline_metric": "temporal_average",
+                "char_accuracy": metrics["temporal_avg_char"],
+                "exact_match": metrics["temporal_avg_exact"],
+            }
+            if "error_count" in metrics:
+                row["error_count"] = metrics["error_count"]
+                row["call_success"] = metrics.get("call_success", {})
+            summary[cond] = row
     return summary
 
 
@@ -285,6 +478,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    np.random.seed(RNG_SEED)
     images, truths, names = load_corpus()
     metadata = load_corpus_metadata()
     selected, sample_policy = select_publication_subset(
@@ -330,13 +524,35 @@ def main() -> int:
     report = {
         "config": {
             "n": n, "epsilon": eps, "cycles": cycles,
+            "rng_seed": RNG_SEED,
             "n_samples": len(images), "sample_policy": sample_policy,
             "profiles": [c[0] for c in PROFILE_CONDITIONS],
             "grid_stripe": list(GRID_STRIPE), "grid_glyph": list(GRID_GLYPH),
             "inversion_alphas": list(INVERSION_ALPHAS),
-            "deployed": {"profile": "strong", "stripe_alpha": 0.10,
-                         "glyph_alpha": 0.12, "inversion_alpha": 0.2},
+            "readability_integration": "brightness_aligned_per_cycle_slots_over_gamma",
+            "block2_attack": "temporal_average_only",
+            "deployed": {
+                "profile": "strong",
+                "stripe_alpha": DEPLOYED_STRIPE_ALPHA,
+                "glyph_alpha": DEPLOYED_GLYPH_ALPHA,
+                "inversion_alpha": DEPLOYED_INVERSION_ALPHA,
+            },
             "vlm": vlm_client is not None,
+        },
+        "interpretation": {
+            "headline_metric": (
+                "Block 1 summary rows use temporal-average char recovery; "
+                "single-frame and best-observed strong-camera results remain in "
+                "detail/summary caveat fields."
+            ),
+            "exact_match_ci": (
+                "At small N, off/overlay/deployed exact-match differences should "
+                "be read with their CI; overlapping CI are not significance claims."
+            ),
+            "readability_delta_e": (
+                "Readability drift, DeltaE, and SSIM use a brightness-aligned "
+                "n_slots/gamma integration model when an inversion slot is present."
+            ),
         },
         "summary": headline_summary(detail),
         "detail": detail,
@@ -351,17 +567,19 @@ def main() -> int:
         return detail.get(cond, {}).get(metric, {}).get("mean", float("nan"))
 
     print(f"\nSaved {out}")
-    print("--- Block 1: profile (strongest-camera exact | temporal char | readability) ---")
-    for label, _, _ in PROFILE_CONDITIONS:
+    print("--- Block 1: profile (best observed exact | temporal char | inv-frame char | readability) ---")
+    for label, _, _, _, _ in PROFILE_CONDITIONS:
         c = f"block1/{label}"
-        print(f"  {label:16s} cam_exact={m(c, 'strong_camera_exact'):.3f}  "
+        print(f"  {label:16s} best_exact={m(c, 'best_observed_exact'):.3f}  "
               f"temporal_char={m(c, 'temporal_avg_char'):.3f}  "
+              f"inv_frame_char={m(c, 'inversion_frame_attack_char'):.3f}  "
               f"drift={m(c, 'readability_drift'):.2f}  "
               f"ΔE={m(c, 'delta_e'):.2f}  SSIM={m(c, 'ssim'):.3f}")
-    print("--- Block 3: inversion α (long-exposure char=defence | readability drift=cost) ---")
+    print("--- Block 3: inversion α (long-exposure char=defence | inv-frame char=single-slot leak | drift=cost) ---")
     for alpha in INVERSION_ALPHAS:
         c = f"block3/alpha_{alpha:.1f}"
         print(f"  α={alpha:.1f}  long_exp_char={m(c, 'long_exposure_char'):.3f}  "
+              f"inv_frame_char={m(c, 'inversion_frame_attack_char'):.3f}  "
               f"(exact={m(c, 'long_exposure_exact'):.3f})  "
               f"drift={m(c, 'readability_drift'):.2f}")
     return 0

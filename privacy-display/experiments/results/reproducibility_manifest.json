@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-06-14T09:33:45.138975+00:00",
+  "generated_at_utc": "2026-06-15T09:55:32.117711+00:00",
   "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
   "git": {
-    "commit": "ff3d64a790554ebdad2255ea3b8c24aafd445c00",
+    "commit": "5a54517cc4873866fb2f3f512f8896f821fc7262",
     "branch": "master",
     "dirty": true
   },
@@ -409,14 +409,14 @@
     {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "10eb73607580c2ba2a1845bcf29b5448abe4c31d0da11658835d941a422959bc",
-      "bytes": 70460
+      "sha256": "b2f6882f9e9ca5c5db85d717990399d2163bffbd16348a418e2075514b806a1b",
+      "bytes": 87958
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "55411d39cfc8fc87bc65ed83c42559aa8bd478f85f85c267d582a9c30cf69237",
-      "bytes": 13305
+      "sha256": "64a4fa1c026eaf002a64ab9de588824a2f688d554b93ac2f3d33be7550a04e70",
+      "bytes": 17537
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
@@ -615,8 +615,8 @@
     {
       "path": "src/evaluation/publication_summary.py",
       "exists": true,
-      "sha256": "29af751d6073dfc6765b8a29a131a3c3bbb7e158773f09bd40ff2e27589c9fe6",
-      "bytes": 31958
+      "sha256": "a4f8b4fb3390c62261d7e47478129724437770020497e3c3bccc7f5e828c3276",
+      "bytes": 36107
     },
     {
       "path": "src/evaluation/vlm_benchmark.py",

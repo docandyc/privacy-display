@@ -23,6 +23,7 @@ This file is generated from machine-readable experiment JSON artifacts.
 - vlm_model_ablation: `vlm_model_ablation.json`
 - brightness_compensation_ablation: `brightness_compensation_ablation.json`
 - mask_granularity_ablation: `mask_granularity_ablation.json`
+- anti_ocr_profile_ablation: `anti_ocr_profile_ablation.json`
 - seed_sensitivity: `seed_sensitivity.json`
 - usability_pilot: `missing`
 
@@ -157,18 +158,19 @@ Recommended: n=6 @ 360.0Hz (FPI 0.0333, single-frame MI 0.249)
 | Experiment | Status | Highlight |
 |---|---|---|
 | component_ablation | available | baseline: char recovery 94.0% (92.3%-95.6%), leak 0.0%, errors 0 |
-| recognizer_generalization | available | tesseract/original: char recovery 94.0% (92.3%-95.6%), leak 100.0%, errors 0 |
+| recognizer_generalization | available | tesseract/original: char recovery 94.0% (92.3%-95.6%), exact 84.2% (77.5%-90.8%), leak 100.0%, errors 0 |
 | perceptual_ablation | available | rgb_full: char recovery 0.0% (0.0%-0.1%), leak 0.0%, errors 0 |
 | pareto_sweep | available | recommended n=6 @ 360.0Hz, FPI 0.0333, MI 0.249 |
-| strong_attack_extra | available | single_subframe: char recovery 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
-| adaptive_attack_ablation | available | raw_subframe: char recovery 0.2% (0.0%-0.4%), leak 0.0%, errors 0 |
-| camera_pipeline_ablation | available | clean_subframe: char recovery 0.1% (0.0%-0.2%), leak 0.0%, errors 0 |
-| screen_privacy_baselines | available | unprotected: char recovery 92.9% (87.8%-97.2%), leak 100.0%, errors 0 |
-| vlm_prompt_ablation | available | strict_transcription: char recovery 72.7% (58.1%-85.6%), leak 0.0%, errors 0 |
+| strong_attack_extra | available | single_subframe: char recovery 0.0% (0.0%-0.0%), exact 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
+| adaptive_attack_ablation | available | raw_subframe: char recovery 0.2% (0.0%-0.4%), exact 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
+| camera_pipeline_ablation | available | clean_subframe: char recovery 0.1% (0.0%-0.2%), exact 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
+| screen_privacy_baselines | available | unprotected: char recovery 92.9% (87.8%-97.2%), exact 66.7% (33.3%-88.9%), leak 100.0%, errors 0 |
+| vlm_prompt_ablation | available | strict_transcription: char recovery 72.7% (58.1%-85.6%), exact 75.0% (61.1%-88.9%), leak 0.0%, errors 0 |
 | noise_epsilon_sweep | available | eps_0.0000: char recovery 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
 | vlm_model_ablation | available | Qwen/Qwen3-VL-32B-Instruct: char recovery 96.3% (92.5%-99.2%), leak 0.0%, errors 1 |
 | brightness_compensation_ablation | available | gamma_1.00: char recovery 0.0% (0.0%-0.1%), leak 0.0%, errors 0 |
 | mask_granularity_ablation | available | block_1: char recovery 0.0% (0.0%-0.1%), leak 0.0%, errors 0 |
+| anti_ocr_profile_ablation | available | block1/off: temporal_average 93.0% (88.4%-96.9%), exact 81.2% (62.5%-100.0%), worst-case char 93.0%, inv-frame char 0.0%, leak 0.0%, errors 0 |
 | seed_sensitivity | available | single_frame_ocr: char recovery 0.0% (0.0%-0.1%), leak 0.0%, errors 0 |
 | usability_pilot | missing | `usability_pilot.json` |
 
@@ -177,133 +179,150 @@ Recommended: n=6 @ 360.0Hz (FPI 0.0333, single-frame MI 0.249)
 
 #### component_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| baseline | 94.0% (92.3%-95.6%) | 0.0% | 0 |
-| single_mask_only | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| single_mask_noise | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| inpaint_mask_only | 50.9% (44.7%-56.8%) | 0.0% | 0 |
-| inpaint_noise_pedestal | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| inpaint_noise_no_pedestal | 9.6% (4.9%-14.7%) | 0.0% | 0 |
-| long_exposure_no_inv | 94.3% (92.7%-95.9%) | 0.0% | 0 |
-| long_exposure_with_inv | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| ae_real_subframe_no_black | 0.1% (0.0%-0.1%) | 0.0% | 0 |
-| ae_real_subframe_with_black | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| weak_mask_only | 32.2% (24.2%-40.4%) | 0.0% | 0 |
-| weak_mask_noise | 26.8% (22.5%-31.1%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| baseline |  | 94.0% (92.3%-95.6%) |  |  |  | 0.0% | 0 |
+| single_mask_only |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| single_mask_noise |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| inpaint_mask_only |  | 50.9% (44.7%-56.8%) |  |  |  | 0.0% | 0 |
+| inpaint_noise_pedestal |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| inpaint_noise_no_pedestal |  | 9.6% (4.9%-14.7%) |  |  |  | 0.0% | 0 |
+| long_exposure_no_inv |  | 94.3% (92.7%-95.9%) |  |  |  | 0.0% | 0 |
+| long_exposure_with_inv |  | 0.0% (0.0%-0.0%) |  |  |  | 0.0% | 0 |
+| ae_real_subframe_no_black |  | 0.1% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| ae_real_subframe_with_black |  | 0.0% (0.0%-0.0%) |  |  |  | 0.0% | 0 |
+| weak_mask_only |  | 32.2% (24.2%-40.4%) |  |  |  | 0.0% | 0 |
+| weak_mask_noise |  | 26.8% (22.5%-31.1%) |  |  |  | 0.0% | 0 |
 
 #### recognizer_generalization
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| tesseract/original | 94.0% (92.3%-95.6%) | 100.0% | 0 |
-| tesseract/single_subframe | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| tesseract/temporal_average_cycle | 94.3% (92.6%-95.9%) | 100.0% | 0 |
-| tesseract/phase_search_max | 94.2% (92.4%-95.8%) | 100.0% | 0 |
-| tesseract/blue_channel_max | 94.6% (93.0%-96.0%) | 100.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| tesseract/original |  | 94.0% (92.3%-95.6%) | 84.2% (77.5%-90.8%) |  |  | 100.0% | 0 |
+| tesseract/single_subframe |  | 0.0% (0.0%-0.1%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| tesseract/temporal_average_cycle |  | 94.3% (92.6%-95.9%) | 87.5% (81.7%-92.5%) |  |  | 100.0% | 0 |
+| tesseract/phase_search_max |  | 94.2% (92.4%-95.8%) | 85.8% (79.2%-91.7%) |  |  | 100.0% | 0 |
+| tesseract/blue_channel_max |  | 94.6% (93.0%-96.0%) | 87.5% (81.7%-93.3%) |  |  | 100.0% | 0 |
 
 #### perceptual_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| rgb_full | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| blue_residual_0.5 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| blue_kept | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| green_kept | 0.0% (0.0%-0.1%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| rgb_full |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| blue_residual_0.5 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| blue_kept |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| green_kept |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
 
 #### strong_attack_extra
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| single_subframe | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| rolling_shutter_single | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| rolling_shutter_row_alignment | 92.9% (87.8%-97.2%) | 100.0% | 0 |
-| temporal_superresolution | 91.4% (85.3%-96.6%) | 100.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| single_subframe |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| rolling_shutter_single |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| rolling_shutter_row_alignment |  | 92.9% (87.8%-97.2%) | 66.7% (33.3%-88.9%) |  |  | 100.0% | 0 |
+| temporal_superresolution |  | 91.4% (85.3%-96.6%) | 55.6% (22.2%-88.9%) |  |  | 100.0% | 0 |
 
 #### adaptive_attack_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| raw_subframe | 0.2% (0.0%-0.4%) | 0.0% | 0 |
-| otsu_binarize | 0.1% (0.0%-0.2%) | 0.0% | 0 |
-| adaptive_threshold | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| clahe_luma | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| unsharp_mask | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| denoise | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| upscale_2x | 0.0% (0.0%-0.0%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| raw_subframe |  | 0.2% (0.0%-0.4%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| otsu_binarize |  | 0.1% (0.0%-0.2%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| adaptive_threshold |  | 0.0% (0.0%-0.1%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| clahe_luma |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| unsharp_mask |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| denoise |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| upscale_2x |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
 
 #### camera_pipeline_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| clean_subframe | 0.1% (0.0%-0.2%) | 0.0% | 0 |
-| jpeg_q50 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| sensor_noise_iso_high | 0.1% (0.0%-0.3%) | 0.0% | 0 |
-| motion_blur | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| digital_zoom_2x | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| auto_contrast | 0.1% (0.0%-0.3%) | 0.0% | 0 |
-| rolling_shutter_single | 0.1% (0.0%-0.2%) | 0.0% | 0 |
-| temporal_average_boundary | 94.4% (92.7%-96.0%) | 100.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| clean_subframe |  | 0.1% (0.0%-0.2%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| jpeg_q50 |  | 0.0% (0.0%-0.1%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| sensor_noise_iso_high |  | 0.1% (0.0%-0.3%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| motion_blur |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| digital_zoom_2x |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| auto_contrast |  | 0.1% (0.0%-0.3%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| rolling_shutter_single |  | 0.1% (0.0%-0.2%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| temporal_average_boundary |  | 94.4% (92.7%-96.0%) | 85.8% (79.2%-91.7%) |  |  | 100.0% | 0 |
 
 #### screen_privacy_baselines
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| unprotected | 92.9% (87.8%-97.2%) | 100.0% | 0 |
-| dim_50pct | 92.9% (87.8%-97.2%) | 100.0% | 0 |
-| gaussian_blur | 52.6% (30.2%-74.5%) | 77.8% | 0 |
-| pixelate_12px | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| privacy_filter_offaxis_proxy | 84.7% (64.1%-96.8%) | 88.9% | 0 |
-| temporal_mask_single_subframe | 0.0% (0.0%-0.0%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| unprotected |  | 92.9% (87.8%-97.2%) | 66.7% (33.3%-88.9%) |  |  | 100.0% | 0 |
+| dim_50pct |  | 92.9% (87.8%-97.2%) | 66.7% (33.3%-88.9%) |  |  | 100.0% | 0 |
+| gaussian_blur |  | 52.6% (30.2%-74.5%) | 11.1% (0.0%-33.3%) |  |  | 77.8% | 0 |
+| pixelate_12px |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| privacy_filter_offaxis_proxy |  | 84.7% (64.1%-96.8%) | 44.4% (11.1%-77.8%) |  |  | 88.9% | 0 |
+| temporal_mask_single_subframe |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
 
 #### vlm_prompt_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| strict_transcription | 72.7% (58.1%-85.6%) | 0.0% | 0 |
-| relaxed_readability | 72.7% (58.1%-85.6%) | 0.0% | 0 |
-| sensitive_field_extraction | 72.8% (58.2%-85.8%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| strict_transcription |  | 72.7% (58.1%-85.6%) | 75.0% (61.1%-88.9%) |  |  | 0.0% | 0 |
+| relaxed_readability |  | 72.7% (58.1%-85.6%) | 75.0% (61.1%-88.9%) |  |  | 0.0% | 0 |
+| sensitive_field_extraction |  | 72.8% (58.2%-85.8%) | 75.0% (61.1%-88.9%) |  |  | 0.0% | 0 |
 
 #### noise_epsilon_sweep
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| eps_0.0000 | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| eps_0.0078 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| eps_0.0157 | 0.1% (0.0%-0.3%) | 0.0% | 0 |
-| eps_0.0314 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| eps_0.0627 | 0.1% (0.0%-0.3%) | 0.0% | 0 |
-| eps_0.1255 | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| eps_0.2510 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| eps_0.3765 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| eps_0.0000 |  | 0.0% (0.0%-0.0%) |  |  |  | 0.0% | 0 |
+| eps_0.0078 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| eps_0.0157 |  | 0.1% (0.0%-0.3%) |  |  |  | 0.0% | 0 |
+| eps_0.0314 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| eps_0.0627 |  | 0.1% (0.0%-0.3%) |  |  |  | 0.0% | 0 |
+| eps_0.1255 |  | 0.0% (0.0%-0.0%) |  |  |  | 0.0% | 0 |
+| eps_0.2510 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| eps_0.3765 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
 
 #### vlm_model_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| Qwen/Qwen3-VL-32B-Instruct | 96.3% (92.5%-99.2%) | 0.0% | 1 |
-| Pro/moonshotai/Kimi-K2.6 | 96.0% (93.1%-98.2%) | 0.0% | 2 |
-| zai-org/GLM-4.5V | 93.2% (84.9%-98.7%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Qwen/Qwen3-VL-32B-Instruct |  | 96.3% (92.5%-99.2%) |  |  |  | 0.0% | 1 |
+| Pro/moonshotai/Kimi-K2.6 |  | 96.0% (93.1%-98.2%) |  |  |  | 0.0% | 2 |
+| zai-org/GLM-4.5V |  | 93.2% (84.9%-98.7%) |  |  |  | 0.0% | 0 |
 
 #### brightness_compensation_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| gamma_1.00 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| gamma_2.00 | 0.1% (0.0%-0.1%) | 0.0% | 0 |
-| gamma_4.00 | 0.1% (0.0%-0.1%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| gamma_1.00 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| gamma_2.00 |  | 0.1% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| gamma_4.00 |  | 0.1% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
 
 #### mask_granularity_ablation
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| block_1 | 0.0% (0.0%-0.1%) | 0.0% | 0 |
-| block_2 | 0.0% (0.0%-0.0%) | 0.0% | 0 |
-| block_4 | 0.1% (0.0%-0.2%) | 0.0% | 0 |
-| block_8 | 0.8% (0.5%-1.2%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| block_1 |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |
+| block_2 |  | 0.0% (0.0%-0.0%) |  |  |  | 0.0% | 0 |
+| block_4 |  | 0.1% (0.0%-0.2%) |  |  |  | 0.0% | 0 |
+| block_8 |  | 0.8% (0.5%-1.2%) |  |  |  | 0.0% | 0 |
+
+#### anti_ocr_profile_ablation
+
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| block1/off | temporal_average | 93.0% (88.4%-96.9%) | 81.2% (62.5%-100.0%) | 93.0% | 0.0% | 0.0% | 0 |
+| block1/strong@overlay | temporal_average | 90.1% (84.5%-94.8%) | 43.8% (18.8%-62.7%) | 92.5% | 0.0% | 0.0% | 0 |
+| block1/strong@deployed | temporal_average | 87.9% (80.8%-93.8%) | 50.0% (25.0%-75.0%) | 94.0% | 93.0% | 0.0% | 0 |
+| block1/vlm | temporal_average | 49.1% (30.4%-66.6%) | 6.2% (0.0%-18.8%) | 49.1% | 0.0% | 0.0% | 0 |
+| block2/s0.00_g0.00 | temporal_average | 93.0% (88.4%-96.9%) | 81.2% (62.5%-100.0%) |  |  | 0.0% | 0 |
+| block2/s0.10_g0.12 | temporal_average | 90.1% (84.5%-94.8%) | 43.8% (18.8%-62.7%) |  |  | 0.0% | 0 |
+| block2/s0.18_g0.22 | temporal_average | 82.4% (74.6%-88.7%) | 6.2% (0.0%-18.8%) |  |  | 0.0% | 0 |
+| block2/s0.30_g0.22 | temporal_average | 10.7% (0.0%-23.3%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| block3/alpha_0.0 | long_exposure | 92.0% (87.2%-96.0%) | 68.8% (43.8%-87.5%) |  | 0.0% | 0.0% | 0 |
+| block3/alpha_0.2 | long_exposure | 88.2% (82.4%-93.6%) | 31.2% (12.5%-56.2%) |  | 93.0% | 0.0% | 0 |
+| block3/alpha_0.5 | long_exposure | 79.1% (72.1%-85.3%) | 6.2% (0.0%-18.8%) |  | 93.0% | 0.0% | 0 |
+| block3/alpha_1.0 | long_exposure | 57.0% (36.5%-75.0%) | 6.2% (0.0%-18.8%) |  | 93.0% | 0.0% | 0 |
 
 #### seed_sensitivity
 
-| Condition | Char recovery | Leak rate char>=20% | Errors |
-|---|---:|---:|---:|
-| single_frame_ocr | 0.0% (0.0%-0.1%) | 0.0% | 0 |
+| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| single_frame_ocr |  | 0.0% (0.0%-0.1%) |  |  |  | 0.0% | 0 |

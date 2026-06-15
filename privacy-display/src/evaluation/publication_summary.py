@@ -42,6 +42,21 @@ SUMMARY_MD = "publication_summary.md"
 
 STRATA_FIELDS = ["category", "language", "layout", "font_size"]
 
+ANTI_OCR_PROFILE_PRIORITY = [
+    "block1/off",
+    "block1/strong@overlay",
+    "block1/strong@deployed",
+    "block1/vlm",
+    "block2/s0.00_g0.00",
+    "block2/s0.10_g0.12",
+    "block2/s0.18_g0.22",
+    "block2/s0.30_g0.22",
+    "block3/alpha_0.0",
+    "block3/alpha_0.2",
+    "block3/alpha_0.5",
+    "block3/alpha_1.0",
+]
+
 STRONG_ATTACK_ORDER = [
     "global_shutter_slot0",
     "differential_luma",
@@ -410,10 +425,15 @@ def summarize_supplemental_ablation(report: dict | None, expected_file: str) -> 
             "reason": "missing_result_file",
             "expected_file": expected_file,
         }
+    rows = (
+        _anti_ocr_profile_rows(report)
+        if expected_file == "anti_ocr_profile_ablation.json"
+        else _supplemental_rows(report)
+    )
     return {
         "available": True,
         "config": report.get("config", {}),
-        "rows": _supplemental_rows(report),
+        "rows": rows,
     }
 
 
@@ -635,13 +655,28 @@ def _render_supplemental_details(lines: list[str], supplemental: dict) -> None:
             "",
             f"#### {name}",
             "",
-            "| Condition | Char recovery | Leak rate char>=20% | Errors |",
-            "|---|---:|---:|---:|",
+            "| Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |",
+            "|---|---|---:|---:|---:|---:|---:|---:|",
         ])
         for row in rows:
+            exact = (
+                _pct_ci(row["exact_match"], row.get("exact_match_ci95", {}))
+                if "exact_match" in row
+                else ""
+            )
+            worst = _pct(row["best_observed_char"]) if "best_observed_char" in row else ""
+            inv = (
+                _pct(row["inversion_frame_attack_char"])
+                if "inversion_frame_attack_char" in row
+                else ""
+            )
             lines.append(
                 f"| {row['name']} | "
+                f"{row.get('headline_metric', '')} | "
                 f"{_pct_ci(row['char_accuracy'], row.get('char_accuracy_ci95', {}))} | "
+                f"{exact} | "
+                f"{worst} | "
+                f"{inv} | "
                 f"{_pct(row.get('leak_rate_char_ge_20pct', 0.0))} | "
                 f"{row.get('error_count', 0)} |"
             )
@@ -700,7 +735,7 @@ def _detection_row(value: dict) -> dict:
     }
 
 
-def _supplemental_rows(report: dict) -> list[dict]:
+def _supplemental_rows(report: dict, limit: int | None = 12) -> list[dict]:
     summary = report.get("summary", {})
     if isinstance(summary, dict):
         rows = []
@@ -708,13 +743,28 @@ def _supplemental_rows(report: dict) -> list[dict]:
             if not isinstance(value, dict):
                 continue
             if "char_accuracy" in value:
-                rows.append({
+                row = {
                     "name": key,
                     "char_accuracy": _stat_mean(value.get("char_accuracy")),
                     "char_accuracy_ci95": _ci(value.get("char_accuracy", {}).get("ci95", {})),
                     "leak_rate_char_ge_20pct": _stat_mean(value.get("leak_rate_char_ge_20pct")),
                     "error_count": int(value.get("error_count", 0)),
-                })
+                }
+                if "headline_metric" in value:
+                    row["headline_metric"] = str(value.get("headline_metric", ""))
+                if "exact_match" in value:
+                    row["exact_match"] = _stat_mean(value.get("exact_match"))
+                    row["exact_match_ci95"] = _ci(value.get("exact_match", {}).get("ci95", {}))
+                if "best_observed_char" in value:
+                    row["best_observed_char"] = _stat_mean(value.get("best_observed_char"))
+                    row["best_observed_exact"] = _stat_mean(value.get("best_observed_exact"))
+                if "single_frame_char" in value:
+                    row["single_frame_char"] = _stat_mean(value.get("single_frame_char"))
+                    row["single_frame_exact"] = _stat_mean(value.get("single_frame_exact"))
+                if "inversion_frame_attack_char" in value:
+                    row["inversion_frame_attack_char"] = _stat_mean(value.get("inversion_frame_attack_char"))
+                    row["inversion_frame_attack_exact"] = _stat_mean(value.get("inversion_frame_attack_exact"))
+                rows.append(row)
             elif "single_frame_ocr" in value:
                 rows.append({
                     "name": key,
@@ -741,15 +791,21 @@ def _supplemental_rows(report: dict) -> list[dict]:
             else:
                 for nested_key, nested_value in value.items():
                     if isinstance(nested_value, dict) and "char_accuracy" in nested_value:
-                        rows.append({
+                        row = {
                             "name": f"{key}/{nested_key}",
                             "char_accuracy": _stat_mean(nested_value.get("char_accuracy")),
                             "char_accuracy_ci95": _ci(nested_value.get("char_accuracy", {}).get("ci95", {})),
                             "leak_rate_char_ge_20pct": _stat_mean(nested_value.get("leak_rate_char_ge_20pct")),
                             "error_count": int(nested_value.get("error_count", 0)),
-                        })
+                        }
+                        if "headline_metric" in nested_value:
+                            row["headline_metric"] = str(nested_value.get("headline_metric", ""))
+                        if "exact_match" in nested_value:
+                            row["exact_match"] = _stat_mean(nested_value.get("exact_match"))
+                            row["exact_match_ci95"] = _ci(nested_value.get("exact_match", {}).get("ci95", {}))
+                        rows.append(row)
         if rows:
-            return rows[:12]
+            return rows if limit is None else rows[:limit]
     if "recommended" in report:
         rec = report["recommended"]
         return [{
@@ -762,13 +818,45 @@ def _supplemental_rows(report: dict) -> list[dict]:
     return []
 
 
+def _anti_ocr_profile_rows(report: dict) -> list[dict]:
+    """Pick the paper-relevant rows from the multi-block anti-OCR ablation."""
+    summary = report.get("summary", {})
+    if not isinstance(summary, dict):
+        return []
+    rows_by_name = _supplemental_rows({"summary": summary}, limit=None)
+    lookup = {row.get("name"): row for row in rows_by_name}
+    selected = [
+        lookup[name] for name in ANTI_OCR_PROFILE_PRIORITY
+        if name in lookup
+    ]
+    if len(selected) >= len(ANTI_OCR_PROFILE_PRIORITY):
+        return selected
+    for row in rows_by_name:
+        if row.get("name") not in {r.get("name") for r in selected}:
+            selected.append(row)
+        if len(selected) >= len(ANTI_OCR_PROFILE_PRIORITY):
+            break
+    return selected
+
+
 def _format_supplemental_row(row: dict) -> str:
     if "char_accuracy" in row:
-        return (
-            f"{row['name']}: char recovery "
-            f"{_pct_ci(row['char_accuracy'], row.get('char_accuracy_ci95', {}))}, "
-            f"leak {_pct(row['leak_rate_char_ge_20pct'])}, errors {row['error_count']}"
-        )
+        metric = row.get("headline_metric") or "char recovery"
+        parts = [
+            (
+                f"{row['name']}: {metric} "
+                f"{_pct_ci(row['char_accuracy'], row.get('char_accuracy_ci95', {}))}"
+            )
+        ]
+        if "exact_match" in row:
+            parts.append(f"exact {_pct_ci(row['exact_match'], row.get('exact_match_ci95', {}))}")
+        if "best_observed_char" in row:
+            parts.append(f"worst-case char {_pct(row['best_observed_char'])}")
+        if "inversion_frame_attack_char" in row:
+            parts.append(f"inv-frame char {_pct(row['inversion_frame_attack_char'])}")
+        parts.append(f"leak {_pct(row['leak_rate_char_ge_20pct'])}")
+        parts.append(f"errors {row['error_count']}")
+        return ", ".join(parts)
     if "readability_1_5" in row:
         return (
             f"{row['name']}: readability {row['readability_1_5']:.2f}, "
