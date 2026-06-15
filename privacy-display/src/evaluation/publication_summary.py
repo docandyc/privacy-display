@@ -33,6 +33,7 @@ SUPPLEMENTAL_FILES = {
     "vlm_model_ablation": "vlm_model_ablation.json",
     "brightness_compensation_ablation": "brightness_compensation_ablation.json",
     "mask_granularity_ablation": "mask_granularity_ablation.json",
+    "anti_ocr_profile_ablation": "anti_ocr_profile_ablation.json",
     "seed_sensitivity": "seed_sensitivity.json",
     "usability_pilot": "usability_pilot.json",
 }

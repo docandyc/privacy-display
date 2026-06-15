@@ -385,6 +385,19 @@
     const refreshHz = Number(options.refreshHz) > 0 ? Number(options.refreshHz) : 0;
     const cycleHz = refreshHz > 0 ? refreshHz / n : null;
     const mode = refreshHz > 0 && cycleHz < safeFlickerHz ? "static_fallback" : "temporal";
+    // Optional partial inversion frame alpha*(255-I) per cycle (long-exposure
+    // defence, mirrors playback compose_partial_inversion_frame). It adds one
+    // slot per cycle, so the inversion recurs at refresh/(n+1). When that drops
+    // below the flicker threshold we keep temporal mode (the dim alpha=0.2 flash
+    // is a mild, accepted flicker, validated on a 240 Hz panel) and only warn --
+    // we do NOT fall back to a static, unprotected frame.
+    const insertInversion = Boolean(options.insertInversion);
+    const inversionAlpha = insertInversion
+      ? Math.max(0, Math.min(1, Number(options.inversionAlpha) || 0.2))
+      : 0;
+    const perCycleSlots = n + (insertInversion ? 1 : 0);
+    const inversionFlickerWarn = insertInversion && refreshHz > 0
+      && refreshHz / perCycleSlots < safeFlickerHz;
     const sourceCanvas = renderSourceCanvas(text, { width, height, fontSize: options.fontSize });
     const sourceCtx = sourceCanvas.getContext("2d", { willReadFrequently: true });
     const source = sourceCtx.getImageData(0, 0, width, height);
@@ -448,6 +461,27 @@
         frames.push(frameCanvas);
       });
 
+      if (insertInversion) {
+        // Weak inversion of the original source: alpha*(255 - value) per channel.
+        // Polarity-agnostic (works for the dark-panel/light-text theme), and not
+        // overlaid with anti-OCR artefacts so it keeps its grey-field neutralising
+        // role intact -- identical to compose_partial_inversion_frame in playback.
+        const invFrame = scratchCtx.createImageData(width, height);
+        for (let p = 0; p < pixelCount; p += 1) {
+          const px = p * 4;
+          for (let c = 0; c < 3; c += 1) {
+            invFrame.data[px + c] = Math.max(0, Math.min(255,
+              Math.round(inversionAlpha * (255 - source.data[px + c]))));
+          }
+          invFrame.data[px + 3] = 255;
+        }
+        const invCanvas = document.createElement("canvas");
+        invCanvas.width = width;
+        invCanvas.height = height;
+        invCanvas.getContext("2d").putImageData(invFrame, 0, 0);
+        frames.push(invCanvas);
+      }
+
       if (cycle === 0) {
         firstCounts = counts;
         firstPermutation = permutation;
@@ -473,6 +507,10 @@
         safe_flicker_hz: safeFlickerHz,
         cycles,
         frame_count: frames.length,
+        insert_inversion: insertInversion,
+        inversion_alpha: insertInversion ? inversionAlpha : null,
+        per_cycle_slots: perCycleSlots,
+        inversion_flicker_warn: inversionFlickerWarn,
         anti_ocr: antiOcr
           ? {
             profile: antiOcr.profile,

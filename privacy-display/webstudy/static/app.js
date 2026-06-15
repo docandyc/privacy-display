@@ -22,6 +22,13 @@
     stripeAlpha: 0.1,
     glyphAlpha: 0.12
   };
+  // Weak inversion frame alpha*(255-I) per cycle, mirroring the playback config
+  // `--inversion --inversion-alpha 0.2`. It strengthens the long-exposure defence
+  // while staying readable (full inversion washes out small text). On a 240 Hz
+  // panel this makes the masked cycle n+1=5 slots -> 48 Hz (a mild, warned
+  // flicker, validated on hardware) rather than a static fallback.
+  const INSERT_INVERSION = true;
+  const INVERSION_ALPHA = 0.2;
   // Subframe count that gives the best anti-capture strength (240 Hz panel).
   const MASKED_TARGET_N = 4;
   // Refresh needed to run the target n in temporal mode: n must satisfy
@@ -414,10 +421,12 @@
         label: "遮罩条件",
         n: maskedN,
         requested_n: MASKED_TARGET_N,
-        components: "mask+noise+anti-ocr",
+        components: "mask+noise+anti-ocr+inversion",
         target_text: pair.masked,
         useNoise: true,
-        antiOcr: ANTI_OCR_STRONG
+        antiOcr: ANTI_OCR_STRONG,
+        insertInversion: INSERT_INVERSION,
+        inversionAlpha: INVERSION_ALPHA
       }
     ];
 
@@ -433,12 +442,19 @@
     }
     const isMasked = trial.condition === "masked";
     const degraded = isMasked && trial.n < (trial.requested_n || MASKED_TARGET_N);
+    const slotsPerCycle = trial.n + (isMasked && trial.insertInversion ? 1 : 0);
+    const inversionFlicker = isMasked && trial.insertInversion && state.refresh.hz > 0
+      && state.refresh.hz / slotsPerCycle < SAFE_FLICKER_HZ;
     const progressLabel = `试次 ${state.trialCursor + 1} / ${state.trials.length}`;
     const stimulus = isMasked
       ? `
         ${degraded ? `
         <div class="warning">
           检测到刷新率 ${formatNumber(state.refresh.hz, 1)}Hz，低于 ${TEMPORAL_MIN_REFRESH_HZ}Hz：遮罩条件已自动把子帧数从 ${trial.requested_n} 降到 ${trial.n} 层以避免闪烁与光敏风险，防偷拍效果明显低于 ${ASSUMED_MONITOR_HZ}Hz 的最优配置。
+        </div>` : ""}
+        ${inversionFlicker ? `
+        <div class="warning">
+          已叠加弱反色帧（α=${INVERSION_ALPHA}）增强防长曝光偷拍：每周期 ${slotsPerCycle} 帧使周期率降至 ${formatNumber(state.refresh.hz / slotsPerCycle, 1)}Hz，略低于 ${SAFE_FLICKER_HZ}Hz 闪烁阈值，可能有轻微闪烁（已在 ${ASSUMED_MONITOR_HZ}Hz 实测可接受）。
         </div>` : ""}
         <div class="masked-canvas-wrap">
           <canvas id="maskedCanvas" class="masked-canvas"></canvas>
@@ -491,7 +507,9 @@
         // artefacts (stripe 0.10 / glyph 0.12) over multiple mask cycles defeat
         // a real phone camera while staying readable to the eye.
         cycles: ANTI_CAPTURE_CYCLES,
-        antiOcr: trial.antiOcr || null
+        antiOcr: trial.antiOcr || null,
+        insertInversion: trial.insertInversion || false,
+        inversionAlpha: trial.inversionAlpha || INVERSION_ALPHA
       });
       trial.mask_meta = meta;
       currentPlayer.start();
