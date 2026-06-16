@@ -185,15 +185,97 @@ def run_real_capture_ocr(
 
 
 def summarize_real_capture_rows(rows: list[dict]) -> dict:
-    """Summarize real-camera OCR rows by engine, condition, and device."""
+    """Summarize real-camera OCR rows by engine, condition, and device.
+
+    The headline ``by_ablation_attack`` / ``protection_delta`` views collapse
+    OCR engines to the attacker-favorable best-of per capture (a leak counts if
+    *any* engine reads it), rather than averaging a weak engine with a strong
+    one. ``by_engine`` keeps the raw per-engine numbers for transparency.
+    """
     summary = {
         "by_engine": _group_summary(rows, "engine"),
         "by_condition": _group_summary(rows, "condition"),
         "by_device": _group_summary(rows, "device"),
     }
     if any(row.get("ablation") and row.get("attack") for row in rows):
-        summary["by_ablation_attack"] = summarize_by(rows, ["ablation", "attack"])
+        best = collapse_best_of_engines(rows)
+        summary["by_ablation_attack"] = summarize_by(best, ["ablation", "attack"])
+        delta = protection_delta(best)
+        if delta:
+            summary["protection_delta"] = delta
     return summary
+
+
+def collapse_best_of_engines(rows: list[dict]) -> list[dict]:
+    """Reduce per-(capture id) rows across OCR engines to the maximum recovery.
+
+    Models an attacker who runs every available engine and keeps whatever reads
+    best; averaging engines would understate recovery and overstate protection.
+    """
+    by_id: dict[str, list[dict]] = {}
+    for row in rows:
+        # Group engines of the SAME capture together. The metadata id is shared
+        # across engines and unique per capture; fall back to a composite that
+        # still separates distinct captures (e.g. different attacks) when absent.
+        key = str(row.get("id") or "")
+        if not key:
+            key = "|".join(
+                str(row.get(field, ""))
+                for field in ("image", "condition", "ablation", "attack")
+            )
+        by_id.setdefault(key, []).append(row)
+    collapsed: list[dict] = []
+    for group in by_id.values():
+        best = max(
+            group,
+            key=lambda r: (float(r.get("exact_match", 0.0)), float(r.get("char_accuracy", 0.0))),
+        )
+        merged = dict(best)
+        merged["engine"] = "best_of"
+        merged["char_accuracy"] = max(float(r["char_accuracy"]) for r in group)
+        merged["word_accuracy"] = max(float(r.get("word_accuracy", 0.0)) for r in group)
+        merged["exact_match"] = max(float(r["exact_match"]) for r in group)
+        merged["sensitive_token_recall"] = max(
+            float(r.get("sensitive_token_recall", 0.0)) for r in group
+        )
+        merged["sensitive_token_count"] = max(
+            int(r.get("sensitive_token_count", 0)) for r in group
+        )
+        collapsed.append(merged)
+    return collapsed
+
+
+def protection_delta(rows: list[dict], baseline_ablation: str = "original") -> dict:
+    """Per attack, recovery reduction of each ablation vs the unprotected baseline.
+
+    Positive numbers mean the protection lowered attacker recovery relative to
+    the ``original`` (unprotected) capture under the same attack — the headline
+    paired effect that absolute per-condition means alone don't show.
+    """
+    by_attack: dict[str, list[dict]] = {}
+    for row in rows:
+        attack = str(row.get("attack", "")).strip()
+        if not attack:
+            continue
+        by_attack.setdefault(attack, []).append(row)
+    out: dict[str, dict] = {}
+    for attack, group in by_attack.items():
+        base = [r for r in group if str(r.get("ablation")) == baseline_ablation]
+        if not base:
+            continue
+        base_char = float(np.mean([float(r["char_accuracy"]) for r in base]))
+        base_exact = float(np.mean([float(r["exact_match"]) for r in base]))
+        for ablation in sorted({str(r.get("ablation")) for r in group}):
+            sub = [r for r in group if str(r.get("ablation")) == ablation]
+            out[f"{ablation}|{attack}"] = {
+                "ablation": ablation,
+                "attack": attack,
+                "char_accuracy_drop": base_char - float(np.mean([float(r["char_accuracy"]) for r in sub])),
+                "exact_match_drop": base_exact - float(np.mean([float(r["exact_match"]) for r in sub])),
+                "baseline_char_accuracy": base_char,
+                "baseline_exact_match": base_exact,
+            }
+    return out
 
 
 def summarize_by(rows: list[dict], fields: list[str]) -> dict:
@@ -237,7 +319,7 @@ def render_real_capture_markdown(report: dict) -> str:
     lines.append("")
     if "by_ablation_attack" in report["summary"]:
         lines.extend([
-            "## By Ablation And Attack",
+            "## By Ablation And Attack (best-of-engine, attacker-favorable)",
             "",
             "| Ablation | Attack | Rows | Char recovery | Exact match | Sensitive token recall | Leak rate char>=20% |",
             "|---|---|---:|---:|---:|---:|---:|",
@@ -250,6 +332,25 @@ def render_real_capture_markdown(report: dict) -> str:
                 f"{_pct(stats['exact_match']['mean'])} | "
                 f"{_pct(stats['sensitive_token_recall']['mean'])} | "
                 f"{_pct(stats['leak_rate_char_ge_20pct']['mean'])} |"
+            )
+        lines.append("")
+    if "protection_delta" in report["summary"]:
+        lines.extend([
+            "## Protection Delta vs Unprotected Baseline (best-of-engine)",
+            "",
+            "Recovery reduction relative to the `original` capture under the same attack "
+            "(higher = stronger protection).",
+            "",
+            "| Ablation | Attack | Char recovery drop | Exact match drop | Baseline char | Baseline exact |",
+            "|---|---|---:|---:|---:|---:|",
+        ])
+        for key, stats in sorted(report["summary"]["protection_delta"].items()):
+            lines.append(
+                f"| {stats['ablation']} | {stats['attack']} | "
+                f"{_pct(stats['char_accuracy_drop'])} | "
+                f"{_pct(stats['exact_match_drop'])} | "
+                f"{_pct(stats['baseline_char_accuracy'])} | "
+                f"{_pct(stats['baseline_exact_match'])} |"
             )
         lines.append("")
     return "\n".join(lines)

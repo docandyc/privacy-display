@@ -6,7 +6,10 @@ import numpy as np
 import pytest
 
 from experiments.real_capture_ablation import (
+    _attack_specs,
     _load_subset,
+    _parse_benchmark_fps,
+    _parse_int_list,
     build_metadata_entry,
     build_study_plan,
     condition_to_playback_args,
@@ -177,3 +180,24 @@ def test_wait_for_playback_ready_honors_timeout_without_stdout():
         proc.wait(timeout=2)
 
     assert time.monotonic() - started < 1.0
+
+
+def test_video_attack_uses_short_exposure_and_native_fps():
+    video = _attack_specs()["video"]
+    # Each video frame must be short-exposure so the burst samples many phases;
+    # interval 0 keeps the native 60fps so successive frames differ in phase.
+    assert video.exposure_key == "short"
+    assert video.interval == 0.0
+    assert video.fps == 60.0
+
+
+def test_parse_benchmark_fps_extracts_measured_value():
+    output = "PLAYBACK_READY\nnoise\n{\"measured_fps_avg\": 239.4, \"frame_count\": 1000}\n"
+    assert _parse_benchmark_fps(output) == 239.4
+    assert _parse_benchmark_fps("no json here") is None
+
+
+def test_parse_int_list():
+    assert _parse_int_list("1, 2 ,3") == [1, 2, 3]
+    assert _parse_int_list("") == []
+    assert _parse_int_list(None) == []

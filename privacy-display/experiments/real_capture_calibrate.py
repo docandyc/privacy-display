@@ -30,10 +30,12 @@ from experiments.real_capture_shoot import (  # noqa: E402
     camera_settings,
     exposure_log2_to_seconds,
     grab_frames,
-    open_camera,
+    open_camera_with_backend,
     try_set_exposure,
     warmup,
 )
+from src.demo.playback_demo import fit_image_to_canvas  # noqa: E402
+from src.evaluation.metrics import compute_ssim  # noqa: E402
 
 DEFAULT_CALIBRATION_DIR = "experiments/real_captures/calibration"
 
@@ -116,16 +118,66 @@ def parse_exposure_values(text: str) -> list[float]:
     return values
 
 
+def select_exposure_from_scan(
+    scan: list[dict],
+    *,
+    masked_threshold: float = 0.25,
+    plateau_threshold: float = 0.9,
+    min_dynamic_range: float = 0.15,
+    min_plateau_ssim: float = 0.4,
+) -> tuple[float | None, float | None, str]:
+    """Pick (short, long) exposure log2 values from an SSIM-vs-original scan.
+
+    The scan must come from a *mask_only* scene (no anti-OCR / inversion / noise
+    defences) so SSIM-to-original purely tracks how much of the cycle the camera
+    integrated. Then:
+
+    * ``short`` = the largest (least-negative) exposure whose normalised SSIM is
+      still at the floor → still captures only ~one sub-frame (masked).
+    * ``long``  = the smallest (most-negative) exposure that already reaches the
+      SSIM plateau → shortest shutter that integrates a full cycle.
+
+    Guards against a curve with no real contrast (camera never integrates, wrong
+    scene, or an exposure range that is too short): if the SSIM span is tiny or
+    the peak SSIM never indicates reconstruction, returns the scan extremes with
+    a ``low_contrast`` tag instead of inventing a spurious plateau.
+    """
+    pts = sorted(
+        (float(s["value"]), float(s["ssim"]))
+        for s in scan
+        if s.get("ssim") is not None
+    )
+    if len(pts) < 2:
+        return None, None, "insufficient_ssim"
+    values = [v for v, _ in pts]
+    ssims = [x for _, x in pts]
+    lo, hi = min(ssims), max(ssims)
+    if (hi - lo) < min_dynamic_range or hi < min_plateau_ssim:
+        return min(values), max(values), "ssim_low_contrast_fallback"
+    rng = hi - lo
+    norm = [(x - lo) / rng for x in ssims]
+    masked = [v for v, nn in zip(values, norm) if nn <= masked_threshold]
+    integrated = [v for v, nn in zip(values, norm) if nn >= plateau_threshold]
+    short_value = max(masked) if masked else min(values)
+    long_value = min(integrated) if integrated else max(values)
+    method = "ssim_floor_plateau"
+    if not masked or not integrated:
+        method = "ssim_partial_fallback"
+    return short_value, long_value, method
+
+
 def build_exposure_calibration(
     *,
     short_value: float,
     long_value: float,
     backend: str | None,
     scan_results: list[dict] | None = None,
+    selection_method: str = "manual",
 ) -> dict:
     return {
         "schema_version": 1,
         "backend": backend,
+        "selection_method": selection_method,
         "short": {
             "value": float(short_value),
             "exposure_s": exposure_log2_to_seconds(short_value),
@@ -138,6 +190,14 @@ def build_exposure_calibration(
     }
 
 
+def _load_ssim_reference(image_path: str, width: int, height: int) -> np.ndarray:
+    """Load the displayed content and letterbox it to the rectified ROI size."""
+    from PIL import Image
+
+    content = np.asarray(Image.open(image_path).convert("RGB"), dtype=np.uint8)
+    return fit_image_to_canvas(content, width, height, background=(0, 0, 0))
+
+
 def save_exposure_calibration(payload: dict, calibration_dir: str | Path) -> Path:
     path = exposure_path(calibration_dir)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -147,7 +207,7 @@ def save_exposure_calibration(payload: dict, calibration_dir: str | Path) -> Pat
 
 
 def _select_roi(args: argparse.Namespace) -> int:
-    cap = open_camera(
+    cap, _ = open_camera_with_backend(
         args.device,
         args.width,
         args.height,
@@ -207,7 +267,21 @@ def _select_roi(args: argparse.Namespace) -> int:
 
 
 def _calibrate_exposure(args: argparse.Namespace) -> int:
-    cap = open_camera(
+    # SSIM-vs-original needs the captured frame rectified to the screen rect.
+    reference = None
+    roi_calib = None
+    if args.image:
+        roi_file = roi_path(args.calibration_dir, args.pos)
+        if not roi_file.exists():
+            print(f"[calibrate] --image given but no ROI for pos={args.pos} "
+                  f"({roi_file}); run --select-roi first. Falling back to manual values.",
+                  file=sys.stderr)
+        else:
+            roi_calib = load_roi_calibration(roi_file)
+            reference = _load_ssim_reference(
+                args.image, int(roi_calib["output_width"]), int(roi_calib["output_height"]))
+
+    cap, backend_used = open_camera_with_backend(
         args.device,
         args.width,
         args.height,
@@ -222,29 +296,53 @@ def _calibrate_exposure(args: argparse.Namespace) -> int:
                 cap,
                 manual=True,
                 value=value,
-                backend_name=args.backend,
+                backend_name=backend_used,
             )
             warmup(cap, args.warmup)
             ok, frame = cap.read()
+            ssim = None
+            if ok and frame is not None and reference is not None and roi_calib is not None:
+                rect = rectify_frame(frame, roi_calib)
+                ssim = compute_ssim(rect, reference)
             scan_results.append({
                 "value": value,
                 "exposure_s": exposure_log2_to_seconds(value),
                 "honored": result["honored"],
                 "settings": camera_settings(cap),
                 "frame_mean": float(frame.mean()) if ok and frame is not None else None,
+                "ssim": ssim,
             })
             print(
                 f"value={value:g} exposure_s={exposure_log2_to_seconds(value)} "
-                f"honored={result['honored']}"
+                f"honored={result['honored']} ssim={ssim}"
             )
     finally:
         cap.release()
 
+    # Auto-pick from the SSIM curve only when the scene is defence-free
+    # (mask_only); otherwise SSIM never plateaus and manual values are safer.
+    short_value, long_value = args.short_value, args.long_value
+    method = "manual"
+    if reference is not None and args.scene == "mask_only":
+        sel_short, sel_long, method = select_exposure_from_scan(scan_results)
+        if sel_short is not None and sel_long is not None:
+            short_value, long_value = sel_short, sel_long
+            print(f"[calibrate] auto-selected short={short_value:g} long={long_value:g} "
+                  f"({method})")
+        else:
+            method = "manual_fallback"
+            print("[calibrate] SSIM scan insufficient; using manual --short/--long values.",
+                  file=sys.stderr)
+    elif reference is not None:
+        print(f"[calibrate] scene={args.scene} is not 'mask_only'; SSIM recorded but "
+              "short/long left at manual values.", file=sys.stderr)
+
     payload = build_exposure_calibration(
-        short_value=args.short_value,
-        long_value=args.long_value,
-        backend=args.backend,
+        short_value=short_value,
+        long_value=long_value,
+        backend=backend_used,
         scan_results=scan_results,
+        selection_method=method,
     )
     out = save_exposure_calibration(payload, args.calibration_dir)
     print(f"Exposure calibration written: {out}")
@@ -258,7 +356,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     mode.add_argument("--calibrate-exposure", action="store_true")
     p.add_argument("--device", type=int, default=DEFAULT_DEVICE)
     p.add_argument("--device-name", default=DEFAULT_DEVICE_NAME)
-    p.add_argument("--backend", default=None)
+    p.add_argument("--backend", default="dshow",
+                   choices=("dshow", "msmf", "avfoundation", "v4l2", "any"))
     p.add_argument("--width", type=int, default=1920)
     p.add_argument("--height", type=int, default=1080)
     p.add_argument("--fps", type=float, default=None)
@@ -271,6 +370,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--exposure-values", default="-3,-4,-5,-6,-7,-8,-9,-10,-11")
     p.add_argument("--short-value", type=float, default=-8.0)
     p.add_argument("--long-value", type=float, default=-5.0)
+    p.add_argument("--image", default=None,
+                   help="Displayed content image; enables SSIM-vs-original "
+                        "exposure auto-selection (needs --select-roi done first)")
+    p.add_argument("--scene", default="mask_only",
+                   choices=("mask_only", "deployed", "original"),
+                   help="What playback shows during the scan; auto-select only "
+                        "runs for mask_only (defence-free)")
     return p.parse_args(argv)
 
 

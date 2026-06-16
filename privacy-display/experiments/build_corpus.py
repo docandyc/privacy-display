@@ -213,9 +213,17 @@ def _render_text(text: str, font_size: int, layout: str, variant: int) -> np.nda
 
     font = None
     for fp in [
+        # macOS
         "/System/Library/Fonts/PingFang.ttc",
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
+        # Windows (CJK + Latin) — so corpus text stays legible if regenerated there
+        "C:/Windows/Fonts/msyh.ttc",
+        "C:/Windows/Fonts/simsun.ttc",
+        "C:/Windows/Fonts/arial.ttf",
+        # Linux
+        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     ]:
         try:
             font = ImageFont.truetype(fp, font_size)

@@ -111,28 +111,36 @@ def _auto_exposure_values(backend_name: str | None) -> tuple[float, float]:
     return 0.25, 0.75
 
 
-def open_camera(
+def open_camera_with_backend(
     device: int,
     width: int,
     height: int,
     fourcc: str = "MJPG",
     fps: float | None = None,
     backend: str | None = None,
-) -> cv2.VideoCapture:
-    """Open the webcam with the requested platform backend and format."""
+) -> tuple[cv2.VideoCapture, str]:
+    """Open the webcam and return ``(cap, backend_name_actually_used)``.
+
+    The actual backend matters because the manual-exposure convention differs
+    between backends (MSMF uses 0/1 for AUTO_EXPOSURE, DirectShow uses
+    0.25/0.75). Callers must pass the *returned* backend to ``try_set_exposure``
+    so manual exposure is set with the right constant.
+    """
     attempted: list[str] = []
     cap: cv2.VideoCapture | None = None
+    chosen = ""
     for backend_name, backend_code in get_camera_backends(preferred=backend):
         attempted.append(backend_name)
         candidate = cv2.VideoCapture(device, backend_code)
         if candidate.isOpened():
             cap = candidate
+            chosen = backend_name
             break
         candidate.release()
     if cap is None:
         attempted_text = ", ".join(attempted) or "none"
         raise RuntimeError(f"{PERMISSION_HINT} Attempted backends: {attempted_text}.")
-    # FOURCC must be set before resolution so the C920 exposes MJPG high-res modes.
+    # FOURCC must be set before resolution so the camera exposes MJPG high-res modes.
     if fourcc:
         cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*fourcc))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -143,6 +151,19 @@ def open_camera(
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     except cv2.error:
         pass
+    return cap, chosen
+
+
+def open_camera(
+    device: int,
+    width: int,
+    height: int,
+    fourcc: str = "MJPG",
+    fps: float | None = None,
+    backend: str | None = None,
+) -> cv2.VideoCapture:
+    """Backward-compatible wrapper returning only the ``cv2.VideoCapture``."""
+    cap, _ = open_camera_with_backend(device, width, height, fourcc, fps, backend=backend)
     return cap
 
 
@@ -261,7 +282,7 @@ def list_devices(max_index: int = 10, backend: str | None = None) -> None:
 
 def probe(device: int, width: int, height: int, fourcc: str, backend: str | None = None) -> int:
     try:
-        cap = open_camera(device, width, height, fourcc, backend=backend)
+        cap, backend_name = open_camera_with_backend(device, width, height, fourcc, backend=backend)
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
@@ -278,7 +299,7 @@ def probe(device: int, width: int, height: int, fourcc: str, backend: str | None
         s = camera_settings(cap)
         fps_text = f"@{fps}" if fps else ""
         print(f"  request {w}x{h}{fps_text} -> effective {s['width']}x{s['height']}@{s['fps']} {s['fourcc']}")
-    backend_name = backend or get_camera_backend()[0]
+    print(f"opened via backend={backend_name}")
     exp = try_set_exposure(cap, manual=True, value=-7, backend_name=backend_name)
     print(
         "  manual-exposure attempt honored=%s effective_exposure=%s exposure_s=%s"
@@ -489,7 +510,7 @@ def run_matrix(cap, args) -> list[dict]:
                 cap,
                 manual=True,
                 value=args.exposure_value,
-                backend_name=args.backend,
+                backend_name=getattr(args, "backend_used", args.backend),
             )
         mode = "video_frame" if args.burst > 1 else (
             "short_exposure" if cond == "short_exposure" else "auto_photo"
@@ -577,7 +598,7 @@ def main() -> int:
         return probe(args.device, args.width, args.height, args.fourcc, backend=args.backend)
 
     try:
-        cap = open_camera(
+        cap, backend_used = open_camera_with_backend(
             args.device,
             args.width,
             args.height,
@@ -588,13 +609,16 @@ def main() -> int:
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
+    # Remember the backend that actually opened so exposure helpers use the
+    # right AUTO_EXPOSURE convention (run_matrix reads this off args).
+    args.backend_used = backend_used
 
     if args.manual_exposure or args.condition == "short_exposure":
         exp = try_set_exposure(
             cap,
             manual=True,
             value=args.exposure_value,
-            backend_name=args.backend,
+            backend_name=backend_used,
         )
         if not exp["honored"]:
             print("[note] manual exposure was not honored by OpenCV/UVC read-back; "

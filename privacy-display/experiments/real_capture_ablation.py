@@ -3,6 +3,20 @@
 This script turns the deployed playback demo into a real USB-webcam capture
 experiment. It is designed to be safe to test without hardware: ``--dry-run``
 prints the full capture plan and never opens a camera or a pygame window.
+
+Pipeline per run:
+  1. preflight: benchmark the deployed playback to confirm the display sustains
+     the target refresh rate (else captures are confounded with refresh failure);
+  2. for each (position, image, ablation) group: launch playback once, then for
+     each attack open the camera, set the calibrated exposure, capture, rectify
+     via the position ROI, and (for video) run the offline reconstruction attacks;
+  3. analyse with best-of-engine OCR.
+
+Rolling shutter: the S600 is a CMOS rolling-shutter sensor, so a single still of
+a 240Hz display is a *row-wise mixture* of sub-frames (visible banding), not one
+clean sub-frame. Short exposure shrinks the band height; ``--save-raw`` keeps an
+un-rectified frame per capture so the banding can be shown in the paper. Treat
+"single sub-frame" as an approximation and report the banding explicitly.
 """
 
 from __future__ import annotations
@@ -49,11 +63,15 @@ from experiments.real_capture_shoot import (  # noqa: E402
     grab_frames,
     make_entry,
     merge_metadata,
-    open_camera,
+    open_camera_with_backend,
     try_set_exposure,
     warmup,
 )
-from src.demo.playback_demo import fit_image_to_canvas  # noqa: E402
+from src.demo.playback_demo import (  # noqa: E402
+    CET6_PDF_PATH,
+    fit_image_to_canvas,
+    render_pdf_page_to_canvas,
+)
 from src.evaluation.real_capture import REAL_CAPTURE_JSON, REAL_CAPTURE_MD, run_real_capture_ocr  # noqa: E402
 from src.evaluation.sampling import select_publication_subset, take_indices  # noqa: E402
 
@@ -168,7 +186,13 @@ def _attack_specs() -> dict[str, AttackSpec]:
     return {
         "short": AttackSpec("short", 3840, 2160, 30.0, 3, 0.0, "short", "short_exposure"),
         "long": AttackSpec("long", 3840, 2160, 30.0, 3, 0.0, "long", "long_exposure"),
-        "video": AttackSpec("video", 1920, 1080, 60.0, 150, 1 / 60, None, "video_frame"),
+        # Video frames must each be SHORT exposure (<= one sub-frame) so the
+        # burst samples many display phases; the offline temporal mean over the
+        # burst is then the actual reconstruction attack. With auto/long
+        # exposure each frame would already integrate a full cycle, collapsing
+        # the video attack into the long-exposure one. interval=0 keeps the
+        # native 60fps so successive frames land on different cycle phases.
+        "video": AttackSpec("video", 1920, 1080, 60.0, 150, 0.0, "short", "video_frame"),
     }
 
 
@@ -437,6 +461,75 @@ def _load_subset(subset_size: int | None) -> tuple[list[np.ndarray], list[str], 
     return take_indices(images, indices), take_indices(truths, indices), take_indices(names, indices)
 
 
+def extract_pdf_page_text(pdf_path: str | Path, page_number: int) -> str:
+    """Extract a PDF page's text via pypdfium2; '' if unavailable.
+
+    Used to obtain ground truth for the CET6 realistic-document captures so the
+    OCR metric has a reference. Whitespace is normalised to a single line.
+    """
+    try:
+        import pypdfium2 as pdfium
+    except ImportError:
+        return ""
+    pdf = pdfium.PdfDocument(str(pdf_path))
+    try:
+        if page_number <= 0 or page_number > len(pdf):
+            return ""
+        page = pdf[page_number - 1]
+        try:
+            textpage = page.get_textpage()
+            try:
+                text = textpage.get_text_range()
+            finally:
+                textpage.close()
+        finally:
+            page.close()
+    finally:
+        pdf.close()
+    return " ".join(str(text).split())
+
+
+def load_cet6_content(
+    pages: Iterable[int],
+    *,
+    pdf_path: str | Path = CET6_PDF_PATH,
+    width: int = DEFAULT_DISPLAY_WIDTH,
+    height: int = DEFAULT_DISPLAY_HEIGHT,
+) -> tuple[list[np.ndarray], list[str], list[str]]:
+    """Render CET6 PDF pages to display-sized images + extract their text truth.
+
+    Pages whose text cannot be extracted are skipped with a warning so the OCR
+    metric is never computed against an empty ground truth.
+    """
+    images: list[np.ndarray] = []
+    names: list[str] = []
+    truths: list[str] = []
+    path = Path(pdf_path)
+    if not path.exists():
+        print(f"[cet6] PDF not found, skipping: {path}", file=sys.stderr)
+        return images, names, truths
+    for page in pages:
+        truth = extract_pdf_page_text(path, page)
+        if not truth.strip():
+            print(f"[cet6] no extractable text on page {page}, skipping", file=sys.stderr)
+            continue
+        try:
+            image = render_pdf_page_to_canvas(path, page, width, height)
+        except Exception as exc:  # noqa: BLE001 - rendering is best-effort
+            print(f"[cet6] render failed on page {page}: {exc}", file=sys.stderr)
+            continue
+        images.append(np.asarray(image, dtype=np.uint8))
+        names.append(f"cet6_p{page}")
+        truths.append(truth)
+    return images, names, truths
+
+
+def _parse_int_list(text: str | None) -> list[int]:
+    if not text or not str(text).strip():
+        return []
+    return [int(part.strip()) for part in str(text).split(",") if part.strip()]
+
+
 def _playback_command(args: argparse.Namespace, image_path: Path, item: dict) -> list[str]:
     cmd = [
         args.python_executable,
@@ -527,7 +620,7 @@ def _save_frames(
         if suffix:
             entry_item["condition"] = f"{item['condition']}|{suffix.strip('_')}"
             entry_item["attack"] = f"{item['attack']}:{suffix.strip('_')}"
-        entries.append(build_metadata_entry(
+        entry = build_metadata_entry(
             entry_item,
             image_name=image_name,
             entry_id=entry_id,
@@ -543,9 +636,106 @@ def _save_frames(
             lighting_lux=args.lighting_lux,
             environment=args.environment,
             notes=args.notes,
-        ))
+        )
+        entry["playback_fps_measured"] = getattr(args, "measured_fps", None)
+        entries.append(entry)
     merge_metadata(capture_dir, args.metadata, entries)
     return entries
+
+
+def _parse_benchmark_fps(output: str) -> float | None:
+    """Pull ``measured_fps_avg`` from a playback ``--benchmark`` JSON line."""
+    for line in output.splitlines():
+        line = line.strip()
+        if not line.startswith("{") or "measured_fps_avg" not in line:
+            continue
+        try:
+            stats = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        value = stats.get("measured_fps_avg")
+        if value is not None:
+            return float(value)
+    return None
+
+
+def preflight_refresh_check(args: argparse.Namespace, sample_image: np.ndarray) -> float | None:
+    """Run the deployed playback under ``--benchmark`` and return measured fps.
+
+    Verifies the machine actually sustains the high refresh rate while rendering
+    full-size sub-frames. Without this, a slow compositor silently turns the
+    "protected" stream into a flickering partial cycle and every capture is
+    confounded with refresh failure.
+    """
+    with tempfile.TemporaryDirectory(prefix="real-capture-preflight-") as tmp:
+        from PIL import Image
+
+        padded = pad_to_display_aspect(sample_image, width=args.display_width, height=args.display_height)
+        image_path = Path(tmp) / "preflight.png"
+        Image.fromarray(padded).save(image_path)
+        deployed = next(spec for spec in COMPONENT_CONDITIONS if spec.label == "deployed")
+        cmd = [
+            args.python_executable, "main.py", "playback",
+            "--image", str(image_path),
+            "--width", str(args.display_width),
+            "--height", str(args.display_height),
+            "--n", str(args.n),
+            "--cycles", str(args.cycles),
+            "--benchmark", str(args.refresh_check_seconds),
+        ]
+        if args.fullscreen:
+            cmd.append("--fullscreen")
+        cmd += condition_to_playback_args(deployed)
+        proc = subprocess.run(
+            cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, timeout=args.refresh_check_seconds + args.playback_timeout + 30,
+            check=False,
+        )
+    fps = _parse_benchmark_fps(proc.stdout or "")
+    return fps
+
+
+def _available_engines(requested: list[str]) -> list[str]:
+    """Filter to installed OCR engines.
+
+    A requested-but-missing engine would otherwise return empty text and be
+    recorded as 0%% recovery — fake evidence that inflates the protection claim.
+    """
+    from src.attack.ocr_evaluator import OCREvaluator
+
+    available = set(OCREvaluator(engines=None).engines)
+    keep = [e for e in requested if e in available]
+    dropped = [e for e in requested if e not in available]
+    if dropped:
+        print(f"[ocr] skipping unavailable engines: {', '.join(dropped)}", file=sys.stderr)
+    return keep or sorted(available)
+
+
+def _group_plan(plan: list[dict]) -> dict[tuple[str, str, str], list[dict]]:
+    """Group items so one playback launch serves all attacks of a condition."""
+    groups: dict[tuple[str, str, str], list[dict]] = {}
+    for item in plan:
+        key = (item["position"]["label"], str(item["image_name"]), str(item["ablation"]))
+        groups.setdefault(key, []).append(item)
+    return groups
+
+
+def _save_raw_frame(frame: np.ndarray, *, args: argparse.Namespace, item: dict) -> Path:
+    """Save one un-rectified frame for rolling-shutter banding inspection."""
+    raw_dir = Path(args.capture_dir) / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%H%M%S%f")
+    base = build_base(
+        args.device_name,
+        str(item["condition"]) + "_raw",
+        float(item["position"]["angle_degrees"]),
+        float(item["position"]["distance_m"]),
+        str(item["image_name"]),
+        args.n,
+    )
+    path = raw_dir / f"{base}_{ts}.jpg"
+    cv2.imwrite(str(path), frame, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    return path
 
 
 def _execute_plan(args: argparse.Namespace, images: list[np.ndarray], plan: list[dict]) -> int:
@@ -554,86 +744,105 @@ def _execute_plan(args: argparse.Namespace, images: list[np.ndarray], plan: list
         name = str(item["image_name"])
         if name not in unique_names:
             unique_names.append(name)
-    image_by_name = {
-        name: image
-        for name, image in zip(unique_names, images)
-    }
+    image_by_name = {name: image for name, image in zip(unique_names, images)}
 
     exposure_calib = load_exposure_calibration(args.calibration_dir)
     attacks = _attack_specs()
-    last_pos = None
+    needs_exposure = {a for a in {str(it["attack"]) for it in plan}
+                      if a in attacks and attacks[a].exposure_key}
+    if needs_exposure and not exposure_calib:
+        print("[warn] no exposure calibration found at "
+              f"{args.calibration_dir}/exposure.json; short/long/video captures will use the "
+              "camera's AUTO exposure and may be invalid. Run real_capture_calibrate.py "
+              "--calibrate-exposure first.", file=sys.stderr)
+
+    # Preflight: confirm the display actually sustains the target refresh rate.
+    args.measured_fps = None
+    if not args.skip_refresh_check and images:
+        print("[preflight] measuring sustained playback fps ...")
+        fps = preflight_refresh_check(args, images[0])
+        args.measured_fps = fps
+        threshold = args.min_refresh_fps if args.min_refresh_fps is not None else 0.9 * args.refresh_hz
+        if fps is None:
+            print("[preflight] could not measure fps (no benchmark output); "
+                  "continuing — verify the display manually.", file=sys.stderr)
+        elif fps < threshold:
+            print(f"[preflight] measured {fps:.1f} fps < required {threshold:.1f} "
+                  f"(target {args.refresh_hz}Hz). Captures would be confounded with refresh "
+                  "failure; aborting. Use --skip-refresh-check to override.", file=sys.stderr)
+            return 2
+        else:
+            print(f"[preflight] OK: {fps:.1f} fps (target {args.refresh_hz}Hz).")
+
+    groups = _group_plan(plan)
+    positions = {item["position"]["label"] for item in plan}
+    multi_position = len(positions) > 1
     total_entries = 0
+    last_pos = None
     with tempfile.TemporaryDirectory(prefix="real-capture-ablation-") as tmp:
         tmp_root = Path(tmp)
-        for idx, item in enumerate(plan, 1):
-            pos_label = item["position"]["label"]
-            if args.prompt_positions and pos_label != last_pos:
+        for gi, ((pos_label, image_name, ablation), items) in enumerate(groups.items(), 1):
+            # Only prompt for physical repositioning when the geometry actually
+            # changes (studies 1/2 stay at one position → no prompt).
+            if args.prompt_positions and multi_position and pos_label != last_pos:
                 input(f"[position {pos_label}] Move camera to distance/angle, then press ENTER...")
-                last_pos = pos_label
-            image = image_by_name[str(item["image_name"])]
+            last_pos = pos_label
+            image = image_by_name[image_name]
             padded = pad_to_display_aspect(image, width=args.display_width, height=args.display_height)
-            image_path = tmp_root / f"{item['image_name']}_{idx}.png"
+            image_path = tmp_root / f"{image_name}_{gi}.png"
             from PIL import Image
 
             Image.fromarray(padded).save(image_path)
-            playback_cmd = _playback_command(args, image_path, item)
-            print(f"[{idx}/{len(plan)}] {item['condition']} {item['image_name']} {pos_label}")
+            playback_cmd = _playback_command(args, image_path, items[0])
+            print(f"[group {gi}/{len(groups)}] {ablation} {image_name} {pos_label} "
+                  f"attacks={','.join(str(it['attack']) for it in items)}")
             proc = subprocess.Popen(
-                playback_cmd,
-                cwd=str(ROOT),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
+                playback_cmd, cwd=str(ROOT), stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT, text=True,
             )
             try:
                 wait_for_playback_ready(proc, args.playback_timeout)
-                attack_spec = attacks[str(item["attack"])]
-                exposure_value, exposure_s = exposure_for_attack(exposure_calib, attack_spec.exposure_key or "")
-                cap = open_camera(
-                    args.device,
-                    attack_spec.width,
-                    attack_spec.height,
-                    args.fourcc,
-                    attack_spec.fps,
-                    backend=args.backend,
-                )
-                try:
-                    if exposure_value is not None:
-                        try_set_exposure(
-                            cap,
-                            manual=True,
-                            value=exposure_value,
-                            backend_name=args.backend,
-                        )
-                    warmup(cap, args.warmup)
-                    frames = grab_frames(cap, attack_spec.burst, attack_spec.interval)
-                    frames = _maybe_rectify_frames(frames, args.calibration_dir, pos_label)
-                    settings = camera_settings(cap)
-                finally:
-                    cap.release()
-                if item["attack"] == "video":
-                    variants = offline_video_attack_frames(frames, window=args.n)
-                    for name, frame in variants.items():
+                for item in items:
+                    attack_spec = attacks[str(item["attack"])]
+                    exposure_value, exposure_s = exposure_for_attack(
+                        exposure_calib, attack_spec.exposure_key or "")
+                    cap, backend_used = open_camera_with_backend(
+                        args.device, attack_spec.width, attack_spec.height,
+                        args.fourcc, attack_spec.fps, backend=args.backend,
+                    )
+                    try:
+                        if exposure_value is not None:
+                            exp = try_set_exposure(
+                                cap, manual=True, value=exposure_value,
+                                backend_name=backend_used,
+                            )
+                            if not exp["honored"]:
+                                print(f"[exposure] {item['attack']}: manual exposure not honored "
+                                      f"(backend={backend_used}); try --backend dshow.",
+                                      file=sys.stderr)
+                        warmup(cap, args.warmup)
+                        raw_frames = grab_frames(cap, attack_spec.burst, attack_spec.interval)
+                        settings = camera_settings(cap)
+                    finally:
+                        cap.release()
+                    if args.save_raw and raw_frames:
+                        _save_raw_frame(raw_frames[0], args=args, item=item)
+                    frames = _maybe_rectify_frames(raw_frames, args.calibration_dir, pos_label)
+                    if str(item["attack"]) == "video":
+                        variants = offline_video_attack_frames(
+                            frames, window=args.video_window or args.n)
+                        for name, frame in variants.items():
+                            total_entries += len(_save_frames(
+                                [frame], args=args, item=item, attack_spec=attack_spec,
+                                settings=settings, exposure_s=exposure_s,
+                                playback_cmd=playback_cmd, suffix=f"_{name}",
+                            ))
+                    else:
                         total_entries += len(_save_frames(
-                            [frame],
-                            args=args,
-                            item=item,
-                            attack_spec=attack_spec,
-                            settings=settings,
-                            exposure_s=exposure_s,
+                            frames, args=args, item=item, attack_spec=attack_spec,
+                            settings=settings, exposure_s=exposure_s,
                             playback_cmd=playback_cmd,
-                            suffix=f"_{name}",
                         ))
-                else:
-                    total_entries += len(_save_frames(
-                        frames,
-                        args=args,
-                        item=item,
-                        attack_spec=attack_spec,
-                        settings=settings,
-                        exposure_s=exposure_s,
-                        playback_cmd=playback_cmd,
-                    ))
             finally:
                 proc.terminate()
                 try:
@@ -642,7 +851,7 @@ def _execute_plan(args: argparse.Namespace, images: list[np.ndarray], plan: list
                     proc.kill()
     print(f"Saved metadata entries: {total_entries}")
     if args.analyze:
-        engines = [part for part in _csv(args.engines, ("tesseract",))]
+        engines = _available_engines([part for part in _csv(args.engines, ("tesseract",))])
         run_real_capture_ocr(args.capture_dir, args.metadata, engines=engines)
         print(f"Analysis written: experiments/results/{REAL_CAPTURE_JSON}, {REAL_CAPTURE_MD}")
     return 0
@@ -681,9 +890,29 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--device", type=int, default=DEFAULT_DEVICE)
     p.add_argument("--device-name", default=DEFAULT_DEVICE_NAME)
     p.add_argument("--camera-type", default="usb_webcam")
-    p.add_argument("--backend", default=None)
+    # DirectShow honours the log2 exposure convention and the 0.25/0.75 manual
+    # AUTO_EXPOSURE values this pipeline assumes; MSMF uses different units, so
+    # exposure-controlled captures default to dshow. Override with --backend msmf
+    # (exposure_s metadata will then be approximate).
+    p.add_argument("--backend", default="dshow",
+                   choices=("dshow", "msmf", "avfoundation", "v4l2", "any"))
     p.add_argument("--fourcc", default="MJPG")
     p.add_argument("--warmup", type=float, default=0.8)
+    p.add_argument("--video-window", type=int, default=0,
+                   help="Sliding-window size (camera frames) for the offline "
+                        "window-mean attack; 0 uses --n")
+    p.add_argument("--save-raw", action="store_true",
+                   help="Also save one un-rectified frame per capture (rolling-"
+                        "shutter banding inspection)")
+    p.add_argument("--cet6-pages", default="1",
+                   help="Comma CET6 PDF page numbers to add as realistic-doc "
+                        "content (empty to disable)")
+    p.add_argument("--cet6-pdf", default=str(CET6_PDF_PATH))
+    p.add_argument("--refresh-check-seconds", type=float, default=4.0)
+    p.add_argument("--skip-refresh-check", action="store_true")
+    p.add_argument("--min-refresh-fps", type=float, default=None,
+                   help="Abort if measured playback fps is below this (default "
+                        "0.9*refresh-hz)")
     p.add_argument("--capture-dir", default=DEFAULT_CAPTURE_DIR)
     p.add_argument("--metadata", default="metadata.json")
     p.add_argument("--calibration-dir", default=DEFAULT_CALIBRATION_DIR)
@@ -720,6 +949,17 @@ def main(argv: list[str] | None = None) -> int:
     if load_subset_size is None:
         load_subset_size = 12 if args.study in {"1", "all"} else 5
     images, truths, names = _load_subset(load_subset_size)
+    # Prepend CET6 realistic-document pages so they survive subset slicing and
+    # appear in every study alongside the synthetic corpus.
+    cet6_pages = _parse_int_list(args.cet6_pages)
+    if cet6_pages:
+        cet6_imgs, cet6_names, cet6_truths = load_cet6_content(
+            cet6_pages, pdf_path=args.cet6_pdf,
+            width=args.display_width, height=args.display_height,
+        )
+        images = cet6_imgs + images
+        names = cet6_names + names
+        truths = cet6_truths + truths
     conditions = _csv(args.conditions, ())
     plan = build_study_plan(
         study=args.study,

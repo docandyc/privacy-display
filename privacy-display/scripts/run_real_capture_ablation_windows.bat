@@ -11,7 +11,7 @@ if exist ".venv\Scripts\python.exe" (
 
 if "%~1"=="dry-run" (
   shift
-  "%PY%" experiments\real_capture_ablation.py --study all --subset-size 120 --dry-run %*
+  "%PY%" experiments\real_capture_ablation.py --study all --dry-run %*
   exit /b %ERRORLEVEL%
 )
 
@@ -29,7 +29,7 @@ if "%~1"=="calibrate-exposure" (
 
 if "%~1"=="full" (
   shift
-  "%PY%" experiments\real_capture_ablation.py --study all --subset-size 120 --backend dshow --analyze %*
+  "%PY%" experiments\real_capture_ablation.py --study all --backend dshow --analyze %*
   exit /b %ERRORLEVEL%
 )
 
