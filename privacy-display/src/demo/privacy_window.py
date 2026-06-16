@@ -55,9 +55,9 @@ def ensure_safe_refresh_rate(n: int, refresh_rate: int) -> int:
 
 
 def validate_inversion_alpha(alpha: float) -> None:
-    """交底书约束：反色帧持续时间系数 alpha ∈ [0.2, 0.5]。"""
-    if not (0.2 <= float(alpha) <= 0.5):
-        raise ValueError("inversion_alpha must be in [0.2, 0.5]")
+    """反色帧系数 alpha；playback 消融允许全反色参考 α=1.0。"""
+    if not (0.2 <= float(alpha) <= 1.0):
+        raise ValueError("inversion_alpha must be in [0.2, 1.0]")
 
 
 def validate_brightness_model(model: str) -> None:
@@ -324,16 +324,22 @@ def _extract_refresh_rate_from_text(text: str) -> int | None:
     return max(rates) if rates else None
 
 
-def create_display_surface(pygame_module, size: tuple[int, int], prefer_vsync: bool):
+def create_display_surface(
+    pygame_module,
+    size: tuple[int, int],
+    prefer_vsync: bool,
+    fullscreen: bool = False,
+):
     """创建显示表面；支持时优先开启 SDL vsync。"""
+    flags = pygame_module.FULLSCREEN if fullscreen else 0
     if prefer_vsync:
         try:
-            return pygame_module.display.set_mode(size, vsync=1), True
+            return pygame_module.display.set_mode(size, flags, vsync=1), True
         except TypeError:
             pass
         except Exception:
             pass
-    return pygame_module.display.set_mode(size), False
+    return pygame_module.display.set_mode(size, flags), False
 
 
 def select_output_frame(

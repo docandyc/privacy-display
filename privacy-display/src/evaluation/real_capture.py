@@ -131,6 +131,14 @@ def run_real_capture_ocr(
                 "image": str(entry["image"]),
                 "engine": engine,
                 "condition": str(entry.get("condition", "unknown")),
+                "ablation": str(entry.get("ablation", "")),
+                "attack": str(entry.get("attack", "")),
+                "profile": str(entry.get("profile", "")),
+                "stripe_alpha": _optional_float(entry.get("stripe_alpha")),
+                "glyph_alpha": _optional_float(entry.get("glyph_alpha")),
+                "inversion_alpha": _optional_float(entry.get("inversion_alpha")),
+                "playback_cmd": str(entry.get("playback_cmd", "")),
+                "roi_pos": str(entry.get("roi_pos", "")),
                 "device": str(entry.get("device", "unknown")),
                 "camera_type": str(entry.get("camera_type", "unknown")),
                 "capture_mode": str(entry.get("capture_mode", "unknown")),
@@ -178,10 +186,29 @@ def run_real_capture_ocr(
 
 def summarize_real_capture_rows(rows: list[dict]) -> dict:
     """Summarize real-camera OCR rows by engine, condition, and device."""
-    return {
+    summary = {
         "by_engine": _group_summary(rows, "engine"),
         "by_condition": _group_summary(rows, "condition"),
         "by_device": _group_summary(rows, "device"),
+    }
+    if any(row.get("ablation") and row.get("attack") for row in rows):
+        summary["by_ablation_attack"] = summarize_by(rows, ["ablation", "attack"])
+    return summary
+
+
+def summarize_by(rows: list[dict], fields: list[str]) -> dict:
+    """Summarize rows by a compound key made from structured metadata fields."""
+    if not fields:
+        raise ValueError("fields must not be empty")
+    grouped: dict[str, list[dict]] = {}
+    for row in rows:
+        if not all(str(row.get(field, "")).strip() for field in fields):
+            continue
+        key = "|".join(str(row.get(field, "unknown")) for field in fields)
+        grouped.setdefault(key, []).append(row)
+    return {
+        key: _metric_summary(group)
+        for key, group in sorted(grouped.items())
     }
 
 
@@ -208,6 +235,23 @@ def render_real_capture_markdown(report: dict) -> str:
             f"{_pct(stats['leak_rate_char_ge_20pct']['mean'])} |"
         )
     lines.append("")
+    if "by_ablation_attack" in report["summary"]:
+        lines.extend([
+            "## By Ablation And Attack",
+            "",
+            "| Ablation | Attack | Rows | Char recovery | Exact match | Sensitive token recall | Leak rate char>=20% |",
+            "|---|---|---:|---:|---:|---:|---:|",
+        ])
+        for key, stats in sorted(report["summary"]["by_ablation_attack"].items()):
+            ablation, attack = key.split("|", 1)
+            lines.append(
+                f"| {ablation} | {attack} | {stats['char_accuracy']['count']} | "
+                f"{_pct(stats['char_accuracy']['mean'])} | "
+                f"{_pct(stats['exact_match']['mean'])} | "
+                f"{_pct(stats['sensitive_token_recall']['mean'])} | "
+                f"{_pct(stats['leak_rate_char_ge_20pct']['mean'])} |"
+            )
+        lines.append("")
     return "\n".join(lines)
 
 
@@ -216,20 +260,24 @@ def _group_summary(rows: list[dict], field: str) -> dict:
     for row in rows:
         grouped.setdefault(str(row.get(field, "unknown")), []).append(row)
     return {
-        name: {
-            "char_accuracy": _mean_std([float(row["char_accuracy"]) for row in group]),
-            "word_accuracy": _mean_std([float(row["word_accuracy"]) for row in group]),
-            "exact_match": _mean_std([float(row["exact_match"]) for row in group]),
-            "sensitive_token_recall": _mean_std([
-                float(row["sensitive_token_recall"])
-                for row in group
-                if int(row.get("sensitive_token_count", 0)) > 0
-            ]),
-            "leak_rate_char_ge_20pct": _mean_std([
-                float(row["char_accuracy"] >= 0.20) for row in group
-            ]),
-        }
+        name: _metric_summary(group)
         for name, group in sorted(grouped.items())
+    }
+
+
+def _metric_summary(group: list[dict]) -> dict:
+    return {
+        "char_accuracy": _mean_std([float(row["char_accuracy"]) for row in group]),
+        "word_accuracy": _mean_std([float(row["word_accuracy"]) for row in group]),
+        "exact_match": _mean_std([float(row["exact_match"]) for row in group]),
+        "sensitive_token_recall": _mean_std([
+            float(row["sensitive_token_recall"])
+            for row in group
+            if int(row.get("sensitive_token_count", 0)) > 0
+        ]),
+        "leak_rate_char_ge_20pct": _mean_std([
+            float(row["char_accuracy"] >= 0.20) for row in group
+        ]),
     }
 
 

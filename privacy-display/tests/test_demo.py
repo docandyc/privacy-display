@@ -3,6 +3,7 @@ import numpy as np
 from src.demo.visual_integration import analyze_single_frame_readability
 from src.demo.privacy_window import (
     WindowConfig,
+    create_display_surface,
     ensure_safe_refresh_rate,
     minimum_refresh_rate,
     output_slot_duration,
@@ -72,6 +73,31 @@ def test_window_config_rejects_invalid_inversion_alpha():
         assert "inversion_alpha" in str(exc)
     else:
         raise AssertionError("invalid inversion_alpha should be rejected")
+
+
+def test_create_display_surface_passes_fullscreen_flag_with_vsync():
+    class FakeDisplay:
+        def __init__(self):
+            self.calls = []
+
+        def set_mode(self, size, flags=0, vsync=0):
+            self.calls.append((size, flags, vsync))
+            return "surface"
+
+    class FakePygame:
+        FULLSCREEN = 0x80000000
+        display = FakeDisplay()
+
+    surface, vsync = create_display_surface(
+        FakePygame,
+        (2560, 1600),
+        prefer_vsync=True,
+        fullscreen=True,
+    )
+
+    assert surface == "surface"
+    assert vsync is True
+    assert FakePygame.display.calls == [((2560, 1600), FakePygame.FULLSCREEN, 1)]
 
 
 def test_sub_noises_to_pixel_space_adds_pedestal():

@@ -1,5 +1,5 @@
 """
-Capture real photos from a USB webcam (Logitech C920) for Experiment A.
+Capture real photos from a USB webcam for Experiment A.
 
 This is the *shooter* that complements ``real_capture_analysis.py`` (the
 analyzer). The camera is fixed in front of the screen; you display protected
@@ -10,22 +10,22 @@ Captured stills are written into ``experiments/real_captures/`` and merged into
 
 Typical flow
 ------------
-1. Grant the terminal app (Tabby) Camera permission once, then restart it.
-2. ``python experiments/real_capture_shoot.py --probe``           # check device caps
+1. ``python experiments/real_capture_shoot.py --list``            # confirm index
+2. ``python experiments/real_capture_shoot.py --probe --device 1`` # check caps
 3. On the high-refresh screen: ``python main.py playback --demo cet6 --n 4 ...``
 4. ``python experiments/real_capture_shoot.py --interactive``     # reposition + shoot
 5. ``python experiments/real_capture_analysis.py --engines tesseract``
 
-macOS note: manual exposure of a UVC webcam is usually *not* honored through
-OpenCV/AVFoundation. The script attempts it and reports the effective value; for
-a true short-exposure condition, brighten the scene so auto-exposure shortens
-the shutter, or set exposure in Logitech's own utility.
+Windows note: the EMEET SmartCam S600 target setup usually works through UVC
+with either MSMF or DirectShow. Manual exposure read-back is recorded so short
+and long exposure captures are auditable.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import platform
 import sys
 import time
 from datetime import datetime
@@ -44,32 +44,94 @@ from src.evaluation.real_capture import (  # noqa: E402
 )
 
 DEFAULT_CAPTURE_DIR = "experiments/real_captures"
-DEFAULT_DEVICE = 0  # AVFoundation index of "HD Pro Webcam C920"
-DEFAULT_DEVICE_NAME = "HD Pro Webcam C920"
+DEFAULT_DEVICE = 1  # Windows DirectShow/MSMF index of "EMEET SmartCam S600"
+DEFAULT_DEVICE_NAME = "EMEET SmartCam S600"
 DEFAULT_EPSILON = 8.0 / 255.0  # matches metadata template (ε=8/255)
 CONDITIONS = ("protected", "original", "short_exposure", "video_frame")
 
 PERMISSION_HINT = (
-    "Camera could not be opened. On macOS this is almost always a permission "
-    "issue: System Settings -> Privacy & Security -> Camera -> enable for "
-    "'Tabby', then fully quit and reopen Tabby (resume with `claude --continue`)."
+    "Camera could not be opened. On Windows check Settings -> Privacy & security "
+    "-> Camera and confirm the USB webcam is not held by another app. On macOS, "
+    "enable Camera permission for this terminal app and restart it. On Linux, "
+    "check /dev/video* permissions and whether another process owns the device."
 )
+
+BACKEND_ATTRS = {
+    "msmf": "CAP_MSMF",
+    "dshow": "CAP_DSHOW",
+    "avfoundation": "CAP_AVFOUNDATION",
+    "v4l2": "CAP_V4L2",
+    "any": "CAP_ANY",
+}
 
 
 # --------------------------------------------------------------------------- #
 # Camera helpers
 # --------------------------------------------------------------------------- #
+def _backend_code(name: str) -> int:
+    attr = BACKEND_ATTRS.get(str(name).strip().lower())
+    if attr is None:
+        raise ValueError(f"unknown camera backend: {name}")
+    return int(getattr(cv2, attr, cv2.CAP_ANY))
+
+
+def get_camera_backends(system: str | None = None, preferred: str | None = None) -> list[tuple[str, int]]:
+    """Return OpenCV camera backends in the order this platform should try."""
+    if preferred:
+        return [(preferred.strip().lower(), _backend_code(preferred))]
+
+    system_name = system or platform.system()
+    if system_name == "Windows":
+        names = ("msmf", "dshow")
+    elif system_name == "Darwin":
+        names = ("avfoundation",)
+    elif system_name == "Linux":
+        names = ("v4l2",)
+    else:
+        names = ("any",)
+    return [(name, _backend_code(name)) for name in names]
+
+
+def get_camera_backend(system: str | None = None) -> tuple[str, int]:
+    """Return the first preferred backend for compatibility with older callers."""
+    return get_camera_backends(system=system)[0]
+
+
+def exposure_log2_to_seconds(value: float | None) -> float | None:
+    """Convert DirectShow-style log2 shutter values to seconds."""
+    if value is None:
+        return None
+    return float(2 ** float(value))
+
+
+def _auto_exposure_values(backend_name: str | None) -> tuple[float, float]:
+    """Return (manual, auto) values for OpenCV's CAP_PROP_AUTO_EXPOSURE."""
+    if (backend_name or "").strip().lower() == "msmf":
+        return 0.0, 1.0
+    return 0.25, 0.75
+
+
 def open_camera(
     device: int,
     width: int,
     height: int,
     fourcc: str = "MJPG",
     fps: float | None = None,
+    backend: str | None = None,
 ) -> cv2.VideoCapture:
-    """Open the webcam via the AVFoundation backend with the requested format."""
-    cap = cv2.VideoCapture(device, cv2.CAP_AVFOUNDATION)
-    if not cap.isOpened():
-        raise RuntimeError(PERMISSION_HINT)
+    """Open the webcam with the requested platform backend and format."""
+    attempted: list[str] = []
+    cap: cv2.VideoCapture | None = None
+    for backend_name, backend_code in get_camera_backends(preferred=backend):
+        attempted.append(backend_name)
+        candidate = cv2.VideoCapture(device, backend_code)
+        if candidate.isOpened():
+            cap = candidate
+            break
+        candidate.release()
+    if cap is None:
+        attempted_text = ", ".join(attempted) or "none"
+        raise RuntimeError(f"{PERMISSION_HINT} Attempted backends: {attempted_text}.")
     # FOURCC must be set before resolution so the C920 exposes MJPG high-res modes.
     if fourcc:
         cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*fourcc))
@@ -98,27 +160,44 @@ def camera_settings(cap: cv2.VideoCapture) -> dict:
     }
 
 
-def try_set_exposure(cap: cv2.VideoCapture, manual: bool, value: float | None) -> dict:
+def try_set_exposure(
+    cap: cv2.VideoCapture,
+    manual: bool,
+    value: float | None,
+    backend_name: str | None = None,
+) -> dict:
     """Best-effort manual exposure; returns requested vs effective values."""
+    return _try_set_exposure(cap, manual=manual, value=value, backend_name=backend_name)
+
+
+def _try_set_exposure(
+    cap: cv2.VideoCapture,
+    *,
+    manual: bool,
+    value: float | None,
+    backend_name: str | None,
+) -> dict:
     before = camera_settings(cap)
+    manual_value, auto_value = _auto_exposure_values(backend_name)
     if manual:
-        # 0.25 == manual on the V4L/AVFoundation convention; 0.75 == auto.
-        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
+        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, manual_value)
         if value is not None:
             cap.set(cv2.CAP_PROP_EXPOSURE, value)
     else:
-        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)
+        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, auto_value)
     cap.read()
     after = camera_settings(cap)
     value_honored = (
         manual
         and value is not None
-        and abs(after["exposure"] - value) < 1e-6
+        and abs(after["exposure"] - value) < 1e-3
     )
     auto_mode_changed = manual and after["auto_exposure"] != before["auto_exposure"]
     return {
         "requested_manual": manual,
         "requested_value": value,
+        "backend": backend_name,
+        "exposure_s": exposure_log2_to_seconds(value),
         "before": before,
         "after": after,
         "honored": bool(value_honored),
@@ -150,25 +229,39 @@ def grab_frames(cap: cv2.VideoCapture, count: int, interval: float):
 # --------------------------------------------------------------------------- #
 # Device enumeration / probe
 # --------------------------------------------------------------------------- #
-def list_devices(max_index: int = 4) -> None:
-    print("Probing AVFoundation video device indices (0..%d)..." % (max_index - 1))
+def list_devices(max_index: int = 10, backend: str | None = None) -> None:
+    backends = get_camera_backends(preferred=backend)
+    print(
+        "Probing video device indices (0..%d) via %s..."
+        % (max_index - 1, "/".join(name for name, _ in backends))
+    )
     for idx in range(max_index):
-        cap = cv2.VideoCapture(idx, cv2.CAP_AVFOUNDATION)
-        opened = cap.isOpened()
+        cap = None
+        backend_name = ""
+        for name, code in backends:
+            candidate = cv2.VideoCapture(idx, code)
+            if candidate.isOpened():
+                cap = candidate
+                backend_name = name
+                break
+            candidate.release()
+        opened = bool(cap and cap.isOpened())
         ok = False
         if opened:
             ok, _ = cap.read()
         s = camera_settings(cap) if opened else {}
-        cap.release()
+        if cap is not None:
+            cap.release()
         status = "OPEN+frame" if ok else ("opened-no-frame" if opened else "closed")
         extra = f" {s.get('width')}x{s.get('height')}@{s.get('fps')} {s.get('fourcc')}" if opened else ""
-        print(f"  [{idx}] {status}{extra}")
-    print("Index 0 is normally the C920. If all are 'closed', grant Camera permission to Tabby.")
+        backend_extra = f" backend={backend_name}" if backend_name else ""
+        print(f"  [{idx}] {status}{extra}{backend_extra}")
+    print("The EMEET S600 is expected at index 1 on the target Windows setup.")
 
 
-def probe(device: int, width: int, height: int, fourcc: str) -> int:
+def probe(device: int, width: int, height: int, fourcc: str, backend: str | None = None) -> int:
     try:
-        cap = open_camera(device, width, height, fourcc)
+        cap = open_camera(device, width, height, fourcc, backend=backend)
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
@@ -176,14 +269,21 @@ def probe(device: int, width: int, height: int, fourcc: str) -> int:
     ok, frame = cap.read()
     print(f"device {device}: first_frame_ok={ok} shape={None if not ok else frame.shape}")
     print(f"default request {width}x{height} {fourcc} -> {camera_settings(cap)}")
-    for (w, h) in [(1920, 1080), (1280, 720), (640, 480)]:
+    for (w, h, fps) in [(3840, 2160, 30), (1920, 1080, 60), (1280, 720, 60), (640, 480, None)]:
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, w)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, h)
+        if fps:
+            cap.set(cv2.CAP_PROP_FPS, fps)
         cap.read()
         s = camera_settings(cap)
-        print(f"  request {w}x{h} -> effective {s['width']}x{s['height']}@{s['fps']} {s['fourcc']}")
-    exp = try_set_exposure(cap, manual=True, value=-7)
-    print(f"  manual-exposure attempt honored={exp['honored']} effective_exposure={exp['after']['exposure']}")
+        fps_text = f"@{fps}" if fps else ""
+        print(f"  request {w}x{h}{fps_text} -> effective {s['width']}x{s['height']}@{s['fps']} {s['fourcc']}")
+    backend_name = backend or get_camera_backend()[0]
+    exp = try_set_exposure(cap, manual=True, value=-7, backend_name=backend_name)
+    print(
+        "  manual-exposure attempt honored=%s effective_exposure=%s exposure_s=%s"
+        % (exp["honored"], exp["after"]["exposure"], exp["exposure_s"])
+    )
     cap.release()
     return 0
 
@@ -385,7 +485,12 @@ def run_matrix(cap, args) -> list[dict]:
         if cmd == "s":
             continue
         if cond == "short_exposure":
-            try_set_exposure(cap, manual=True, value=args.exposure_value)
+            try_set_exposure(
+                cap,
+                manual=True,
+                value=args.exposure_value,
+                backend_name=args.backend,
+            )
         mode = "video_frame" if args.burst > 1 else (
             "short_exposure" if cond == "short_exposure" else "auto_photo"
         )
@@ -400,8 +505,8 @@ def run_matrix(cap, args) -> list[dict]:
 # CLI
 # --------------------------------------------------------------------------- #
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Capture real C920 photos for Experiment A")
-    p.add_argument("--list", action="store_true", help="List AVFoundation device indices and exit")
+    p = argparse.ArgumentParser(description="Capture real USB webcam photos for Experiment A")
+    p.add_argument("--list", action="store_true", help="List platform camera device indices and exit")
     p.add_argument("--probe", action="store_true", help="Probe device capabilities and exit")
     p.add_argument("--interactive", action="store_true", help="Interactive reposition-and-shoot loop")
     p.add_argument("--matrix", action="store_true",
@@ -413,6 +518,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", type=int, default=DEFAULT_DEVICE)
     p.add_argument("--device-name", default=DEFAULT_DEVICE_NAME)
     p.add_argument("--camera-type", default="usb_webcam")
+    p.add_argument("--backend", default=None, choices=tuple(BACKEND_ATTRS),
+                   help="OpenCV backend override: msmf/dshow/avfoundation/v4l2/any")
     p.add_argument("--width", type=int, default=1920)
     p.add_argument("--height", type=int, default=1080)
     p.add_argument("--fourcc", default="MJPG")
@@ -420,7 +527,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--warmup", type=float, default=2.0, help="Seconds to settle AE/AF before capture")
     p.add_argument("--burst", type=int, default=1, help="Frames per capture (use >1 for video_frame)")
     p.add_argument("--burst-interval", type=float, default=0.0)
-    p.add_argument("--manual-exposure", action="store_true", help="Best-effort manual exposure (often ignored on macOS)")
+    p.add_argument("--manual-exposure", action="store_true", help="Best-effort manual UVC exposure")
     p.add_argument("--exposure-value", type=float, default=None)
 
     # Metadata tagging for the capture condition.
@@ -457,7 +564,7 @@ def main() -> int:
     args = parse_args()
 
     if args.list:
-        list_devices()
+        list_devices(backend=args.backend)
         return 0
     if args.list_conditions:
         combos = planned_matrix(args)
@@ -467,19 +574,32 @@ def main() -> int:
             print(f"  - condition={cond} n={n} distance={dist:g}m angle={int(round(ang))}deg")
         return 0
     if args.probe:
-        return probe(args.device, args.width, args.height, args.fourcc)
+        return probe(args.device, args.width, args.height, args.fourcc, backend=args.backend)
 
     try:
-        cap = open_camera(args.device, args.width, args.height, args.fourcc, args.fps)
+        cap = open_camera(
+            args.device,
+            args.width,
+            args.height,
+            args.fourcc,
+            args.fps,
+            backend=args.backend,
+        )
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
 
     if args.manual_exposure or args.condition == "short_exposure":
-        exp = try_set_exposure(cap, manual=True, value=args.exposure_value)
+        exp = try_set_exposure(
+            cap,
+            manual=True,
+            value=args.exposure_value,
+            backend_name=args.backend,
+        )
         if not exp["honored"]:
-            print("[note] manual exposure not honored by AVFoundation/OpenCV; "
-                  "brighten the scene for a short auto shutter, or set it in Logitech's utility.")
+            print("[note] manual exposure was not honored by OpenCV/UVC read-back; "
+                  "try --backend dshow on Windows, brighten the scene for a short auto shutter, "
+                  "or set exposure in the camera vendor utility.")
 
     try:
         if args.matrix:

@@ -256,6 +256,70 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 # uses BoxMOT ByteTrack on the server when available, with a local fallback for tests
 ```
 
+## Scenario: Real Camera Capture Ablation Orchestration
+
+### 1. Scope / Trigger
+- Trigger: adding or changing Windows/macOS/Linux real-camera capture, calibration, playback orchestration, or OCR summary code for `privacy-display` physical-device ablation experiments.
+
+### 2. Signatures
+- Command: `python experiments/real_capture_shoot.py --list [--backend msmf|dshow|avfoundation|v4l2|any]`
+- Command: `python experiments/real_capture_shoot.py --probe --device 1 --backend dshow`
+- Command: `python experiments/real_capture_calibrate.py --select-roi --pos d0.5_a0 --backend dshow`
+- Command: `python experiments/real_capture_calibrate.py --calibrate-exposure --backend dshow`
+- Command: `python experiments/real_capture_ablation.py --study {1,2,3,all} --dry-run`
+- Command: `python experiments/real_capture_ablation.py --study 1 --subset-size 1 --attacks short --conditions original,deployed --backend dshow --analyze`
+- Command: `python experiments/real_capture_ablation.py --study all --subset-size 120 --backend dshow --analyze`
+- Windows helper: `scripts\run_real_capture_ablation_windows.bat [dry-run|calibrate-roi|calibrate-exposure|full]` where `dry-run` and `full` use `--subset-size 120`.
+- Playback command contract: `python main.py playback --image <png> --width 2560 --height 1600 --n 4 --fullscreen [condition flags]` prints `PLAYBACK_READY` before captures start.
+
+### 3. Contracts
+- `real_capture_shoot.get_camera_backends(system="Windows")` must prefer `msmf` then `dshow`; macOS uses `avfoundation`; Linux uses `v4l2`.
+- DirectShow exposure values are log2 seconds (`-8 ~= 1/256s`, `-6 ~= 1/64s`); metadata should include both the requested OpenCV value and `exposure_s` when known.
+- `condition` remains a backward-compatible string such as `deployed|short`; structured optional fields must include `ablation`, `attack`, `profile`, `stripe_alpha`, `glyph_alpha`, `inversion_alpha`, `playback_cmd`, and `roi_pos`.
+- Dry-run paths must not open a camera or pygame window; they only load corpus metadata, build plans, and print counts.
+- Default all-study planning must stay bounded: study 1 uses about 12 stratified samples; studies 2 and 3 use about 5 unless `--subset-size` overrides.
+- Video attacks should save attacker-friendly derived frames (`single_best`, `temporal_mean`, `window_mean_best`, `max_proj`) rather than raw bursts only.
+
+### 4. Validation & Error Matrix
+- Unknown camera backend -> `ValueError` before opening hardware.
+- Unknown attack or condition for a study -> `ValueError` during plan construction.
+- Missing ROI calibration -> capture raw frames and preserve `roi_pos`; do not fail the run.
+- Missing exposure calibration -> skip manual exposure for that attack and leave `exposure_s` null unless provided.
+- Playback exits before `PLAYBACK_READY` -> fail the current run with captured stdout context.
+- Empty video frame list -> `ValueError` from offline video attack helper.
+
+### 5. Good/Base/Bad Cases
+- Good: run `--study all --dry-run` first and verify the plan size before opening camera hardware.
+- Good: run the one-sample smoke command before full study collection to prove `original|short` can be read and `deployed|short` suppresses recovery.
+- Base: run without ROI calibration; metadata remains usable, but notes should make the missing rectification auditable.
+- Bad: starting capture after a fixed sleep only; playback must expose `PLAYBACK_READY` so camera timing is deterministic.
+- Bad: changing `condition` to a nested object only, because existing real-capture analysis groups by string condition.
+- Bad: letting default all-study planning expand to the full 120-image corpus without an explicit `--subset-size`.
+
+### 6. Tests Required
+- Assert Windows backend preference and backend-specific auto-exposure values.
+- Assert DirectShow log2 exposure conversion.
+- Assert playback CLI parses `--fullscreen`, `--show-original`, and `--inversion-alpha 1.0`.
+- Assert study plan sizes, condition filtering, geometry matrix positions, and default bounded all-study behavior.
+- Assert letterbox padding preserves aspect ratio with black borders.
+- Assert offline video attack helpers return all expected derived frame keys.
+- Assert structured metadata fields survive into `summarize_real_capture_rows(...)[by_ablation_attack]`.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+time.sleep(5)
+capture_once(cap, args, condition="deployed", ...)
+```
+
+#### Correct
+```python
+proc = subprocess.Popen(playback_cmd, stdout=subprocess.PIPE, text=True)
+wait_for_playback_ready(proc, timeout=20)
+frames = grab_frames(cap, count=attack.burst, interval=attack.interval)
+entry = build_metadata_entry(item, playback_cmd=playback_cmd, ...)
+```
+
 ## Scenario: Publication Corpus and Stratified OCR Reports
 
 ### 1. Scope / Trigger

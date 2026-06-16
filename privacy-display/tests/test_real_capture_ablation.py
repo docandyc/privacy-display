@@ -1,0 +1,179 @@
+import subprocess
+import sys
+import time
+
+import numpy as np
+import pytest
+
+from experiments.real_capture_ablation import (
+    _load_subset,
+    build_metadata_entry,
+    build_study_plan,
+    condition_to_playback_args,
+    offline_video_attack_frames,
+    pad_to_display_aspect,
+    parse_positions,
+    wait_for_playback_ready,
+)
+
+
+def test_condition_to_playback_args_original_uses_static_baseline():
+    args = condition_to_playback_args("original")
+
+    assert "--show-original" in args
+    assert "--anti-ocr-profile" not in args
+    assert "--inversion" not in args
+
+
+def test_condition_to_playback_args_deployed_matches_selected_profile():
+    args = condition_to_playback_args("deployed")
+
+    assert args == [
+        "--anti-ocr-profile", "strong",
+        "--stripe-alpha", "0.10",
+        "--glyph-alpha", "0.12",
+        "--inversion",
+        "--inversion-alpha", "0.20",
+    ]
+
+
+def test_build_study1_plan_filters_conditions_and_attacks():
+    plan = build_study_plan(
+        study="1",
+        names=["doc_a", "doc_b"],
+        truths=["A", "B"],
+        subset_size=2,
+        attacks=("short",),
+        conditions=("original", "deployed"),
+    )
+
+    assert len(plan) == 4
+    assert {item["condition"] for item in plan} == {"original|short", "deployed|short"}
+    assert {item["position"]["label"] for item in plan} == {"d0.5_a0"}
+
+
+def test_build_study3_plan_uses_geometry_matrix_for_deployed_only():
+    plan = build_study_plan(
+        study="3",
+        names=["doc_a"],
+        truths=["A"],
+        subset_size=1,
+        attacks=("short",),
+    )
+
+    assert len(plan) == 12
+    assert {item["ablation"] for item in plan} == {"deployed"}
+    assert {item["attack"] for item in plan} == {"short"}
+    assert "d1.5_a45" in {item["position"]["label"] for item in plan}
+
+
+def test_build_all_plan_uses_study_specific_default_subset_sizes():
+    names = [f"doc_{idx}" for idx in range(20)]
+    truths = [f"T{idx}" for idx in range(20)]
+
+    plan = build_study_plan(study="all", names=names, truths=truths)
+
+    by_study = {}
+    for item in plan:
+        by_study[item["study"]] = by_study.get(item["study"], 0) + 1
+    assert by_study == {
+        "1": 12 * 6 * 3,
+        "2": 5 * 24,
+        "3": 5 * 12 * 2,
+    }
+
+
+def test_load_subset_uses_full_corpus_when_requested_size_reaches_total():
+    images, truths, names = _load_subset(120)
+
+    assert len(images) == 120
+    assert len(truths) == 120
+    assert len(names) == 120
+
+
+def test_parse_positions_accepts_compact_labels():
+    positions = parse_positions("d0.5_a0,d1.5_a45")
+
+    assert [p["label"] for p in positions] == ["d0.5_a0", "d1.5_a45"]
+    assert positions[1]["distance_m"] == 1.5
+    assert positions[1]["angle_degrees"] == 45.0
+
+
+def test_pad_to_display_aspect_uses_black_letterbox_without_stretching():
+    img = np.full((40, 20, 3), 200, dtype=np.uint8)
+
+    out = pad_to_display_aspect(img, width=100, height=100)
+
+    assert out.shape == (100, 100, 3)
+    non_black = np.any(out != 0, axis=2)
+    ys, xs = np.where(non_black)
+    assert xs.max() - xs.min() + 1 == 50
+    assert ys.max() - ys.min() + 1 == 100
+    assert np.all(out[:, :20] == 0)
+
+
+def test_offline_video_attack_frames_returns_attacker_candidates():
+    frames = [
+        np.full((4, 4, 3), 10, dtype=np.uint8),
+        np.full((4, 4, 3), 50, dtype=np.uint8),
+        np.full((4, 4, 3), 90, dtype=np.uint8),
+    ]
+
+    attacks = offline_video_attack_frames(frames, window=2)
+
+    assert set(attacks) == {"single_best", "temporal_mean", "window_mean_best", "max_proj"}
+    assert attacks["temporal_mean"].shape == frames[0].shape
+    assert int(attacks["temporal_mean"][0, 0, 0]) == 50
+    assert int(attacks["max_proj"][0, 0, 0]) == 90
+
+
+def test_build_metadata_entry_adds_structured_ablation_fields():
+    item = build_study_plan(
+        study="1",
+        names=["doc_a"],
+        truths=["VISIBLE TEXT"],
+        subset_size=1,
+        attacks=("short",),
+        conditions=("deployed",),
+    )[0]
+    entry = build_metadata_entry(
+        item,
+        image_name="capture.jpg",
+        entry_id="capture-001",
+        device_name="EMEET SmartCam S600",
+        camera_type="usb_webcam",
+        capture_mode="short_exposure",
+        exposure_s=1 / 256,
+        fps=30.0,
+        refresh_hz=240.0,
+        n=4,
+        epsilon=8 / 255,
+        playback_cmd=["python", "main.py", "playback"],
+    )
+
+    assert entry["condition"] == "deployed|short"
+    assert entry["ablation"] == "deployed"
+    assert entry["attack"] == "short"
+    assert entry["profile"] == "strong"
+    assert entry["stripe_alpha"] == 0.10
+    assert entry["glyph_alpha"] == 0.12
+    assert entry["inversion_alpha"] == 0.20
+    assert entry["playback_cmd"] == "python main.py playback"
+
+
+def test_wait_for_playback_ready_honors_timeout_without_stdout():
+    proc = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(2)"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    started = time.monotonic()
+    try:
+        with pytest.raises(TimeoutError):
+            wait_for_playback_ready(proc, timeout=0.2)
+    finally:
+        proc.terminate()
+        proc.wait(timeout=2)
+
+    assert time.monotonic() - started < 1.0

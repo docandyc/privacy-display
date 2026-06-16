@@ -688,6 +688,8 @@ class PlaybackConfig:
     pdf_page: int = 1
     benchmark_seconds: float = 0.0  # >0 时运行该秒数后自动退出并打印统计
     show_hud: bool = True
+    fullscreen: bool = False
+    show_original: bool = False
     anti_ocr_profile: str = "off"
     mask_cell_size: int = 1
     stripe_width: int = 10
@@ -749,6 +751,7 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         pygame,
         (cfg.width, cfg.height),
         prefer_vsync=True,
+        fullscreen=cfg.fullscreen,
     )
     pygame.display.set_caption("人眼端回放演示 | Privacy Display Playback")
     clock = pygame.time.Clock()
@@ -763,20 +766,43 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
     pygame.display.flip()
 
     image = _load_input_image(cfg)
-    frames, meta = build_playback_frames(
-        image,
-        n=cfg.n,
-        cycles=cfg.cycles,
-        epsilon=cfg.epsilon,
-        insert_inversion=cfg.insert_inversion,
-        inversion_alpha=cfg.inversion_alpha,
-        use_noise=cfg.use_noise,
-        anti_ocr_profile=cfg.anti_ocr_profile,
-        mask_cell_size=cfg.mask_cell_size,
-        stripe_width=cfg.stripe_width,
-        stripe_alpha=cfg.stripe_alpha,
-        glyph_alpha=cfg.glyph_alpha,
-    )
+    if cfg.show_original:
+        frames = [(image, "original")]
+        meta = {
+            "n": cfg.n,
+            "cycles": 1,
+            "epsilon": cfg.epsilon,
+            "pedestal": 0.0,
+            "use_noise": False,
+            "insert_inversion": False,
+            "inversion_alpha": None,
+            "per_cycle_slots": 1,
+            "permutations": [],
+            "noise_schedule": [],
+            "anti_ocr": {
+                "profile": "off",
+                "mask_cell_size": 1,
+                "stripe_width": 10,
+                "stripe_alpha": 0.0,
+                "glyph_alpha": 0.0,
+                "saliency_pixels": 0,
+            },
+        }
+    else:
+        frames, meta = build_playback_frames(
+            image,
+            n=cfg.n,
+            cycles=cfg.cycles,
+            epsilon=cfg.epsilon,
+            insert_inversion=cfg.insert_inversion,
+            inversion_alpha=cfg.inversion_alpha,
+            use_noise=cfg.use_noise,
+            anti_ocr_profile=cfg.anti_ocr_profile,
+            mask_cell_size=cfg.mask_cell_size,
+            stripe_width=cfg.stripe_width,
+            stripe_alpha=cfg.stripe_alpha,
+            glyph_alpha=cfg.glyph_alpha,
+        )
 
     # convert 必须在 set_mode 之后；转换完丢弃 numpy 帧引用以省内存
     surfaces = [
@@ -826,7 +852,7 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
     idx = 0
     frame_count = 0
     show_hud = cfg.show_hud
-    show_original = False
+    show_original = cfg.show_original
     paused = False
     running = True
     fps_value = 0.0
@@ -836,6 +862,7 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
     body_times: deque[float] = deque(maxlen=100000)  # 循环体耗时（flip 前）
     start_time = time.perf_counter()
     next_deadline = start_time + frame_interval   # 软件帧率封顶的目标时刻
+    print("PLAYBACK_READY", flush=True)
 
     while running:
         t_iter = time.perf_counter()
@@ -964,13 +991,17 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
     parser.add_argument("--inversion", action="store_true",
                         help="每周期末插入反色帧（长曝光防御）")
     parser.add_argument("--inversion-alpha", type=float, default=0.2,
-                        help="反色帧振幅系数 α∈[0.2,0.5]：越小越清晰、防长曝光越弱"
+                        help="反色帧振幅系数 α∈[0.2,1.0]：越小越清晰、防长曝光越弱"
                              "（默认 0.2 偏可读）")
     parser.add_argument("--benchmark", type=float, default=0.0,
                         metavar="SECONDS",
                         help="运行指定秒数后自动退出并打印 JSON 统计")
     parser.add_argument("--width", type=int, default=1280, help="窗口宽度")
     parser.add_argument("--height", type=int, default=720, help="窗口高度")
+    parser.add_argument("--fullscreen", action="store_true",
+                        help="用 pygame FULLSCREEN 打开显示窗口")
+    parser.add_argument("--show-original", action="store_true",
+                        help="直接显示原图作为无防护基线，不生成保护子帧")
     parser.add_argument(
         "--anti-ocr-profile",
         choices=ANTI_OCR_PROFILES,
@@ -1012,6 +1043,8 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         demo_name=args.demo,
         pdf_page=args.pdf_page,
         benchmark_seconds=args.benchmark,
+        fullscreen=args.fullscreen,
+        show_original=args.show_original,
         anti_ocr_profile=args.anti_ocr_profile,
         mask_cell_size=anti_options.mask_cell_size,
         stripe_width=anti_options.stripe_width,

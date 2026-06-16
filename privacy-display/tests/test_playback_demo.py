@@ -95,6 +95,22 @@ def test_build_playback_frames_inserts_inversion_at_cycle_end():
         assert np.array_equal(inversion, expected)
 
 
+def test_build_playback_frames_allows_full_inversion_reference():
+    img = _small_test_image()
+    frames, meta = build_playback_frames(
+        img,
+        n=2,
+        cycles=1,
+        insert_inversion=True,
+        inversion_alpha=1.0,
+        key=KEY,
+    )
+
+    assert meta["inversion_alpha"] == 1.0
+    inversion = next(frame for frame, kind in frames if kind == "inversion")
+    assert np.array_equal(inversion, 255 - img)
+
+
 def test_each_cycle_integrates_back_to_original():
     img = _small_test_image()
     frames, meta = build_playback_frames(img, n=2, cycles=3, key=KEY)
@@ -412,6 +428,8 @@ def test_parse_args_defaults():
     assert cfg.stripe_width == 10
     assert cfg.stripe_alpha == 0.18
     assert cfg.glyph_alpha == 0.22
+    assert not cfg.fullscreen
+    assert not cfg.show_original
 
 
 def test_parse_args_overrides():
@@ -420,6 +438,7 @@ def test_parse_args_overrides():
         "--cycles", "8", "--inversion",
         "--width", "640", "--height", "360",
         "--image", "doc.png",
+        "--fullscreen", "--show-original",
     ])
 
     assert not cfg.use_noise
@@ -430,6 +449,8 @@ def test_parse_args_overrides():
     assert cfg.width == 640
     assert cfg.height == 360
     assert cfg.image_path == "doc.png"
+    assert cfg.fullscreen
+    assert cfg.show_original
 
 
 def test_parse_args_anti_ocr_options():
