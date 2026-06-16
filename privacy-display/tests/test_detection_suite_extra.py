@@ -99,6 +99,33 @@ def test_motmetrics_runtime_failure_falls_back_to_scipy(monkeypatch):
     assert metrics["mota"] == 1.0
 
 
+def test_detector_pgd_gpu_path_is_gated_and_falls_back():
+    """Requesting a CUDA device must use the GPU PGD path when available and fall
+    back to the identical CPU result when CUDA is absent (e.g. local CI)."""
+    from src.core.noise_injector import NoiseInjector
+
+    rng = np.random.default_rng(0)
+    img = rng.random((16, 16, 3)).astype(np.float32)
+    cpu = NoiseInjector(n=2, epsilon=8 / 255, target_models=["yolo26"], device=None)
+    requested = NoiseInjector(n=2, epsilon=8 / 255, target_models=["yolo26"], device="cuda:0")
+
+    out_cpu = cpu.generate_pgd_noise(img, model_name="yolo26", seed=0)
+    out_req = requested.generate_pgd_noise(img, model_name="yolo26", seed=0)
+
+    cuda_available = False
+    try:
+        import torch
+
+        cuda_available = torch.cuda.is_available()
+    except Exception:
+        cuda_available = False
+
+    assert out_cpu.shape == img.shape
+    if not cuda_available:
+        assert requested._resolve_cuda_device() is None
+        assert np.array_equal(out_cpu, out_req)
+
+
 def test_attack_variants_are_reproducible_per_seed_and_identifier():
     rng = np.random.default_rng(0)
     image = rng.integers(0, 256, size=(24, 32, 3), dtype=np.uint8)

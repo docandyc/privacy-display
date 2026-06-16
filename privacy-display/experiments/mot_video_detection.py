@@ -74,6 +74,7 @@ def run_mot_video_detection(
                     target_model=model_name,
                     seed=seed,
                     identifier=f"{seq}:{frame.frame_id}",
+                    device=selected_device,
                 )
                 for attack, variant in variants.items():
                     pred_by_attack[attack][seq][frame.frame_id] = [

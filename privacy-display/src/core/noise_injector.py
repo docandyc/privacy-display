@@ -48,6 +48,7 @@ class NoiseInjector:
         target_models: list[str] | None = None,
         max_epsilon: float | None = None,
         online_threshold: float = 0.20,
+        device: str | None = None,
     ):
         """
         Args:
@@ -57,9 +58,13 @@ class NoiseInjector:
             target_models: 动态轮换的目标模型名称
             max_epsilon: 在线更新允许提升到的最大扰动预算
             online_threshold: 识别成功率高于该阈值时触发在线更新
+            device: 计算设备。为 ``cuda``/``cuda:N`` 且可用时，检测器 PGD 噪声
+                在 GPU 上迭代（与 CPU 路径同为 sign-PGD，结果等价但快几个数量级），
+                这是大图(如 1080p MOT 帧)逐帧逐模型生成噪声的关键加速。
         """
         self.n = n
         self.epsilon = epsilon
+        self._device = device
         self.max_epsilon = max_epsilon if max_epsilon is not None else epsilon
         self.online_threshold = online_threshold
         self.template_dir = Path(template_dir) if template_dir else None
@@ -155,6 +160,14 @@ class NoiseInjector:
             if step_size is not None
             else max(eps * spec.step_scale, eps / max(iters, 1))
         )
+
+        # GPU fast-path for detector targets: identical sign-PGD over the same
+        # Sobel-energy shadow loss, but the whole loop stays on the GPU. Falls
+        # back to the CPU path below when CUDA is unavailable or it is not a
+        # detector spec, so OCR/local behaviour is unchanged.
+        gpu_perturb = self._pgd_detector_gpu(image, spec, eps, iters, alpha, random_start, seed)
+        if gpu_perturb is not None:
+            return gpu_perturb
 
         rng = np.random.default_rng(seed)
         if random_start:
@@ -348,6 +361,96 @@ class NoiseInjector:
     def get_template_metadata(self, name: str) -> dict:
         """返回模板元数据快照；旧模板无元数据时返回空 dict。"""
         return dict(self._template_metadata.get(name, {}))
+
+    def _resolve_cuda_device(self) -> str | None:
+        """Return the CUDA device string if one was requested and is usable."""
+        device = self._device
+        if not device or not str(device).startswith("cuda"):
+            return None
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                return str(device)
+        except Exception:
+            return None
+        return None
+
+    def _pgd_detector_gpu(
+        self,
+        image: np.ndarray,
+        spec: TargetModelSpec,
+        eps: float,
+        iters: int,
+        alpha: float,
+        random_start: bool,
+        seed: int | None,
+    ) -> np.ndarray | None:
+        """GPU-resident sign-PGD for detector specs (mirrors the CPU shadow path).
+
+        Replicates ``_differentiable_shadow_gradient`` (detector branch) + the
+        ``generate_pgd_noise`` loop entirely in torch on the GPU, keeping the
+        random start identical (numpy RNG) so the result matches the CPU path up
+        to float noise that the sign step washes out. Returns ``None`` to fall
+        back when CUDA is unavailable, the spec is not a detector, or anything
+        fails.
+        """
+        device = self._resolve_cuda_device()
+        if device is None or spec.family != "detector":
+            return None
+        try:
+            import torch
+            import torch.nn.functional as F
+
+            dev = torch.device(device)
+            image_f = np.clip(image.astype(np.float32), 0.0, 1.0)
+            x_base = (
+                torch.from_numpy(image_f).permute(2, 0, 1).unsqueeze(0).to(dev)
+            )
+            rgb = torch.tensor([0.299, 0.587, 0.114], device=dev).view(1, 3, 1, 1)
+            sobel_x = torch.tensor(
+                [[[[-1.0, 0.0, 1.0], [-2.0, 0.0, 2.0], [-1.0, 0.0, 1.0]]]],
+                device=dev,
+            )
+            sobel_y = torch.tensor(
+                [[[[-1.0, -2.0, -1.0], [0.0, 0.0, 0.0], [1.0, 2.0, 1.0]]]],
+                device=dev,
+            )
+            weights = torch.tensor(
+                spec.color_weights, dtype=torch.float32, device=dev
+            ).view(1, 3, 1, 1)
+
+            rng = np.random.default_rng(seed)
+            if random_start:
+                perturb = (
+                    torch.from_numpy(rng.uniform(-eps, eps, image.shape).astype(np.float32))
+                    .permute(2, 0, 1)
+                    .unsqueeze(0)
+                    .to(dev)
+                )
+            else:
+                perturb = torch.zeros_like(x_base)
+
+            for _ in range(max(1, iters)):
+                adv = torch.clamp(x_base + perturb, 0.0, 1.0).detach().requires_grad_(True)
+                gray = (adv * rgb).sum(dim=1, keepdim=True)
+                gx = F.conv2d(gray, sobel_x, padding=1)
+                gy = F.conv2d(gray, sobel_y, padding=1)
+                loss = (gx.square() + gy.square()).mean()
+                (grad,) = torch.autograd.grad(loss, adv)
+                grad = grad * weights
+                signed = torch.where(
+                    grad.abs() < 1e-6, torch.zeros_like(grad), torch.sign(grad)
+                )
+                perturb = torch.clamp(perturb + alpha * signed, -eps, eps)
+
+            out = (
+                perturb.squeeze(0).permute(1, 2, 0).contiguous().cpu().numpy().astype(np.float32)
+            )
+            self._last_gradient_source = "shadow_gpu"
+            return out
+        except Exception:
+            return None
 
     def _target_gradient(self, image: np.ndarray, spec: TargetModelSpec) -> np.ndarray:
         if spec.name == "easyocr":

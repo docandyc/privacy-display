@@ -37,6 +37,7 @@ def build_attack_variants(
     target_model: str = "yolov8",
     seed: int = 0,
     identifier: str = "",
+    device: str | None = None,
 ) -> dict[str, np.ndarray]:
     """Build clean/single-subframe/temporal-average variants for one RGB image.
 
@@ -44,6 +45,10 @@ def build_attack_variants(
     rerun reproduces the exact attacked pixels (the repo tracks this via the
     reproducibility manifest); ``identifier`` should uniquely name the stimulus
     (e.g. COCO file name or ``sequence:frame``).
+
+    ``device`` (e.g. ``cuda:0``) lets the PGD adversarial noise run on the GPU,
+    which is the dominant cost for large frames; it falls back to CPU when CUDA
+    is unavailable.
     """
     requested = tuple(attacks)
     variants: dict[str, np.ndarray] = {}
@@ -57,7 +62,7 @@ def build_attack_variants(
     noise_target = detector_noise_target(target_model)
     generator = MaskGenerator(w, h, n, key=mask_key(seed, identifier))
     composer = SubframeComposer(n=n)
-    injector = NoiseInjector(n=n, epsilon=epsilon, target_models=[noise_target])
+    injector = NoiseInjector(n=n, epsilon=epsilon, target_models=[noise_target], device=device)
     masks = generator.generate(0)
     base = injector.generate_pgd_noise(
         image.astype(np.float32) / 255.0,

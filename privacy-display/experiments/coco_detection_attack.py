@@ -68,6 +68,7 @@ def run_coco_detection_attack(
                 target_model=model_name,
                 seed=seed,
                 identifier=image_info["file_name"],
+                device=selected_device,
             )
             for attack, variant in variants.items():
                 detections = detector.detect(variant)

@@ -89,6 +89,7 @@ def run_mot_tracking_attack(
                         target_model=model_name,
                         seed=seed,
                         identifier=f"{seq}:{frame.frame_id}",
+                        device=selected_device,
                     )
                     detections = [
                         box for box in detector.detect(variants[attack]) if box.label == "person"
