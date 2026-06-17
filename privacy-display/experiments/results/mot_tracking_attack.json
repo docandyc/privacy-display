@@ -1,0 +1,229 @@
+{
+  "config": {
+    "dataset": "MOT17",
+    "mot_root": "data/MOT17",
+    "split": "train",
+    "models": [
+      "yolo26x",
+      "rtdetr-x",
+      "faster_rcnn",
+      "retinanet"
+    ],
+    "sequences": [
+      "MOT17-02-FRCNN",
+      "MOT17-04-FRCNN",
+      "MOT17-05-FRCNN",
+      "MOT17-09-FRCNN",
+      "MOT17-10-FRCNN",
+      "MOT17-11-FRCNN",
+      "MOT17-13-FRCNN"
+    ],
+    "attacks": [
+      "clean",
+      "single_subframe",
+      "temporal_average"
+    ],
+    "device": "cuda:0",
+    "tracker": "greedy_bytetrack_fallback",
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "conf": 0.25,
+    "imgsz": 640,
+    "seed": 0,
+    "max_frames": null,
+    "hota": {
+      "available": false,
+      "reason": "nonzero_exit",
+      "workspace": "experiments/results/trackeval_workspace",
+      "gt_folder": "experiments/results/trackeval_workspace/gt",
+      "trackers_folder": "experiments/results/trackeval_workspace/trackers",
+      "seqmap_file": "experiments/results/trackeval_workspace/gt/seqmaps/PRIVACY-train.txt",
+      "benchmark": "PRIVACY",
+      "split": "train"
+    }
+  },
+  "detectors": {
+    "yolo26x": {
+      "backend": "ultralytics",
+      "weights": "yolo26x.pt",
+      "device": "cuda:0",
+      "conf": 0.25,
+      "imgsz": 640,
+      "model_cls": "YOLO"
+    },
+    "rtdetr-x": {
+      "backend": "ultralytics",
+      "weights": "rtdetr-x.pt",
+      "device": "cuda:0",
+      "conf": 0.25,
+      "imgsz": 640,
+      "model_cls": "RTDETR"
+    },
+    "faster_rcnn": {
+      "backend": "torchvision",
+      "arch": "faster_rcnn",
+      "device": "cuda:0",
+      "score_thresh": 0.25
+    },
+    "retinanet": {
+      "backend": "torchvision",
+      "arch": "retinanet",
+      "device": "cuda:0",
+      "score_thresh": 0.25
+    }
+  },
+  "results": {
+    "yolo26x": {
+      "clean": {
+        "mota": 0.31098495265784,
+        "motp": 0.8169851288626939,
+        "idf1": 0.27077671200616127,
+        "tp": 45143,
+        "fp": 10156,
+        "fn": 56669,
+        "id_switches": 3325,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "single_subframe": {
+        "mota": 0.0005500333948846858,
+        "motp": 0.7476504201356846,
+        "idf1": 0.000667327451692362,
+        "tp": 85,
+        "fp": 2,
+        "fn": 101727,
+        "id_switches": 27,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "temporal_average": {
+        "mota": 0.09095195065414685,
+        "motp": 0.781361934214688,
+        "idf1": 0.11951664423007989,
+        "tp": 17420,
+        "fp": 6307,
+        "fn": 84392,
+        "id_switches": 1853,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      }
+    },
+    "rtdetr-x": {
+      "clean": {
+        "mota": 0.24117982163202767,
+        "motp": 0.7979635883926801,
+        "idf1": 0.38218742106592574,
+        "tp": 62296,
+        "fp": 33842,
+        "fn": 39516,
+        "id_switches": 3899,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "single_subframe": {
+        "mota": -0.023386241307507882,
+        "motp": 0.7320991010951349,
+        "idf1": 0.054053614021377226,
+        "tp": 10379,
+        "fp": 10650,
+        "fn": 91433,
+        "id_switches": 2110,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "temporal_average": {
+        "mota": -0.1144364122107413,
+        "motp": 0.7496506151765185,
+        "idf1": 0.14665140891819614,
+        "tp": 23711,
+        "fp": 32648,
+        "fn": 78101,
+        "id_switches": 2714,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      }
+    },
+    "faster_rcnn": {
+      "clean": {
+        "mota": 0.037687109574509936,
+        "motp": 0.7792335807187509,
+        "idf1": 0.3562079114719325,
+        "tp": 70768,
+        "fp": 62193,
+        "fn": 31044,
+        "id_switches": 4738,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "single_subframe": {
+        "mota": -0.024859545043806275,
+        "motp": 0.711602003170563,
+        "idf1": 0.044755971794850295,
+        "tp": 8398,
+        "fp": 9059,
+        "fn": 93414,
+        "id_switches": 1870,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "temporal_average": {
+        "mota": -0.02733469532078736,
+        "motp": 0.7323420021811197,
+        "idf1": 0.13967785046071604,
+        "tp": 19855,
+        "fp": 20503,
+        "fn": 81957,
+        "id_switches": 2135,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      }
+    },
+    "retinanet": {
+      "clean": {
+        "mota": -0.054384551919223645,
+        "motp": 0.7709881691768601,
+        "idf1": 0.30486105897172794,
+        "tp": 69219,
+        "fp": 68711,
+        "fn": 32593,
+        "id_switches": 6045,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "single_subframe": {
+        "mota": 0.0041940046359957295,
+        "motp": 0.706391158438637,
+        "idf1": 0.027429977563870594,
+        "tp": 5267,
+        "fp": 3457,
+        "fn": 96545,
+        "id_switches": 1383,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      },
+      "temporal_average": {
+        "mota": -0.028916041331080722,
+        "motp": 0.7382730144857333,
+        "idf1": 0.11890006901812634,
+        "tp": 17540,
+        "fp": 18293,
+        "fn": 84272,
+        "id_switches": 2191,
+        "n_frames": 5316,
+        "hota": null,
+        "metric_backend": "approximate_scipy"
+      }
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "config": {
+    "dataset": "MOT17",
+    "mot_root": "data/MOT17",
+    "split": "train",
+    "models": [
+      "yolo26x",
+      "rtdetr-x",
+      "faster_rcnn",
+      "retinanet"
+    ],
+    "sequences": [
+      "MOT17-02-FRCNN",
+      "MOT17-04-FRCNN",
+      "MOT17-05-FRCNN",
+      "MOT17-09-FRCNN",
+      "MOT17-10-FRCNN",
+      "MOT17-11-FRCNN",
+      "MOT17-13-FRCNN"
+    ],
+    "attacks": [
+      "clean",
+      "single_subframe",
+      "temporal_average"
+    ],
+    "device": "cuda:0",
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "conf": 0.25,
+    "imgsz": 640,
+    "seed": 0,
+    "max_frames": null
+  },
+  "detectors": {
+    "yolo26x": {
+      "backend": "ultralytics",
+      "weights": "yolo26x.pt",
+      "device": "cuda:0",
+      "conf": 0.25,
+      "imgsz": 640,
+      "model_cls": "YOLO"
+    },
+    "rtdetr-x": {
+      "backend": "ultralytics",
+      "weights": "rtdetr-x.pt",
+      "device": "cuda:0",
+      "conf": 0.25,
+      "imgsz": 640,
+      "model_cls": "RTDETR"
+    },
+    "faster_rcnn": {
+      "backend": "torchvision",
+      "arch": "faster_rcnn",
+      "device": "cuda:0",
+      "score_thresh": 0.25
+    },
+    "retinanet": {
+      "backend": "torchvision",
+      "arch": "retinanet",
+      "device": "cuda:0",
+      "score_thresh": 0.25
+    }
+  },
+  "results": {
+    "yolo26x": {
+      "clean": {
+        "map": 0.24308402704117288,
+        "map50": 0.4120422815523762,
+        "recall": 0.44339567045142025,
+        "precision": 0.8163438760194579,
+        "tp": 45143,
+        "fp": 10156,
+        "fn": 56669,
+        "n_frames": 5316
+      },
+      "single_subframe": {
+        "map": 0.00038473433133261295,
+        "map50": 0.0008280479610666283,
+        "recall": 0.0008348721172356893,
+        "precision": 0.9770114942528736,
+        "tp": 85,
+        "fp": 2,
+        "fn": 101727,
+        "n_frames": 5316
+      },
+      "temporal_average": {
+        "map": 0.08415793723721014,
+        "map50": 0.1564642784539116,
+        "recall": 0.17109967390877304,
+        "precision": 0.734184684115143,
+        "tp": 17420,
+        "fp": 6307,
+        "fn": 84392,
+        "n_frames": 5316
+      }
+    },
+    "rtdetr-x": {
+      "clean": {
+        "map": 0.3068059509975713,
+        "map50": 0.5475360828548163,
+        "recall": 0.6118728637095824,
+        "precision": 0.6479851879589756,
+        "tp": 62296,
+        "fp": 33842,
+        "fn": 39516,
+        "n_frames": 5316
+      },
+      "single_subframe": {
+        "map": 0.036924539474432444,
+        "map50": 0.08601428620087508,
+        "recall": 0.10194279652693199,
+        "precision": 0.4935565171905464,
+        "tp": 10379,
+        "fp": 10650,
+        "fn": 91433,
+        "n_frames": 5316
+      },
+      "temporal_average": {
+        "map": 0.09669398434951268,
+        "map50": 0.19895796577095462,
+        "recall": 0.2328900326091227,
+        "precision": 0.4207136393477528,
+        "tp": 23711,
+        "fp": 32648,
+        "fn": 78101,
+        "n_frames": 5316
+      }
+    },
+    "faster_rcnn": {
+      "clean": {
+        "map": 0.3387454490208288,
+        "map50": 0.6214683552236671,
+        "recall": 0.6950850587357089,
+        "precision": 0.532246297786569,
+        "tp": 70768,
+        "fp": 62193,
+        "fn": 31044,
+        "n_frames": 5316
+      },
+      "single_subframe": {
+        "map": 0.0258603012708174,
+        "map50": 0.0696160216791983,
+        "recall": 0.0824853651828861,
+        "precision": 0.4810677665120009,
+        "tp": 8398,
+        "fp": 9059,
+        "fn": 93414,
+        "n_frames": 5316
+      },
+      "temporal_average": {
+        "map": 0.07582248169197683,
+        "map50": 0.1669823604167255,
+        "recall": 0.19501630456134836,
+        "precision": 0.4919718519252688,
+        "tp": 19855,
+        "fp": 20503,
+        "fn": 81957,
+        "n_frames": 5316
+      }
+    },
+    "retinanet": {
+      "clean": {
+        "map": 0.31720488949818904,
+        "map50": 0.5997816405749307,
+        "recall": 0.6798707421522021,
+        "precision": 0.5018415138113536,
+        "tp": 69219,
+        "fp": 68711,
+        "fn": 32593,
+        "n_frames": 5316
+      },
+      "single_subframe": {
+        "map": 0.015495153042200782,
+        "map50": 0.04226729584659953,
+        "recall": 0.05173260519388677,
+        "precision": 0.6037368179734067,
+        "tp": 5267,
+        "fp": 3457,
+        "fn": 96545,
+        "n_frames": 5316
+      },
+      "temporal_average": {
+        "map": 0.06660416477821013,
+        "map50": 0.14565128202915228,
+        "recall": 0.17227831689781165,
+        "precision": 0.4894929255155862,
+        "tp": 17540,
+        "fp": 18293,
+        "fn": 84272,
+        "n_frames": 5316
+      }
+    }
+  }
+}

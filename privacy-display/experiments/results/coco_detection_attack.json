@@ -1,0 +1,203 @@
+{
+  "config": {
+    "dataset": "COCO",
+    "coco_root": "data/coco",
+    "split": "val2017",
+    "models": [
+      "yolo26x",
+      "rtdetr-x",
+      "faster_rcnn",
+      "retinanet"
+    ],
+    "attacks": [
+      "clean",
+      "single_subframe",
+      "temporal_average"
+    ],
+    "device": "cuda:3",
+    "n": 4,
+    "epsilon": 0.03137254901960784,
+    "conf": 0.25,
+    "imgsz": 640,
+    "seed": 0,
+    "max_images": null
+  },
+  "detectors": {
+    "yolo26x": {
+      "backend": "ultralytics",
+      "weights": "yolo26x.pt",
+      "device": "cuda:3",
+      "conf": 0.25,
+      "imgsz": 640,
+      "model_cls": "YOLO"
+    },
+    "rtdetr-x": {
+      "backend": "ultralytics",
+      "weights": "rtdetr-x.pt",
+      "device": "cuda:3",
+      "conf": 0.25,
+      "imgsz": 640,
+      "model_cls": "RTDETR"
+    },
+    "faster_rcnn": {
+      "backend": "torchvision",
+      "arch": "faster_rcnn",
+      "device": "cuda:3",
+      "score_thresh": 0.25
+    },
+    "retinanet": {
+      "backend": "torchvision",
+      "arch": "retinanet",
+      "device": "cuda:3",
+      "score_thresh": 0.25
+    }
+  },
+  "results": {
+    "yolo26x": {
+      "clean": {
+        "map": 0.452275382871268,
+        "map50": 0.5735850813160212,
+        "map75": 0.4949241602405341,
+        "ap_small": 0.25365002298975525,
+        "ap_medium": 0.49983918527883414,
+        "ap_large": 0.6250091696823017,
+        "ar": 0.5063271530134889,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "single_subframe": {
+        "map": 0.002849841460390645,
+        "map50": 0.003970485742921377,
+        "map75": 0.0028819328312050785,
+        "ap_small": 0.0002908415841584158,
+        "ap_medium": 0.002900359744472842,
+        "ap_large": 0.004138431018319519,
+        "ar": 0.002893988513719427,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "temporal_average": {
+        "map": 0.1530900678414796,
+        "map50": 0.2138403133586488,
+        "map75": 0.16701888271662732,
+        "ap_small": 0.05652854171180524,
+        "ap_medium": 0.1733041167855044,
+        "ap_large": 0.22779004213648832,
+        "ar": 0.1824612948964523,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      }
+    },
+    "rtdetr-x": {
+      "clean": {
+        "map": 0.5130371587641341,
+        "map50": 0.6815713212161222,
+        "map75": 0.5575925715607088,
+        "ap_small": 0.3121354561628552,
+        "ap_medium": 0.5622877101416761,
+        "ap_large": 0.6995199741587704,
+        "ar": 0.6138942650650011,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "single_subframe": {
+        "map": 0.02880488538448903,
+        "map50": 0.043196028053102874,
+        "map75": 0.02992654109765157,
+        "ap_small": 0.0035762273362324663,
+        "ap_medium": 0.028640459829546824,
+        "ap_large": 0.06894552875338632,
+        "ar": 0.04859143071895402,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "temporal_average": {
+        "map": 0.25020599007613764,
+        "map50": 0.3679107582938481,
+        "map75": 0.26796533404055445,
+        "ap_small": 0.10065117603251687,
+        "ap_medium": 0.2650532264750088,
+        "ap_large": 0.39787687336799193,
+        "ar": 0.33227617772738016,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      }
+    },
+    "faster_rcnn": {
+      "clean": {
+        "map": 0.3596480188093843,
+        "map50": 0.5642421328082535,
+        "map75": 0.3907696785993181,
+        "ap_small": 0.20036487438725042,
+        "ap_medium": 0.39221087763353774,
+        "ap_large": 0.4734385218573507,
+        "ar": 0.4624946069677152,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "single_subframe": {
+        "map": 0.004099502639858093,
+        "map50": 0.006334917603726428,
+        "map75": 0.004168497370650517,
+        "ap_small": 0.000595472598385542,
+        "ap_medium": 0.0032522525973362262,
+        "ap_large": 0.008177889853053224,
+        "ar": 0.004840482631060778,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "temporal_average": {
+        "map": 0.0849820593675484,
+        "map50": 0.14758619203786247,
+        "map75": 0.08581493443581167,
+        "ap_small": 0.027556321903576986,
+        "ap_medium": 0.0870753999776195,
+        "ap_large": 0.13781955489243894,
+        "ar": 0.12077863940037328,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      }
+    },
+    "retinanet": {
+      "clean": {
+        "map": 0.3491722583465013,
+        "map50": 0.5266473919858033,
+        "map75": 0.37149541969073996,
+        "ap_small": 0.1734020869496045,
+        "ap_medium": 0.3827429917000615,
+        "ap_large": 0.4806395457469158,
+        "ar": 0.44815169164330015,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "single_subframe": {
+        "map": 0.0038039423929546634,
+        "map50": 0.005556191464054676,
+        "map75": 0.004099785966471554,
+        "ap_small": 0.00042998741534137365,
+        "ap_medium": 0.0030367838710640437,
+        "ap_large": 0.00736921633750442,
+        "ar": 0.004217588197787547,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      },
+      "temporal_average": {
+        "map": 0.08222097665385439,
+        "map50": 0.13580125979539281,
+        "map75": 0.08281526666731942,
+        "ap_small": 0.023270377384358797,
+        "ap_medium": 0.08580199855015935,
+        "ap_large": 0.1343956295567851,
+        "ar": 0.1157243077403302,
+        "n_images": 5000,
+        "evaluator": "pycocotools"
+      }
+    }
+  },
+  "baseline_clean_map": {
+    "yolo26x": 0.452275382871268,
+    "rtdetr-x": 0.5130371587641341,
+    "faster_rcnn": 0.3596480188093843,
+    "retinanet": 0.3491722583465013
+  }
+}

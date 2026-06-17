@@ -7,6 +7,9 @@ This file is generated from machine-readable experiment JSON artifacts.
 - ocr: `corpus_multi_engine.json`
 - strong_camera: `corpus_strong_camera_attack.json`
 - detection: `detection_attack_yolo.json`
+- coco_detection: `coco_detection_attack.json`
+- mot_video_detection: `mot_video_detection.json`
+- mot_tracking: `mot_tracking_attack.json`
 - view_attack: `view_attack.json`
 - vlm: `vlm_qwen3_siliconflow.json`
 - real_capture: `missing`
@@ -114,6 +117,59 @@ Primary engine: `tesseract`
 - Engine: `ultralytics-yolo` / `yolov8n.pt`
 - Single subframe mAP50: 40.0%; recall: 40.0%
 - Temporal average mAP50: 100.0%; recall: 100.0%
+
+## COCO Detection Suite
+
+| Model | Attack | mAP | mAP50 | mAP75 | AP_S | AP_M | AP_L | AR | Images |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| yolo26x | clean | 45.2% | 57.4% | 49.5% | 25.4% | 50.0% | 62.5% | 50.6% | 5000 |
+| yolo26x | single_subframe | 0.3% | 0.4% | 0.3% | 0.0% | 0.3% | 0.4% | 0.3% | 5000 |
+| yolo26x | temporal_average | 15.3% | 21.4% | 16.7% | 5.7% | 17.3% | 22.8% | 18.2% | 5000 |
+| rtdetr-x | clean | 51.3% | 68.2% | 55.8% | 31.2% | 56.2% | 70.0% | 61.4% | 5000 |
+| rtdetr-x | single_subframe | 2.9% | 4.3% | 3.0% | 0.4% | 2.9% | 6.9% | 4.9% | 5000 |
+| rtdetr-x | temporal_average | 25.0% | 36.8% | 26.8% | 10.1% | 26.5% | 39.8% | 33.2% | 5000 |
+| faster_rcnn | clean | 36.0% | 56.4% | 39.1% | 20.0% | 39.2% | 47.3% | 46.2% | 5000 |
+| faster_rcnn | single_subframe | 0.4% | 0.6% | 0.4% | 0.1% | 0.3% | 0.8% | 0.5% | 5000 |
+| faster_rcnn | temporal_average | 8.5% | 14.8% | 8.6% | 2.8% | 8.7% | 13.8% | 12.1% | 5000 |
+| retinanet | clean | 34.9% | 52.7% | 37.1% | 17.3% | 38.3% | 48.1% | 44.8% | 5000 |
+| retinanet | single_subframe | 0.4% | 0.6% | 0.4% | 0.0% | 0.3% | 0.7% | 0.4% | 5000 |
+| retinanet | temporal_average | 8.2% | 13.6% | 8.3% | 2.3% | 8.6% | 13.4% | 11.6% | 5000 |
+
+## MOT17 Video Detection
+
+| Model | Attack | mAP | mAP50 | Recall | Precision | Frames |
+|---|---|---:|---:|---:|---:|---:|
+| yolo26x | clean | 24.3% | 41.2% | 44.3% | 81.6% | 5316 |
+| yolo26x | single_subframe | 0.0% | 0.1% | 0.1% | 97.7% | 5316 |
+| yolo26x | temporal_average | 8.4% | 15.6% | 17.1% | 73.4% | 5316 |
+| rtdetr-x | clean | 30.7% | 54.8% | 61.2% | 64.8% | 5316 |
+| rtdetr-x | single_subframe | 3.7% | 8.6% | 10.2% | 49.4% | 5316 |
+| rtdetr-x | temporal_average | 9.7% | 19.9% | 23.3% | 42.1% | 5316 |
+| faster_rcnn | clean | 33.9% | 62.1% | 69.5% | 53.2% | 5316 |
+| faster_rcnn | single_subframe | 2.6% | 7.0% | 8.2% | 48.1% | 5316 |
+| faster_rcnn | temporal_average | 7.6% | 16.7% | 19.5% | 49.2% | 5316 |
+| retinanet | clean | 31.7% | 60.0% | 68.0% | 50.2% | 5316 |
+| retinanet | single_subframe | 1.5% | 4.2% | 5.2% | 60.4% | 5316 |
+| retinanet | temporal_average | 6.7% | 14.6% | 17.2% | 48.9% | 5316 |
+
+## MOT17 Tracking
+
+Tracker: `greedy_bytetrack_fallback`
+
+| Model | Attack | MOTA | MOTP | IDF1 | HOTA | Frames |
+|---|---|---:|---:|---:|---:|---:|
+| yolo26x | clean | 31.1% | 81.7% | 27.1% | n/a | 5316 |
+| yolo26x | single_subframe | 0.1% | 74.8% | 0.1% | n/a | 5316 |
+| yolo26x | temporal_average | 9.1% | 78.1% | 12.0% | n/a | 5316 |
+| rtdetr-x | clean | 24.1% | 79.8% | 38.2% | n/a | 5316 |
+| rtdetr-x | single_subframe | -2.3% | 73.2% | 5.4% | n/a | 5316 |
+| rtdetr-x | temporal_average | -11.4% | 75.0% | 14.7% | n/a | 5316 |
+| faster_rcnn | clean | 3.8% | 77.9% | 35.6% | n/a | 5316 |
+| faster_rcnn | single_subframe | -2.5% | 71.2% | 4.5% | n/a | 5316 |
+| faster_rcnn | temporal_average | -2.7% | 73.2% | 14.0% | n/a | 5316 |
+| retinanet | clean | -5.4% | 77.1% | 30.5% | n/a | 5316 |
+| retinanet | single_subframe | 0.4% | 70.6% | 2.7% | n/a | 5316 |
+| retinanet | temporal_average | -2.9% | 73.8% | 11.9% | n/a | 5316 |
 
 ## View Attack
 

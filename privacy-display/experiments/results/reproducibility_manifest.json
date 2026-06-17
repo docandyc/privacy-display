@@ -1,31 +1,35 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-06-15T09:55:32.117711+00:00",
-  "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
+  "generated_at_utc": "2026-06-17T08:14:48.857448+00:00",
+  "project_root": "/hzy/privacy-display/privacy-display",
   "git": {
-    "commit": "5a54517cc4873866fb2f3f512f8896f821fc7262",
+    "commit": "b84958e7adc905bb99ff11e5ff7efef232f8760f",
     "branch": "master",
     "dirty": true
   },
   "environment": {
-    "python": "3.10.16",
-    "platform": "macOS-12.7.6-arm64-arm-64bit",
-    "machine": "arm64",
+    "python": "3.10.19",
+    "platform": "Linux-5.15.0-60-generic-x86_64-with-glibc2.35",
+    "machine": "x86_64",
     "packages": {
       "numpy": "2.2.6",
       "scipy": "1.15.3",
-      "Pillow": "12.2.0",
-      "opencv-python": "4.12.0.88",
-      "pytest": "9.0.3",
+      "Pillow": "12.0.0",
+      "opencv-python": "4.11.0.86",
+      "pytest": "8.3.5",
       "pytesseract": "0.3.13",
       "easyocr": "1.7.2",
-      "paddleocr": "3.6.0",
-      "ultralytics": "8.4.65",
-      "pycryptodome": "3.23.0",
+      "paddleocr": "3.7.0",
+      "ultralytics": "8.4.67",
+      "pycryptodome": "3.22.0",
       "moderngl": "5.12.0",
       "transformers": null,
-      "torch": "2.11.0",
-      "python-doctr": null
+      "torch": "2.9.0",
+      "python-doctr": null,
+      "pycocotools": "2.0.11",
+      "motmetrics": "1.4.0",
+      "boxmot": "21.0.0",
+      "lap": "0.5.13"
     }
   },
   "commands": [
@@ -90,6 +94,41 @@
       "command": "python experiments/detection_attack.py",
       "purpose": "Evaluate YOLOv8n object-detection leakage.",
       "expected": "experiments/results/detection_attack_yolo.json"
+    },
+    {
+      "name": "detection_suite_setup",
+      "command": "pip install -U ultralytics && pip install -r requirements-detection.txt",
+      "purpose": "Install server-only detection, COCO, MOT, and tracking dependencies.",
+      "expected": "Ultralytics YOLO/RT-DETR, pycocotools, motmetrics, and ByteTrack-compatible packages are available."
+    },
+    {
+      "name": "download_coco_val2017",
+      "command": "bash scripts/download_coco_val2017.sh",
+      "purpose": "Download COCO val2017 images and annotations to data/coco by default.",
+      "expected": "data/coco/val2017 and data/coco/annotations/instances_val2017.json"
+    },
+    {
+      "name": "download_mot17",
+      "command": "bash scripts/download_mot17.sh",
+      "purpose": "Download MOT17 to data/MOT17 by default.",
+      "expected": "data/MOT17/train/MOT17-*/img1 and gt/gt.txt"
+    },
+    {
+      "name": "trackeval_hota_setup",
+      "command": "git clone https://github.com/JonathonLuiten/TrackEval.git && pip install -r TrackEval/requirements.txt && export TRACKEVAL_ROOT=$PWD/TrackEval",
+      "purpose": "Optional: enable HOTA/DetA/AssA for MOT17 tracking via the reference TrackEval implementation.",
+      "expected": "mot_tracking_attack.json rows gain non-null hota/deta/assa; otherwise hota stays null and MOTChallenge files are exported under experiments/results/trackeval_workspace."
+    },
+    {
+      "name": "run_detection_suite",
+      "command": "bash scripts/run_detection_suite.sh",
+      "purpose": "Run COCO val2017 detection, MOT17 frame detection, and MOT17 tracking across the planned detector suite.",
+      "expected": "experiments/results/coco_detection_attack.json, mot_video_detection.json, and mot_tracking_attack.json",
+      "requires_data": [
+        "data/coco/val2017",
+        "data/coco/annotations/instances_val2017.json",
+        "data/MOT17/train"
+      ]
     },
     {
       "name": "view_attack",
@@ -281,6 +320,24 @@
       "bytes": 739
     },
     {
+      "path": "experiments/results/coco_detection_attack.json",
+      "exists": true,
+      "sha256": "3ed7d84b2a2f0113fe93558659d9edf0476c6a5cfaa025222183724f2987a7b9",
+      "bytes": 5767
+    },
+    {
+      "path": "experiments/results/mot_video_detection.json",
+      "exists": true,
+      "sha256": "c54932af759f487bee072d96a26d6754d781f1fad2a9f249de910ff0efb3c530",
+      "bytes": 4684
+    },
+    {
+      "path": "experiments/results/mot_tracking_attack.json",
+      "exists": true,
+      "sha256": "0588b8586471afa968bbd71230f3a42f6a8e48ab62d2578956500f514926be59",
+      "bytes": 5822
+    },
+    {
       "path": "experiments/results/view_attack.json",
       "exists": true,
       "sha256": "cec5e21e132bf5849a4fcb13dc9e90070bd22c9b8ab48ec9eb3c231d0ddc7d78",
@@ -409,14 +466,14 @@
     {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "b2f6882f9e9ca5c5db85d717990399d2163bffbd16348a418e2075514b806a1b",
-      "bytes": 87958
+      "sha256": "f060a2391c42576b0541afb58a55aa60677cea7a16eeff44d0dc80e5cc61966f",
+      "bytes": 101754
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "64a4fa1c026eaf002a64ab9de588824a2f688d554b93ac2f3d33be7550a04e70",
-      "bytes": 17537
+      "sha256": "c923cba8817f1ad637a81e7257d71a36eae47a81b585152da422c5557186d83c",
+      "bytes": 20747
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
@@ -429,8 +486,14 @@
     {
       "path": "README.md",
       "exists": true,
-      "sha256": "80d91782248b7b399177a060f5092e92155894387a610b338f991ea97d56494a",
-      "bytes": 22097
+      "sha256": "f08dc2dddca84215d91806e0a2b375538fb26d29a5fdbdf5d00efd3cb758378f",
+      "bytes": 23213
+    },
+    {
+      "path": "docs/detection_suite_server.md",
+      "exists": true,
+      "sha256": "9932f6a5b02bec23319e3071c74728f8ce8df055af3eba1c39d89185500f2fbe",
+      "bytes": 3742
     },
     {
       "path": ".env.example",
@@ -445,10 +508,34 @@
       "bytes": 283
     },
     {
+      "path": "requirements-detection.txt",
+      "exists": true,
+      "sha256": "0d77fe2a88e58b57df3eda37a098700aea7ca7c852f9909378c80d26c5408f44",
+      "bytes": 57
+    },
+    {
       "path": "scripts/reproduce_all.sh",
       "exists": true,
-      "sha256": "8292a9a96bbba23c704d11fb0f2c3831b2b5c10457ab38669066ecfff6b495b4",
-      "bytes": 4859
+      "sha256": "08e73613b75c959bea6d662d2956ea89279ad5f282a96eb6abf32c3add7e3966",
+      "bytes": 5834
+    },
+    {
+      "path": "scripts/download_coco_val2017.sh",
+      "exists": true,
+      "sha256": "7e8b5a4521145bae58ebd105efc6bb68aefa3cb84e9f45250a50f8d176e4a518",
+      "bytes": 762
+    },
+    {
+      "path": "scripts/download_mot17.sh",
+      "exists": true,
+      "sha256": "5f64e7923d1c277f6f87ae15b518873099335ff562a27e0d4b8c7e09c5c53f69",
+      "bytes": 619
+    },
+    {
+      "path": "scripts/run_detection_suite.sh",
+      "exists": true,
+      "sha256": "8d4d5aa5576f79e572ec4bd6cd25d8b5ff892d8df9cea5758d347f95aed0357c",
+      "bytes": 3072
     },
     {
       "path": "experiments/build_corpus.py",
@@ -467,6 +554,24 @@
       "exists": true,
       "sha256": "efb47f3fc68a83304e66c559e8df0f352c1601c50afe04283e0d3b6dca74ba05",
       "bytes": 2888
+    },
+    {
+      "path": "experiments/coco_detection_attack.py",
+      "exists": true,
+      "sha256": "5cad416e0b51c4abfad0cb309219f8d77d834f1d2d33cd6e031a198197d69503",
+      "bytes": 5143
+    },
+    {
+      "path": "experiments/mot_video_detection.py",
+      "exists": true,
+      "sha256": "77fde888d25207204a5cce9c475f081a408bde8c36dc4b744b8496e27a885b2f",
+      "bytes": 5482
+    },
+    {
+      "path": "experiments/mot_tracking_attack.py",
+      "exists": true,
+      "sha256": "c01bd095b7bcbfd3ee35242b2652f16779a8f232547e868cff94b48f4afe9746",
+      "bytes": 9237
     },
     {
       "path": "experiments/view_attack.py",
@@ -615,8 +720,8 @@
     {
       "path": "src/evaluation/publication_summary.py",
       "exists": true,
-      "sha256": "a4f8b4fb3390c62261d7e47478129724437770020497e3c3bccc7f5e828c3276",
-      "bytes": 36107
+      "sha256": "5d8711a3d62426e419ca5f1826c897d9bed0bb363c509fb0e70e94811ecfaa25",
+      "bytes": 41852
     },
     {
       "path": "src/evaluation/vlm_benchmark.py",
@@ -639,14 +744,38 @@
     {
       "path": "src/evaluation/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "be4d41909ab0cba99d3b953aa672757d500a8bac26c0d481603bbedf295e9a54",
-      "bytes": 18551
+      "sha256": "f4062abed3a0e11d2b131474f251d4e449941cdf10549c2f93153ca3d4fa7346",
+      "bytes": 21112
+    },
+    {
+      "path": "src/evaluation/coco_eval.py",
+      "exists": true,
+      "sha256": "ed3825bbd3c124826c4917e5f4d78c52eb33e7ebdf5e594a69002ea2c76f1f96",
+      "bytes": 6542
+    },
+    {
+      "path": "src/evaluation/detection_suite.py",
+      "exists": true,
+      "sha256": "77e42d4d8f6b88ba879495011cf42ad31511764f16dca34c9ddc879e03cd6639",
+      "bytes": 4297
+    },
+    {
+      "path": "src/evaluation/mot.py",
+      "exists": true,
+      "sha256": "2917757098c187e6ed1f0ee1cc8c86e688beb4551fad1cdb8c420ee42c040e68",
+      "bytes": 26094
     },
     {
       "path": "src/attack/camera_simulator.py",
       "exists": true,
       "sha256": "ac7bf4132d519dfceaeb46f5f443a0d98ae9e95c7945a2cb3205746a9b6e7f01",
       "bytes": 31754
+    },
+    {
+      "path": "src/attack/detectors.py",
+      "exists": true,
+      "sha256": "30bf82635e48b4bdad9f45455d2e9ae16128c1c27a8cd81a11a0024d12fa176c",
+      "bytes": 9174
     },
     {
       "path": "src/attack/ocr_evaluator.py",

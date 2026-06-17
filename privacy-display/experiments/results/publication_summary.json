@@ -3,6 +3,9 @@
     "ocr": "corpus_multi_engine.json",
     "strong_camera": "corpus_strong_camera_attack.json",
     "detection": "detection_attack_yolo.json",
+    "coco_detection": "coco_detection_attack.json",
+    "mot_video_detection": "mot_video_detection.json",
+    "mot_tracking": "mot_tracking_attack.json",
     "view_attack": "view_attack.json",
     "vlm": "vlm_qwen3_siliconflow.json",
     "real_capture": null,
@@ -1090,6 +1093,503 @@
       "prediction_boxes": 5,
       "status": "ok"
     }
+  },
+  "coco_detection": {
+    "available": true,
+    "config": {
+      "dataset": "COCO",
+      "coco_root": "data/coco",
+      "split": "val2017",
+      "models": [
+        "yolo26x",
+        "rtdetr-x",
+        "faster_rcnn",
+        "retinanet"
+      ],
+      "attacks": [
+        "clean",
+        "single_subframe",
+        "temporal_average"
+      ],
+      "device": "cuda:3",
+      "n": 4,
+      "epsilon": 0.03137254901960784,
+      "conf": 0.25,
+      "imgsz": 640,
+      "seed": 0,
+      "max_images": null
+    },
+    "rows": [
+      {
+        "model": "yolo26x",
+        "attack": "clean",
+        "map": 0.452275382871268,
+        "map50": 0.5735850813160212,
+        "map75": 0.4949241602405341,
+        "ap_small": 0.25365002298975525,
+        "ap_medium": 0.49983918527883414,
+        "ap_large": 0.6250091696823017,
+        "ar": 0.5063271530134889,
+        "n_images": 5000.0
+      },
+      {
+        "model": "yolo26x",
+        "attack": "single_subframe",
+        "map": 0.002849841460390645,
+        "map50": 0.003970485742921377,
+        "map75": 0.0028819328312050785,
+        "ap_small": 0.0002908415841584158,
+        "ap_medium": 0.002900359744472842,
+        "ap_large": 0.004138431018319519,
+        "ar": 0.002893988513719427,
+        "n_images": 5000.0
+      },
+      {
+        "model": "yolo26x",
+        "attack": "temporal_average",
+        "map": 0.1530900678414796,
+        "map50": 0.2138403133586488,
+        "map75": 0.16701888271662732,
+        "ap_small": 0.05652854171180524,
+        "ap_medium": 0.1733041167855044,
+        "ap_large": 0.22779004213648832,
+        "ar": 0.1824612948964523,
+        "n_images": 5000.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "clean",
+        "map": 0.5130371587641341,
+        "map50": 0.6815713212161222,
+        "map75": 0.5575925715607088,
+        "ap_small": 0.3121354561628552,
+        "ap_medium": 0.5622877101416761,
+        "ap_large": 0.6995199741587704,
+        "ar": 0.6138942650650011,
+        "n_images": 5000.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "single_subframe",
+        "map": 0.02880488538448903,
+        "map50": 0.043196028053102874,
+        "map75": 0.02992654109765157,
+        "ap_small": 0.0035762273362324663,
+        "ap_medium": 0.028640459829546824,
+        "ap_large": 0.06894552875338632,
+        "ar": 0.04859143071895402,
+        "n_images": 5000.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "temporal_average",
+        "map": 0.25020599007613764,
+        "map50": 0.3679107582938481,
+        "map75": 0.26796533404055445,
+        "ap_small": 0.10065117603251687,
+        "ap_medium": 0.2650532264750088,
+        "ap_large": 0.39787687336799193,
+        "ar": 0.33227617772738016,
+        "n_images": 5000.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "clean",
+        "map": 0.3596480188093843,
+        "map50": 0.5642421328082535,
+        "map75": 0.3907696785993181,
+        "ap_small": 0.20036487438725042,
+        "ap_medium": 0.39221087763353774,
+        "ap_large": 0.4734385218573507,
+        "ar": 0.4624946069677152,
+        "n_images": 5000.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "single_subframe",
+        "map": 0.004099502639858093,
+        "map50": 0.006334917603726428,
+        "map75": 0.004168497370650517,
+        "ap_small": 0.000595472598385542,
+        "ap_medium": 0.0032522525973362262,
+        "ap_large": 0.008177889853053224,
+        "ar": 0.004840482631060778,
+        "n_images": 5000.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "temporal_average",
+        "map": 0.0849820593675484,
+        "map50": 0.14758619203786247,
+        "map75": 0.08581493443581167,
+        "ap_small": 0.027556321903576986,
+        "ap_medium": 0.0870753999776195,
+        "ap_large": 0.13781955489243894,
+        "ar": 0.12077863940037328,
+        "n_images": 5000.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "clean",
+        "map": 0.3491722583465013,
+        "map50": 0.5266473919858033,
+        "map75": 0.37149541969073996,
+        "ap_small": 0.1734020869496045,
+        "ap_medium": 0.3827429917000615,
+        "ap_large": 0.4806395457469158,
+        "ar": 0.44815169164330015,
+        "n_images": 5000.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "single_subframe",
+        "map": 0.0038039423929546634,
+        "map50": 0.005556191464054676,
+        "map75": 0.004099785966471554,
+        "ap_small": 0.00042998741534137365,
+        "ap_medium": 0.0030367838710640437,
+        "ap_large": 0.00736921633750442,
+        "ar": 0.004217588197787547,
+        "n_images": 5000.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "temporal_average",
+        "map": 0.08222097665385439,
+        "map50": 0.13580125979539281,
+        "map75": 0.08281526666731942,
+        "ap_small": 0.023270377384358797,
+        "ap_medium": 0.08580199855015935,
+        "ap_large": 0.1343956295567851,
+        "ar": 0.1157243077403302,
+        "n_images": 5000.0
+      }
+    ]
+  },
+  "mot_video_detection": {
+    "available": true,
+    "config": {
+      "dataset": "MOT17",
+      "mot_root": "data/MOT17",
+      "split": "train",
+      "models": [
+        "yolo26x",
+        "rtdetr-x",
+        "faster_rcnn",
+        "retinanet"
+      ],
+      "sequences": [
+        "MOT17-02-FRCNN",
+        "MOT17-04-FRCNN",
+        "MOT17-05-FRCNN",
+        "MOT17-09-FRCNN",
+        "MOT17-10-FRCNN",
+        "MOT17-11-FRCNN",
+        "MOT17-13-FRCNN"
+      ],
+      "attacks": [
+        "clean",
+        "single_subframe",
+        "temporal_average"
+      ],
+      "device": "cuda:0",
+      "n": 4,
+      "epsilon": 0.03137254901960784,
+      "conf": 0.25,
+      "imgsz": 640,
+      "seed": 0,
+      "max_frames": null
+    },
+    "rows": [
+      {
+        "model": "yolo26x",
+        "attack": "clean",
+        "map": 0.24308402704117288,
+        "map50": 0.4120422815523762,
+        "recall": 0.44339567045142025,
+        "precision": 0.8163438760194579,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "yolo26x",
+        "attack": "single_subframe",
+        "map": 0.00038473433133261295,
+        "map50": 0.0008280479610666283,
+        "recall": 0.0008348721172356893,
+        "precision": 0.9770114942528736,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "yolo26x",
+        "attack": "temporal_average",
+        "map": 0.08415793723721014,
+        "map50": 0.1564642784539116,
+        "recall": 0.17109967390877304,
+        "precision": 0.734184684115143,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "clean",
+        "map": 0.3068059509975713,
+        "map50": 0.5475360828548163,
+        "recall": 0.6118728637095824,
+        "precision": 0.6479851879589756,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "single_subframe",
+        "map": 0.036924539474432444,
+        "map50": 0.08601428620087508,
+        "recall": 0.10194279652693199,
+        "precision": 0.4935565171905464,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "temporal_average",
+        "map": 0.09669398434951268,
+        "map50": 0.19895796577095462,
+        "recall": 0.2328900326091227,
+        "precision": 0.4207136393477528,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "clean",
+        "map": 0.3387454490208288,
+        "map50": 0.6214683552236671,
+        "recall": 0.6950850587357089,
+        "precision": 0.532246297786569,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "single_subframe",
+        "map": 0.0258603012708174,
+        "map50": 0.0696160216791983,
+        "recall": 0.0824853651828861,
+        "precision": 0.4810677665120009,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "temporal_average",
+        "map": 0.07582248169197683,
+        "map50": 0.1669823604167255,
+        "recall": 0.19501630456134836,
+        "precision": 0.4919718519252688,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "clean",
+        "map": 0.31720488949818904,
+        "map50": 0.5997816405749307,
+        "recall": 0.6798707421522021,
+        "precision": 0.5018415138113536,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "single_subframe",
+        "map": 0.015495153042200782,
+        "map50": 0.04226729584659953,
+        "recall": 0.05173260519388677,
+        "precision": 0.6037368179734067,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "temporal_average",
+        "map": 0.06660416477821013,
+        "map50": 0.14565128202915228,
+        "recall": 0.17227831689781165,
+        "precision": 0.4894929255155862,
+        "n_frames": 5316.0
+      }
+    ]
+  },
+  "mot_tracking": {
+    "available": true,
+    "config": {
+      "dataset": "MOT17",
+      "mot_root": "data/MOT17",
+      "split": "train",
+      "models": [
+        "yolo26x",
+        "rtdetr-x",
+        "faster_rcnn",
+        "retinanet"
+      ],
+      "sequences": [
+        "MOT17-02-FRCNN",
+        "MOT17-04-FRCNN",
+        "MOT17-05-FRCNN",
+        "MOT17-09-FRCNN",
+        "MOT17-10-FRCNN",
+        "MOT17-11-FRCNN",
+        "MOT17-13-FRCNN"
+      ],
+      "attacks": [
+        "clean",
+        "single_subframe",
+        "temporal_average"
+      ],
+      "device": "cuda:0",
+      "tracker": "greedy_bytetrack_fallback",
+      "n": 4,
+      "epsilon": 0.03137254901960784,
+      "conf": 0.25,
+      "imgsz": 640,
+      "seed": 0,
+      "max_frames": null,
+      "hota": {
+        "available": false,
+        "reason": "nonzero_exit",
+        "workspace": "experiments/results/trackeval_workspace",
+        "gt_folder": "experiments/results/trackeval_workspace/gt",
+        "trackers_folder": "experiments/results/trackeval_workspace/trackers",
+        "seqmap_file": "experiments/results/trackeval_workspace/gt/seqmaps/PRIVACY-train.txt",
+        "benchmark": "PRIVACY",
+        "split": "train"
+      }
+    },
+    "rows": [
+      {
+        "model": "yolo26x",
+        "attack": "clean",
+        "mota": 0.31098495265784,
+        "motp": 0.8169851288626939,
+        "idf1": 0.27077671200616127,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "yolo26x",
+        "attack": "single_subframe",
+        "mota": 0.0005500333948846858,
+        "motp": 0.7476504201356846,
+        "idf1": 0.000667327451692362,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "yolo26x",
+        "attack": "temporal_average",
+        "mota": 0.09095195065414685,
+        "motp": 0.781361934214688,
+        "idf1": 0.11951664423007989,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "clean",
+        "mota": 0.24117982163202767,
+        "motp": 0.7979635883926801,
+        "idf1": 0.38218742106592574,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "single_subframe",
+        "mota": -0.023386241307507882,
+        "motp": 0.7320991010951349,
+        "idf1": 0.054053614021377226,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "rtdetr-x",
+        "attack": "temporal_average",
+        "mota": -0.1144364122107413,
+        "motp": 0.7496506151765185,
+        "idf1": 0.14665140891819614,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "clean",
+        "mota": 0.037687109574509936,
+        "motp": 0.7792335807187509,
+        "idf1": 0.3562079114719325,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "single_subframe",
+        "mota": -0.024859545043806275,
+        "motp": 0.711602003170563,
+        "idf1": 0.044755971794850295,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "faster_rcnn",
+        "attack": "temporal_average",
+        "mota": -0.02733469532078736,
+        "motp": 0.7323420021811197,
+        "idf1": 0.13967785046071604,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "clean",
+        "mota": -0.054384551919223645,
+        "motp": 0.7709881691768601,
+        "idf1": 0.30486105897172794,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "single_subframe",
+        "mota": 0.0041940046359957295,
+        "motp": 0.706391158438637,
+        "idf1": 0.027429977563870594,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      },
+      {
+        "model": "retinanet",
+        "attack": "temporal_average",
+        "mota": -0.028916041331080722,
+        "motp": 0.7382730144857333,
+        "idf1": 0.11890006901812634,
+        "hota": null,
+        "deta": null,
+        "assa": null,
+        "n_frames": 5316.0
+      }
+    ]
   },
   "view_attack": {
     "available": true,
