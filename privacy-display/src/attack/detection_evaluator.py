@@ -80,14 +80,20 @@ def average_precision_at_iou(
     """Compute single-class AP at one IoU threshold over labeled boxes."""
     if not references:
         return 0.0
+    # Pre-group refs by label so each pred only scans its own image's refs
+    # instead of all refs — reduces from O(N_preds × N_refs_total) to
+    # O(N_preds × N_refs_per_image), critical for multi-image datasets.
+    refs_by_label: dict[str, list[tuple[int, "DetectionBox"]]] = {}
+    for idx, ref in enumerate(references):
+        refs_by_label.setdefault(ref.label, []).append((idx, ref))
     matched: set[int] = set()
     tps = []
     fps = []
     for pred in sorted(predictions, key=lambda b: b.score, reverse=True):
         best_idx = -1
         best_iou = 0.0
-        for idx, ref in enumerate(references):
-            if idx in matched or pred.label != ref.label:
+        for idx, ref in refs_by_label.get(pred.label, []):
+            if idx in matched:
                 continue
             iou = box_iou(pred, ref)
             if iou > best_iou:
