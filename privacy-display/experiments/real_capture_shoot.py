@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import sys
 import time
@@ -47,6 +48,8 @@ DEFAULT_CAPTURE_DIR = "experiments/real_captures"
 DEFAULT_DEVICE = 1  # Windows DirectShow/MSMF index of "EMEET SmartCam S600"
 DEFAULT_DEVICE_NAME = "EMEET SmartCam S600"
 DEFAULT_EPSILON = 8.0 / 255.0  # matches metadata template (ε=8/255)
+METADATA_WRITE_ATTEMPTS = 20
+METADATA_WRITE_RETRY_DELAY_S = 0.5
 CONDITIONS = ("protected", "original", "short_exposure", "video_frame")
 
 PERMISSION_HINT = (
@@ -347,6 +350,37 @@ def make_entry(*, image: str, truth: str, condition: str, device_name: str, came
     }
 
 
+def _write_json_atomic_with_retries(
+    path: Path,
+    payload: dict,
+    *,
+    attempts: int = METADATA_WRITE_ATTEMPTS,
+    retry_delay_s: float = METADATA_WRITE_RETRY_DELAY_S,
+) -> None:
+    """Write JSON via a same-directory temp file so long runs keep metadata intact."""
+    last_error: OSError | None = None
+    path.parent.mkdir(parents=True, exist_ok=True)
+    for attempt in range(1, attempts + 1):
+        temp_path = path.with_name(f".{path.name}.{os.getpid()}.{time.monotonic_ns()}.tmp")
+        try:
+            with open(temp_path, "w", encoding="utf-8") as f:
+                json.dump(payload, f, ensure_ascii=False, indent=2)
+            os.replace(temp_path, path)
+            return
+        except OSError as exc:
+            last_error = exc
+            try:
+                temp_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+            if attempt < attempts:
+                time.sleep(retry_delay_s)
+    raise OSError(
+        getattr(last_error, "errno", None),
+        f"failed to write metadata after {attempts} attempts: {path}",
+    ) from last_error
+
+
 def merge_metadata(capture_dir: Path, metadata_file: str, new_entries: list[dict]) -> Path:
     """Append entries into metadata.json (create if missing), dedup by id."""
     path = capture_dir / metadata_file
@@ -365,8 +399,7 @@ def merge_metadata(capture_dir: Path, metadata_file: str, new_entries: list[dict
     for entry in new_entries:
         by_id[entry["id"]] = entry
     payload["captures"] = list(by_id.values())
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+    _write_json_atomic_with_retries(path, payload)
     return path
 
 

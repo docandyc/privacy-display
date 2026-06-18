@@ -1,12 +1,14 @@
 import subprocess
 import sys
 import time
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
 from experiments.real_capture_ablation import (
     _attack_specs,
+    _execute_plan,
     _load_subset,
     _parse_benchmark_fps,
     _parse_int_list,
@@ -15,7 +17,9 @@ from experiments.real_capture_ablation import (
     condition_to_playback_args,
     offline_video_attack_frames,
     pad_to_display_aspect,
+    parse_args,
     parse_positions,
+    preflight_refresh_check,
     wait_for_playback_ready,
 )
 
@@ -84,6 +88,22 @@ def test_build_all_plan_uses_study_specific_default_subset_sizes():
         "2": 5 * 24,
         "3": 5 * 12 * 2,
     }
+
+
+def test_build_all_plan_applies_explicit_positions_to_every_study():
+    names = [f"doc_{idx}" for idx in range(20)]
+    truths = [f"T{idx}" for idx in range(20)]
+
+    plan = build_study_plan(
+        study="all",
+        names=names,
+        truths=truths,
+        positions="d0.5_a15",
+    )
+
+    assert {item["study"] for item in plan} == {"1", "2", "3"}
+    assert {item["position"]["label"] for item in plan} == {"d0.5_a15"}
+    assert {item["position"]["angle_degrees"] for item in plan} == {15.0}
 
 
 def test_load_subset_uses_full_corpus_when_requested_size_reaches_total():
@@ -195,6 +215,107 @@ def test_parse_benchmark_fps_extracts_measured_value():
     output = "PLAYBACK_READY\nnoise\n{\"measured_fps_avg\": 239.4, \"frame_count\": 1000}\n"
     assert _parse_benchmark_fps(output) == 239.4
     assert _parse_benchmark_fps("no json here") is None
+
+
+def test_real_capture_timeouts_default_to_slow_machine_values():
+    args = parse_args([])
+
+    assert args.playback_timeout == 300.0
+    assert args.preflight_timeout_margin == 300.0
+    assert args.playback_shutdown_timeout == 300.0
+
+
+def test_preflight_refresh_check_returns_none_when_benchmark_times_out(monkeypatch, capsys):
+    def fake_run(cmd, **kwargs):
+        raise subprocess.TimeoutExpired(
+            cmd=cmd,
+            timeout=kwargs["timeout"],
+            output="PLAYBACK_READY\n",
+        )
+
+    monkeypatch.setattr("experiments.real_capture_ablation.subprocess.run", fake_run)
+    args = SimpleNamespace(
+        python_executable=sys.executable,
+        display_width=32,
+        display_height=24,
+        n=4,
+        cycles=16,
+        refresh_check_seconds=4.0,
+        playback_timeout=20.0,
+        preflight_timeout_margin=300.0,
+        fullscreen=True,
+    )
+    sample = np.zeros((8, 8, 3), dtype=np.uint8)
+
+    assert preflight_refresh_check(args, sample) is None
+
+    err = capsys.readouterr().err
+    assert "preflight playback timed out" in err
+    assert "main.py playback" in err
+
+
+def test_execute_plan_reports_group_playback_timeout_without_traceback(monkeypatch, tmp_path, capsys):
+    class FakePlaybackProcess:
+        stdout = []
+
+        def __init__(self):
+            self.terminated = False
+            self.killed = False
+            self.wait_timeout = None
+
+        def poll(self):
+            return None
+
+        def terminate(self):
+            self.terminated = True
+
+        def wait(self, timeout=None):
+            self.wait_timeout = timeout
+            return 0
+
+        def kill(self):
+            self.killed = True
+
+    fake_proc = FakePlaybackProcess()
+    monkeypatch.setattr(
+        "experiments.real_capture_ablation.subprocess.Popen",
+        lambda *args, **kwargs: fake_proc,
+    )
+    args = SimpleNamespace(
+        skip_refresh_check=True,
+        calibration_dir=str(tmp_path / "calibration"),
+        prompt_positions=False,
+        display_width=32,
+        display_height=24,
+        python_executable=sys.executable,
+        n=4,
+        cycles=16,
+        fullscreen=True,
+        playback_timeout=0.01,
+        playback_shutdown_timeout=300.0,
+        capture_dir=str(tmp_path / "captures"),
+        metadata="metadata.json",
+        analyze=False,
+        engines="tesseract",
+    )
+    plan = build_study_plan(
+        study="1",
+        names=["doc_a"],
+        truths=["VISIBLE TEXT"],
+        subset_size=1,
+        attacks=("short",),
+        conditions=("deployed",),
+    )
+    image = np.zeros((8, 8, 3), dtype=np.uint8)
+
+    assert _execute_plan(args, [image], plan) == 3
+
+    err = capsys.readouterr().err
+    assert "playback did not print PLAYBACK_READY" in err
+    assert "main.py playback" in err
+    assert "deployed doc_a d0.5_a0" in err
+    assert fake_proc.terminated
+    assert fake_proc.wait_timeout == 300.0
 
 
 def test_parse_int_list():

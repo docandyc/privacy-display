@@ -101,6 +101,20 @@ def load_roi_calibration(path: str | Path) -> dict:
 
 def rectify_frame(frame: np.ndarray, calibration: dict) -> np.ndarray:
     matrix = np.asarray(calibration["homography"], dtype=np.float32)
+    image_shape = calibration.get("image_shape")
+    if image_shape:
+        calib_h, calib_w = int(image_shape[0]), int(image_shape[1])
+        frame_h, frame_w = frame.shape[:2]
+        if calib_w > 0 and calib_h > 0 and (calib_w, calib_h) != (frame_w, frame_h):
+            scale_to_calibration = np.asarray(
+                [
+                    [calib_w / frame_w, 0.0, 0.0],
+                    [0.0, calib_h / frame_h, 0.0],
+                    [0.0, 0.0, 1.0],
+                ],
+                dtype=np.float32,
+            )
+            matrix = matrix @ scale_to_calibration
     width = int(calibration["output_width"])
     height = int(calibration["output_height"])
     return cv2.warpPerspective(frame, matrix, (width, height))

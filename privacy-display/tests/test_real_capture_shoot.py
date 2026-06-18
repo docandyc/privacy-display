@@ -79,6 +79,30 @@ def test_merge_metadata_rejects_malformed_existing_file(tmp_path):
     assert json.loads(path.read_text(encoding="utf-8")) == {"captures": {}}
 
 
+def test_merge_metadata_retries_transient_write_oserror(tmp_path, monkeypatch):
+    path = tmp_path / "metadata.json"
+    path.write_text(
+        json.dumps({"schema_version": 1, "captures": [{"id": "old", "image": "old.jpg"}]}),
+        encoding="utf-8",
+    )
+    original_open = open
+    failures = {"remaining": 1}
+
+    def flaky_open(*args, **kwargs):
+        mode = args[1] if len(args) > 1 else kwargs.get("mode", "r")
+        if "w" in mode and failures["remaining"]:
+            failures["remaining"] -= 1
+            raise OSError(22, "Invalid argument")
+        return original_open(*args, **kwargs)
+
+    monkeypatch.setattr("builtins.open", flaky_open)
+
+    merge_metadata(tmp_path, "metadata.json", [{"id": "new", "image": "new.jpg"}])
+
+    captures = json.loads(path.read_text(encoding="utf-8"))["captures"]
+    assert {entry["id"] for entry in captures} == {"old", "new"}
+
+
 def test_planned_matrix_rejects_unknown_condition():
     class Args:
         conditions = "protected,unknown"

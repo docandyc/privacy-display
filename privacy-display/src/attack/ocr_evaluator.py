@@ -6,6 +6,8 @@ OCR 准确率评估器
 """
 
 import os
+from pathlib import Path
+import shutil
 
 import numpy as np
 import re
@@ -105,6 +107,7 @@ def text_recovery_metrics(pred: str, ref: str) -> dict:
 class OCREvaluator:
     SUPPORTED_ENGINES = ("tesseract", "easyocr", "paddleocr", "trocr", "doctr")
     TROCR_MODEL_ID = "microsoft/trocr-base-printed"
+    TESSERACT_ENV_VARS = ("TESSERACT_CMD", "TESSERACT_EXE")
 
     def __init__(self, engines: list[str] | None = None, timeout: float | None = 10.0):
         """
@@ -129,6 +132,43 @@ class OCREvaluator:
         return os.environ.get(name, "").strip().casefold() in {"1", "true", "yes", "on"}
 
     @classmethod
+    def _candidate_tesseract_commands(cls) -> list[str]:
+        candidates: list[str] = []
+        for env_name in cls.TESSERACT_ENV_VARS:
+            value = os.environ.get(env_name, "").strip()
+            if value:
+                candidates.append(value)
+        path_cmd = shutil.which("tesseract")
+        if path_cmd:
+            candidates.append(path_cmd)
+        if os.name == "nt":
+            for base in (
+                os.environ.get("ProgramFiles"),
+                os.environ.get("ProgramFiles(x86)"),
+                r"C:\Program Files",
+                r"C:\Program Files (x86)",
+            ):
+                if base:
+                    candidates.append(str(Path(base) / "Tesseract-OCR" / "tesseract.exe"))
+
+        seen: set[str] = set()
+        unique: list[str] = []
+        for candidate in candidates:
+            key = candidate.casefold()
+            if key not in seen:
+                seen.add(key)
+                unique.append(candidate)
+        return unique or ["tesseract"]
+
+    @classmethod
+    def _configure_tesseract(cls, pytesseract_module) -> bool:
+        for cmd in cls._candidate_tesseract_commands():
+            if cmd == "tesseract" or Path(cmd).exists():
+                pytesseract_module.pytesseract.tesseract_cmd = cmd
+                return True
+        return False
+
+    @classmethod
     def _trocr_cache_available(cls) -> bool:
         try:
             from transformers.utils import cached_file
@@ -144,6 +184,8 @@ class OCREvaluator:
         available = []
         try:
             import pytesseract
+            if not self._configure_tesseract(pytesseract):
+                raise RuntimeError("tesseract executable not found")
             pytesseract.get_tesseract_version()
             available.append("tesseract")
         except Exception:
@@ -174,6 +216,8 @@ class OCREvaluator:
     def _run_tesseract(self, image: np.ndarray) -> str:
         import pytesseract
         from PIL import Image
+        if not self._configure_tesseract(pytesseract):
+            raise RuntimeError("tesseract executable not found")
         pil_img = Image.fromarray(image)
         kwargs = {"lang": "chi_sim+eng"}
         if self.timeout is not None:

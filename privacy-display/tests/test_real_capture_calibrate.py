@@ -65,3 +65,20 @@ def test_roi_calibration_roundtrip_rectifies_to_axis_aligned(tmp_path):
     frame = np.zeros((120, 160, 3), dtype=np.uint8)
     rect = rectify_frame(frame, loaded)
     assert rect.shape == (48, 64, 3)
+
+
+def test_rectify_frame_scales_roi_when_capture_resolution_changes():
+    payload = build_roi_calibration(
+        [(10, 10), (90, 10), (90, 90), (10, 90)],
+        output_width=80,
+        output_height=80,
+        pos="d0.5_a0",
+        image_shape=(100, 100, 3),
+    )
+    frame = np.zeros((200, 200, 3), dtype=np.uint8)
+    x_gradient = np.arange(200, dtype=np.uint8)
+    frame[:, :, 0] = x_gradient[None, :]
+
+    rect = rectify_frame(frame, payload)
+
+    assert 90 <= int(rect[40, 40, 0]) <= 110

@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import types
+from pathlib import Path
 
 from src.attack.ocr_evaluator import (
     OCREvaluator,
@@ -49,6 +50,37 @@ def test_heavy_ocr_auto_detection_is_offline_safe(monkeypatch):
 
     assert "trocr" not in engines
     assert "doctr" not in engines
+
+
+def test_tesseract_detection_uses_windows_program_files_path(monkeypatch):
+    expected = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+
+    class FakePytesseract:
+        class pytesseract:
+            tesseract_cmd = "tesseract"
+
+        @staticmethod
+        def get_tesseract_version():
+            if FakePytesseract.pytesseract.tesseract_cmd != str(expected):
+                raise RuntimeError("not in PATH")
+            return "5.5.0"
+
+    monkeypatch.setitem(sys.modules, "pytesseract", FakePytesseract)
+    monkeypatch.setenv("ProgramFiles", r"C:\Program Files")
+    monkeypatch.delenv("ProgramFiles(x86)", raising=False)
+    monkeypatch.delenv("TESSERACT_CMD", raising=False)
+    monkeypatch.delenv("TESSERACT_EXE", raising=False)
+    monkeypatch.setattr("src.attack.ocr_evaluator.shutil.which", lambda name: None, raising=False)
+    monkeypatch.setattr("src.attack.ocr_evaluator.os.name", "nt")
+    monkeypatch.setattr(
+        "src.attack.ocr_evaluator.Path.exists",
+        lambda self: str(self) == str(expected),
+    )
+
+    evaluator = OCREvaluator(engines=[])
+
+    assert "tesseract" in evaluator._detect_available_engines()
+    assert FakePytesseract.pytesseract.tesseract_cmd == str(expected)
 
 
 def test_trocr_loader_uses_local_files_only(monkeypatch):

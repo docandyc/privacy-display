@@ -81,6 +81,9 @@ DEFAULT_DISPLAY_HEIGHT = 1600
 DEFAULT_REFRESH_HZ = 240.0
 DEFAULT_N = 4
 DEFAULT_CYCLES = 16
+DEFAULT_PLAYBACK_TIMEOUT = 300.0
+DEFAULT_PREFLIGHT_TIMEOUT_MARGIN = 300.0
+DEFAULT_PLAYBACK_SHUTDOWN_TIMEOUT = 300.0
 
 ATTACKS = ("short", "long", "video")
 STUDIES = ("1", "2", "3", "all")
@@ -300,7 +303,7 @@ def build_study_plan(
                 subset_size=subset_size if subset_size is not None else default_sizes[part],
                 attacks=attacks,
                 conditions=conditions,
-                positions=positions if part == "3" else None,
+                positions=positions,
             ))
         return merged
     if study not in {"1", "2", "3"}:
@@ -552,6 +555,29 @@ def _playback_command(args: argparse.Namespace, image_path: Path, item: dict) ->
     return cmd
 
 
+def _format_command(cmd: list[str]) -> str:
+    return subprocess.list2cmdline([str(part) for part in cmd])
+
+
+def _report_playback_start_failure(
+    *,
+    group_index: int,
+    group_count: int,
+    ablation: str,
+    image_name: str,
+    pos_label: str,
+    playback_cmd: list[str],
+    error: BaseException,
+) -> None:
+    print(
+        f"[playback] failed to start group {group_index}/{group_count}: "
+        f"{ablation} {image_name} {pos_label}",
+        file=sys.stderr,
+    )
+    print(f"[playback] command: {_format_command(playback_cmd)}", file=sys.stderr)
+    print(f"[playback] {error}", file=sys.stderr)
+
+
 def wait_for_playback_ready(proc: subprocess.Popen, timeout: float) -> None:
     deadline = time.monotonic() + timeout
     buffered: list[str] = []
@@ -577,7 +603,9 @@ def wait_for_playback_ready(proc: subprocess.Popen, timeout: float) -> None:
             return
         if proc.poll() is not None and lines.empty():
             raise RuntimeError(f"playback exited before ready: {' | '.join(buffered[-5:])}")
-    raise TimeoutError(f"playback did not print PLAYBACK_READY within {timeout}s")
+    tail = " | ".join(buffered[-5:])
+    detail = f"; output tail: {tail}" if tail else "; no playback output captured"
+    raise TimeoutError(f"playback did not print PLAYBACK_READY within {timeout}s{detail}")
 
 
 def _maybe_rectify_frames(frames: list[np.ndarray], calibration_dir: str | Path, pos_label: str) -> list[np.ndarray]:
@@ -686,11 +714,32 @@ def preflight_refresh_check(args: argparse.Namespace, sample_image: np.ndarray) 
         if args.fullscreen:
             cmd.append("--fullscreen")
         cmd += condition_to_playback_args(deployed)
-        proc = subprocess.run(
-            cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            text=True, timeout=args.refresh_check_seconds + args.playback_timeout + 30,
-            check=False,
+        timeout = (
+            args.refresh_check_seconds
+            + args.playback_timeout
+            + args.preflight_timeout_margin
         )
+        try:
+            proc = subprocess.run(
+                cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                text=True, timeout=timeout,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            output = exc.output or ""
+            if isinstance(output, bytes):
+                output = output.decode("utf-8", errors="replace")
+            tail = " | ".join(
+                line.strip() for line in str(output).splitlines()[-5:] if line.strip()
+            )
+            print(
+                f"[preflight] preflight playback timed out after {timeout:.1f}s: "
+                f"{_format_command(cmd)}",
+                file=sys.stderr,
+            )
+            if tail:
+                print(f"[preflight] playback output before timeout: {tail}", file=sys.stderr)
+            return None
     fps = _parse_benchmark_fps(proc.stdout or "")
     return fps
 
@@ -796,12 +845,36 @@ def _execute_plan(args: argparse.Namespace, images: list[np.ndarray], plan: list
             playback_cmd = _playback_command(args, image_path, items[0])
             print(f"[group {gi}/{len(groups)}] {ablation} {image_name} {pos_label} "
                   f"attacks={','.join(str(it['attack']) for it in items)}")
-            proc = subprocess.Popen(
-                playback_cmd, cwd=str(ROOT), stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT, text=True,
-            )
             try:
-                wait_for_playback_ready(proc, args.playback_timeout)
+                proc = subprocess.Popen(
+                    playback_cmd, cwd=str(ROOT), stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT, text=True,
+                )
+            except OSError as exc:
+                _report_playback_start_failure(
+                    group_index=gi,
+                    group_count=len(groups),
+                    ablation=str(ablation),
+                    image_name=str(image_name),
+                    pos_label=str(pos_label),
+                    playback_cmd=playback_cmd,
+                    error=exc,
+                )
+                return 3
+            try:
+                try:
+                    wait_for_playback_ready(proc, args.playback_timeout)
+                except (RuntimeError, TimeoutError) as exc:
+                    _report_playback_start_failure(
+                        group_index=gi,
+                        group_count=len(groups),
+                        ablation=str(ablation),
+                        image_name=str(image_name),
+                        pos_label=str(pos_label),
+                        playback_cmd=playback_cmd,
+                        error=exc,
+                    )
+                    return 3
                 for item in items:
                     attack_spec = attacks[str(item["attack"])]
                     exposure_value, exposure_s = exposure_for_attack(
@@ -846,7 +919,7 @@ def _execute_plan(args: argparse.Namespace, images: list[np.ndarray], plan: list
             finally:
                 proc.terminate()
                 try:
-                    proc.wait(timeout=2)
+                    proc.wait(timeout=args.playback_shutdown_timeout)
                 except subprocess.TimeoutExpired:
                     proc.kill()
     print(f"Saved metadata entries: {total_entries}")
@@ -931,7 +1004,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--notes", default="")
     p.add_argument("--engines", default="tesseract")
     p.add_argument("--analyze", action="store_true")
-    p.add_argument("--playback-timeout", type=float, default=20.0)
+    p.add_argument("--playback-timeout", type=float, default=DEFAULT_PLAYBACK_TIMEOUT,
+                   help="Seconds to wait for playback to print PLAYBACK_READY "
+                        f"(default {DEFAULT_PLAYBACK_TIMEOUT:.0f}; slow machines may need this high)")
+    p.add_argument("--preflight-timeout-margin", type=float,
+                   default=DEFAULT_PREFLIGHT_TIMEOUT_MARGIN,
+                   help="Extra seconds added to the preflight benchmark subprocess "
+                        "timeout after refresh-check and playback-ready time "
+                        f"(default {DEFAULT_PREFLIGHT_TIMEOUT_MARGIN:.0f})")
+    p.add_argument("--playback-shutdown-timeout", type=float,
+                   default=DEFAULT_PLAYBACK_SHUTDOWN_TIMEOUT,
+                   help="Seconds to wait for playback to exit after terminate() "
+                        f"before killing it (default {DEFAULT_PLAYBACK_SHUTDOWN_TIMEOUT:.0f})")
     p.add_argument("--python-executable", default=sys.executable)
     return p.parse_args(argv)
 

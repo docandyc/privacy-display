@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "Backend layer entry point for checking experiment orchestration changes."}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "Real camera capture and playback contracts plus required tests."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Shared thinking guide index for final verification."}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Confirm related timeout/config paths were searched."}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Confirm subprocess boundary handling remains explicit."}

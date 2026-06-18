@@ -168,6 +168,7 @@ where `_target_gradient` tries the differentiable shadow model first and records
 
 ### 3. Contracts
 - Auto-detection must only list an engine when importing the package and any cheap local availability check succeeds.
+- Tesseract detection must configure `pytesseract.pytesseract.tesseract_cmd` from `TESSERACT_CMD`/`TESSERACT_EXE`, PATH, or the Windows default install dirs (`C:\Program Files\Tesseract-OCR\tesseract.exe`, `C:\Program Files (x86)\Tesseract-OCR\tesseract.exe`) before calling `get_tesseract_version()`.
 - Unit tests must not instantiate OCR engines that download model weights; inject cached/fake readers for parser and dispatch tests.
 - Images passed into OCR backends must be contiguous NumPy arrays.
 - PaddleOCR 3.x should use `PaddleOCR(...).predict(image)` when present; older versions may fall back to `.ocr(image)`.
@@ -176,18 +177,21 @@ where `_target_gradient` tries the differentiable shadow model first and records
 
 ### 4. Validation & Error Matrix
 - Engine package import fails -> omit the engine from `engines` and keep other engines available.
+- Tesseract Python package is installed but `tesseract.exe` is not on PATH -> try configured env/default executable paths before omitting the engine.
 - Unsupported engine name in `recognize` -> raise `ValueError`.
 - PaddleOCR output shape lacks recognized text fields -> return an empty string rather than crashing.
 - Heavy model download or runtime setup failure -> keep it out of unit tests; verify with an explicit integration command when the environment has cached models or network access.
 
 ### 5. Good/Base/Bad Cases
 - Good: add an engine with parser-only regression tests plus one fake-reader dispatch test.
+- Good: Windows machines with Tesseract installed under `C:\Program Files\Tesseract-OCR` are detected without requiring users to edit PATH.
 - Base: existing Tesseract/EasyOCR behavior remains unchanged when PaddleOCR is unavailable.
 - Bad: unit tests instantiate `PaddleOCR()` directly and trigger downloads.
 - Bad: hand-edit `corpus_multi_engine.json` without rerunning `run_corpus_multi_engine`.
 
 ### 6. Tests Required
 - Assert `OCREvaluator().engines` includes the engine in an environment where the dependency is installed.
+- Assert Windows default Tesseract install path is used when `tesseract` is not on PATH.
 - Assert parser coverage for every supported output shape.
 - Assert `recognize(..., engine)` uses a cached/fake reader and returns joined text.
 - Run `pytest tests/ -q` and, for corpus changes, rerun `run_corpus_multi_engine(...)`.
@@ -269,6 +273,7 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 - Command: `python experiments/real_capture_ablation.py --study {1,2,3,all} --dry-run`
 - Command: `python experiments/real_capture_ablation.py --study 1 --subset-size 1 --attacks short --conditions original,deployed --backend dshow --analyze`
 - Command: `python experiments/real_capture_ablation.py --study all --subset-size 120 --backend dshow --analyze`
+- Timeout CLI: `--playback-timeout 300 --preflight-timeout-margin 300 --playback-shutdown-timeout 300` by default; callers may increase them further on slow machines.
 - Windows helper: `scripts\run_real_capture_ablation_windows.bat [dry-run|calibrate-roi|calibrate-exposure|full]` where `dry-run` and `full` use `--subset-size 120`.
 - Playback command contract: `python main.py playback --image <png> --width 2560 --height 1600 --n 4 --fullscreen [condition flags]` prints `PLAYBACK_READY` before captures start.
 
@@ -279,13 +284,17 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 - Dry-run paths must not open a camera or pygame window; they only load corpus metadata, build plans, and print counts.
 - Default all-study planning must stay bounded: study 1 uses about 12 stratified samples; studies 2 and 3 use about 5 unless `--subset-size` overrides.
 - Video attacks should save attacker-friendly derived frames (`single_best`, `temporal_mean`, `window_mean_best`, `max_proj`) rather than raw bursts only.
+- Real-capture playback startup defaults must be slow-machine friendly: wait about five minutes for `PLAYBACK_READY`, add about five minutes of margin around preflight benchmark subprocesses, and wait five minutes before killing a terminated playback process.
 
 ### 4. Validation & Error Matrix
 - Unknown camera backend -> `ValueError` before opening hardware.
 - Unknown attack or condition for a study -> `ValueError` during plan construction.
 - Missing ROI calibration -> capture raw frames and preserve `roi_pos`; do not fail the run.
+- ROI rectification -> scale the saved homography from calibration `image_shape` to the current frame resolution before warping, because calibration preview and capture frames may differ between 1080p and 4K.
 - Missing exposure calibration -> skip manual exposure for that attack and leave `exposure_s` null unless provided.
-- Playback exits before `PLAYBACK_READY` -> fail the current run with captured stdout context.
+- Metadata merge writes -> use same-directory temp JSON plus atomic replace with bounded retry, so transient Windows file-open errors do not abort long capture runs or leave partial metadata files.
+- Preflight playback benchmark timeout -> record the command/stdout tail, set measured fps to null, and continue with a manual verification warning.
+- Capture playback exits or times out before `PLAYBACK_READY` -> terminate the playback process, report group/command/stdout context, and return a controlled non-zero code instead of raising a traceback.
 - Empty video frame list -> `ValueError` from offline video attack helper.
 
 ### 5. Good/Base/Bad Cases
@@ -302,6 +311,11 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 - Assert playback CLI parses `--fullscreen`, `--show-original`, and `--inversion-alpha 1.0`.
 - Assert study plan sizes, condition filtering, geometry matrix positions, and default bounded all-study behavior.
 - Assert letterbox padding preserves aspect ratio with black borders.
+- Assert ROI rectification still selects the same screen region when capture resolution differs from the calibration frame shape.
+- Assert metadata merge retries a transient `OSError` during JSON write and preserves existing plus new capture entries.
+- Assert preflight playback benchmark timeout returns a null fps measurement with diagnostic output instead of raising `TimeoutExpired`.
+- Assert capture playback readiness timeout returns a controlled non-zero result with group and command diagnostics instead of raising `TimeoutError`.
+- Assert timeout parser defaults remain slow-machine friendly.
 - Assert offline video attack helpers return all expected derived frame keys.
 - Assert structured metadata fields survive into `summarize_real_capture_rows(...)[by_ablation_attack]`.
 
@@ -315,7 +329,7 @@ capture_once(cap, args, condition="deployed", ...)
 #### Correct
 ```python
 proc = subprocess.Popen(playback_cmd, stdout=subprocess.PIPE, text=True)
-wait_for_playback_ready(proc, timeout=20)
+wait_for_playback_ready(proc, timeout=300)
 frames = grab_frames(cap, count=attack.burst, interval=attack.interval)
 entry = build_metadata_entry(item, playback_cmd=playback_cmd, ...)
 ```
