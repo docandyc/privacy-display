@@ -695,6 +695,53 @@ class PlaybackConfig:
     stripe_width: int = 10
     stripe_alpha: float = 0.18
     glyph_alpha: float = 0.22
+    # 外部预渲染帧：直接循环显示该目录下排序后的 *.png（跳过 build_playback_frames）。
+    # 供检测/跟踪真实拍摄实验显示"检测攻击子帧"用。
+    frames_dir: str | None = None
+    # 常驻推进：若设置，则轮询该控制文件，内容形如 {"frames_dir": ..., "epoch": N}，
+    # mtime 变化时热切换显示帧并打印 "ADVANCED N"（MOT 逐帧停拍，避免反复重启进程）。
+    control_file: str | None = None
+
+
+def _load_png_frames(frames_dir: str | Path) -> list[np.ndarray]:
+    """按文件名排序加载目录下全部 *.png 为 uint8 RGB 帧列表。"""
+    from PIL import Image
+
+    out: list[np.ndarray] = []
+    for path in sorted(Path(frames_dir).glob("*.png")):
+        out.append(np.array(Image.open(path).convert("RGB"), dtype=np.uint8))
+    return out
+
+
+def _frames_payload_for_dir(
+    frames_dir: str | Path, cfg: PlaybackConfig
+) -> tuple[list[tuple[np.ndarray, str]], dict]:
+    """把 frames-dir 里的 png 包成 (frames, meta)，meta 形状对齐 build_playback_frames。"""
+    imgs = _load_png_frames(frames_dir)
+    if not imgs:
+        raise ValueError(f"frames-dir 为空或无 png: {frames_dir}")
+    frames = [(im, "subframe") for im in imgs]
+    meta = {
+        "n": len(imgs),
+        "cycles": 1,
+        "epsilon": cfg.epsilon,
+        "pedestal": 0.0,
+        "use_noise": True,
+        "insert_inversion": False,
+        "inversion_alpha": None,
+        "per_cycle_slots": len(imgs),
+        "permutations": [],
+        "noise_schedule": [],
+        "anti_ocr": {
+            "profile": "off",
+            "mask_cell_size": 1,
+            "stripe_width": 10,
+            "stripe_alpha": 0.0,
+            "glyph_alpha": 0.0,
+            "saliency_pixels": 0,
+        },
+    }
+    return frames, meta
 
 
 def _load_input_image(cfg: PlaybackConfig) -> np.ndarray:
@@ -765,8 +812,12 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
     )
     pygame.display.flip()
 
-    image = _load_input_image(cfg)
-    if cfg.show_original:
+    if cfg.frames_dir:
+        # 外部预渲染帧模式：直接循环显示目录内 png（检测/跟踪真实拍摄）。
+        frames, meta = _frames_payload_for_dir(cfg.frames_dir, cfg)
+        image = frames[0][0]  # 首帧充当 original 占位（此模式无独立原图）
+    elif cfg.show_original:
+        image = _load_input_image(cfg)
         frames = [(image, "original")]
         meta = {
             "n": cfg.n,
@@ -789,6 +840,7 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
             },
         }
     else:
+        image = _load_input_image(cfg)
         frames, meta = build_playback_frames(
             image,
             n=cfg.n,
@@ -805,10 +857,13 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         )
 
     # convert 必须在 set_mode 之后；转换完丢弃 numpy 帧引用以省内存
-    surfaces = [
-        (pygame.surfarray.make_surface(f.swapaxes(0, 1)).convert(), kind)
-        for f, kind in frames
-    ]
+    def _surfaces_from(frames_list):
+        return [
+            (pygame.surfarray.make_surface(f.swapaxes(0, 1)).convert(), kind)
+            for f, kind in frames_list
+        ]
+
+    surfaces = _surfaces_from(frames)
     original_surface = pygame.surfarray.make_surface(
         image.swapaxes(0, 1)
     ).convert()
@@ -862,6 +917,7 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
     body_times: deque[float] = deque(maxlen=100000)  # 循环体耗时（flip 前）
     start_time = time.perf_counter()
     next_deadline = start_time + frame_interval   # 软件帧率封顶的目标时刻
+    control_mtime = None  # 常驻推进：上次读到的控制文件 mtime
     print("PLAYBACK_READY", flush=True)
 
     while running:
@@ -883,6 +939,36 @@ def run_playback(cfg: PlaybackConfig) -> dict | None:
         if paused:
             clock.tick(30)
             continue
+
+        # 常驻推进：每 ~12 帧（~50ms@240Hz）查一次控制文件，mtime 变化即热切换显示帧。
+        if cfg.control_file and frame_count % 12 == 0:
+            ctrl = Path(cfg.control_file)
+            try:
+                mtime = ctrl.stat().st_mtime
+            except OSError:
+                mtime = None
+            if mtime is not None and mtime != control_mtime:
+                control_mtime = mtime
+                try:
+                    payload = json.loads(ctrl.read_text())
+                    new_imgs = _load_png_frames(payload["frames_dir"])
+                    if new_imgs:
+                        surfaces = _surfaces_from([(im, "subframe") for im in new_imgs])
+                        total_slots = len(surfaces)
+                        original_surface = surfaces[0][0]
+                        idx = 0
+                        ack_file = payload.get("ack_file")
+                        if ack_file:
+                            Path(ack_file).write_text(
+                                json.dumps({
+                                    "epoch": int(payload.get("epoch", 0)),
+                                    "frames_dir": str(payload["frames_dir"]),
+                                }),
+                                encoding="utf-8",
+                            )
+                        print(f"ADVANCED {payload.get('epoch', 0)}", flush=True)
+                except (OSError, ValueError, KeyError):
+                    pass
 
         # —— 循环体：仅 blit + HUD，无任何 numpy 帧处理 ——
         if show_original:
@@ -1000,6 +1086,8 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
     parser.add_argument("--height", type=int, default=720, help="窗口高度")
     parser.add_argument("--fullscreen", action="store_true",
                         help="用 pygame FULLSCREEN 打开显示窗口")
+    parser.add_argument("--no-hud", action="store_true",
+                        help="隐藏 HUD 覆盖层（真实拍摄/检测实验应启用，避免污染画面）")
     parser.add_argument("--show-original", action="store_true",
                         help="直接显示原图作为无防护基线，不生成保护子帧")
     parser.add_argument(
@@ -1019,6 +1107,12 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
                         help="反 OCR 档位的条纹混合强度 [0,1]")
     parser.add_argument("--glyph-alpha", type=float, default=None,
                         help="反 OCR 档位的字形打孔/假笔画强度 [0,1]")
+    parser.add_argument("--frames-dir", type=str, default=None,
+                        help="直接循环显示该目录下排序后的 *.png（检测/跟踪真实拍摄子帧），"
+                             "跳过内置子帧生成")
+    parser.add_argument("--control-file", type=str, default=None,
+                        help="常驻推进：轮询该 JSON 控制文件 {frames_dir, epoch}，"
+                             "mtime 变化时热切换显示帧（MOT 逐帧停拍）")
     args = parser.parse_args(argv)
     try:
         anti_options = resolve_anti_ocr_options(
@@ -1043,6 +1137,7 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         demo_name=args.demo,
         pdf_page=args.pdf_page,
         benchmark_seconds=args.benchmark,
+        show_hud=not args.no_hud,
         fullscreen=args.fullscreen,
         show_original=args.show_original,
         anti_ocr_profile=args.anti_ocr_profile,
@@ -1050,6 +1145,8 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
         stripe_width=anti_options.stripe_width,
         stripe_alpha=anti_options.stripe_alpha,
         glyph_alpha=anti_options.glyph_alpha,
+        frames_dir=args.frames_dir,
+        control_file=args.control_file,
     )
 
 

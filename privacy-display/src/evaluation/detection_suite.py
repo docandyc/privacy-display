@@ -29,6 +29,43 @@ def mask_key(seed: int, identifier: str) -> bytes:
     return hashlib.sha256(f"detection-suite-{seed}-{identifier}".encode()).digest()
 
 
+def build_display_subframes(
+    image: np.ndarray,
+    n: int = 4,
+    epsilon: float = 8 / 255,
+    target_model: str = "yolov8",
+    seed: int = 0,
+    identifier: str = "",
+    device: str | None = None,
+) -> list[np.ndarray]:
+    """Build the n privacy subframes for one RGB image.
+
+    These are the exact frames the playback display cycles through: a legitimate
+    viewer's eye integrates them back to ``image`` while a single camera frame
+    only captures one masked subframe. Both the simulated attack
+    (:func:`build_attack_variants`) and the real-capture display path consume
+    this same construction so they stay apples-to-apples.
+
+    Masks use a deterministic key derived from ``seed`` and ``identifier`` so a
+    rerun reproduces the exact pixels; ``identifier`` should uniquely name the
+    stimulus (e.g. COCO file name or ``sequence:frame``). ``device`` (e.g.
+    ``cuda:0``) runs the PGD adversarial noise on GPU and falls back to CPU.
+    """
+    h, w = image.shape[:2]
+    noise_target = detector_noise_target(target_model)
+    generator = MaskGenerator(w, h, n, key=mask_key(seed, identifier))
+    composer = SubframeComposer(n=n)
+    injector = NoiseInjector(n=n, epsilon=epsilon, target_models=[noise_target], device=device)
+    masks = generator.generate(0)
+    base = injector.generate_pgd_noise(
+        image.astype(np.float32) / 255.0,
+        model_name=noise_target,
+        seed=seed,
+    )
+    sub_noises = [(noise * 255).astype(np.float32) for noise in injector.split_complementary(base)]
+    return composer.compose(image, masks, sub_noises)
+
+
 def build_attack_variants(
     image: np.ndarray,
     attacks: Iterable[str] = DEFAULT_ATTACKS,
@@ -58,19 +95,15 @@ def build_attack_variants(
     if not needs_subframes:
         return variants
 
-    h, w = image.shape[:2]
-    noise_target = detector_noise_target(target_model)
-    generator = MaskGenerator(w, h, n, key=mask_key(seed, identifier))
-    composer = SubframeComposer(n=n)
-    injector = NoiseInjector(n=n, epsilon=epsilon, target_models=[noise_target], device=device)
-    masks = generator.generate(0)
-    base = injector.generate_pgd_noise(
-        image.astype(np.float32) / 255.0,
-        model_name=noise_target,
+    subframes = build_display_subframes(
+        image,
+        n=n,
+        epsilon=epsilon,
+        target_model=target_model,
         seed=seed,
+        identifier=identifier,
+        device=device,
     )
-    sub_noises = [(noise * 255).astype(np.float32) for noise in injector.split_complementary(base)]
-    subframes = composer.compose(image, masks, sub_noises)
     if "single_subframe" in requested:
         variants["single_subframe"] = subframes[0]
     if "temporal_average" in requested:

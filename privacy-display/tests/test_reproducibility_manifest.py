@@ -60,6 +60,12 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
     assert "experiments/results/coco_detection_attack.json" in result_paths
     assert "experiments/results/mot_video_detection.json" in result_paths
     assert "experiments/results/mot_tracking_attack.json" in result_paths
+    assert "experiments/real_captures/coco_detection/capture_manifest.json" in result_paths
+    assert "experiments/real_captures/mot_MOT17-09-FRCNN/capture_manifest.json" in result_paths
+    source_paths = {record["path"] for record in default_manifest["source_files"]}
+    assert "scripts/run_real_capture_detection_windows.bat" in source_paths
+    assert any(command["name"] == "real_capture_coco_detection" for command in default_manifest["commands"])
+    assert any(command["name"] == "real_capture_mot" for command in default_manifest["commands"])
     model_live = next(c for c in manifest["commands"] if c["name"] == "vlm_model_ablation_live")
     assert model_live["requires_env"] == ["SILICONFLOW_API_KEY"]
     vlm_live = next(command for command in manifest["commands"] if command["name"] == "vlm_live")

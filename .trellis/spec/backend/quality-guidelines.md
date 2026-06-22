@@ -295,6 +295,7 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 - Metadata merge writes -> use same-directory temp JSON plus atomic replace with bounded retry, so transient Windows file-open errors do not abort long capture runs or leave partial metadata files.
 - Preflight playback benchmark timeout -> record the command/stdout tail, set measured fps to null, and continue with a manual verification warning.
 - Capture playback exits or times out before `PLAYBACK_READY` -> terminate the playback process, report group/command/stdout context, and return a controlled non-zero code instead of raising a traceback.
+- Playback hot-swap control file is updated but the requested `epoch` is not acknowledged -> fail the current run before opening/grabbing the camera for that sample.
 - Empty video frame list -> `ValueError` from offline video attack helper.
 
 ### 5. Good/Base/Bad Cases
@@ -302,6 +303,8 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 - Good: run the one-sample smoke command before full study collection to prove `original|short` can be read and `deployed|short` suppresses recovery.
 - Base: run without ROI calibration; metadata remains usable, but notes should make the missing rectification auditable.
 - Bad: starting capture after a fixed sleep only; playback must expose `PLAYBACK_READY` so camera timing is deterministic.
+- Bad: after a persistent playback process is running, switching `frames_dir` and then starting capture after only `sleep(settle)`; hot-swaps must acknowledge the requested epoch (for example through an ack file in the control payload) before the camera grabs frames.
+- Bad: leaving playback HUD enabled for camera-captured benchmark frames; HUD overlays contaminate object-detection and tracking metrics.
 - Bad: changing `condition` to a nested object only, because existing real-capture analysis groups by string condition.
 - Bad: letting default all-study planning expand to the full 120-image corpus without an explicit `--subset-size`.
 
@@ -310,6 +313,8 @@ SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh
 - Assert DirectShow log2 exposure conversion.
 - Assert playback CLI parses `--fullscreen`, `--show-original`, and `--inversion-alpha 1.0`.
 - Assert study plan sizes, condition filtering, geometry matrix positions, and default bounded all-study behavior.
+- Assert persistent playback hot-swaps wait for the requested epoch acknowledgement and time out if it never arrives.
+- Assert real-capture playback commands disable HUD overlays.
 - Assert letterbox padding preserves aspect ratio with black borders.
 - Assert ROI rectification still selects the same screen region when capture resolution differs from the calibration frame shape.
 - Assert metadata merge retries a transient `OSError` during JSON write and preserves existing plus new capture entries.
@@ -585,6 +590,7 @@ api_key = os.environ["SILICONFLOW_API_KEY"]
 ### 4. Validation & Error Matrix
 - Missing required OCR or strong-camera result -> normal file error; do not synthesize placeholder values.
 - Missing optional detection/view/VLM result -> keep summary generation successful and mark that section unavailable.
+- Real-capture COCO/MOT result exists but lacks `real_clean`, has zero shared samples, mismatched attack sample counts, or `capture.coverage.complete=false` -> keep summary generation successful and mark that real-capture section unavailable with an explicit reason.
 - Optional VLM result exists but all rows failed -> keep summary generation successful and mark VLM unavailable with an explicit all-failed interpretation.
 - Older result JSON missing CI fields -> render mean-only percentages instead of failing.
 - Unknown extra OCR engines or attack names -> include them after the known ordered entries.
@@ -592,6 +598,7 @@ api_key = os.environ["SILICONFLOW_API_KEY"]
 ### 5. Good/Base/Bad Cases
 - Good: rerun experiments, then run `python experiments/publication_summary.py`, then update thesis tables from the generated Markdown.
 - Good: VLM result is absent and the summary explicitly records that no live VLM number should be cited.
+- Good: real-capture COCO/MOT sections are rendered only when every model/attack row has the same positive captured sample count and includes a `real_clean` baseline.
 - Good: VLM result file exists only as an API-error diagnostic and the summary says it is not available for citation.
 - Base: detection or view-attack result is absent in a lightweight environment, but OCR and strong attack summaries still render.
 - Bad: editing `publication_summary.md` by hand while raw JSON disagrees.
@@ -602,6 +609,7 @@ api_key = os.environ["SILICONFLOW_API_KEY"]
 - Assert summary building reads minimal OCR and strong-camera fixtures and reports expected means.
 - Assert missing optional VLM/view result files are marked unavailable.
 - Assert all-error VLM result files are marked unavailable and rendered as not citable.
+- Assert real-capture COCO/MOT result files with incomplete coverage, missing `real_clean`, zero samples, or mismatched attack counts are marked unavailable and not rendered as citable tables.
 - Assert Markdown includes OCR, strong-camera, detection, view, and VLM sections.
 - Assert `write_publication_summary` writes both JSON and Markdown outputs.
 - Run `pytest tests/test_publication_summary.py -q` after changing the summary builder.
@@ -645,6 +653,7 @@ sed -n '1,120p' experiments/results/publication_summary.md
 - Missing result/source files must be represented as `exists=False`, empty `sha256`, and zero bytes rather than failing manifest generation.
 - Absolute output paths must be respected; relative output paths are resolved against `project_root`.
 - Regenerate the manifest after rerunning experiments or changing code that it hashes, otherwise the file hashes no longer describe the current archive.
+- Real-capture COCO/MOT detection/tracking manifests under `experiments/real_captures/**/capture_manifest.json` are publication provenance artifacts; include the planned capture manifests in the reproducibility manifest alongside the metric JSON files.
 - `scripts/reproduce_all.sh` is the publication artifact orchestrator. Its default path must stay offline and bounded: tests, VLM dry-run, publication summary, and reproducibility manifest only.
 - Heavy offline experiments must require `--full-offline`; live online VLM calls must require `--with-vlm-live` plus `SILICONFLOW_API_KEY` in the environment.
 - The orchestrator must never accept an API key as a positional argument or CLI flag.

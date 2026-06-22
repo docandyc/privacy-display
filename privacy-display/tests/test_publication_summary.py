@@ -5,6 +5,8 @@ from src.evaluation.publication_summary import (
     SUMMARY_MD,
     build_publication_summary,
     render_markdown,
+    summarize_real_capture_coco_detection,
+    summarize_real_capture_mot_detection,
     summarize_supplemental_ablation,
     summarize_ocr_strata,
     summarize_pareto_security,
@@ -235,6 +237,54 @@ def test_publication_summary_marks_all_error_vlm_result_uncitable(tmp_path):
     assert summary["vlm"]["available"] is False
     assert summary["vlm"]["reason"] == "all_calls_failed"
     assert "all live API calls failed" in markdown
+
+
+def test_real_capture_detection_summary_rejects_uncitable_coverage():
+    report = {
+        "config": {"models": ["fake"], "attacks": ["real_clean", "real_short"]},
+        "capture": {"coverage": {"complete": False, "reason": "missing real_short"}},
+        "results": {
+            "fake": {
+                "real_clean": {"map": 0.8, "map50": 0.9, "n_images": 2},
+                "real_short": {"map": 0.1, "map50": 0.2, "n_images": 1},
+            }
+        },
+    }
+
+    out = summarize_real_capture_coco_detection(report)
+
+    assert out["available"] is False
+    assert out["reason"] == "incomplete_capture_coverage"
+
+
+def test_real_capture_detection_summary_requires_clean_baseline_and_samples():
+    report = {
+        "config": {"models": ["fake"], "attacks": ["real_short"]},
+        "capture": {"coverage": {"complete": True, "n_shared": 0}},
+        "results": {"fake": {"real_short": {"map": 0.0, "map50": 0.0, "n_images": 0}}},
+    }
+
+    out = summarize_real_capture_coco_detection(report)
+
+    assert out["available"] is False
+    assert out["reason"] == "missing_real_clean_baseline"
+
+
+def test_real_capture_mot_summary_rejects_mismatched_sample_counts():
+    report = {
+        "config": {"models": ["fake"], "attacks": ["real_clean", "real_short"]},
+        "results": {
+            "fake": {
+                "real_clean": {"map": 0.8, "map50": 0.9, "n_frames": 3},
+                "real_short": {"map": 0.1, "map50": 0.2, "n_frames": 2},
+            }
+        },
+    }
+
+    out = summarize_real_capture_mot_detection(report)
+
+    assert out["available"] is False
+    assert out["reason"] == "mismatched_sample_counts"
 
 
 def test_anti_ocr_supplemental_rows_prioritize_profile_and_alpha_sweep():

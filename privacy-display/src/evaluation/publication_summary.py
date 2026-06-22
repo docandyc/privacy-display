@@ -22,6 +22,9 @@ MOT_TRACKING_FILE = "mot_tracking_attack.json"
 VIEW_ATTACK_FILE = "view_attack.json"
 VLM_FILE = "vlm_qwen3_siliconflow.json"
 REAL_CAPTURE_FILE = "real_capture_ocr.json"
+REAL_CAPTURE_COCO_DETECTION_FILE = "real_capture_coco_detection.json"
+REAL_CAPTURE_MOT_DETECTION_FILE = "real_capture_mot_detection.json"
+REAL_CAPTURE_MOT_TRACKING_FILE = "real_capture_mot_tracking.json"
 SUPPLEMENTAL_FILES = {
     "component_ablation": "component_ablation.json",
     "recognizer_generalization": "recognizer_generalization.json",
@@ -89,6 +92,9 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
     view_attack = _load_optional(root / VIEW_ATTACK_FILE)
     vlm = _load_optional(root / VLM_FILE)
     real_capture = _load_optional(root / REAL_CAPTURE_FILE)
+    real_capture_coco = _load_optional(root / REAL_CAPTURE_COCO_DETECTION_FILE)
+    real_capture_mot_det = _load_optional(root / REAL_CAPTURE_MOT_DETECTION_FILE)
+    real_capture_mot_trk = _load_optional(root / REAL_CAPTURE_MOT_TRACKING_FILE)
     supplemental = {
         name: _load_optional(root / filename)
         for name, filename in SUPPLEMENTAL_FILES.items()
@@ -105,6 +111,15 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
             "view_attack": VIEW_ATTACK_FILE if view_attack is not None else None,
             "vlm": VLM_FILE if vlm is not None else None,
             "real_capture": REAL_CAPTURE_FILE if real_capture is not None else None,
+            "real_capture_coco_detection": (
+                REAL_CAPTURE_COCO_DETECTION_FILE if real_capture_coco is not None else None
+            ),
+            "real_capture_mot_detection": (
+                REAL_CAPTURE_MOT_DETECTION_FILE if real_capture_mot_det is not None else None
+            ),
+            "real_capture_mot_tracking": (
+                REAL_CAPTURE_MOT_TRACKING_FILE if real_capture_mot_trk is not None else None
+            ),
             **{
                 name: filename if supplemental[name] is not None else None
                 for name, filename in SUPPLEMENTAL_FILES.items()
@@ -122,6 +137,9 @@ def build_publication_summary(results_dir: str | Path = "experiments/results") -
         "vlm": summarize_vlm(vlm),
         "vlm_model_cross": summarize_vlm_model_ablation(supplemental.get("vlm_model_ablation")),
         "real_capture": summarize_real_capture(real_capture),
+        "real_capture_coco_detection": summarize_real_capture_coco_detection(real_capture_coco),
+        "real_capture_mot_detection": summarize_real_capture_mot_detection(real_capture_mot_det),
+        "real_capture_mot_tracking": summarize_real_capture_mot_tracking(real_capture_mot_trk),
         "supplemental_ablations": {
             name: summarize_supplemental_ablation(payload, SUPPLEMENTAL_FILES[name])
             for name, payload in supplemental.items()
@@ -399,6 +417,126 @@ def summarize_mot_tracking(report: dict | None) -> dict:
     }
 
 
+def summarize_real_capture_coco_detection(report: dict | None) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": REAL_CAPTURE_COCO_DETECTION_FILE,
+        }
+    rows, reason = _validate_real_capture_rows(
+        report,
+        ["map", "map50", "map75", "ap_small", "ap_medium", "ap_large", "ar", "n_images"],
+        count_field="n_images",
+    )
+    if reason:
+        return _real_capture_unavailable(
+            REAL_CAPTURE_COCO_DETECTION_FILE, report, rows, reason
+        )
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "capture": report.get("capture", {}),
+        "rows": rows,
+    }
+
+
+def summarize_real_capture_mot_detection(report: dict | None) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": REAL_CAPTURE_MOT_DETECTION_FILE,
+        }
+    rows, reason = _validate_real_capture_rows(
+        report,
+        ["map", "map50", "recall", "precision", "n_frames"],
+        count_field="n_frames",
+    )
+    if reason:
+        return _real_capture_unavailable(
+            REAL_CAPTURE_MOT_DETECTION_FILE, report, rows, reason
+        )
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "capture": report.get("capture", {}),
+        "rows": rows,
+    }
+
+
+def summarize_real_capture_mot_tracking(report: dict | None) -> dict:
+    if report is None:
+        return {
+            "available": False,
+            "reason": "missing_result_file",
+            "expected_file": REAL_CAPTURE_MOT_TRACKING_FILE,
+        }
+    rows, reason = _validate_real_capture_rows(
+        report,
+        ["mota", "motp", "idf1", "hota", "deta", "assa", "n_frames"],
+        count_field="n_frames",
+    )
+    if reason:
+        return _real_capture_unavailable(
+            REAL_CAPTURE_MOT_TRACKING_FILE, report, rows, reason
+        )
+    return {
+        "available": True,
+        "config": report.get("config", {}),
+        "capture": report.get("capture", {}),
+        "rows": rows,
+    }
+
+
+def _real_capture_unavailable(
+    expected_file: str,
+    report: dict,
+    rows: list[dict],
+    reason: str,
+) -> dict:
+    return {
+        "available": False,
+        "reason": reason,
+        "expected_file": expected_file,
+        "config": report.get("config", {}),
+        "capture": report.get("capture", {}),
+        "rows": rows,
+    }
+
+
+def _validate_real_capture_rows(
+    report: dict,
+    fields: list[str],
+    *,
+    count_field: str,
+) -> tuple[list[dict], str | None]:
+    rows = _model_attack_rows(report, fields)
+    if not rows:
+        return rows, "no_citable_rows"
+
+    coverage = report.get("capture", {}).get("coverage", {})
+    if coverage:
+        if coverage.get("complete") is False:
+            return rows, "incomplete_capture_coverage"
+
+    by_model: dict[str, list[dict]] = {}
+    for row in rows:
+        by_model.setdefault(str(row.get("model")), []).append(row)
+    for model_rows in by_model.values():
+        attacks = {str(row.get("attack")) for row in model_rows}
+        if "real_clean" not in attacks:
+            return rows, "missing_real_clean_baseline"
+        counts = [int(row.get(count_field) or 0) for row in model_rows]
+        if any(count <= 0 for count in counts):
+            return rows, "no_citable_samples"
+        if len(set(counts)) > 1:
+            return rows, "mismatched_sample_counts"
+    if coverage and int(coverage.get("n_shared") or 0) <= 0:
+        return rows, "no_shared_samples"
+    return rows, None
+
+
 def summarize_view_attack(report: dict | None) -> dict:
     if report is None:
         return {"available": False, "reason": "missing_result_file"}
@@ -586,6 +724,7 @@ def render_markdown(summary: dict) -> str:
     _render_coco_detection(lines, summary.get("coco_detection", {}))
     _render_mot_video_detection(lines, summary.get("mot_video_detection", {}))
     _render_mot_tracking(lines, summary.get("mot_tracking", {}))
+    _render_real_capture_detection(lines, summary)
 
     view = summary["view_attack"]
     lines.extend(["", "## View Attack", ""])
@@ -739,6 +878,58 @@ def _render_mot_tracking(lines: list[str], section: dict) -> None:
             f"{_pct(row.get('motp'))} | {_pct(row.get('idf1'))} | "
             f"{hota_text} | {int(row.get('n_frames') or 0)} |"
         )
+
+
+def _render_real_capture_detection(lines: list[str], summary: dict) -> None:
+    """Real USB-webcam capture of COCO/MOT content (validates the sim trend on hardware)."""
+    coco = summary.get("real_capture_coco_detection", {})
+    mot_det = summary.get("real_capture_mot_detection", {})
+    mot_trk = summary.get("real_capture_mot_tracking", {})
+    if not any(s.get("available") for s in (coco, mot_det, mot_trk)):
+        return
+    lines.extend([
+        "", "## Real-Device Capture (COCO/MOT)", "",
+        "Privacy content shown on a 240Hz screen and photographed with a USB webcam; "
+        "`real_clean` is the captured unprotected baseline, so the gap to `real_short` "
+        "(single-frame) / `real_video` (temporal mean) isolates the privacy effect.",
+        "MOT17 rows are stop-motion physical-frame validation: each dataset frame is "
+        "displayed as a static stimulus before capture, so they should not be described "
+        "as continuous video playback results.",
+    ])
+    if coco.get("available"):
+        lines.extend(["", "### COCO Real Capture", "",
+                      "| Model | Attack | mAP | mAP50 | mAP75 | AP_S | AP_M | AP_L | AR | Images |",
+                      "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"])
+        for row in coco.get("rows", []):
+            lines.append(
+                f"| {row['model']} | {row['attack']} | {_pct(row.get('map'))} | "
+                f"{_pct(row.get('map50'))} | {_pct(row.get('map75'))} | "
+                f"{_pct(row.get('ap_small'))} | {_pct(row.get('ap_medium'))} | "
+                f"{_pct(row.get('ap_large'))} | {_pct(row.get('ar'))} | "
+                f"{int(row.get('n_images') or 0)} |"
+            )
+    if mot_det.get("available"):
+        lines.extend(["", "### MOT17 Real Capture — Detection", "",
+                      "| Model | Attack | mAP | mAP50 | Recall | Precision | Frames |",
+                      "|---|---|---:|---:|---:|---:|---:|"])
+        for row in mot_det.get("rows", []):
+            lines.append(
+                f"| {row['model']} | {row['attack']} | {_pct(row.get('map'))} | "
+                f"{_pct(row.get('map50'))} | {_pct(row.get('recall'))} | "
+                f"{_pct(row.get('precision'))} | {int(row.get('n_frames') or 0)} |"
+            )
+    if mot_trk.get("available"):
+        lines.extend(["", "### MOT17 Real Capture — Tracking", "",
+                      "| Model | Attack | MOTA | MOTP | IDF1 | HOTA | Frames |",
+                      "|---|---|---:|---:|---:|---:|---:|"])
+        for row in mot_trk.get("rows", []):
+            hota = row.get("hota")
+            hota_text = "n/a" if hota is None else _pct(hota)
+            lines.append(
+                f"| {row['model']} | {row['attack']} | {_pct(row.get('mota'))} | "
+                f"{_pct(row.get('motp'))} | {_pct(row.get('idf1'))} | "
+                f"{hota_text} | {int(row.get('n_frames') or 0)} |"
+            )
 
 
 def _render_vlm_model_cross(lines: list[str], cross: dict) -> None:
