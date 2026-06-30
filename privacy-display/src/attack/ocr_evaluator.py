@@ -2,7 +2,7 @@
 OCR 准确率评估器
 
 测量原始帧与子帧的 OCR 识别准确率，量化隐私保护效果。
-支持 Tesseract、EasyOCR、PaddleOCR 三种主流 OCR 引擎。
+支持 Tesseract、EasyOCR、Surya 等 OCR 引擎。
 """
 
 import os
@@ -12,6 +12,16 @@ import shutil
 import numpy as np
 import re
 from dataclasses import dataclass
+
+
+def _configure_surya_runtime() -> None:
+    """Use a project-local model cache and stable Windows download concurrency."""
+    project_root = Path(__file__).resolve().parents[2]
+    cache_dir = project_root / ".cache" / "surya"
+    os.environ.setdefault("MODEL_CACHE_DIR", str(cache_dir))
+    if os.name == "nt":
+        os.environ.setdefault("PARALLEL_DOWNLOAD_WORKERS", "1")
+    Path(os.environ["MODEL_CACHE_DIR"]).mkdir(parents=True, exist_ok=True)
 
 
 @dataclass
@@ -105,21 +115,21 @@ def text_recovery_metrics(pred: str, ref: str) -> dict:
 
 
 class OCREvaluator:
-    SUPPORTED_ENGINES = ("tesseract", "easyocr", "paddleocr", "trocr", "doctr")
+    SUPPORTED_ENGINES = ("tesseract", "easyocr", "surya", "trocr", "doctr")
     TROCR_MODEL_ID = "microsoft/trocr-base-printed"
     TESSERACT_ENV_VARS = ("TESSERACT_CMD", "TESSERACT_EXE")
 
     def __init__(self, engines: list[str] | None = None, timeout: float | None = 10.0):
         """
         Args:
-            engines: 使用的 OCR 引擎列表，可选 'tesseract', 'easyocr', 'paddleocr'
+            engines: 使用的 OCR 引擎列表，可选 'tesseract', 'easyocr', 'surya'
                      None 时自动检测可用引擎
             timeout: 单次 OCR 调用超时时间（秒）；None 表示不设置超时
         """
         self.engines = self._detect_available_engines() if engines is None else engines
         self.timeout = timeout
         self._easyocr_reader = None
-        self._paddleocr_reader = None
+        self._surya_readers = None
         self._trocr = None        # (processor, model) tuple, lazily loaded
         self._doctr_predictor = None
 
@@ -196,8 +206,8 @@ class OCREvaluator:
         except ImportError:
             pass
         try:
-            import paddleocr  # noqa: F401
-            available.append("paddleocr")
+            import surya  # noqa: F401
+            available.append("surya")
         except Exception:
             pass
         # Heavy modern OCR engines often download pretrained weights. Auto-list
@@ -231,73 +241,63 @@ class OCREvaluator:
         results = self._easyocr_reader.readtext(image, detail=0)
         return " ".join(results)
 
-    def _run_paddleocr(self, image: np.ndarray) -> str:
-        from paddleocr import PaddleOCR
+    @staticmethod
+    def _resolve_surya_device() -> str:
+        configured = os.environ.get("SURYA_DEVICE", "auto").strip().casefold()
+        if configured and configured != "auto":
+            return configured
 
-        if self._paddleocr_reader is None:
-            self._paddleocr_reader = PaddleOCR(
-                lang="ch",
-                use_doc_orientation_classify=False,
-                use_doc_unwarping=False,
-                use_textline_orientation=False,
+        import torch
+
+        if torch.cuda.is_available():
+            return "cuda"
+        if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            return "mps"
+        return "cpu"
+
+    def _run_surya(self, image: np.ndarray) -> str:
+        from PIL import Image
+
+        if self._surya_readers is None:
+            _configure_surya_runtime()
+            from surya.detection import DetectionPredictor
+            from surya.recognition import RecognitionPredictor
+
+            device = self._resolve_surya_device()
+            self._surya_readers = (
+                RecognitionPredictor(device=device),
+                DetectionPredictor(device=device),
             )
 
-        if hasattr(self._paddleocr_reader, "predict"):
-            result = self._paddleocr_reader.predict(image)
-        else:
-            result = self._paddleocr_reader.ocr(image)
-        return self._parse_paddleocr_text(result)
+        recognition_predictor, detection_predictor = self._surya_readers
+        pil_image = Image.fromarray(image).convert("RGB")
+        result = recognition_predictor(
+            [pil_image],
+            det_predictor=detection_predictor,
+            sort_lines=True,
+            math_mode=False,
+        )
+        return self._parse_surya_text(result)
 
-    @classmethod
-    def _parse_paddleocr_text(cls, result) -> str:
-        """解析 PaddleOCR 2.x/3.x 常见返回结构中的识别文本。"""
+    @staticmethod
+    def _parse_surya_text(result) -> str:
+        """Extract text lines from Surya 0.14.x OCRResult objects or dictionaries."""
+        pages = result if isinstance(result, (list, tuple)) else [result]
         texts: list[str] = []
-        cls._collect_paddle_text(result, texts)
-        return " ".join(t for t in texts if t)
-
-    @classmethod
-    def _collect_paddle_text(cls, value, texts: list[str]) -> None:
-        if value is None:
-            return
-        if isinstance(value, str):
-            texts.append(value)
-            return
-        if isinstance(value, dict):
-            for key in ("rec_texts", "text", "texts"):
-                if key in value:
-                    cls._collect_paddle_text(value[key], texts)
-                    return
-            if "res" in value:
-                cls._collect_paddle_text(value["res"], texts)
-                return
-            for child in value.values():
-                cls._collect_paddle_text(child, texts)
-            return
-        if hasattr(value, "json"):
-            cls._collect_paddle_text(value.json, texts)
-            return
-        if hasattr(value, "res"):
-            cls._collect_paddle_text(value.res, texts)
-            return
-        if isinstance(value, tuple):
-            if len(value) == 2 and isinstance(value[0], str):
-                texts.append(value[0])
-                return
-            if len(value) == 2 and isinstance(value[1], (int, float)):
-                cls._collect_paddle_text(value[0], texts)
-                return
-        if isinstance(value, list):
-            # PaddleOCR 2.x: [box, ("text", score)]
-            if (
-                len(value) == 2
-                and isinstance(value[1], tuple)
-                and value[1]
-                and isinstance(value[1][0], str)
-            ):
-                texts.append(value[1][0])
-                return
-            for child in value:
-                cls._collect_paddle_text(child, texts)
+        for page in pages:
+            if isinstance(page, dict):
+                lines = page.get("text_lines", [])
+            else:
+                lines = getattr(page, "text_lines", [])
+            for line in lines or []:
+                if isinstance(line, dict):
+                    text = line.get("text", "")
+                else:
+                    text = getattr(line, "text", "")
+                text = str(text).strip()
+                if text:
+                    texts.append(text)
+        return " ".join(texts)
 
     def _run_trocr(self, image: np.ndarray) -> str:
         """Transformer OCR (microsoft/trocr-base-printed). Printed-text English."""
@@ -339,8 +339,8 @@ class OCREvaluator:
             return self._run_tesseract(image)
         elif engine == "easyocr":
             return self._run_easyocr(image)
-        elif engine == "paddleocr":
-            return self._run_paddleocr(image)
+        elif engine == "surya":
+            return self._run_surya(image)
         elif engine == "trocr":
             return self._run_trocr(image)
         elif engine == "doctr":

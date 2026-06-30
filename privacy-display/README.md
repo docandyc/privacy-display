@@ -85,13 +85,15 @@ python main.py playback --demo cet6 --pdf-page 1 --width 900 --height 1280 --n 4
 # 改进项实验（见 改进文档.md）
 python experiments/performance_benchmark.py # A4 性能实测
 python experiments/build_corpus.py          # C2 生成多样本语料
-python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)"  # 120 样本三引擎全量复测
+.\.venv-surya\Scripts\python.exe -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','surya'], merge_existing=True)"  # 120 样本三引擎全量复测
 python experiments/ablation_noise.py        # B1 对抗噪声消融
 python experiments/detection_attack.py      # G2 YOLOv8n 目标检测攻击
 python experiments/view_attack.py           # G3 离轴相机攻击
 python experiments/unet_reconstruction.py   # G5 学习型重构攻击
 python experiments/real_capture_analysis.py --init-template # 生成真实拍摄 metadata 模板
 python experiments/real_capture_analysis.py --engines tesseract # 分析已采集的真实拍摄图片
+.\scripts\download_surya_models.ps1 # 首次下载 Surya 模型，支持失败后断点续传
+.\scripts\rerun_real_capture_surya_only.ps1 -Jobs d0.5_a0 # 保留 Tesseract/EasyOCR，仅用 Surya 替换第三引擎
 python experiments/publication_summary.py   # 汇总主要 JSON 结果到 publication_summary.{json,md}
 python experiments/reproducibility_manifest.py # 记录环境、复现命令和关键文件哈希
 scripts/reproduce_all.sh                    # 默认安全路径：测试 + VLM dry-run + summary + manifest
@@ -150,13 +152,13 @@ FPI 模型与交底书逐项吻合：240Hz/n4→0.030、480Hz/n8→0.035、144Hz
 
 ### 4.2 语料级 OCR 防御效果
 
-`experiments/build_corpus.py` 默认生成 120 张可复现合成语料（12 类 × 10 变体），并写入 `data/test_images/corpus_metadata.json`，支持按类别、语言、版式、字号做分层统计。`run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)` 的全量结果已保存到 `experiments/results/corpus_multi_engine.json`：
+`experiments/build_corpus.py` 默认生成 120 张可复现合成语料（12 类 × 10 变体），并写入 `data/test_images/corpus_metadata.json`，支持按类别、语言、版式、字号做分层统计。第三个 OCR 引擎现已从 PaddleOCR 迁移到 Surya；旧 PaddleOCR 行不再作为当前结果引用，Surya 数值应在重跑后由 `experiments/results/corpus_multi_engine.json` 自动更新：
 
 | OCR 引擎 | 样本数 | 原始帧准确率 | 单子帧准确率 | 配对降幅 |
 |------|------:|------:|------:|------:|
 | Tesseract | 120 | **94.0% ± 9.1%** (95%CI 92.3%–95.5%) | **0.0% ± 0.2%** (95%CI 0.0%–0.1%) | **93.9%** (95%CI 92.3%–95.5%) |
 | EasyOCR | 120 | **94.1% ± 8.1%** (95%CI 92.7%–95.5%) | **0.0% ± 0.0%** (95%CI 0.0%–0.0%) | **94.1%** (95%CI 92.7%–95.5%) |
-| PaddleOCR | 120 | **94.9% ± 7.3%** (95%CI 93.7%–96.2%) | **0.0% ± 0.0%** (95%CI 0.0%–0.0%) | **94.9%** (95%CI 93.7%–96.2%) |
+| Surya | 待重跑 | — | — | — |
 
 补充恢复指标（单子帧）同样为 0：三引擎的词级准确率、exact-match 和敏感 token 恢复率均为 **0.0%**；敏感 token 统计覆盖 104/120 个样本。
 

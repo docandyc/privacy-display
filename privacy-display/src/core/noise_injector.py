@@ -30,7 +30,7 @@ class TargetModelSpec:
 DEFAULT_TARGET_MODELS: tuple[TargetModelSpec, ...] = (
     TargetModelSpec("tesseract", "ocr", "fgsm", "x", 9.0, (1.0, 1.0, 1.0)),
     TargetModelSpec("easyocr", "ocr", "pgd", "y", 13.0, (0.9, 1.1, 1.0)),
-    TargetModelSpec("paddleocr", "ocr", "pgd", "laplace", 17.0, (1.1, 0.9, 1.0)),
+    TargetModelSpec("surya", "ocr", "pgd", "laplace", 17.0, (1.1, 0.9, 1.0)),
     TargetModelSpec("yolov8", "detector", "pgd", "magnitude", 7.0, (1.0, 0.85, 1.15)),
     TargetModelSpec("yolo26", "detector", "pgd", "magnitude", 7.0, (1.0, 0.85, 1.15)),
     TargetModelSpec("rtdetr", "detector", "pgd", "magnitude", 6.5, (1.0, 0.9, 1.1)),
@@ -106,7 +106,7 @@ class NoiseInjector:
         """
         生成 FGSM 对抗噪声。
 
-        Tesseract/EasyOCR/PaddleOCR 等 OCR 引擎本身通常不可微；本实现
+        Tesseract/EasyOCR/Surya 等 OCR 引擎本身通常不可微；本实现
         使用本地可微影子模型计算真实输入梯度，并保留模板库优先路径。
         若 PyTorch 不可用，才回退到传统图像代理梯度。
 
@@ -245,7 +245,7 @@ class NoiseInjector:
         return noise, metadata
 
     def select_target_model(self, cycle: int | None = None) -> str:
-        """选择当前周期的目标模型，覆盖 Tesseract/EasyOCR/PaddleOCR/检测模型轮换。"""
+        """选择当前周期的目标模型，覆盖 Tesseract/EasyOCR/Surya/检测模型轮换。"""
         if cycle is None:
             idx = self._rotation_counter
             self._rotation_counter += 1
@@ -303,7 +303,7 @@ class NoiseInjector:
             from src.attack.ocr_evaluator import OCREvaluator
             ocr_evaluator = OCREvaluator()
 
-        ocr_engines = {"tesseract", "easyocr", "paddleocr"}
+        ocr_engines = {"tesseract", "easyocr", "surya"}
         selected_engine = engine or (
             model_name if model_name in ocr_engines else "tesseract"
         )

@@ -1,30 +1,30 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-06-17T08:14:48.857448+00:00",
-  "project_root": "/hzy/privacy-display/privacy-display",
+  "generated_at_utc": "2026-06-30T05:51:14.843306+00:00",
+  "project_root": "D:\\hzyThesisProject\\privacy-display\\privacy-display",
   "git": {
-    "commit": "b84958e7adc905bb99ff11e5ff7efef232f8760f",
+    "commit": "807e8c36146d43c312c76e86251e0ced20b8bd7d",
     "branch": "master",
     "dirty": true
   },
   "environment": {
-    "python": "3.10.19",
-    "platform": "Linux-5.15.0-60-generic-x86_64-with-glibc2.35",
-    "machine": "x86_64",
+    "python": "3.10.20",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "machine": "AMD64",
     "packages": {
       "numpy": "2.2.6",
       "scipy": "1.15.3",
-      "Pillow": "12.0.0",
-      "opencv-python": "4.11.0.86",
-      "pytest": "8.3.5",
+      "Pillow": "12.2.0",
+      "opencv-python": "4.13.0.92",
+      "pytest": "9.1.1",
       "pytesseract": "0.3.13",
       "easyocr": "1.7.2",
-      "paddleocr": "3.7.0",
-      "ultralytics": "8.4.67",
-      "pycryptodome": "3.22.0",
+      "surya-ocr": null,
+      "ultralytics": "8.4.82",
+      "pycryptodome": "3.23.0",
       "moderngl": "5.12.0",
       "transformers": null,
-      "torch": "2.9.0",
+      "torch": "2.12.1+cpu",
       "python-doctr": null,
       "pycocotools": "2.0.11",
       "motmetrics": "1.4.0",
@@ -58,10 +58,11 @@
     {
       "name": "reproduce_with_real_capture",
       "command": "scripts/reproduce_all.sh --real-capture",
-      "purpose": "Analyze manually collected real camera captures before refreshing publication artifacts.",
-      "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, publication summary, and manifest are regenerated.",
+      "purpose": "Finalize already collected real camera OCR/MOT artifacts before refreshing publication artifacts.",
+      "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, real_capture_mot_detection.json, real_capture_mot_tracking.json, publication summary, and manifest are regenerated.",
       "requires_data": [
-        "experiments/real_captures/metadata.json",
+        "experiments/results_d*_final/real_capture_ocr.json",
+        "experiments/results_d1.5_a0_detection/results",
         "referenced capture image files"
       ]
     },
@@ -79,8 +80,8 @@
     },
     {
       "name": "multi_engine_ocr",
-      "command": "python -c \"from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)\"",
-      "purpose": "Run or merge Tesseract/EasyOCR/PaddleOCR corpus OCR results.",
+      "command": ".venv-surya/bin/python -c \"from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','surya'], merge_existing=True)\"",
+      "purpose": "Run or merge Tesseract/EasyOCR/Surya corpus OCR results.",
       "expected": "experiments/results/corpus_multi_engine.json"
     },
     {
@@ -128,6 +129,32 @@
         "data/coco/val2017",
         "data/coco/annotations/instances_val2017.json",
         "data/MOT17/train"
+      ]
+    },
+    {
+      "name": "real_capture_calibrate",
+      "command": "scripts\\run_real_capture_detection_windows.bat calibrate-roi --pos d0.5_a0 && scripts\\run_real_capture_detection_windows.bat calibrate-exposure --image data\\coco\\val2017\\000000000139.jpg",
+      "purpose": "Windows 240Hz only: calibrate ROI homography (rectify to display canvas) and short/long exposure before real detection/tracking capture.",
+      "expected": "experiments/real_captures/calibration/roi_d0.5_a0.json and exposure.json"
+    },
+    {
+      "name": "real_capture_coco_detection",
+      "command": "python experiments/real_capture_detection.py --coco-root data/coco --max-images 150 --device cuda:0",
+      "purpose": "Windows 240Hz only: photograph privacy-displayed COCO images with a USB webcam and score 4 detectors against COCO GT (real_clean/real_short/real_video).",
+      "expected": "experiments/results/real_capture_coco_detection.json",
+      "requires_data": [
+        "data/coco/val2017",
+        "experiments/real_captures/calibration/roi_d0.5_a0.json"
+      ]
+    },
+    {
+      "name": "real_capture_mot",
+      "command": "python experiments/real_capture_mot.py --mot-root data/MOT17 --sequence MOT17-09-FRCNN --max-frames 450 --device cuda:0",
+      "purpose": "Windows 240Hz only: stop-motion real capture of a MOT17 clip; per-frame detection + ByteTrack tracking against MOT GT.",
+      "expected": "experiments/results/real_capture_mot_detection.json and real_capture_mot_tracking.json",
+      "requires_data": [
+        "data/MOT17/train",
+        "experiments/real_captures/calibration/roi_d0.5_a0.json"
       ]
     },
     {
@@ -263,12 +290,33 @@
     },
     {
       "name": "real_capture_ocr",
-      "command": "python experiments/real_capture_analysis.py --engines tesseract",
-      "purpose": "Analyze manually collected real camera photos or video frames.",
-      "expected": "experiments/results/real_capture_ocr.json and real_capture_ocr.md",
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/run_real_capture_ocr_all.ps1",
+      "purpose": "Analyze the 3x3 real camera OCR position matrix with Tesseract.",
+      "expected": "experiments/results_<position>_final/real_capture_ocr.json and .md for all 9 positions",
       "requires_data": [
-        "experiments/real_captures/metadata.json",
+        "experiments/real_captures_<position>_final/metadata.json",
         "referenced capture image files"
+      ]
+    },
+    {
+      "name": "real_capture_surya",
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/rerun_real_capture_surya_only.ps1",
+      "purpose": "Replace legacy third-engine rows with Surya while preserving Tesseract/EasyOCR.",
+      "expected": "Nine per-position reports and the combined report use tesseract/easyocr/surya.",
+      "requires_data": [
+        "experiments/results_<position>_final/real_capture_ocr.json",
+        "referenced capture image files"
+      ]
+    },
+    {
+      "name": "real_capture_finalize",
+      "command": "python experiments/finalize_real_capture_artifacts.py",
+      "purpose": "Merge the 3x3 OCR position reports and canonicalize real MOT capture artifacts under experiments/results.",
+      "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, real_capture_mot_detection.json, real_capture_mot_tracking.json, and real_capture_mot_capture_manifest.json",
+      "requires_data": [
+        "experiments/results_d*_final/real_capture_ocr.json",
+        "experiments/results_d1.5_a0_detection/results",
+        "experiments/results_d1.5_a0_detection/captures/mot_MOT17-09-FRCNN"
       ]
     },
     {
@@ -304,86 +352,278 @@
     {
       "path": "experiments/results/corpus_multi_engine.json",
       "exists": true,
-      "sha256": "bebef9a89fbc6298ccc2d18fd862a9f88d05087b334c0b32574e210e34cc9db5",
-      "bytes": 411145
+      "sha256": "cb273a3bbb2ad8c52afeff948e9f6bf926bfbce98efc1edf6b22bc4a8169f344",
+      "bytes": 424385
     },
     {
       "path": "experiments/results/corpus_strong_camera_attack.json",
       "exists": true,
-      "sha256": "48fb4572e4569beb5942c4899ae154dad0fdf0afb7fb3e2cec3d2c55916d87dd",
-      "bytes": 813048
+      "sha256": "390ac102850816a6d13d8392c4e932675523226290a8e688b933a8c7c3c3b328",
+      "bytes": 840336
     },
     {
       "path": "experiments/results/detection_attack_yolo.json",
       "exists": true,
-      "sha256": "4ffb9a97c2f4a4ec444deb05e5b2fa1a3f9bc5409ef695b1a5924c003646fba7",
-      "bytes": 739
+      "sha256": "22657c4290680029559d7e3de6cd2c5a7bdea9fb1065d58e61cb07721b2b3170",
+      "bytes": 776
     },
     {
       "path": "experiments/results/coco_detection_attack.json",
       "exists": true,
-      "sha256": "3ed7d84b2a2f0113fe93558659d9edf0476c6a5cfaa025222183724f2987a7b9",
-      "bytes": 5767
+      "sha256": "18344b55aa3cc9f0e11e72f37f2f30b6327615760f74035a2c6c23038f214e45",
+      "bytes": 5743
     },
     {
       "path": "experiments/results/mot_video_detection.json",
       "exists": true,
-      "sha256": "c54932af759f487bee072d96a26d6754d781f1fad2a9f249de910ff0efb3c530",
-      "bytes": 4684
+      "sha256": "73b8e8ee5972626b807659c227133ab3a8123f3b40d0046e5844271bee499668",
+      "bytes": 4877
     },
     {
       "path": "experiments/results/mot_tracking_attack.json",
       "exists": true,
-      "sha256": "0588b8586471afa968bbd71230f3a42f6a8e48ab62d2578956500f514926be59",
-      "bytes": 5822
+      "sha256": "c7d229e89d0d30b13da9dd65321be925ebff44bf40971b3e2414ee15b0b0a44e",
+      "bytes": 6050
     },
     {
       "path": "experiments/results/view_attack.json",
       "exists": true,
-      "sha256": "cec5e21e132bf5849a4fcb13dc9e90070bd22c9b8ab48ec9eb3c231d0ddc7d78",
-      "bytes": 1014
+      "sha256": "56ea9a457c8b25a4e054b4758f78cb5a47e24e7acbeeaaaa8b913c3e367f51bd",
+      "bytes": 1044
     },
     {
       "path": "experiments/results/unet_reconstruction.json",
       "exists": true,
-      "sha256": "7592c7fbadedfcc750ea6b5f6e5321943c7b0bf267e513d373ee58403e0f7051",
-      "bytes": 1220
+      "sha256": "c444961a1fce1465b7528700f787d61081209b90474c386999654e51604e3828",
+      "bytes": 1255
     },
     {
       "path": "experiments/results/real_capture_ocr.json",
-      "exists": false,
-      "sha256": "",
-      "bytes": 0
+      "exists": true,
+      "sha256": "9ec42c56edf59215ef0ec9b41a73b9d0c77b4ccc56d7a73ea943e4c31522a922",
+      "bytes": 50351171
     },
     {
       "path": "experiments/results/real_capture_ocr.md",
-      "exists": false,
-      "sha256": "",
-      "bytes": 0
+      "exists": true,
+      "sha256": "03b93a93034449bdb49ac01e381a0dcdf2b06d0804ebe0535b7fefde68618842",
+      "bytes": 20986
+    },
+    {
+      "path": "experiments/results_d0.5_a0_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "af06f3e6366f8eed72122c2106bdcfc1025e5139b334051af4e0534ff0aec521",
+      "bytes": 5599578
+    },
+    {
+      "path": "experiments/results_d0.5_a15_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "ecc70496189f1fef287260ec74808513d2485dcc0988d0fcc3c503b77b85ea69",
+      "bytes": 5738702
+    },
+    {
+      "path": "experiments/results_d0.5_a30_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "0d743b73f9b4e00808b6c32d24ad255fbc395e18471dc7b9829624987c654a48",
+      "bytes": 6018102
+    },
+    {
+      "path": "experiments/results_d1_a0_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "70bf67ec1fa991a02fe89a872bd749c5a0fe626f5d47a37325e71389112c3c36",
+      "bytes": 5944435
+    },
+    {
+      "path": "experiments/results_d1_a15_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "e54f224123b267465ec7ce11b9681d38dd27bd03a61fe75e002de548997ce795",
+      "bytes": 5926056
+    },
+    {
+      "path": "experiments/results_d1_a30_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "a12913b3f5e60b09dcc693534b3f910262908e20573340854c2b0208cb751144",
+      "bytes": 5947209
+    },
+    {
+      "path": "experiments/results_d1.5_a0_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "2d52b958a4fe51937d18a0d6cfb40fee9471f5df9dda837f4eb819e75dc0a775",
+      "bytes": 5888626
+    },
+    {
+      "path": "experiments/results_d1.5_a15_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "93f08efaee6a469f21ef6f28a1583cd741700e2323dcc3cca72a6affd9ffea2b",
+      "bytes": 5896917
+    },
+    {
+      "path": "experiments/results_d1.5_a30_final/real_capture_ocr.json",
+      "exists": true,
+      "sha256": "714f021a21e715b841ceffb26e39842baa91875cef20b65b3c7fdd461412cf05",
+      "bytes": 5820331
+    },
+    {
+      "path": "experiments/results_d0.5_a0_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "4307dcb56b2e19dd246e574fcf786ea9ee2c6b3868686bc704f6ecc75833c826",
+      "bytes": 19759
+    },
+    {
+      "path": "experiments/results_d0.5_a15_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "38710cd4da1792fab887570f36c53841c54bb583a675b74b4d393297a92f6e34",
+      "bytes": 19720
+    },
+    {
+      "path": "experiments/results_d0.5_a30_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "f73b9d4089e85e25172f2ff4a4be49c6d55d1b4e659821f0a633c24dd62bfc99",
+      "bytes": 20203
+    },
+    {
+      "path": "experiments/results_d1_a0_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "2ee87e2237688b624de87a3484bc82458fc8dd634b911de1ff2f2b83cb7b4b5f",
+      "bytes": 20236
+    },
+    {
+      "path": "experiments/results_d1_a15_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "381288bb6eb786fe6c6ae487fa069b525fc05399e54cd520ec7dfcf6e7e737c3",
+      "bytes": 20305
+    },
+    {
+      "path": "experiments/results_d1_a30_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "acf48bb0de7344da8c47d38eb02523659a552f285a6daa8e974bf0181de56b39",
+      "bytes": 20329
+    },
+    {
+      "path": "experiments/results_d1.5_a0_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "7810ce12c3012f035e9c09e8df86443c2adba63ab8c4e89165838d13731c04e5",
+      "bytes": 20350
+    },
+    {
+      "path": "experiments/results_d1.5_a15_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "2749f7247b1422c03370eabd0a9b4128875f3b8bdc775bb9ac771879872807fa",
+      "bytes": 20382
+    },
+    {
+      "path": "experiments/results_d1.5_a30_final/real_capture_ocr.md",
+      "exists": true,
+      "sha256": "ef50f4aa4c5957cecca38000f83c601c8cae4f49014221ef28569e4d6b1eded1",
+      "bytes": 20401
+    },
+    {
+      "path": "experiments/real_captures_d0.5_a0_final/metadata.json",
+      "exists": true,
+      "sha256": "563b93884bc11c5fa96a1254e7bd29dc9d43ad5fdbb1ff7f6084af7dcb9ea2c1",
+      "bytes": 2029039
+    },
+    {
+      "path": "experiments/real_captures_d0.5_a15_final/metadata.json",
+      "exists": true,
+      "sha256": "caa6875dbfe6c7179a2de98acd803e5379b5ae9aedd13650335ab4d7e619fae5",
+      "bytes": 2032564
+    },
+    {
+      "path": "experiments/real_captures_d0.5_a30_final/metadata.json",
+      "exists": true,
+      "sha256": "ef175046b8108853cc07bd58a3443a91965b3ac5104a5db9e8e556ea3f85f3bb",
+      "bytes": 2031669
+    },
+    {
+      "path": "experiments/real_captures_d1_a0_final/metadata.json",
+      "exists": true,
+      "sha256": "208bac1a5b716bfe434d0da2550a66a887bf42b463f784bd4f9362d21bb162e8",
+      "bytes": 2019919
+    },
+    {
+      "path": "experiments/real_captures_d1_a15_final/metadata.json",
+      "exists": true,
+      "sha256": "d43d6903c404751a492194907bb982ae251162f565a8c130a348dafbf726721e",
+      "bytes": 2024619
+    },
+    {
+      "path": "experiments/real_captures_d1_a30_final/metadata.json",
+      "exists": true,
+      "sha256": "bafc7e4b092f29d0d125fb40184d7f4696a2d7f8189e4b937d2d8fae16c2cd92",
+      "bytes": 2024619
+    },
+    {
+      "path": "experiments/real_captures_d1.5_a0_final/metadata.json",
+      "exists": true,
+      "sha256": "437d7bd7221ef0448432225bbed47ba27e1f87e91c1ac4377e7851e6e14044b2",
+      "bytes": 2026969
+    },
+    {
+      "path": "experiments/real_captures_d1.5_a15_final/metadata.json",
+      "exists": true,
+      "sha256": "70ee4d19cab68bc28b720c2f1e3a8177546f3dcc3bde2cb626a57f75d0dff7fc",
+      "bytes": 2031669
+    },
+    {
+      "path": "experiments/real_captures_d1.5_a30_final/metadata.json",
+      "exists": true,
+      "sha256": "aead23d9fdff530b53f10c68e2085a6f935ed3543dd99a4b49d9486dc9008520",
+      "bytes": 2031669
+    },
+    {
+      "path": "experiments/results/real_capture_coco_detection.json",
+      "exists": true,
+      "sha256": "af78f29cb31a5d7852080fb6bbdb6b525b8f888a45e897de1db18e1ca08c9ec1",
+      "bytes": 1768155
+    },
+    {
+      "path": "experiments/results/real_capture_mot_detection.json",
+      "exists": true,
+      "sha256": "d0ac5e3993c4d77731625bf912692703997e4e3cf8f19bab97f6774ac323e5a5",
+      "bytes": 5239713
+    },
+    {
+      "path": "experiments/results/real_capture_mot_tracking.json",
+      "exists": true,
+      "sha256": "3e03fdb44aa8cc29c9f7d431e93c98574d8e41f17e86eaf828a619a0c323d9fa",
+      "bytes": 5241860
+    },
+    {
+      "path": "experiments/results/real_capture_mot_capture_manifest.json",
+      "exists": true,
+      "sha256": "bf7790659c9328c54f4a83b82d9735fcd36818cea3e6795c200e738a66f6c9dc",
+      "bytes": 4444123
+    },
+    {
+      "path": "experiments/real_captures/coco_detection/capture_manifest.json",
+      "exists": true,
+      "sha256": "17658631c6749ae6880b83d44bd5a133011380a31a941a828468c53493cf4509",
+      "bytes": 1493766
     },
     {
       "path": "experiments/results/component_ablation.json",
       "exists": true,
-      "sha256": "cdeaf4eeda39e2d6b5bf71884e10d9fc4c48bb5a0256aa44be2ae1e33090068a",
-      "bytes": 4637
+      "sha256": "69010c945e6d62739e4a4de34623cb24b565b5f0c3d7a8e03df9217c3fb604f3",
+      "bytes": 4810
     },
     {
       "path": "experiments/results/recognizer_generalization.json",
       "exists": true,
-      "sha256": "302eeeb0d5867ac420078901512f051df3c1a7a6915efc861c191f0a565acc73",
-      "bytes": 388068
+      "sha256": "73652664d345c20e52790b6426debad151462427c61befe48fabacdb2f29559e",
+      "bytes": 401573
     },
     {
       "path": "experiments/results/perceptual_ablation.json",
       "exists": true,
-      "sha256": "dc3ee6f90be717124439ccee32e3606a2cb3adbae84e83650cd1dbd27266b6ef",
-      "bytes": 9079
+      "sha256": "007f28550f96f546becb6c8d0df835134d4b9fb3e28365bcdd585b0c4003b3b6",
+      "bytes": 9419
     },
     {
       "path": "experiments/results/pareto_sweep.json",
       "exists": true,
-      "sha256": "a11467f921e28f0aafeab9c70d927066fab55c89bdec14708c3d739dc7b04e10",
-      "bytes": 13060
+      "sha256": "d1fc1b09e7dc89d4f94566df1fbd9481651c297d3935796b1039aa22699374b8",
+      "bytes": 13543
     },
     {
       "path": "experiments/results/pareto_sweep.png",
@@ -394,62 +634,62 @@
     {
       "path": "experiments/results/strong_attack_extra.json",
       "exists": true,
-      "sha256": "34b47a095e9b7b986aa1b33e95a874b8ae503dcdb2b82d93a92a23d48508e917",
-      "bytes": 39926
+      "sha256": "2593abc0b8a2c6723fee834a9ec320c9e3f92f336e71afd7a1f122510ce08482",
+      "bytes": 41333
     },
     {
       "path": "experiments/results/adaptive_attack_ablation.json",
       "exists": true,
-      "sha256": "a87833f0ffc2dcabdf1482b52ebfeb1d2ed90b7bf2f7177f1d354cf3599f484c",
-      "bytes": 484413
+      "sha256": "899aac7910eee3c5f219333de3e3b8d42c9544b6621f2fbc53bd249b4cdf68ca",
+      "bytes": 502555
     },
     {
       "path": "experiments/results/camera_pipeline_ablation.json",
       "exists": true,
-      "sha256": "4e6ca028940f0f0fb15c6f1604d29e2e934385a2800cbd7e19262eeceaf6044a",
-      "bytes": 560783
+      "sha256": "b8cc65fb234fb39a6ba7486ea95109b3bc49bcddef2ee3efd352314f2f956e31",
+      "bytes": 581516
     },
     {
       "path": "experiments/results/screen_privacy_baselines.json",
       "exists": true,
-      "sha256": "4fe9cb1d91d6d393c4120eca0699c57f1c3d1caf5c5317535c32539fe9ea8119",
-      "bytes": 56280
+      "sha256": "42e0fd888e49ea3231c0c6e40048e140218525fe435bc31ff4271e4d8484da9e",
+      "bytes": 58319
     },
     {
       "path": "experiments/results/vlm_prompt_ablation.json",
       "exists": true,
-      "sha256": "286fce076d680620aad8632bde7e79a44f2093080367e8d16e1b98c69f120284",
-      "bytes": 113751
+      "sha256": "9342793d4aa784d94b6dd9a1097a7d1a455036d139b2ee708adbcdfa3d13ca4c",
+      "bytes": 117013
     },
     {
       "path": "experiments/results/noise_epsilon_sweep.json",
       "exists": true,
-      "sha256": "97e309d0e80f57271988ff4b998f8d0123095d52e813050ad9f5976b89f41fc3",
-      "bytes": 21841
+      "sha256": "1082fe3b7c84d570b8b309f3a15bb3f664e0b43e0f896b8f5c37217f8bdc9dc0",
+      "bytes": 22624
     },
     {
       "path": "experiments/results/vlm_model_ablation.json",
       "exists": true,
-      "sha256": "29b522567fbbf543173069020afba65d90fd720736b36cfc965f8a75efcb1d0b",
-      "bytes": 51833
+      "sha256": "dba0ca71fa0211078f0d91e383c73534f868eafdc9e2629e7705bea94309e415",
+      "bytes": 53498
     },
     {
       "path": "experiments/results/brightness_compensation_ablation.json",
       "exists": true,
-      "sha256": "7156db9a001a8581eb64913ab6337a55a937949758d1d37d6559a91616b09534",
-      "bytes": 6356
+      "sha256": "91b4dab4608faf562334db072e4e145d7248a91c14a5276fca6f2ec242e8e12a",
+      "bytes": 6584
     },
     {
       "path": "experiments/results/mask_granularity_ablation.json",
       "exists": true,
-      "sha256": "9678417f880f784ccbdf66c89456f7c6a052625422c89db2a274ebf435891a9f",
-      "bytes": 7503
+      "sha256": "d3e9f0e478fe9a113f33b87d585acca345dd6f827f7fea222f3b6cbc84268356",
+      "bytes": 7797
     },
     {
       "path": "experiments/results/seed_sensitivity.json",
       "exists": true,
-      "sha256": "389c291091dc810fb6727a123881f1d7555a365ca5297e7fe5b093672afae7aa",
-      "bytes": 2360
+      "sha256": "7b8b67b7aaf532af317966f5903a9befa63232871ac8671ef06e6781b15a96fd",
+      "bytes": 2439
     },
     {
       "path": "experiments/results/usability_pilot.json",
@@ -466,328 +706,394 @@
     {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "f060a2391c42576b0541afb58a55aa60677cea7a16eeff44d0dc80e5cc61966f",
-      "bytes": 101754
+      "sha256": "fe30e6656b5cb418595cf41f6118716f7beb5f3870adf28ab84360f4a2c46ed1",
+      "bytes": 13276283
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "c923cba8817f1ad637a81e7257d71a36eae47a81b585152da422c5557186d83c",
-      "bytes": 20747
+      "sha256": "7b15f650b00235b222bb0306dfdae0a1fa3da53b32bf2203d9ff8cc8db787e44",
+      "bytes": 31899
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
       "exists": true,
-      "sha256": "9560451d8579a647e8fbe6224bce9d64af0f7629940d619dee8ccb69f95ece68",
-      "bytes": 110103
+      "sha256": "ab1e756fe6f92ee0ec7bdce6df03b865b604bbf1dff4a7e9d33653de528fd9cb",
+      "bytes": 113508
     }
   ],
   "source_files": [
     {
       "path": "README.md",
       "exists": true,
-      "sha256": "f08dc2dddca84215d91806e0a2b375538fb26d29a5fdbdf5d00efd3cb758378f",
-      "bytes": 23213
+      "sha256": "62d89e9b3d557df92cc3fbf7ec5eab934791e8ddbc45edfef571815d510bc5b9",
+      "bytes": 23659
     },
     {
       "path": "docs/detection_suite_server.md",
       "exists": true,
-      "sha256": "9932f6a5b02bec23319e3071c74728f8ce8df055af3eba1c39d89185500f2fbe",
-      "bytes": 3742
+      "sha256": "ca7b8d56b0107379dea966fce9f502e7bb1031fb5fe4d44b36710bfa410561e3",
+      "bytes": 3847
     },
     {
       "path": ".env.example",
       "exists": true,
-      "sha256": "e1f4b25d538adb1f2c672f58e21ed493b1da0bbc4cf1b0ff0aaf150d01fc833e",
-      "bytes": 160
+      "sha256": "92f0f5bc38676b255c021e153d823155f5a7d416555a92a71eae12aa81ff4a89",
+      "bytes": 163
     },
     {
       "path": "requirements.txt",
       "exists": true,
-      "sha256": "75d1af59895af13486130e7312a7c44d62f96f0999be63dac83ab6a123e57527",
-      "bytes": 283
+      "sha256": "989606f7576414b4e18460a75d9cca3fd5e446315695d17a1dd3fe20e5e486e5",
+      "bytes": 262
+    },
+    {
+      "path": "requirements-surya.txt",
+      "exists": true,
+      "sha256": "8e52bcdb9ea3664fd731af9e33fe41618ea666e9b2969b620c56896aa56efae9",
+      "bytes": 227
     },
     {
       "path": "requirements-detection.txt",
       "exists": true,
-      "sha256": "0d77fe2a88e58b57df3eda37a098700aea7ca7c852f9909378c80d26c5408f44",
-      "bytes": 57
+      "sha256": "1e09ce7b972d68af7f6d7e100a694eba5d6b9b289ef8450aadcd7388c1bf05b3",
+      "bytes": 61
     },
     {
       "path": "scripts/reproduce_all.sh",
       "exists": true,
-      "sha256": "08e73613b75c959bea6d662d2956ea89279ad5f282a96eb6abf32c3add7e3966",
-      "bytes": 5834
+      "sha256": "4a58c04152b35e01cde3c0143f40380516b9412447c217bb153478f41161a4a1",
+      "bytes": 6259
     },
     {
       "path": "scripts/download_coco_val2017.sh",
       "exists": true,
-      "sha256": "7e8b5a4521145bae58ebd105efc6bb68aefa3cb84e9f45250a50f8d176e4a518",
-      "bytes": 762
+      "sha256": "30a98cf9dbd7c8daf4ffaecab1d88d2ba1b9f0fcf9762c09e57415529a0210ef",
+      "bytes": 786
     },
     {
       "path": "scripts/download_mot17.sh",
       "exists": true,
-      "sha256": "5f64e7923d1c277f6f87ae15b518873099335ff562a27e0d4b8c7e09c5c53f69",
-      "bytes": 619
+      "sha256": "9a9f91243ea7d3631862011953360033efeb4790dec408dd8c71eee644912f0a",
+      "bytes": 641
     },
     {
       "path": "scripts/run_detection_suite.sh",
       "exists": true,
-      "sha256": "8d4d5aa5576f79e572ec4bd6cd25d8b5ff892d8df9cea5758d347f95aed0357c",
-      "bytes": 3072
+      "sha256": "c149b447942970e4bf999b4ed98775cd32c8fba40bf6849f7faf4e3c4db095ca",
+      "bytes": 3161
+    },
+    {
+      "path": "scripts/run_real_capture_ocr_all.ps1",
+      "exists": true,
+      "sha256": "5799cbb50fe52df5f5b4c5480df02ae9b6ce89b1ad7b97c7c3283cdd99c8ca5d",
+      "bytes": 4372
+    },
+    {
+      "path": "scripts/run_real_capture_ocr_all_engines.ps1",
+      "exists": true,
+      "sha256": "1d1566ce44738143cffd1ce541d6a4d3552d1177276ed6f3e32dacc754490d6e",
+      "bytes": 5761
+    },
+    {
+      "path": "scripts/setup_surya_ocr_env.ps1",
+      "exists": true,
+      "sha256": "f7f5b9199b81280ead53849135d8b937b2a11643cb3b7593c82c5f22b6dfc5d9",
+      "bytes": 2031
+    },
+    {
+      "path": "scripts/download_surya_models.ps1",
+      "exists": true,
+      "sha256": "f12e0146bb2e6f00a4f88ebfa24440a729affa2dfbb4b2d2146b9c25713a7e41",
+      "bytes": 3704
+    },
+    {
+      "path": "scripts/rerun_real_capture_surya_only.ps1",
+      "exists": true,
+      "sha256": "3407567516da7ae795cb2fc432fba634ec0c1cc41d3517fd1e984663f770ef83",
+      "bytes": 5329
+    },
+    {
+      "path": "scripts/run_real_capture_detection_windows.bat",
+      "exists": true,
+      "sha256": "e266737f57ed9111f3b536e410c77a8c03628d63841da9570bfd8305e3ef9487",
+      "bytes": 1649
     },
     {
       "path": "experiments/build_corpus.py",
       "exists": true,
-      "sha256": "478be281467d42a756370279f1187badf90dd2d35b2ee5243eb0c5c5c63f75d3",
-      "bytes": 11703
+      "sha256": "216ad9ee0e94f7bb235717b751a46b76da5748af4f3c7bc5f6c09e338360afd3",
+      "bytes": 12404
     },
     {
       "path": "experiments/attack_analysis.py",
       "exists": true,
-      "sha256": "58e54058542efdfc73abd9fc9f6077f626568f8db961db20ef67b4c0cfa03b4b",
-      "bytes": 8714
+      "sha256": "0e23479a9027fd280348a3165927c83ec161635e7bc2aaa8e58b72d77195bc0f",
+      "bytes": 8927
     },
     {
       "path": "experiments/detection_attack.py",
       "exists": true,
-      "sha256": "efb47f3fc68a83304e66c559e8df0f352c1601c50afe04283e0d3b6dca74ba05",
-      "bytes": 2888
+      "sha256": "c7cace42af3a12ec5e2a48d3ddce9d8c46fd723c2f0252c7958c522cf32ed6a1",
+      "bytes": 2971
     },
     {
       "path": "experiments/coco_detection_attack.py",
       "exists": true,
-      "sha256": "5cad416e0b51c4abfad0cb309219f8d77d834f1d2d33cd6e031a198197d69503",
-      "bytes": 5143
+      "sha256": "857d1963fb0f0566f34ded04f59578d1d7397a80ff0bbe45af9d9729a2fef15c",
+      "bytes": 5290
     },
     {
       "path": "experiments/mot_video_detection.py",
       "exists": true,
-      "sha256": "77fde888d25207204a5cce9c475f081a408bde8c36dc4b744b8496e27a885b2f",
-      "bytes": 5482
+      "sha256": "7dd2cbbcf884579f162ff5de2704dfd86e67d2b99c26cae7dbaf6c84abdf1a12",
+      "bytes": 5635
     },
     {
       "path": "experiments/mot_tracking_attack.py",
       "exists": true,
-      "sha256": "c01bd095b7bcbfd3ee35242b2652f16779a8f232547e868cff94b48f4afe9746",
-      "bytes": 9237
+      "sha256": "22be2c7409a1eb6245b0ce5a96177414b1806e2eaaa5b4e161ac31c2245db29c",
+      "bytes": 9483
     },
     {
       "path": "experiments/view_attack.py",
       "exists": true,
-      "sha256": "6b1879555a029b3772e133b4cb8e4063e5f26f589e6031da48e5209b255b0d3c",
-      "bytes": 5144
+      "sha256": "2f7ab9525968fd52783c6b96ac4f37e78d62ee6037e206c7d5974f1be6d74faf",
+      "bytes": 5289
     },
     {
       "path": "experiments/unet_reconstruction.py",
       "exists": true,
-      "sha256": "4860f1627b74be46bb13ed4601ce7917c2e093c4c80847e2a81d9eeb748274a0",
-      "bytes": 6791
+      "sha256": "56f45810e815c7e822d700b709e5970c55285a2961a7924ee863a058e050e6c5",
+      "bytes": 6966
     },
     {
       "path": "experiments/real_capture_analysis.py",
       "exists": true,
-      "sha256": "09611dcae9618f950d25e193f29f288c3fe149919cd5a545beb46675a45ca7b0",
-      "bytes": 2069
+      "sha256": "c53642f877c361f4a5b4d49983e935c53fd5dc59350029397f4b14ad83e84486",
+      "bytes": 2262
+    },
+    {
+      "path": "experiments/merge_real_capture_surya.py",
+      "exists": true,
+      "sha256": "0d74da6c8cf78ec156c47ffb6c131b69b7648c4f4d3b250d52abca30638c8ed2",
+      "bytes": 2599
+    },
+    {
+      "path": "experiments/finalize_real_capture_artifacts.py",
+      "exists": true,
+      "sha256": "7e4a8f02aa6e277affa3ff4e651545ccbe570ea250adec284e89f711719f2f5d",
+      "bytes": 11070
     },
     {
       "path": "experiments/real_capture_shoot.py",
       "exists": true,
-      "sha256": "42b91498fb171d5902ee2f712469ba198d1759919fca4014028414f7d6759083",
-      "bytes": 22489
+      "sha256": "9ab80597e2dcb051342f4a65f64ba0c5f113e2014c4530cae32e041629cdd5b2",
+      "bytes": 29172
+    },
+    {
+      "path": "experiments/real_capture_detection.py",
+      "exists": true,
+      "sha256": "b85f7697c635feed478a470ce723cbc5e74a23a5c179a6c6c3f907e711b7691f",
+      "bytes": 30877
+    },
+    {
+      "path": "experiments/real_capture_mot.py",
+      "exists": true,
+      "sha256": "2841cd56271703cd17f81b65085c78c7745085e097983a01dff41d225e52a5c2",
+      "bytes": 20401
     },
     {
       "path": "experiments/component_ablation.py",
       "exists": true,
-      "sha256": "695d2bc6483c2f095324bd90b26eab0b589aa199fcbe55885ff915d7f523631a",
-      "bytes": 9946
+      "sha256": "f0cc56c02718d156a9a1d682875da853e463712811a430f0aaf201a92cd489cd",
+      "bytes": 10150
     },
     {
       "path": "experiments/recognizer_generalization.py",
       "exists": true,
-      "sha256": "20ff62e856e403c61d8939400a8c88bfc3c757762bf0204bb7b2280458f3c1d5",
-      "bytes": 8225
+      "sha256": "4f12bcdc57fadc4f2c4fb97a23aa6fb1812e5f4d6137f8f1fcc9956a99ae3879",
+      "bytes": 8408
     },
     {
       "path": "experiments/perceptual_ablation.py",
       "exists": true,
-      "sha256": "7cb20db926ea1483ed47ef4d72d3517c5606adb1f5e89e6f5008c00b111d3dd9",
-      "bytes": 7660
+      "sha256": "8c2da67cc7cc30646610e949080ca0487e33e31e79bc8ea656bdc4ce38eaf3bf",
+      "bytes": 7836
     },
     {
       "path": "experiments/pareto_sweep.py",
       "exists": true,
-      "sha256": "00d8757c1ea17331b97b22e042ec64e9e7c8b7e8a70612d1f36de57bf02dd244",
-      "bytes": 9457
+      "sha256": "dc3e829274fb4d7739b18fdd9892d4b759678edefb8993d861ae9790eb1865b9",
+      "bytes": 9665
     },
     {
       "path": "experiments/strong_attack_extra.py",
       "exists": true,
-      "sha256": "b183e609a7dd1bf749be5cfa6fbd3260c405a0fc6a521eb88a17cf28a5b5e9a4",
-      "bytes": 7679
+      "sha256": "61560beef13bc7e5676d0d6cd2d0941c482321b181004faf510df4d37b48982c",
+      "bytes": 7841
     },
     {
       "path": "experiments/adaptive_attack_ablation.py",
       "exists": true,
-      "sha256": "81a5abe795d3b5af0caac1834c40a93a1963eb840c254ea8371c79a5821b39c6",
-      "bytes": 6301
+      "sha256": "454d4fcfd09c3186ffbb9b52cfbe08af5407f4c1ba236c1227ce9995f4f2b952",
+      "bytes": 6463
     },
     {
       "path": "experiments/camera_pipeline_ablation.py",
       "exists": true,
-      "sha256": "9c4126c44f934c3d6f3531bea423bd6821933761408ca4e5680f197f08088deb",
-      "bytes": 7165
+      "sha256": "23f66b77faa65db50ca8b7f726e9b31f9884001c77342d6520a861d56bc983b9",
+      "bytes": 7338
     },
     {
       "path": "experiments/screen_privacy_baselines.py",
       "exists": true,
-      "sha256": "a36b8a9a811315e524c9c0d1a9281b8d8ac83d51fea2a0413665e1a765e6163f",
-      "bytes": 7291
+      "sha256": "d5a2fd33ef990d9788d8962befbcbc624b2b8a7f420a597271eab201d76c325d",
+      "bytes": 7459
     },
     {
       "path": "experiments/vlm_prompt_ablation.py",
       "exists": true,
-      "sha256": "857f43206cc4b756904e34a757ce36fed59cfa7706cc5b1f23012db96f72576e",
-      "bytes": 12821
+      "sha256": "236d0170bbf374d313c797b123d7f2c6b2d29eaf54f9791478a604e4beb26d61",
+      "bytes": 13140
     },
     {
       "path": "experiments/noise_epsilon_sweep.py",
       "exists": true,
-      "sha256": "87f54f7682a4c7a28066b3a71d0ac25974b1ae0796696cffec4dac47019030db",
-      "bytes": 8566
+      "sha256": "abfeed0ed1f13d0cc4784cbb05774a5bcde268768358cd18788b7b0c6e7443b6",
+      "bytes": 8778
     },
     {
       "path": "experiments/vlm_model_ablation.py",
       "exists": true,
-      "sha256": "d7fdd636847c6d95a6904613532a632d055cfce4da03357ca8ace86a662ba761",
-      "bytes": 9433
+      "sha256": "12a1fc073c94dc0833e7b124bcb039a6e8ae46471ed9c5cbf2c127fbbd88048f",
+      "bytes": 9694
     },
     {
       "path": "experiments/brightness_compensation_ablation.py",
       "exists": true,
-      "sha256": "ff94bd8597d03c4f6f039c265006f76a49ef5f5845e9133598f251e4484193f8",
-      "bytes": 8208
+      "sha256": "f79ca63ccdc2bdb6e8bf0a32a784c3bbbf722ff82f26ef0ea4c4bb18cdc1de7d",
+      "bytes": 8408
     },
     {
       "path": "experiments/mask_granularity_ablation.py",
       "exists": true,
-      "sha256": "26989f686ba1135fa30d9add0f6742038390775a2258170dbfe2a047059a64ef",
-      "bytes": 7934
+      "sha256": "4ce3e9b4eae2124f81c827373adf4cb2e3728aa275b96eda20a117c749ebf095",
+      "bytes": 8136
     },
     {
       "path": "experiments/seed_sensitivity.py",
       "exists": true,
-      "sha256": "a02de4fc100e018f677948bb1c98591612a45d2e1433f71ca1de21aa5a042fb6",
-      "bytes": 7873
+      "sha256": "e81a3f270a29dc8246fd10efdc20c3983a955788d70b6db24ab0906417fe0749",
+      "bytes": 8073
     },
     {
       "path": "experiments/usability_pilot.py",
       "exists": true,
-      "sha256": "b5daf621013b5b662d2dcf79b15254681602cadfa60c03705457c14ff25d1d40",
-      "bytes": 6009
+      "sha256": "b43eb225397303bc30eb07f2d649b16f7a5dcac78866eb92e1517c2061fde3cc",
+      "bytes": 6190
     },
     {
       "path": "experiments/real_captures/metadata_template.json",
-      "exists": true,
-      "sha256": "fee4c14d362b536993689e287856c34d60978a97f01ef1eff30bec793fd4a564",
-      "bytes": 810
+      "exists": false,
+      "sha256": "",
+      "bytes": 0
     },
     {
       "path": "experiments/vlm_readability_analysis.py",
       "exists": true,
-      "sha256": "97205fd45e35daee694be9214d8eada04df6a33f26caab689378a6e43abe5d1f",
-      "bytes": 4879
+      "sha256": "b22bb7bf8a3e0b57dce079718152530ab62c9ebe01696650691434479998c5ed",
+      "bytes": 5753
     },
     {
       "path": "experiments/publication_summary.py",
       "exists": true,
-      "sha256": "8c71c736efe273759192bfd21c33525302fe4caf83c66f7795c8112ac84a5788",
-      "bytes": 1090
+      "sha256": "2daa8773bb714a1b808edb685e8f454012eb97b6573a3698567ac9fc1e8d5d41",
+      "bytes": 1130
     },
     {
       "path": "experiments/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "93a78a2925b4005c745a171cff77098b14c026b23403b1b0597c228da44e2550",
-      "bytes": 1577
+      "sha256": "2c57dcb4d7d3219cfd1839d8dcb86786629c6d5ac0469b17e3b40aa0c52a3800",
+      "bytes": 1626
     },
     {
       "path": "src/evaluation/benchmark.py",
       "exists": true,
-      "sha256": "039f8a18a780f85a17df308e31d659657e5891cef5b725cdbf494f1c1e872fe7",
-      "bytes": 27883
+      "sha256": "ef1e90a1e6a556faa705d191d68930f61ef34677bf49f8807350f7238d58b8cf",
+      "bytes": 28607
     },
     {
       "path": "src/evaluation/publication_summary.py",
       "exists": true,
-      "sha256": "5d8711a3d62426e419ca5f1826c897d9bed0bb363c509fb0e70e94811ecfaa25",
-      "bytes": 41852
+      "sha256": "b7226c99439d7e5e898e178459f3481e60a497e6b2316b6370e1df914eccd99b",
+      "bytes": 53942
     },
     {
       "path": "src/evaluation/vlm_benchmark.py",
       "exists": true,
-      "sha256": "7fdd1aff5782439c2743660885e562380022fc3a371ec73a67a3b7d45474715e",
-      "bytes": 13180
+      "sha256": "98fcd32ec8d11c214e6359696cd8ad5510ee632b26bb7ca9b30316cb6f49d6ad",
+      "bytes": 13522
     },
     {
       "path": "src/evaluation/real_capture.py",
       "exists": true,
-      "sha256": "692c3a1bf584d13a343a8e569a36dec99f8351eb6641d05817d9f80c9e544298",
-      "bytes": 9629
+      "sha256": "62ad7f3ac64708f3118a83e1ed16197819f4ccc14d40c7dbf29fe2f0e341840e",
+      "bytes": 18795
     },
     {
       "path": "src/evaluation/sampling.py",
       "exists": true,
-      "sha256": "9348fea722c93a83e63f80861880771699e741bdcc2f1b68b05b4f5a33e43605",
-      "bytes": 3231
+      "sha256": "3d19e16e39beb108772ae50674fe9d013b414cd4fe9af1894e8615f9100c99ad",
+      "bytes": 3329
     },
     {
       "path": "src/evaluation/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "f4062abed3a0e11d2b131474f251d4e449941cdf10549c2f93153ca3d4fa7346",
-      "bytes": 21112
+      "sha256": "77d9bcb778791635e42995c9d60f1394e72c94fbfceaaa732109bec10c0dc7b4",
+      "bytes": 26017
     },
     {
       "path": "src/evaluation/coco_eval.py",
       "exists": true,
-      "sha256": "ed3825bbd3c124826c4917e5f4d78c52eb33e7ebdf5e594a69002ea2c76f1f96",
-      "bytes": 6542
+      "sha256": "daeec6be6c1b3580648f8658d3836d4778369a4af0bd81bac3fe2d4f3a212657",
+      "bytes": 6731
     },
     {
       "path": "src/evaluation/detection_suite.py",
       "exists": true,
-      "sha256": "77e42d4d8f6b88ba879495011cf42ad31511764f16dca34c9ddc879e03cd6639",
-      "bytes": 4297
+      "sha256": "e8d8585912754c5f8d86b969257fec9397e7e6a6678ea69810147fd5f4e8c130",
+      "bytes": 5626
     },
     {
       "path": "src/evaluation/mot.py",
       "exists": true,
-      "sha256": "2917757098c187e6ed1f0ee1cc8c86e688beb4551fad1cdb8c420ee42c040e68",
-      "bytes": 26094
+      "sha256": "07cfc88ad918ba51f216548ab6e4e9f273375ece56b71bfdfc1d43d1f57beec2",
+      "bytes": 26806
     },
     {
       "path": "src/attack/camera_simulator.py",
       "exists": true,
-      "sha256": "ac7bf4132d519dfceaeb46f5f443a0d98ae9e95c7945a2cb3205746a9b6e7f01",
-      "bytes": 31754
+      "sha256": "0eb6e3039495d4cf549359199bf8231337918946828d6a25215a53a35907366d",
+      "bytes": 32563
     },
     {
       "path": "src/attack/detectors.py",
       "exists": true,
-      "sha256": "30bf82635e48b4bdad9f45455d2e9ae16128c1c27a8cd81a11a0024d12fa176c",
-      "bytes": 9174
+      "sha256": "ee12d5abf5d4b0bc0b7d84a19efc8fa6a79defb09b6b4fe788330836cf2b36af",
+      "bytes": 9487
     },
     {
       "path": "src/attack/ocr_evaluator.py",
       "exists": true,
-      "sha256": "f5cde1812b1416c5068fb8804b2de3e2cdf930483c18f255aecdc5aa805b5f65",
-      "bytes": 15792
+      "sha256": "21206ecf8ce35fb638d735db83870c29aaece6b4065f63d893bb408a17361985",
+      "bytes": 17778
     },
     {
       "path": "src/attack/vlm_evaluator.py",
       "exists": true,
-      "sha256": "97ab30085a3ea907c902483f700f7ccd0e037d86793471fcbf733c32ddf993a2",
-      "bytes": 10171
+      "sha256": "69527867e4bf2c634fc7f41ab420258e21412fc57bae5557593c3852502ef98e",
+      "bytes": 10456
     }
   ],
   "secret_policy": {

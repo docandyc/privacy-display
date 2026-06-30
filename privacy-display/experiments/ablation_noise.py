@@ -11,7 +11,7 @@
   组1  仅掩模（无噪声）
   组2  仅噪声（无掩模分割，全帧叠加噪声）
   组3  掩模 + OCR 对比度目标 FGSM 噪声（Tesseract）
-  组4  掩模 + 多模型轮换 PGD 噪声（EasyOCR/PaddleOCR/YOLOv8 等）
+  组4  掩模 + 多模型轮换 PGD 噪声（EasyOCR/Surya/YOLOv8 等）
 
 运行: python experiments/ablation_noise.py
 """

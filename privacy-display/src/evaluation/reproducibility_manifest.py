@@ -21,6 +21,29 @@ from typing import Any
 
 MANIFEST_JSON = "reproducibility_manifest.json"
 
+REAL_CAPTURE_POSITION_LABELS = [
+    "d0.5_a0",
+    "d0.5_a15",
+    "d0.5_a30",
+    "d1_a0",
+    "d1_a15",
+    "d1_a30",
+    "d1.5_a0",
+    "d1.5_a15",
+    "d1.5_a30",
+]
+
+REAL_CAPTURE_POSITION_RESULT_FILES = [
+    f"experiments/results_{label}_final/real_capture_ocr.json"
+    for label in REAL_CAPTURE_POSITION_LABELS
+] + [
+    f"experiments/results_{label}_final/real_capture_ocr.md"
+    for label in REAL_CAPTURE_POSITION_LABELS
+] + [
+    f"experiments/real_captures_{label}_final/metadata.json"
+    for label in REAL_CAPTURE_POSITION_LABELS
+]
+
 RESULT_FILES = [
     "experiments/results/corpus_multi_engine.json",
     "experiments/results/corpus_strong_camera_attack.json",
@@ -32,11 +55,12 @@ RESULT_FILES = [
     "experiments/results/unet_reconstruction.json",
     "experiments/results/real_capture_ocr.json",
     "experiments/results/real_capture_ocr.md",
+    *REAL_CAPTURE_POSITION_RESULT_FILES,
     "experiments/results/real_capture_coco_detection.json",
     "experiments/results/real_capture_mot_detection.json",
     "experiments/results/real_capture_mot_tracking.json",
+    "experiments/results/real_capture_mot_capture_manifest.json",
     "experiments/real_captures/coco_detection/capture_manifest.json",
-    "experiments/real_captures/mot_MOT17-09-FRCNN/capture_manifest.json",
     "experiments/results/component_ablation.json",
     "experiments/results/recognizer_generalization.json",
     "experiments/results/perceptual_ablation.json",
@@ -64,11 +88,17 @@ SOURCE_FILES = [
     "docs/detection_suite_server.md",
     ".env.example",
     "requirements.txt",
+    "requirements-surya.txt",
     "requirements-detection.txt",
     "scripts/reproduce_all.sh",
     "scripts/download_coco_val2017.sh",
     "scripts/download_mot17.sh",
     "scripts/run_detection_suite.sh",
+    "scripts/run_real_capture_ocr_all.ps1",
+    "scripts/run_real_capture_ocr_all_engines.ps1",
+    "scripts/setup_surya_ocr_env.ps1",
+    "scripts/download_surya_models.ps1",
+    "scripts/rerun_real_capture_surya_only.ps1",
     "scripts/run_real_capture_detection_windows.bat",
     "experiments/build_corpus.py",
     "experiments/attack_analysis.py",
@@ -79,6 +109,8 @@ SOURCE_FILES = [
     "experiments/view_attack.py",
     "experiments/unet_reconstruction.py",
     "experiments/real_capture_analysis.py",
+    "experiments/merge_real_capture_surya.py",
+    "experiments/finalize_real_capture_artifacts.py",
     "experiments/real_capture_shoot.py",
     "experiments/real_capture_detection.py",
     "experiments/real_capture_mot.py",
@@ -124,7 +156,7 @@ PACKAGE_NAMES = [
     "pytest",
     "pytesseract",
     "easyocr",
-    "paddleocr",
+    "surya-ocr",
     "ultralytics",
     "pycryptodome",
     "moderngl",
@@ -161,9 +193,13 @@ REPRODUCTION_COMMANDS = [
     {
         "name": "reproduce_with_real_capture",
         "command": "scripts/reproduce_all.sh --real-capture",
-        "purpose": "Analyze manually collected real camera captures before refreshing publication artifacts.",
-        "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, publication summary, and manifest are regenerated.",
-        "requires_data": ["experiments/real_captures/metadata.json", "referenced capture image files"],
+        "purpose": "Finalize already collected real camera OCR/MOT artifacts before refreshing publication artifacts.",
+        "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, real_capture_mot_detection.json, real_capture_mot_tracking.json, publication summary, and manifest are regenerated.",
+        "requires_data": [
+            "experiments/results_d*_final/real_capture_ocr.json",
+            "experiments/results_d1.5_a0_detection/results",
+            "referenced capture image files",
+        ],
     },
     {
         "name": "unit_tests",
@@ -179,8 +215,8 @@ REPRODUCTION_COMMANDS = [
     },
     {
         "name": "multi_engine_ocr",
-        "command": "python -c \"from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)\"",
-        "purpose": "Run or merge Tesseract/EasyOCR/PaddleOCR corpus OCR results.",
+        "command": ".venv-surya/bin/python -c \"from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','surya'], merge_existing=True)\"",
+        "purpose": "Run or merge Tesseract/EasyOCR/Surya corpus OCR results.",
         "expected": "experiments/results/corpus_multi_engine.json",
     },
     {
@@ -373,10 +409,28 @@ REPRODUCTION_COMMANDS = [
     },
     {
         "name": "real_capture_ocr",
-        "command": "python experiments/real_capture_analysis.py --engines tesseract",
-        "purpose": "Analyze manually collected real camera photos or video frames.",
-        "expected": "experiments/results/real_capture_ocr.json and real_capture_ocr.md",
-        "requires_data": ["experiments/real_captures/metadata.json", "referenced capture image files"],
+        "command": "powershell -ExecutionPolicy Bypass -File scripts/run_real_capture_ocr_all.ps1",
+        "purpose": "Analyze the 3x3 real camera OCR position matrix with Tesseract.",
+        "expected": "experiments/results_<position>_final/real_capture_ocr.json and .md for all 9 positions",
+        "requires_data": ["experiments/real_captures_<position>_final/metadata.json", "referenced capture image files"],
+    },
+    {
+        "name": "real_capture_surya",
+        "command": "powershell -ExecutionPolicy Bypass -File scripts/rerun_real_capture_surya_only.ps1",
+        "purpose": "Replace legacy third-engine rows with Surya while preserving Tesseract/EasyOCR.",
+        "expected": "Nine per-position reports and the combined report use tesseract/easyocr/surya.",
+        "requires_data": ["experiments/results_<position>_final/real_capture_ocr.json", "referenced capture image files"],
+    },
+    {
+        "name": "real_capture_finalize",
+        "command": "python experiments/finalize_real_capture_artifacts.py",
+        "purpose": "Merge the 3x3 OCR position reports and canonicalize real MOT capture artifacts under experiments/results.",
+        "expected": "experiments/results/real_capture_ocr.json, real_capture_ocr.md, real_capture_mot_detection.json, real_capture_mot_tracking.json, and real_capture_mot_capture_manifest.json",
+        "requires_data": [
+            "experiments/results_d*_final/real_capture_ocr.json",
+            "experiments/results_d1.5_a0_detection/results",
+            "experiments/results_d1.5_a0_detection/captures/mot_MOT17-09-FRCNN",
+        ],
     },
     {
         "name": "vlm_dry_run",

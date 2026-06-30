@@ -18,6 +18,12 @@ secrets/
 __pycache__/
 .pytest_cache/
 .venv/
+privacy-display/.venv-surya/
+privacy-display/.paddlex_cache/
+privacy-display/.cache/huggingface/
+privacy-display/.cache/surya/
+privacy-display/experiments/.surya_rerun/
+privacy-display/experiments/.paddleocr_rerun/
 *.pt
 *.sublime-project
 *.sublime-workspace
@@ -49,4 +55,34 @@ Thumbs.db
 # 检测套件：下载的数据集与 TrackEval 生成工作区（体积大，不入库）
 privacy-display/data/coco/
 privacy-display/data/MOT17/
+privacy-display/data/*.zip
+privacy-display/experiments.zip
+TrackEval/
 **/experiments/results/trackeval_workspace/
+**/experiments/results/trackeval_workspace_real/
+**/trackeval_workspace_real/
+
+# 真实拍摄媒体保留在本机；仅提交 metadata、manifest 和分析结果。
+privacy-display/experiments/real_captures*/**/*.jpg
+privacy-display/experiments/real_captures*/**/*.jpeg
+privacy-display/experiments/real_captures*/**/*.png
+privacy-display/experiments/real_captures*/**/*.bmp
+privacy-display/experiments/real_captures*/**/*.tif
+privacy-display/experiments/real_captures*/**/*.tiff
+privacy-display/experiments/real_captures*/**/*.webp
+privacy-display/experiments/real_captures*/**/*.mp4
+privacy-display/experiments/real_captures*/**/*.avi
+privacy-display/experiments/real_captures*/**/*.mov
+privacy-display/experiments/real_captures*/**/*.mkv
+privacy-display/experiments/*_real_capture/captures/**/*.jpg
+privacy-display/experiments/*_real_capture/captures/**/*.jpeg
+privacy-display/experiments/*_real_capture/captures/**/*.png
+privacy-display/experiments/*_real_capture/captures/**/*.mp4
+privacy-display/experiments/results_*_detection/captures/**/*.jpg
+privacy-display/experiments/results_*_detection/captures/**/*.jpeg
+privacy-display/experiments/results_*_detection/captures/**/*.png
+privacy-display/experiments/results_*_detection/captures/**/*.mp4
+privacy-display/experiments/results_*_detection/real_captures*/**/*.jpg
+privacy-display/experiments/results_*_detection/real_captures*/**/*.jpeg
+privacy-display/experiments/results_*_detection/real_captures*/**/*.png
+privacy-display/experiments/results_*_detection/real_captures*/**/*.mp4

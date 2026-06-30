@@ -1,7 +1,7 @@
 """
 Experiment B — recognizer generalization across the attack-frame matrix.
 
-Runs every available OCR family (Tesseract / EasyOCR / PaddleOCR / TrOCR /
+Runs every available OCR family (Tesseract / EasyOCR / Surya / TrOCR /
 docTR) over the same set of attack frames so a reviewer cannot argue the 0%
 single-subframe result is specific to classic engines. The full-cycle
 reconstruction frames are included on purpose: they should leak across *all*

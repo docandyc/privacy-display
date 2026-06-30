@@ -163,7 +163,7 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - `OCREvaluator(engines: list[str] | None = None)`
 - `_detect_available_engines() -> list[str]`
 - `recognize(image: np.ndarray, engine: str = "tesseract") -> str`
-- `_parse_paddleocr_text(result) -> str`
+- `_parse_surya_text(result) -> str`
 - `run_corpus_multi_engine(engines: list[str] | None = None) -> dict`
 
 ### 3. Contracts
@@ -171,22 +171,27 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - Tesseract detection must configure `pytesseract.pytesseract.tesseract_cmd` from `TESSERACT_CMD`/`TESSERACT_EXE`, PATH, or the Windows default install dirs (`C:\Program Files\Tesseract-OCR\tesseract.exe`, `C:\Program Files (x86)\Tesseract-OCR\tesseract.exe`) before calling `get_tesseract_version()`.
 - Unit tests must not instantiate OCR engines that download model weights; inject cached/fake readers for parser and dispatch tests.
 - Images passed into OCR backends must be contiguous NumPy arrays.
-- PaddleOCR 3.x should use `PaddleOCR(...).predict(image)` when present; older versions may fall back to `.ocr(image)`.
-- PaddleOCR output parsing must accept 2.x list tuples like `[box, ("text", score)]` and 3.x dict/result-object payloads containing `rec_texts`, `text`, `texts`, `res`, or `.json`/`.res`.
+- Surya must be pinned to `surya-ocr==0.14.7` for direct in-process inference; Surya 0.20+ uses a server-based API and is not compatible with this adapter.
+- Surya should lazily construct one `RecognitionPredictor` and one `DetectionPredictor`, reuse them across images, and select the device through `SURYA_DEVICE=auto|cpu|cuda|mps`.
+- Surya model files should use the project-local `.cache/surya` directory. On Windows, default model download concurrency to one worker because the upstream parallel downloader can trigger TLS EOF failures on constrained networks.
+- The Windows model bootstrap should use `scripts/download_surya_models.ps1`, downloading to `.part` files with curl retries and resume support before renaming completed files into the cache expected by Surya.
+- Windows PowerShell scripts must resolve external executables to one scalar path. For `curl.exe`, prefer `%SystemRoot%\\System32\\curl.exe`; fallback discovery must use `Get-Command -All | Select-Object -First 1` before reading `.Source`, because activated Conda environments can expose multiple `curl.exe` applications and PowerShell otherwise coerces their paths into one invalid command string.
+- Surya output parsing must accept `OCRResult.text_lines[*].text` objects and equivalent dictionaries.
 - Corpus result JSON must include the exact engine keys that were run, and documentation values should match that file after reruns.
 
 ### 4. Validation & Error Matrix
 - Engine package import fails -> omit the engine from `engines` and keep other engines available.
 - Tesseract Python package is installed but `tesseract.exe` is not on PATH -> try configured env/default executable paths before omitting the engine.
 - Unsupported engine name in `recognize` -> raise `ValueError`.
-- PaddleOCR output shape lacks recognized text fields -> return an empty string rather than crashing.
+- Surya output has no recognized text lines -> return an empty string rather than crashing.
 - Heavy model download or runtime setup failure -> keep it out of unit tests; verify with an explicit integration command when the environment has cached models or network access.
+- Multiple `curl.exe` entries on PATH -> select one executable explicitly and verify a real manifest download; do not invoke an array-valued `.Source` result.
 
 ### 5. Good/Base/Bad Cases
 - Good: add an engine with parser-only regression tests plus one fake-reader dispatch test.
 - Good: Windows machines with Tesseract installed under `C:\Program Files\Tesseract-OCR` are detected without requiring users to edit PATH.
-- Base: existing Tesseract/EasyOCR behavior remains unchanged when PaddleOCR is unavailable.
-- Bad: unit tests instantiate `PaddleOCR()` directly and trigger downloads.
+- Base: existing Tesseract/EasyOCR behavior remains unchanged when Surya is unavailable.
+- Bad: unit tests instantiate Surya predictors directly and trigger model downloads.
 - Bad: hand-edit `corpus_multi_engine.json` without rerunning `run_corpus_multi_engine`.
 
 ### 6. Tests Required
@@ -199,15 +204,20 @@ where `_target_gradient` tries the differentiable shadow model first and records
 ### 7. Wrong vs Correct
 #### Wrong
 ```python
-result = PaddleOCR(lang="ch").predict(image)
-return result[0]["text"]
+result = RecognitionPredictor()([image], det_predictor=DetectionPredictor())
+return result[0].text_lines[0].text
 ```
 
 #### Correct
 ```python
-if self._paddleocr_reader is None:
-    self._paddleocr_reader = PaddleOCR(lang="ch", ...)
-return self._parse_paddleocr_text(self._paddleocr_reader.predict(image))
+if self._surya_readers is None:
+    self._surya_readers = (
+        RecognitionPredictor(device=device),
+        DetectionPredictor(device=device),
+    )
+return self._parse_surya_text(
+    self._surya_readers[0]([image], det_predictor=self._surya_readers[1])
+)
 ```
 
 ## Scenario: Detection Suite Server Experiments
@@ -224,28 +234,34 @@ return self._parse_paddleocr_text(self._paddleocr_reader.predict(image))
 
 ### 3. Contracts
 - Experiment JSON files must be written under `experiments/results/` unless `--output-dir` or `RESULTS_DIR` overrides it.
-- `COCO_ROOT`, `MOT17_ROOT`, `RESULTS_DIR`, `MODELS`, `ATTACKS`, `COCO_DEVICE`, `MOT_DEVICE`, `TRACK_DEVICE`, `SMOKE`, `COCO_MAX_IMAGES`, `MOT_MAX_FRAMES`, `MOT_SEQUENCES`, and `NO_EXTERNAL_TRACKER` are supported server-runner environment keys.
+- `COCO_ROOT`, `MOT17_ROOT`, `RESULTS_DIR`, `MODELS`, `ATTACKS`, `COCO_DEVICE`, `MOT_DEVICE`, `TRACK_DEVICE`, `SMOKE`, `COCO_MAX_IMAGES`, `MOT_MAX_FRAMES`, `MOT_SEQUENCES`, `NO_EXTERNAL_TRACKER`, `NO_HOTA`, and `TRACKEVAL_ROOT` are supported server-runner environment keys.
 - Each experiment result is shaped as `{config, detectors, results}`, with `results[model][attack]` holding scalar metrics.
 - MOT tracking should prefer BoxMOT ByteTrack when available and fall back to a deterministic tracker for local tests.
+- TrackEval HOTA runs against a local checkout pointed to by `TRACKEVAL_ROOT`; keep the project NumPy stack compatible with the rest of the thesis environment, and use a local venv compatibility shim for TrackEval's removed NumPy aliases (`np.float`, `np.int`, etc.) instead of downgrading NumPy.
 
 ### 4. Validation & Error Matrix
 - Missing COCO annotations -> `FileNotFoundError` naming `instances_<split>.json`.
 - Missing MOT split/image directory -> `FileNotFoundError` naming the missing MOT path.
 - Unknown detector spec -> `ValueError`.
 - Missing optional heavy evaluator dependency in local tests -> fall back to deterministic simple metrics or tracker instead of failing the unit path.
+- `TRACKEVAL_ROOT` unset or missing `scripts/run_mot_challenge.py` -> HOTA remains unavailable with a recorded reason while MOTChallenge files are still exported.
+- NumPy 2.x with unpatched TrackEval aliases -> configure a venv-local `sitecustomize.py` alias shim or equivalent before running the HOTA subprocess.
 
 ### 5. Good/Base/Bad Cases
 - Good: run `SMOKE=1 MOT_SEQUENCES=MOT17-02 bash scripts/run_detection_suite.sh` after datasets are placed to verify server setup cheaply.
 - Good: run full suite with `COCO_DEVICE=cuda:0 MOT_DEVICE=cuda:1 TRACK_DEVICE=cuda:0 bash scripts/run_detection_suite.sh`.
+- Good: verify TrackEval with a tiny exported MOTChallenge workspace before launching the full suite; the subprocess should return `available=True` and parse `hota`, `deta`, and `assa`.
 - Base: local tests inject fake detectors and tiny COCO/MOT fixtures without downloading weights or datasets.
 - Bad: writing separate result schemas per script, because publication summary and manifest cannot consume them uniformly.
 - Bad: requiring BoxMOT in unit tests, because local machines may not have compiled tracker dependencies.
+- Bad: installing TrackEval's old pinned requirements by downgrading NumPy/SciPy/OpenCV in the project venv, because it can break the rest of the detection/OCR stack.
 
 ### 6. Tests Required
 - Assert detector adapters normalize YOLO/RT-DETR and torchvision outputs to `DetectionBox`.
 - Assert COCO, MOT detection, and MOT tracking scripts emit the expected `model -> attack -> metrics` schema on tiny fixtures.
 - Assert publication summary renders COCO, MOT video detection, and MOT tracking rows when result JSON files exist.
 - Assert reproducibility manifest records the detection result files, scripts, and server commands.
+- Assert `tests/test_trackeval_export.py` passes after TrackEval environment changes, and run a tiny real TrackEval subprocess when changing the server environment.
 
 ### 7. Wrong vs Correct
 #### Wrong
@@ -352,7 +368,7 @@ entry = build_metadata_entry(item, playback_cmd=playback_cmd, ...)
 - `summarize_corpus_strata(sample_rows, field) -> dict`
 - `run_corpus_multi_engine(n=4, epsilon=8/255, engines=None, output_dir="experiments/results", merge_existing=False) -> dict`
 - Command: `python experiments/build_corpus.py`
-- Command: `python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)"`
+- Command: `.venv-surya/bin/python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','surya'], merge_existing=True)"`
 
 ### 3. Contracts
 - The default corpus is deterministic and publication-facing: 12 base templates times 10 variants, for 120 generated images.
@@ -363,7 +379,7 @@ entry = build_metadata_entry(item, playback_cmd=playback_cmd, ...)
 - `load_corpus_metadata()` must return `{}` rather than failing when older corpora do not have metadata.
 - `run_corpus_multi_engine()` must persist `experiments/results/corpus_multi_engine.json` and include `n_samples`, `n_categories`, overall mean/std fields, per-field `strata`, and per-sample rows.
 - `engines=None` means run every locally available engine; `engines=[]` means run no new engines and is valid when testing merge behavior.
-- `merge_existing=True` must load any existing `corpus_multi_engine.json` and preserve engine entries not requested in the current run. This prevents a long EasyOCR/PaddleOCR run from deleting already verified Tesseract results.
+- `merge_existing=True` must load any existing `corpus_multi_engine.json` and preserve engine entries not requested in the current run. This prevents a long EasyOCR/Surya run from deleting already verified Tesseract results.
 - Publication OCR reports must include bootstrap 95% confidence intervals for original accuracy, subframe accuracy, and paired reduction. Keep the older `original_mean`, `original_std`, `subframe_mean`, and `subframe_std` fields for document compatibility.
 - Paired reduction is computed per sample as `original_char_acc - subframe_char_acc` and summarized separately from independent original/subframe means.
 - Publication OCR reports must include secondary recovery metrics under `recovery_metrics`: word-level accuracy, exact-match rate, and sensitive-token recall for both original and protected subframes.
@@ -382,7 +398,7 @@ entry = build_metadata_entry(item, playback_cmd=playback_cmd, ...)
 - Good: regenerate the corpus, rerun the OCR benchmark, then update thesis tables from `corpus_multi_engine.json`.
 - Good: use category/language/layout/font-size strata to explain where OCR is weak on original frames or protected subframes.
 - Base: Tesseract can be run on the full 120-sample corpus while heavier engines are retained as smaller review checks until cached models are available.
-- Base: run EasyOCR/PaddleOCR with `merge_existing=True` so their results are added without deleting Tesseract.
+- Base: run EasyOCR/Surya with `merge_existing=True` so their results are added without deleting Tesseract.
 - Bad: changing `BASE_CORPUS` without regenerating `ground_truth.json` and `corpus_metadata.json`.
 - Bad: editing `corpus_multi_engine.json` by hand or updating the thesis from stale 12-sample numbers.
 
@@ -405,7 +421,7 @@ report["tesseract"] = {"subframe_mean": 0.0}
 #### Correct
 ```bash
 python experiments/build_corpus.py
-python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)"
+.venv-surya/bin/python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','surya'], merge_existing=True)"
 ```
 
 ## Scenario: Screen-Camera Strong Attack Baselines
@@ -653,7 +669,8 @@ sed -n '1,120p' experiments/results/publication_summary.md
 - Missing result/source files must be represented as `exists=False`, empty `sha256`, and zero bytes rather than failing manifest generation.
 - Absolute output paths must be respected; relative output paths are resolved against `project_root`.
 - Regenerate the manifest after rerunning experiments or changing code that it hashes, otherwise the file hashes no longer describe the current archive.
-- Real-capture COCO/MOT detection/tracking manifests under `experiments/real_captures/**/capture_manifest.json` are publication provenance artifacts; include the planned capture manifests in the reproducibility manifest alongside the metric JSON files.
+- Real-capture COCO/MOT detection/tracking manifests are publication provenance artifacts; include the planned capture manifests in the reproducibility manifest alongside the metric JSON files.
+- When large real-capture image trees already live in position-specific directories, do not duplicate gigabytes of image data just to satisfy a canonical path. Instead, write a canonical manifest such as `experiments/results/real_capture_mot_capture_manifest.json`, rewrite each capture `path` to the actual existing image location, and point metric JSON `capture.manifest_path` plus embedded `capture.manifest` to that canonical manifest.
 - `scripts/reproduce_all.sh` is the publication artifact orchestrator. Its default path must stay offline and bounded: tests, VLM dry-run, publication summary, and reproducibility manifest only.
 - Heavy offline experiments must require `--full-offline`; live online VLM calls must require `--with-vlm-live` plus `SILICONFLOW_API_KEY` in the environment.
 - The orchestrator must never accept an API key as a positional argument or CLI flag.
@@ -670,10 +687,12 @@ sed -n '1,120p' experiments/results/publication_summary.md
 - Good: run `scripts/reproduce_all.sh`, then archive generated summary, manifest, and raw result JSON.
 - Good: run `python experiments/publication_summary.py`, then `python experiments/reproducibility_manifest.py`, then archive both generated files with raw result JSON.
 - Good: manifest shows VLM live benchmark requires `SILICONFLOW_API_KEY` but contains no authorization headers, key values, or request payloads.
+- Good: finalize real-capture artifacts by merging per-position OCR reports and writing a canonical MOT capture manifest whose paths resolve to the existing capture image directory.
 - Base: lightweight environments without a live VLM output still generate a manifest with `vlm_qwen3_siliconflow.json` marked missing.
 - Bad: putting API keys into README examples, CLI flags, JSON outputs, or manifest command strings.
 - Bad: committing `.env.local` or any file containing a real `sk-...` secret.
 - Bad: editing a result JSON after generating the manifest and then using stale hashes as archival evidence.
+- Bad: copying a multi-gigabyte MOT capture directory only to make a stale manifest path exist, or leaving metric JSON pointing at a missing capture manifest.
 
 ### 6. Tests Required
 - Assert file records include SHA-256, byte size, and missing-file placeholders.
@@ -681,6 +700,7 @@ sed -n '1,120p' experiments/results/publication_summary.md
 - Assert command metadata includes the live VLM environment requirement.
 - Assert a fake `SILICONFLOW_API_KEY` in the process environment does not appear in `json.dumps(manifest)`.
 - Assert nested relative output paths are created by `write_reproducibility_manifest`.
+- Assert real-capture finalization records the canonical MOT capture manifest and position-matrix OCR result paths.
 - Run `bash -n scripts/reproduce_all.sh` after changing the orchestration script.
 - Run `scripts/reproduce_all.sh --skip-tests` to verify the default non-network artifact refresh path when script behavior changes.
 - Run `pytest tests/test_reproducibility_manifest.py -q` after changing manifest code.

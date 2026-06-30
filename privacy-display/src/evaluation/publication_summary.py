@@ -72,7 +72,7 @@ STRONG_ATTACK_ORDER = [
     "phase_search_max",
     "blue_channel_max",
 ]
-OCR_ENGINE_ORDER = ["tesseract", "easyocr", "paddleocr"]
+OCR_ENGINE_ORDER = ["tesseract", "easyocr", "surya"]
 
 
 def load_json(path: Path) -> Any:
@@ -615,6 +615,7 @@ def summarize_real_capture(report: dict | None) -> dict:
     return {
         "available": True,
         "config": report.get("config", {}),
+        "positions": _real_capture_positions(report),
         "conditions": conditions,
     }
 
@@ -655,6 +656,60 @@ def _model_attack_rows(report: dict, fields: list[str]) -> list[dict]:
                 row[field] = _num(value) if isinstance(value, (int, float)) else value
             rows.append(row)
     return rows
+
+
+def _real_capture_positions(report: dict) -> list[dict]:
+    positions = report.get("positions")
+    if isinstance(positions, list):
+        rows = []
+        for pos in positions:
+            if not isinstance(pos, dict):
+                continue
+            rows.append({
+                "position": str(pos.get("position", "")),
+                "distance_m": _num(pos.get("distance_m")),
+                "angle_degrees": _num(pos.get("angle_degrees")),
+                "n_captures": int(pos.get("n_captures") or 0),
+                "n_rows": int(pos.get("n_rows") or 0),
+                "capture_dir": str(pos.get("capture_dir", "")),
+                "source_result_file": str(pos.get("source_result_file", "")),
+            })
+        if rows:
+            return rows
+
+    captures = report.get("captures", [])
+    if not isinstance(captures, list):
+        return []
+    grouped: dict[tuple[float, float], dict] = {}
+    for row in captures:
+        if not isinstance(row, dict):
+            continue
+        distance = _num(row.get("distance_m"), None)
+        angle = _num(row.get("angle_degrees"), None)
+        if distance is None or angle is None:
+            continue
+        key = (distance, angle)
+        bucket = grouped.setdefault(key, {
+            "position": f"d{_format_number(distance)}_a{_format_number(angle)}",
+            "distance_m": distance,
+            "angle_degrees": angle,
+            "ids": set(),
+            "n_rows": 0,
+        })
+        bucket["ids"].add(str(row.get("id", "")))
+        bucket["n_rows"] += 1
+    out = []
+    for _, bucket in sorted(grouped.items()):
+        out.append({
+            "position": bucket["position"],
+            "distance_m": bucket["distance_m"],
+            "angle_degrees": bucket["angle_degrees"],
+            "n_captures": len(bucket["ids"]),
+            "n_rows": int(bucket["n_rows"]),
+            "capture_dir": "",
+            "source_result_file": "",
+        })
+    return out
 
 
 def render_markdown(summary: dict) -> str:
@@ -756,7 +811,27 @@ def render_markdown(summary: dict) -> str:
     if real["available"]:
         lines.extend([
             f"- Captures: {real['config'].get('n_captures', 0)}",
+            f"- Positions: {real['config'].get('n_positions', len(real.get('positions', [])))}",
             "",
+        ])
+        positions = real.get("positions", [])
+        if positions:
+            lines.extend([
+                "### Position Matrix",
+                "",
+                "| Position | Distance | Angle | Captures | OCR rows |",
+                "|---|---:|---:|---:|---:|",
+            ])
+            for pos in positions:
+                lines.append(
+                    f"| {pos.get('position', '')} | "
+                    f"{_format_number(pos.get('distance_m', 0.0))} m | "
+                    f"{_format_number(pos.get('angle_degrees', 0.0))} deg | "
+                    f"{int(pos.get('n_captures') or 0)} | "
+                    f"{int(pos.get('n_rows') or 0)} |"
+                )
+            lines.append("")
+        lines.extend([
             "| Condition | Rows | Char recovery | Exact match | Sensitive token recall | Leak rate char>=20% |",
             "|---|---:|---:|---:|---:|---:|",
         ])
@@ -1208,6 +1283,14 @@ def _format_supplemental_row(row: dict) -> str:
 
 def _pct(value: float) -> str:
     return f"{value * 100:.1f}%"
+
+
+def _format_number(value: float) -> str:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return "n/a"
+    return f"{number:.3f}".rstrip("0").rstrip(".")
 
 
 def _pct_ci(value: float, ci: dict) -> str:

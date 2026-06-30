@@ -5,6 +5,7 @@ from src.evaluation.publication_summary import (
     SUMMARY_MD,
     build_publication_summary,
     render_markdown,
+    summarize_real_capture,
     summarize_real_capture_coco_detection,
     summarize_real_capture_mot_detection,
     summarize_supplemental_ablation,
@@ -285,6 +286,49 @@ def test_real_capture_mot_summary_rejects_mismatched_sample_counts():
 
     assert out["available"] is False
     assert out["reason"] == "mismatched_sample_counts"
+
+
+def test_real_capture_summary_surfaces_position_matrix():
+    report = {
+        "config": {"n_captures": 2350, "n_rows": 2350, "n_positions": 2},
+        "positions": [
+            {
+                "position": "d0.5_a0",
+                "distance_m": 0.5,
+                "angle_degrees": 0.0,
+                "n_captures": 1175,
+                "n_rows": 1175,
+                "capture_dir": "experiments/real_captures_d0.5_a0_final",
+                "source_result_file": "experiments/results_d0.5_a0_final/real_capture_ocr.json",
+            },
+            {
+                "position": "d1_a15",
+                "distance_m": 1.0,
+                "angle_degrees": 15.0,
+                "n_captures": 1175,
+                "n_rows": 1175,
+                "capture_dir": "experiments/real_captures_d1_a15_final",
+                "source_result_file": "experiments/results_d1_a15_final/real_capture_ocr.json",
+            },
+        ],
+        "summary": {
+            "by_condition": {
+                "deployed|short": {
+                    "char_accuracy": {"mean": 0.04, "count": 102},
+                    "exact_match": {"mean": 0.0},
+                    "sensitive_token_recall": {"mean": 0.01},
+                    "leak_rate_char_ge_20pct": {"mean": 0.02},
+                }
+            }
+        },
+    }
+
+    out = summarize_real_capture(report)
+
+    assert out["available"] is True
+    assert len(out["positions"]) == 2
+    assert out["positions"][0]["position"] == "d0.5_a0"
+    assert out["positions"][1]["n_captures"] == 1175
 
 
 def test_anti_ocr_supplemental_rows_prioritize_profile_and_alpha_sweep():

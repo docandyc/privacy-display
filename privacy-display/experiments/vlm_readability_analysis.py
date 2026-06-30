@@ -30,6 +30,25 @@ from src.evaluation.vlm_benchmark import (  # noqa: E402
 )
 
 
+def load_local_env(path: Path | None = None) -> None:
+    """Load simple KEY=VALUE entries from local .env.local without dependencies."""
+    env_path = path or (ROOT / ".env.local")
+    if not env_path.exists():
+        return
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if not key or key in os.environ:
+            continue
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        os.environ[key] = value
+
+
 def _parse_attacks(value: str) -> list[str]:
     attacks = [part.strip() for part in value.split(",") if part.strip()]
     if not attacks:
@@ -77,6 +96,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
+    load_local_env()
     args = parse_args()
     images, truths, names = load_corpus()
     metadata = load_corpus_metadata()

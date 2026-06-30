@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
 import numpy as np
@@ -98,6 +99,7 @@ def run_real_capture_ocr(
     engines: list[str] | None = None,
     evaluator: OCREvaluator | None = None,
     ocr_timeout: float | None = 10.0,
+    show_progress: bool = False,
     save: bool = True,
 ) -> dict:
     """Run OCR on manually collected real-camera captures."""
@@ -109,6 +111,8 @@ def run_real_capture_ocr(
         raise ValueError("no OCR engines available for real-capture analysis")
 
     rows: list[dict] = []
+    total_rows = len(captures) * len(engine_list)
+    completed_rows = 0
     for entry in captures:
         image = load_capture_image(capture_root, str(entry["image"]))
         truth = str(entry["truth"])
@@ -160,6 +164,14 @@ def run_real_capture_ocr(
                 "recognized_text": recognized[:240],
                 "ocr_error": ocr_error,
             })
+            completed_rows += 1
+            if show_progress:
+                _print_ocr_progress(
+                    completed_rows,
+                    total_rows,
+                    capture_id=str(entry["id"]),
+                    engine=engine,
+                )
 
     report = {
         "schema_version": 1,
@@ -182,6 +194,29 @@ def run_real_capture_ocr(
         with open(out_root / REAL_CAPTURE_MD, "w", encoding="utf-8") as f:
             f.write(render_real_capture_markdown(report))
     return report
+
+
+def _print_ocr_progress(
+    current: int,
+    total: int,
+    *,
+    capture_id: str,
+    engine: str,
+) -> None:
+    """Render a dependency-free console progress bar for long OCR runs."""
+    ratio = 1.0 if total <= 0 else min(max(current / total, 0.0), 1.0)
+    width = 30
+    filled = int(round(width * ratio))
+    bar = "#" * filled + "-" * (width - filled)
+    label = f"{engine} {capture_id}"[:72]
+    print(
+        f"\rOCR [{bar}] {current}/{total} ({ratio * 100:5.1f}%) {label:<72}",
+        end="",
+        file=sys.stderr,
+        flush=True,
+    )
+    if current >= total:
+        print(file=sys.stderr, flush=True)
 
 
 def summarize_real_capture_rows(rows: list[dict]) -> dict:
@@ -303,11 +338,30 @@ def render_real_capture_markdown(report: dict) -> str:
         f"- Captures: {report['config']['n_captures']}",
         f"- OCR rows: {report['config']['n_rows']}",
         "",
+    ]
+    positions = report.get("positions", [])
+    if positions:
+        lines.extend([
+            "## Position Matrix",
+            "",
+            "| Position | Distance | Angle | Captures | OCR rows |",
+            "|---|---:|---:|---:|---:|",
+        ])
+        for pos in positions:
+            lines.append(
+                f"| {pos.get('position', '')} | "
+                f"{_fmt_float(pos.get('distance_m'))} m | "
+                f"{_fmt_float(pos.get('angle_degrees'))} deg | "
+                f"{int(pos.get('n_captures') or 0)} | "
+                f"{int(pos.get('n_rows') or 0)} |"
+            )
+        lines.append("")
+    lines.extend([
         "## By Condition",
         "",
         "| Condition | Rows | Char recovery | Exact match | Sensitive token recall | Leak rate char>=20% |",
         "|---|---:|---:|---:|---:|---:|",
-    ]
+    ])
     for condition, stats in sorted(report["summary"]["by_condition"].items()):
         lines.append(
             f"| {condition} | {stats['char_accuracy']['count']} | "
@@ -396,3 +450,12 @@ def _optional_int(value: Any) -> int | None:
 
 def _pct(value: float) -> str:
     return f"{value * 100:.1f}%"
+
+
+def _fmt_float(value: object) -> str:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return "n/a"
+    text = f"{number:.3f}".rstrip("0").rstrip(".")
+    return text or "0"

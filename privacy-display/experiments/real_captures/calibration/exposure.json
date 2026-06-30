@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "backend": "dshow",
+  "selection_method": "ssim_low_contrast_fallback",
+  "short": {
+    "value": -11.0,
+    "exposure_s": 0.00048828125
+  },
+  "long": {
+    "value": -3.0,
+    "exposure_s": 0.125
+  },
+  "scan_results": [
+    {
+      "value": -3.0,
+      "exposure_s": 0.125,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -3.0
+      },
+      "frame_mean": 184.46655446244856,
+      "ssim": 0.31405860799431895
+    },
+    {
+      "value": -4.0,
+      "exposure_s": 0.0625,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -4.0
+      },
+      "frame_mean": 149.14881446116254,
+      "ssim": 0.30203155980189283
+    },
+    {
+      "value": -5.0,
+      "exposure_s": 0.03125,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -5.0
+      },
+      "frame_mean": 112.43578366126543,
+      "ssim": 0.28271582894428643
+    },
+    {
+      "value": -6.0,
+      "exposure_s": 0.015625,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -6.0
+      },
+      "frame_mean": 79.64080761316872,
+      "ssim": 0.26081713071571433
+    },
+    {
+      "value": -7.0,
+      "exposure_s": 0.0078125,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -7.0
+      },
+      "frame_mean": 54.40176279578189,
+      "ssim": 0.2587601575928462
+    },
+    {
+      "value": -8.0,
+      "exposure_s": 0.00390625,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -8.0
+      },
+      "frame_mean": 35.688641493055556,
+      "ssim": 0.2677229902263608
+    },
+    {
+      "value": -9.0,
+      "exposure_s": 0.001953125,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -9.0
+      },
+      "frame_mean": 24.983032568158436,
+      "ssim": 0.26658553816517816
+    },
+    {
+      "value": -10.0,
+      "exposure_s": 0.0009765625,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -10.0
+      },
+      "frame_mean": 16.702262249228394,
+      "ssim": 0.24667660322988155
+    },
+    {
+      "value": -11.0,
+      "exposure_s": 0.00048828125,
+      "honored": true,
+      "settings": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 0.0,
+        "fourcc": "MJPG",
+        "auto_exposure": -1.0,
+        "exposure": -11.0
+      },
+      "frame_mean": 12.094987461419754,
+      "ssim": 0.20608943182823208
+    }
+  ]
+}

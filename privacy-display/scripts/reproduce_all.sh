@@ -42,7 +42,7 @@ Default safe path:
 Options:
   --full-offline   Also rerun heavier offline experiments and benchmarks.
   --detection-suite  Also run the COCO/MOT17 multi-detector suite if datasets exist.
-  --real-capture   Also analyze manually collected real camera captures.
+  --real-capture   Also finalize already collected real camera capture artifacts.
   --with-vlm-live  Also run the live online VLM benchmark. Requires SILICONFLOW_API_KEY.
   --skip-tests     Skip pytest in this orchestration run.
   -h, --help       Show this help.
@@ -100,7 +100,13 @@ fi
 
 if [[ "$RUN_FULL_OFFLINE" -eq 1 ]]; then
   run_python experiments/build_corpus.py
-  run_python -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','paddleocr'], merge_existing=True)"
+  SURYA_PYTHON="${SURYA_PYTHON:-$ROOT_DIR/.venv-surya/bin/python}"
+  if [[ ! -x "$SURYA_PYTHON" ]]; then
+    echo "Missing Surya environment: $SURYA_PYTHON" >&2
+    echo "Create it before running --full-offline, or set SURYA_PYTHON." >&2
+    exit 1
+  fi
+  run_cmd "$SURYA_PYTHON" -c "from src.evaluation.benchmark import run_corpus_multi_engine; run_corpus_multi_engine(engines=['tesseract','easyocr','surya'], merge_existing=True)"
   run_python experiments/attack_analysis.py
   run_python experiments/detection_attack.py
   run_python experiments/view_attack.py
@@ -146,7 +152,7 @@ run_python experiments/vlm_prompt_ablation.py --dry-run --samples-per-category 1
 run_python experiments/vlm_model_ablation.py --dry-run --samples-per-category 3
 
 if [[ "$RUN_REAL_CAPTURE" -eq 1 ]]; then
-  run_python experiments/real_capture_analysis.py --engines tesseract
+  run_python experiments/finalize_real_capture_artifacts.py
 fi
 
 if [[ "$RUN_VLM_LIVE" -eq 1 ]]; then

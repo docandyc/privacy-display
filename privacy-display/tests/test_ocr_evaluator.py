@@ -10,35 +10,52 @@ from src.attack.ocr_evaluator import (
 )
 
 
-def test_parse_paddleocr_v2_result():
+def test_parse_surya_result_objects_and_dicts():
     result = [
-        [
-            [[[0, 0], [10, 0], [10, 10], [0, 10]], ("Hello", 0.99)],
-            [[[12, 0], [20, 0], [20, 10], [12, 10]], ("世界", 0.98)],
-        ]
+        types.SimpleNamespace(
+            text_lines=[
+                types.SimpleNamespace(text="Hello"),
+                types.SimpleNamespace(text="世界"),
+            ]
+        ),
+        {"text_lines": [{"text": "second page"}]},
     ]
 
-    assert OCREvaluator._parse_paddleocr_text(result) == "Hello 世界"
+    assert OCREvaluator._parse_surya_text(result) == "Hello 世界 second page"
 
 
-def test_parse_paddleocr_v3_result_dict():
-    result = [{"res": {"rec_texts": ["Hello", "PaddleOCR"]}}]
+def test_recognize_surya_uses_cached_readers():
+    calls = []
 
-    assert OCREvaluator._parse_paddleocr_text(result) == "Hello PaddleOCR"
+    class FakeRecognitionPredictor:
+        def __call__(self, images, **kwargs):
+            calls.append((images, kwargs))
+            return [
+                types.SimpleNamespace(
+                    text_lines=[
+                        types.SimpleNamespace(text="cached"),
+                        types.SimpleNamespace(text="reader"),
+                    ]
+                )
+            ]
 
-
-def test_recognize_paddleocr_uses_cached_reader():
-    class FakeReader:
-        def predict(self, image):
-            assert image.flags["C_CONTIGUOUS"]
-            return [{"res": {"rec_texts": ["cached", "reader"]}}]
-
-    evaluator = OCREvaluator(engines=["paddleocr"])
-    evaluator._paddleocr_reader = FakeReader()
-
+    evaluator = OCREvaluator(engines=["surya"])
+    detector = object()
+    evaluator._surya_readers = (FakeRecognitionPredictor(), detector)
     image = np.zeros((8, 8, 3), dtype=np.uint8)
 
-    assert evaluator.recognize(image, "paddleocr") == "cached reader"
+    assert evaluator.recognize(image[:, ::-1], "surya") == "cached reader"
+    assert calls[0][1] == {
+        "det_predictor": detector,
+        "sort_lines": True,
+        "math_mode": False,
+    }
+
+
+def test_surya_device_env_is_respected(monkeypatch):
+    monkeypatch.setenv("SURYA_DEVICE", "cpu")
+
+    assert OCREvaluator._resolve_surya_device() == "cpu"
 
 
 def test_heavy_ocr_auto_detection_is_offline_safe(monkeypatch):

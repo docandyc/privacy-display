@@ -33,6 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default="experiments/results")
     parser.add_argument("--engines", type=_parse_engines, default=["tesseract"])
     parser.add_argument("--ocr-timeout", type=float, default=10.0)
+    parser.add_argument("--progress", action="store_true", help="Show per-capture OCR progress.")
     parser.add_argument(
         "--init-template",
         action="store_true",
@@ -54,6 +55,7 @@ def main() -> int:
         output_dir=args.output_dir,
         engines=args.engines,
         ocr_timeout=args.ocr_timeout,
+        show_progress=args.progress,
     )
     print(f"Wrote {Path(args.output_dir) / REAL_CAPTURE_JSON}")
     print(f"Wrote {Path(args.output_dir) / REAL_CAPTURE_MD}")

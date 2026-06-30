@@ -57,15 +57,21 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
         timestamp="2026-06-13T00:00:00+00:00",
     )
     result_paths = {record["path"] for record in default_manifest["result_files"]}
+    assert "experiments/results/real_capture_ocr.json" in result_paths
+    assert "experiments/results_d0.5_a0_final/real_capture_ocr.json" in result_paths
+    assert "experiments/results_d1.5_a30_final/real_capture_ocr.md" in result_paths
     assert "experiments/results/coco_detection_attack.json" in result_paths
     assert "experiments/results/mot_video_detection.json" in result_paths
     assert "experiments/results/mot_tracking_attack.json" in result_paths
+    assert "experiments/results/real_capture_mot_capture_manifest.json" in result_paths
     assert "experiments/real_captures/coco_detection/capture_manifest.json" in result_paths
-    assert "experiments/real_captures/mot_MOT17-09-FRCNN/capture_manifest.json" in result_paths
     source_paths = {record["path"] for record in default_manifest["source_files"]}
+    assert "experiments/finalize_real_capture_artifacts.py" in source_paths
+    assert "scripts/run_real_capture_ocr_all.ps1" in source_paths
     assert "scripts/run_real_capture_detection_windows.bat" in source_paths
     assert any(command["name"] == "real_capture_coco_detection" for command in default_manifest["commands"])
     assert any(command["name"] == "real_capture_mot" for command in default_manifest["commands"])
+    assert any(command["name"] == "real_capture_finalize" for command in default_manifest["commands"])
     model_live = next(c for c in manifest["commands"] if c["name"] == "vlm_model_ablation_live")
     assert model_live["requires_env"] == ["SILICONFLOW_API_KEY"]
     vlm_live = next(command for command in manifest["commands"] if command["name"] == "vlm_live")
@@ -80,13 +86,14 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
 def test_file_record_and_sha256_file(tmp_path):
     path = tmp_path / "artifact.txt"
     path.write_text("artifact\n", encoding="utf-8")
+    payload = path.read_bytes()
 
-    assert sha256_file(path) == hashlib.sha256(b"artifact\n").hexdigest()
+    assert sha256_file(path) == hashlib.sha256(payload).hexdigest()
     assert file_record(tmp_path, "artifact.txt") == {
         "path": "artifact.txt",
         "exists": True,
-        "sha256": hashlib.sha256(b"artifact\n").hexdigest(),
-        "bytes": len(b"artifact\n"),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "bytes": len(payload),
     }
 
 

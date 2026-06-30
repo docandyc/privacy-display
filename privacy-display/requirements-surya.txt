@@ -1,0 +1,7 @@
+# Surya 0.20+ uses a server-based API. The 0.14.7 release is pinned for
+# direct in-process OCR through RecognitionPredictor + DetectionPredictor.
+surya-ocr==0.14.7
+pytesseract>=0.3.10
+easyocr>=1.7
+pycryptodome>=3.19
+pytest>=8
