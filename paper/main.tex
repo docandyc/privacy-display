@@ -1,0 +1,937 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{url}
+
+% 中文支持（中文先行草稿阶段使用 xelatex 编译）
+% 最终英文投稿版改回 pdflatex 并删除 xeCJK 相关行
+\usepackage{xeCJK}
+\setCJKmainfont{STSong}
+\setCJKsansfont{STHeiti}
+\setCJKmonofont{STFangsong}
+
+\usepackage{bm}
+\makeatletter
+\AtBeginDocument{\DeclareMathVersion{bold}
+\SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
+\SetSymbolFont{NewLetters}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathrm}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathit}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathbf}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathtt}{bold}{OT1}{pcr}{b}{n}
+\SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
+\renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
+\makeatother
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% TODO 标记宏
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+%% ============================================================
+\begin{document}
+\doi{Not assigned (draft manuscript)}
+\vol{PREPRINT}
+\year{2026}
+
+\title{Temporal Pixel Masking for Mitigating Short-Exposure Camera Capture of On-Screen Information}
+
+\author{\uppercase{First A. Author}\authorrefmark{1}
+\TODO{作者信息待填}}
+
+\address[1]{\TODO{单位地址待填}}
+
+\tfootnote{\TODO{基金致谢待填}}
+
+\markboth
+{Author \headeretal: Temporal Pixel-Masking Display Privacy}
+{Author \headeretal: Temporal Pixel-Masking Display Privacy}
+
+\corresp{Corresponding author: \TODO{通讯作者邮箱}.}
+
+%% ============================================================
+%% 摘 要
+%% ============================================================
+\begin{abstract}
+智能手机和智能眼镜可以静默拍摄屏幕，通过~OCR、目标检测等手段窃取密码、金融数据和个人敏感信息，构成被忽视的物理层隐私威胁。
+现有防护手段或依赖观察角度，或只能提供事后溯源，或以破坏正常阅读为代价，均难以直接缓解正对屏幕的相机抓拍。
+本文研究一种基于时间积分差异的时域像素掩模方法。该方法将原始帧分解为~$n$~个由~CSPRNG~驱动的互补子帧，并可选叠加时域互补噪声。观察者在多个高速子帧上形成整合知觉，短曝光相机则主要记录不完整的像素子集。该机制不保证抵御覆盖完整显示周期的曝光或视频重构。
+真机数据集包含~9~组距离/角度下共~10\,575~次采集，覆盖组件消融、参数消融和多种攻击模式。采用逐样本~best-of-engine~口径时，短曝光~OCR~字符恢复率由未保护条件的~92.5\%~降至~14.1\%（deployed~档）和~4.2\%（抗拍强化档），exact-match~由~66.0\%~降至~0.4\%~/~0\%。真机~COCO~检测~mAP50~由~39--50\%~降至~1.6--5.8\%。
+受控评测中，三个~OCR~引擎的单子帧字符恢复率均不高于~2.6\%。基础~$n=4$、240\,Hz~配置的数字模型得到~FPI\,=\,0.030、$\Delta E_{00}=0.34$，但这些指标仅是代理量，不能替代用户研究和真实光度测量。
+视频时域平均仍为主要残余攻击途径，抗拍强化档在真机视频上将泄露降至~42.3\%~char~/~4.6\%~exact，但未消除该类攻击。
+\end{abstract}
+
+\begin{keywords}
+display privacy, visual eavesdropping, camera capture, persistence of vision, temporal masking, adversarial perturbation, OCR, anti-photography
+\end{keywords}
+
+\titlepgskip=-21pt
+\maketitle
+
+%% ============================================================
+%% I. 引 言
+%% ============================================================
+\section{引言}
+\label{sec:introduction}
+
+屏幕无处不在，覆盖办公、金融、医疗、会议等场景。与此同时，拍照设备同样无处不在：智能手机、智能眼镜（如~Ray-Ban Meta）、微型相机。攻击者只需对屏幕拍一张照片，即可通过~OCR~提取文字，或借助目标检测识别界面元素。这种"视觉窃听"（visual eavesdropping）攻击隐蔽且易于实施，不留网络入侵痕迹，也无需物理接触设备。
+
+\subsection{现有方案及其不足}
+
+现有屏幕隐私防护方案各有适用边界：
+物理隐私膜（如~3M~隐私滤光片）只限制可视角度，无法阻止正对相机的窃取。
+在本文~9~样本的软件代理实验中，50\%~调暗的~OCR~字符恢复率仍为~92.9\%，高斯模糊为~52.6\%，12~像素块化为~0\%。这些数值不代表物理设备间的公平比较，相关边界见~\S\ref{sec:simulation}。
+数字水印仅提供事后追责能力而非事前阻断。
+
+\textbf{核心矛盾}：对相机施加的信息退化往往也会降低合法用户的可读性。本文关注能否利用显示时间结构，在短曝光抓拍场景中扩大二者之间的差异。
+
+\subsection{核心思想}
+
+本文利用观察者时间整合与相机曝光窗口之间的差异。我们将每帧完整画面在时域上拆成~$n$~个随机互补子帧高速交替显示。当曝光时间短于或接近一个子帧时，相机主要记录不完整的像素子集，而观察者可跨多个子帧整合内容（图~\ref{fig:concept}）。相机曝光并非瞬时采样。当长曝光或视频重构覆盖完整周期时，互补子帧可被重新累加，因此本文不对任意曝光条件作不可恢复保证。
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/concept_threat.png}
+\caption{威胁场景与时域掩模核心概念}
+\label{fig:concept}
+\end{figure}
+
+\subsection{贡献}
+
+本文的主要贡献包括：
+\begin{enumerate}
+\item \textbf{面向短曝光抓拍的时域像素掩模实现}：在既有时间掩模思想基础上，实现~CSPRNG~驱动的像素级互补子帧、可选互补噪声和~GPU~渲染原型，并明确其安全性依赖于相机曝光窗口。
+
+\item \textbf{多几何条件真机验证}：汇总~3~个距离与~3~个角度下的~10\,575~次采集。该数据集由组件消融、参数消融和攻击评测构成，并非平衡的全因子设计。其中~deployed~档短曝光~OCR~为~14.1\%（exact~0.4\%），抗拍强化档为~4.2\%（exact~0\%）。
+
+\item \textbf{跨任务攻击评测}：覆盖~3~个~OCR~引擎与~120~条合成语料、4~个目标检测器与~COCO~val2017（真机~150~张，另以~8~张作仿真管线诊断），以及~MOT17~检测/关联评测（仿真~5316~帧、真机停帧采集~450~帧）。结论限定为所评测模型和任务，不外推为对所有视觉模型均有效。
+
+\item \textbf{诚实的安全边界分析}：量化视频时域平均攻击的残余泄露（完整周期~95.2\%），抗拍强化档将真机视频泄露降至~42.3\%~char~/~4.6\%~exact，并明确该攻击仍是方案的原理性边界。
+
+\item \textbf{模型化安全-可用性分析}：报告~FPI、$\Delta E$、SSIM~等代理指标及~Pareto~前沿，同时区分数字积分代理与真实用户体验。\TODO{用户研究数据待补。}
+\end{enumerate}
+
+
+%% ============================================================
+%% II. 相关工作
+%% ============================================================
+\section{相关工作}
+\label{sec:related}
+
+\subsection{屏幕视觉窃听威胁}
+
+远距离屏幕阅读攻击（望远镜、长焦镜头）~\cite{b_backes2009}、HDMI~电磁泄漏的深度学习重建~\cite{b_fernandez2024}、智能眼镜的隐蔽拍摄能力~\cite{b_wang2026}、反射/折射间接窃取~\cite{b_raguram2011}等均已被文献记录。Ponemon~Institute~的一项受控实验表明~91\%~的视觉窃听尝试可在~15~分钟内成功~\cite{b_ponemon2016}。Eiband~等~\cite{b_eiband2017}~通过~174~人的实地调研揭示了肩窥在日常环境中的普遍性与用户应对策略。Tang~和~Shin~\cite{b_tang2023}~提出~Eye-Shield，利用前置摄像头检测旁观者并实时模糊屏幕敏感区域，但依赖用户端硬件且仅做局部遮蔽。本文聚焦不要求拍摄端合作的显示侧缓解机制，但不声称在所有曝光和重构条件下均能阻止信息获取。
+
+\subsection{显示隐私保护}
+
+物理隐私膜通过限制可视角度保护侧面观察者的偷窥~\cite{b_ponemon2016}，但无法阻止正对相机。Zhu~等~\cite{b_zhu2017}~提出~LiShield，利用智能~LED~调制照明干扰滚动快门相机成像以保护物理场景，但该方案作用于环境光源而非显示内容本身。视觉密码术（Visual Cryptography）将秘密图像分拆为多份叠加还原~\cite{b_naor1994}，启发了基于时域分拆的思路，但其原始方案面向打印介质而非高刷显示。数字水印~\cite{b_zhong2023}~可嵌入追踪标识，近年已发展出抗屏摄鲁棒水印~\cite{b_fang2019}，但水印本质上提供事后溯源能力而非事前阻断。软件防截屏（DRM）仅防数字截图，不防物理拍摄。
+
+屏-相机可见光通信（screen-camera VLC）~\cite{b_nguyen2016,b_tran2021,b_ghiasi2024}~同样利用人眼时间积分特性，在显示画面中嵌入人眼不可见的信息供相机解码。本文方法与~VLC~互为"镜像"：VLC~的目标是让相机\emph{读取}隐藏信息，而本文则要让相机\emph{无法}读取显示内容。
+
+Yerazunis~和~Carbone~\cite{b_yerazunis2001}~已提出利用图像时间掩模增强显示隐私。Wu~和~Zhai~\cite{b_wu2013}~随后系统化了时域心理视觉调制（temporal psychovisual modulation），Gao~等~\cite{b_gao2014}~进一步将其用于信息安全显示。Lim~\cite{b_lim2007}~利用视觉暂留在浏览器中生成防截屏键盘，使单次数字截屏只得到局部图案。因此，时域分片本身并非本文首创。本文的增量在于：（1）面向物理相机的像素级~CSPRNG~互补分片与强化档实现；（2）9~组几何条件下共~10\,575~次真机采集；（3）跨~OCR、目标检测和目标关联任务的评测；（4）对完整周期平均失守的定量边界分析。
+
+\subsection{对抗扰动与物理世界鲁棒性}
+
+数字域对抗扰动~\cite{b_goodfellow2015,b_madry2018,b_carlini2017}和物理世界对抗补丁~\cite{b_eykholt2018,b_thys2019,b_xu2020}已被广泛综述~\cite{b_wei2022}。Athalye~等~\cite{b_athalye2018}~通过~Expectation over Transformation（EoT）实现了首个跨视角鲁棒的~3D~物理对抗物体，但仍依赖白盒目标模型。然而，数字到物理的跨域鲁棒性存在显著差距。数字像素级扰动在经过相机采样、JPEG~压缩后大幅削弱~\cite{b_eykholt2018}。物理对抗补丁虽具备跨视角鲁棒性，但需预先生成针对特定分类器的扰动图案~\cite{b_thys2019,b_xu2020}，且对未知模型的迁移性有限~\cite{b_zhao2023}。屏-相机链路还会引入摩尔纹等光学伪影，Niu~等~\cite{b_niu2021}~证明该伪影本身即可充当对抗扰动。本文方法不是在内容上加扰动，而是在时域显示层做分片掩模。物理拍摄天然是"采样"过程，防御嵌入在显示本身，无需假设攻击者所用的识别模型。
+
+
+%% ============================================================
+%% III. 威胁模型
+%% ============================================================
+\section{威胁模型}
+\label{sec:threat}
+
+\subsection{保护资产}
+
+屏幕上显示的敏感文字和视觉信息：密码、金融数据、个人身份信息（PII）、代码、机密文档等。
+
+\subsection{攻击者能力}
+
+攻击能力不是严格的单调等级，而由曝光、几何条件、时间采样和后处理能力共同决定。本文按下列范围报告结果：
+\begin{itemize}
+\item \textbf{主要防护范围}：短曝光快照和逐帧识别。相机曝光时间约为一个子帧时长，攻击者可选择~OCR~引擎，但不拥有覆盖完整周期的全部观测。
+\item \textbf{评测边界}：长曝光、连续录像后的时域平均、离轴拍摄，以及已知周期后的相位搜索和通道重构。本文量化这些攻击，但只把抗拍强化档的结果解释为缓解，不作完全阻断保证。
+\item \textbf{尚未充分覆盖}：更多相机/显示器组合、精确卷帘快门行对齐、真实时域超分辨率、针对显示序列训练的学习型重构器和长期自适应攻击。
+\end{itemize}
+
+\subsection{攻击者知识}
+
+攻击者\emph{已知}时域掩模算法、子帧数~$n$~和候选周期参数，但\emph{未知}当前周期的掩模种子和相位起点。CSPRNG~用于避免固定空间图案和跨周期重复，不构成对完整周期平均攻击的密码学保证。一旦攻击者获得并配准完整周期，未知种子不能阻止线性重构。
+
+\subsection{防护目标}
+
+本文把~OCR~字符恢复率~$<5\%$、exact-match~$=0\%$、检测~mAP50~下降作为短曝光条件下的设计目标，不将其视为对所有攻击模式的形式化安全保证。可用性方面以~FPI、$\Delta E$~和~SSIM~作为模型化代理。在用户研究完成前，本文不据此宣称“人眼无感”。
+
+
+%% ============================================================
+%% IV. 方法
+%% ============================================================
+\section{系统设计}
+\label{sec:method}
+
+\subsection{时域子帧分解}
+
+给定归一化原始帧~$\mathbf{I}\in[0,1]^{H\times W\times C}$，生成二值掩模~$\mathbf{M}_1,\ldots,\mathbf{M}_n$，满足~$\sum_{k=1}^{n}\mathbf{M}_k=\mathbf{1}$，并令~$\mathbf{I}_k=\mathbf{I}\odot\mathbf{M}_k$。因此：
+\begin{itemize}
+\item \textbf{数字域完备性}：$\sum_{k=1}^{n}\mathbf{I}_k = \mathbf{I}$；
+\item \textbf{互斥性}：每个像素在~$n$~个时隙中恰好被点亮一次
+\end{itemize}
+需要区分”求和”与”时间平均”。在等时长、等峰值亮度的理想线性显示上，一个周期的平均辐亮度为~$\mathbf{I}/n$，而非~$\mathbf{I}$。数字域完备性说明子帧可被重新求和，但不等价于真实显示亮度已经无损恢复。
+
+掩模生成采用~ChaCha20~\cite{b_chacha2008} CSPRNG~和~Fisher--Yates~置换算法~\cite{b_knuth1997}，将每个像素随机分配至一个子帧。实现对生成的时隙计数执行卡方均匀性检查。随机种子降低固定图案和跨周期相关性，但不改变完整周期可被线性求和的事实。图~\ref{fig:pipeline}~展示了从原始帧到子帧显示的完整管线。
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{figures/method_pipeline.png}
+\caption{时域像素掩模系统管线：从原始帧到受保护显示}
+\label{fig:pipeline}
+\end{figure*}
+
+\subsection{互补对抗噪声}
+
+在子帧上叠加对抗噪声~$\mathbf{N}_1, \ldots, \mathbf{N}_n$，满足：
+\begin{equation}
+\sum_{k=1}^{n}\mathbf{N}_k = \mathbf{0}
+\label{eq:noise_complement}
+\end{equation}
+式~(\ref{eq:noise_complement})~只在叠加、裁剪和显示传递函数之前的理想线性域严格成立。噪声方向由~FGSM~\cite{b_goodfellow2015}~式代理梯度生成，幅度限制为~$\varepsilon=8/255$，再在时域中作互补分解。由于显示器不能输出负辐亮度，实现使用基底电平和数值裁剪。因此，经过~gamma、量化、裁剪和相机成像后，噪声不保证物理上精确抵消。
+
+\textbf{组件作用}：随机点阵掩模是主要机制。受控数字实验中，噪声可抑制弱掩模或修复攻击下的残余结构。但真机短曝光结果中~mask+noise（24.7\%）高于~mask-only（17.5\%）。因此本文不把对抗噪声表述为在所有物理条件下均有效的强化，而将其视为依赖攻击与成像链路的可选组件。
+
+\subsection{亮度补偿}
+
+每个像素在一个~$n$~时隙周期中仅点亮一次。理论上，若显示器能在线性光域把点亮时隙的光输出提升~$n$~倍，则周期平均亮度可接近原图，但当前~PoC~没有实现逐时隙动态背光协同，也没有使用光度计验证绝对亮度。本文的亮度对齐、CIEDE2000~$\Delta E_{00}$~\cite{b_ciede2000}~和~SSIM~结果均来自数字积分/归一化模型，只用于比较配置，不作为真实面板光学等价或用户舒适度的证据。
+
+\subsection{时序与带宽}
+
+对于仅含~$n$~个互补子帧的基础周期，若把~60\,Hz~作为最低周期率，则需~$f_r\geq60n$；$n=4$~时对应~240\,Hz。若周期额外包含一帧反色帧，则条件变为~$f_r\geq60(n+1)$，240\,Hz~下实际周期率只有~48\,Hz。因此，240\,Hz~满足基础四子帧配置，但不满足含反色帧配置的~60\,Hz~周期目标。FPI~是基于周期率和空间汇聚的模型化闪烁代理，数值越低表示模型预测的闪烁风险越小，不是临床或用户研究阈值。随机掩模的空间相位变化可能降低局部同步调制，但人类闪烁感知仍受亮度、对比度、视网膜位置和眼动影响~\cite{b_cai2024,b_davis2015}。
+
+\subsection{抗拍强化档}
+
+基础的线性时域掩模在完整周期时域平均攻击下会泄露（见~\S\ref{sec:security_frontier}）。为应对该前沿攻击，引入非线性增强档：
+\begin{itemize}
+\item \textbf{strong/deployed~档}：mask~cell~为~1~像素，条纹宽度为~10~像素，真机采集配置使用条纹幅度~$\alpha_s=0.10$~和字形幅度~$\alpha_g=0.12$，deployed~档另加入~$\alpha=0.2$~反色帧。
+
+\item \textbf{抗拍强化档（\texttt{capture\_hardened}）}：mask~cell~增至~2~像素，条纹宽度为~6~像素，条纹幅度和字形幅度分别为~0.42~和~0.55，并加入~$\alpha=0.2$~反色帧。历史真机数据中的~\texttt{vlm}~标签与该档位对应。
+\end{itemize}
+
+非线性档偏离了严格完备性（$\sum\mathbf{I}_k \neq \mathbf{I}$），画面会出现可感知的条纹和颗粒。其安全收益与可读性代价必须分别报告。在用户研究完成前，本文不预设这种代价对所有用户或场景都可接受。
+
+\subsection{部分反色帧}
+
+长曝光攻击（$\geq$17\,ms，覆盖一个完整周期）可通过传感器积分近似还原原始画面。一个直接的缓解是在每个~$n$~帧子帧周期后插入一帧\textbf{部分反色帧}~$\alpha \cdot (255 - \mathbf{I})$，使长曝光积分中叠入与原图互补的亮度分量，降低净信号对比度。反色强度~$\alpha$~越大，长曝光恢复可能下降，但数字积分视图的亮度和对比度也随之改变。
+
+真机长曝光评测（\S\ref{sec:real_capture}）表明，弱反色档（$\alpha=0.2$）并未改善长曝光字符恢复，$\alpha=0$~为~69.9\%，$\alpha=0.2$~反而为~73.0\%（best-of-engine）。只有接近全反色（$\alpha=1.0$）时才降至~24.2\%，但该配置的数字积分视图已严重退化。因此，弱反色帧不能独立抵御长曝光积分。deployed~档取~$\alpha=0.2$~仅代表模型化可读性优先的设计选择，而非经用户研究验证的最优点。
+
+每个显示周期由此包含~$n+1$~个时隙。$n=4$、240\,Hz~时周期率为~48\,Hz，低于本文设定的~60\,Hz~设计目标，可能产生可感知闪烁，且不存在适用于所有观察条件的固定”无闪烁阈值”。
+
+\subsection{实现范围}
+
+当前~PoC~位于应用/算法层，使用~Python~和~GPU~渲染生成显示序列，不含~OS~驱动级注入（DXGI / KMS-DRM / CoreDisplay），也不包含逐时隙动态背光控制。因而本文验证的是显示序列及其拍摄结果，不把当前原型表述为已经完成生产级系统集成。
+
+
+%% ============================================================
+%% V. 实验评估
+%% ============================================================
+\section{实验评估}
+\label{sec:evaluation}
+
+% 叙事逻辑：真机拍摄 OCR（5.2）→ 用户体验（5.3）→ 检测/跟踪（5.4）→ 软件模拟补充（5.5）
+
+\subsection{实验设置}
+\label{sec:setup}
+
+\textbf{硬件平台}：实验在一台配备~Intel Core i7-8700K（3.70\,GHz）、32\,GB RAM、NVIDIA TITAN Xp（12\,GB VRAM）的桌面工作站上运行。显示画布分辨率为~$1920 \times 1080$，显示器标称刷新率为~240\,Hz。该刷新率仅满足~$n=4$~基础子帧循环的~$f_r/n=60$\,Hz。若每周期额外插入一帧反色帧，则实际周期频率为~$240/(n+1)=48$\,Hz。因此，反色配置的视觉舒适性不能由“240\,Hz~高刷”直接推出，仍需用户实验验证。
+
+\textbf{拍摄设备}：使用~eMeet SmartCam S600~USB~网络相机（UVC~标准驱动）。回放画布为~$1920 \times 1080$，相机输出经透视校正和内容裁剪后再送入识别器。合并后的实验元数据显示，短曝光与视频帧曝光时间为~0.49~或~3.91\,ms，长曝光为~31.25~或~125\,ms，视频采集帧率为~60\,fps。摄像头分别放置在距显示器~0.5\,m、1\,m、1.5\,m~三个距离，每个距离下旋转~$0^{\circ}$、$15^{\circ}$、$30^{\circ}$~三个角度，共~9~组几何条件。环境照度未记录，因此本文不把结果外推到不同照明条件。
+
+\textbf{测试内容}：真机拍摄~OCR~实验使用~CET6（英语六级真题）文档（竖版~$900 \times 1280$）和~120~张合成语料（12~类~$\times$~10~变体，覆盖密码、凭证、代码、表格、段落、URL~等类别）。真机检测实验在~COCO~val2017~\cite{b_coco2014}~子集（150~张）上进行，跟踪实验在~MOT17-09-FRCNN~\cite{b_mot16}~序列的~450~帧上进行。软件模拟~OCR~使用全部~120~张合成语料，模拟检测仅使用~8~张图作管线诊断，模拟跟踪覆盖~5316~帧。因此，本文以真机检测结果为主要证据，不把~8~图模拟检测称为全量评测。
+
+\textbf{评测指标}：OCR~字符恢复率定义为~$\max(0,1-\mathrm{CER})$。完全匹配率在移除空白并忽略大小写后判断全文是否一致。敏感~token~恢复率统计参考文本中数字、账号、URL/路径和密钥样式字段被完整找回的比例。泄露率是字符恢复率不低于~20\%~的样本比例。检测使用~mAP、mAP50~和~AR，跟踪使用~HOTA、IDF1，并在软件模拟中补充~MOTA/MOTP。用户调研拟使用打字准确率/速度与可读性、闪烁、疲劳、隐私感的五级~Likert~量表。
+
+真机~OCR~的主结果先对每次拍摄的三个引擎取最大恢复值，以模拟攻击者选择最佳识别器，再以拍摄样本为重采样单位进行~2000~次百分位~bootstrap，报告~95\%~置信区间。由于同一内容和几何条件存在重复测量，这些区间只描述当前语料与拍摄设置下的经验不确定性，不等同于独立人群推断。检测与跟踪结果未进行显著性检验，相关差异均作描述性报告。
+
+数字可用性代理中，$\Delta E_{00}$~是原图与完整周期数字重建图之间的平均~CIEDE2000~色差，SSIM~是两者的平均结构相似度。归一化互信息代理定义为~$I(X;Y)/H(X)$，其中~$X$~为原图灰度、$Y$~为单子帧灰度，使用~64~个直方图区间估计，数值越低表示单子帧保留的信息越少。FPI~采用实现中的简化模型：令单像素调制深度~$d=1-1/n$、空间汇聚像素数~$N=625$、像素点亮频率~$f_p=f_r/n$。当~$f_p\geq60$\,Hz~时，$\mathrm{FPI}=dN^{-1/2}(60/f_p)^2$，低于~60\,Hz~时则使用~$d(1-f_p/60)$。该公式不是~IEEE~1789~标准指标或临床阈值，只用于本文配置间排序。
+
+% ----------------------------------------------------------
+\subsection{真机拍摄~OCR~实验}
+\label{sec:real_capture}
+
+本实验共采集~10\,575~张真机图像，每个几何位置各~1\,175~张。其中混合了组件消融、参数扫描和主攻击条件，因而不是“9~几何 $\times$ 7~档位 $\times$ 3~攻击”的平衡全因子设计。使用~Surya~\cite{b_surya2024}、EasyOCR~\cite{b_easyocr2020}、Tesseract~\cite{b_smith2007}~三个~OCR~引擎分别评测，共产生~31\,725~条引擎级记录。近年视觉语言模型已展现出较强~OCR~能力~\cite{b_shi2023}，但本文尚未对其进行实测，不能由传统~OCR~结果推断~VLM~安全性。表~\ref{tab:real_ocr_main}~报告完整数据中的核心条件子集，并对每次拍摄取~best-of-engine。表~\ref{tab:real_ocr_engine}~给出短曝光下的各引擎独立结果。
+
+\begin{table*}[!t]
+\caption{真机拍摄~OCR~核心条件结果（best-of-engine，$N$~为该行独立拍摄数，9~几何条件汇总）}
+\label{tab:real_ocr_main}
+\centering
+\begin{tabular}{lllcccc}
+\toprule
+防护档位 & 攻击模式 & $N$ & Char~recovery & Exact~match & Sensitive~token & Leak~rate \\
+\midrule
+\multirow{3}{*}{original（未保护）}
+ & short & 324 & 92.5\% & 66.0\% & 96.5\% & 97.5\% \\
+ & video:temporal\_mean & 108 & 72.1\% & 53.7\% & 77.0\% & 78.7\% \\
+ & long & 324 & 44.2\% & 13.9\% & 90.7\% & 54.6\% \\
+\midrule
+\multirow{3}{*}{mask\_only}
+ & short & 324 & 17.5\% & 0.3\% & 28.7\% & 28.7\% \\
+ & video:temporal\_mean & 108 & 69.3\% & 44.4\% & 73.7\% & 76.9\% \\
+ & long & 324 & 70.8\% & 36.7\% & 93.9\% & 77.5\% \\
+\midrule
+\multirow{3}{*}{mask\_noise}
+ & short & 324 & 24.7\% & 2.8\% & 33.5\% & 36.1\% \\
+ & video:temporal\_mean & 108 & 69.6\% & 45.4\% & 73.6\% & 77.8\% \\
+ & long & 324 & 71.7\% & 41.0\% & 94.9\% & 78.7\% \\
+\midrule
+\multirow{3}{*}{deployed}
+ & short & 459 & 14.1\% & 0.4\% & 23.0\% & 19.4\% \\
+ & video:temporal\_mean & 153 & 65.4\% & 41.2\% & 70.2\% & 76.5\% \\
+ & long & 324 & 67.6\% & 41.4\% & 96.4\% & 76.2\% \\
+\midrule
+\multirow{3}{*}{capture-hardened}
+ & short & 324 & 4.2\% & 0.0\% & 5.1\% & 3.4\% \\
+ & video:temporal\_mean & 108 & 42.3\% & 4.6\% & 39.1\% & 66.7\% \\
+ & long & 324 & 11.1\% & 0.0\% & 30.6\% & 17.6\% \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\textbf{核心发现}：
+
+\begin{enumerate}
+\item \textbf{短曝光条件下恢复率明显下降}：未保护屏幕的短曝光照片~OCR~字符恢复率为~92.5\%（exact~66.0\%）。deployed~档将其降至~14.1\%（exact~0.4\%），抗拍强化档进一步降至~4.2\%（exact~0\%）。这些结果支持当前相机、曝光和几何范围内的短曝光缓解效果，但不构成对任意相机设置的保证。
+
+\item \textbf{积分类攻击是残余前沿，可读优先档在此脆弱}：长曝光与视频时域平均都利用了完整周期的线性互补性。可读优先的~deployed~档在长曝光下仍恢复~67.6\%~char~/~41.4\%~exact（敏感~token~召回~96.4\%），在视频时域平均下恢复~65.4\%~char~/~41.2\%~exact。尤其是未保护长曝光基线仅为~44.2\%~char，低于~deployed~的~67.6\%，说明固定的长曝光/相机参数会对不同显示条件产生非单调影响。这一组绝对值不能解释为普遍的防护收益。弱反色帧（$\alpha=0.2$）也不足以独立抵御时域积分。因此，本文的主要有效性结论限定在所评测的单帧短曝光威胁模型，积分类攻击作为安全边界单列。
+
+\item \textbf{抗拍强化档降低了当前积分攻击的恢复率，但代价尚未由用户实验量化}：该档在当前设置下的长曝光结果为~11.1\%~char~/~0\%~exact，视频时域平均为~42.3\%~char~/~4.6\%~exact。视频条件仍存在明显泄露，不应解读为攻击已被闭合。数字积分视图的~SSIM~显示安全性与重建失真之间存在取舍（图~\ref{fig:tradeoff}），但“人眼端可接受”仍需待办的用户实验支持。
+
+\item \textbf{几何条件下的描述性趋势}：在所测~9~组几何条件（0.5--1.5\,m $\times$ 0--30$^{\circ}$）中，短曝光保护条件的恢复率总体低于对应未保护条件。由于设计不平衡且未建立几何因素的推断模型，本文不据此主张距离或角度方向上存在统计意义的单调鲁棒性。
+\end{enumerate}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/real_capture_montage.pdf}
+\caption{真机拍摄蒙太奇：左列为数字积分重建视图，用于检查完整周期的图像一致性，中列为短曝光拍摄，右列为长曝光拍摄。数字积分视图不是人眼可读性或视觉舒适性的直接证据。}
+\label{fig:montage}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/real_capture_bar.pdf}
+\caption{真机防护效果：档位 $\times$ 攻击模式的~OCR~恢复率}
+\label{fig:bar_attack}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/readability_robustness_tradeoff.pdf}
+\caption{数字重建质量与积分攻击鲁棒性的取舍：随抗~OCR~档位增强（off~$\to$~overlay~$\to$~deployed~$\to$~抗拍强化），时域平均字符恢复率下降（左轴），完整周期数字重建的~SSIM~\cite{b_wang2004}~也下降（右轴）。SSIM~是图像代理，不等同于用户可读性。数据来自抗~OCR~档位消融。}
+\label{fig:tradeoff}
+\end{figure}
+
+\textbf{引擎间结果}：表~\ref{tab:real_ocr_engine}~将短曝光结果按引擎拆分。三个引擎在未保护条件下的字符恢复率差异较大（Surya~42.6\%、EasyOCR~71.7\%、Tesseract~78.0\%）。在~deployed~档下，各引擎为~3.0--10.8\%；在抗拍强化档下为~1.3--1.8\%。这说明当前三种传统~OCR~引擎均出现恢复率下降，但样本数和引擎家族有限，不能据此声称与任意识别器无关。主表的~best-of-engine~按每次拍摄选取三个引擎中恢复最好的结果，因此比单引擎均值更保守。
+
+\begin{table}[!t]
+\caption{真机短曝光~OCR：三引擎分别结果（9~几何条件汇总）}
+\label{tab:real_ocr_engine}
+\centering
+\small
+\begin{tabular}{llccc}
+\toprule
+防护档位 & 引擎 & Char~(\%) & Exact~(\%) & N \\
+\midrule
+\multirow{3}{*}{original}
+ & Surya & 42.6 & 27.8 & 324 \\
+ & EasyOCR & 71.7 & 24.1 & 324 \\
+ & Tesseract & 78.0 & 42.6 & 324 \\
+\midrule
+\multirow{3}{*}{mask\_only}
+ & Surya & 4.1 & 0.3 & 324 \\
+ & EasyOCR & 13.9 & 0.0 & 324 \\
+ & Tesseract & 3.2 & 0.0 & 324 \\
+\midrule
+\multirow{3}{*}{mask\_noise}
+ & Surya & 11.0 & 2.8 & 324 \\
+ & EasyOCR & 17.2 & 0.0 & 324 \\
+ & Tesseract & 4.6 & 0.0 & 324 \\
+\midrule
+\multirow{3}{*}{deployed}
+ & Surya & 3.2 & 0.4 & 459 \\
+ & EasyOCR & 10.8 & 0.0 & 459 \\
+ & Tesseract & 3.0 & 0.0 & 459 \\
+\midrule
+\multirow{3}{*}{capture-hardened}
+ & Surya & 1.8 & 0.0 & 324 \\
+ & EasyOCR & 1.3 & 0.0 & 324 \\
+ & Tesseract & 1.5 & 0.0 & 324 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{真机拍摄~VLM~实验}
+\label{sec:vlm}
+
+\TODO{真机拍摄 VLM 实验尚未完成。使用 Qwen3-VL、Kimi-K2.6、GLM-4.5V 对真机照片做逐行 exact-match 评测，验证多模态端到端理解对受保护屏幕的恢复效果。数据跑完后回填。软件模拟 VLM 结果见~\S\ref{sec:simulation}。}
+
+% ----------------------------------------------------------
+\subsection{用户体验调研}
+\label{sec:user_study}
+
+为验证受保护显示对人眼可读性和视觉舒适度的影响，我们设计了一项~Web~端用户调研。
+
+\textbf{实验设备}：同~\S\ref{sec:setup}~的~240\,Hz~显示器。实验开始前，浏览器通过~\texttt{requestAnimationFrame}~记录实测刷新率和丢帧情况，并要求达到当前配置的目标刷新率。不能把~$\geq144$\,Hz~视为~$n=4$~配置的充分条件。含额外反色帧时还需单独记录实际周期频率。
+
+\textbf{任务设计}：每位被试完成两轮打字试次（被试内对照设计），每轮~20~秒：
+（1）\textbf{原始文本}（control）：无掩模保护的正常显示；
+（2）\textbf{掩模文本}（masked）：采用实际部署配置，即~$n=4$，mask+noise，strong~anti-OCR~档（$\alpha_s=0.10$，$\alpha_g=0.12$，6~周期）+~弱反色帧（$\alpha=0.2$）。
+记录打字准确率（accuracy）、每分钟字符数（CPM）和每分钟词数（WPM）。
+
+\textbf{主观评分}：打字试次后，被试对~4~种随机呈现的消融条件分别在~4~个维度上做~1--5~Likert~评分：可读性（readability）、闪烁感（flicker）、视觉疲劳（fatigue）、隐私感（privacy）。消融条件为（均\emph{不}含~anti-OCR~叠加层和反色帧，以隔离核心掩模机制的感知影响）：$n=2$~mask+noise、$n=4$~mask+noise、$n=8$~mask+noise、$n=4$~mask-only。
+
+\textbf{被试}：\TODO{最终被试人数及人口统计。}
+
+\TODO{表：打字试次客观指标（accuracy/CPM/WPM，control vs masked，配对差异 + CI）。}
+
+\TODO{表：4~条件 $\times$ 4~维度的 Likert 均值 + 标准差。}
+
+\TODO{核心结论：$n=4$ mask+noise 条件下打字准确率/速度是否有显著下降；主观可读性和闪烁感评分情况。}
+
+% ----------------------------------------------------------
+\subsection{真机拍摄目标检测与跟踪实验}
+\label{sec:detection}
+
+为考察文字以外的视觉任务，我们将内容显示在~240\,Hz~屏上，使用~eMeet~S600~在~1.5\,m~/~$0^{\circ}$~下采集，再离线运行四个检测器~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}。检测以~real\_clean（未保护内容经相同屏--相机链路采集）为参照。跟踪实验使用~MOT17-09-FRCNN~的~450~帧，并采用逐源帧静态显示后拍摄的停帧验证流程，而非连续视频同步播放。关联器是受~ByteTrack~\cite{b_bytetrack2022}~启发的贪心回退实现，不是官方~ByteTrack。real\_clean~能部分控制屏--相机链路退化，但曝光与受保护显示之间仍可能存在交互，因此差异不能全部作单一因果归因。
+
+\begin{table}[!t]
+\caption{真机~COCO~检测（150~图，real\_clean~为未保护实拍基线）}
+\label{tab:real_coco}
+\centering
+\small
+\begin{tabular}{llccc}
+\toprule
+检测器 & 条件 & mAP & mAP50 & AR \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & real\_clean & 28.6\% & 43.9\% & 31.0\% \\
+ & real\_short & 1.3\% & 2.4\% & 1.4\% \\
+ & real\_video & 3.5\% & 5.3\% & 3.6\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & real\_clean & 30.1\% & 50.2\% & 34.8\% \\
+ & real\_short & 3.5\% & 5.8\% & 4.1\% \\
+ & real\_video & 4.6\% & 7.3\% & 5.5\% \\
+\midrule
+\multirow{3}{*}{Faster~R-CNN}
+ & real\_clean & 21.3\% & 39.2\% & 28.7\% \\
+ & real\_short & 0.8\% & 1.6\% & 0.9\% \\
+ & real\_video & 1.5\% & 3.0\% & 1.8\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & real\_clean & 22.6\% & 39.4\% & 27.0\% \\
+ & real\_short & 0.9\% & 1.8\% & 1.0\% \\
+ & real\_video & 1.9\% & 3.1\% & 2.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!t]
+\caption{真机~MOT17-09-FRCNN~停帧采集跟踪（ByteTrack~风格贪心关联，450~帧）}
+\label{tab:real_mot}
+\centering
+\begin{tabular}{llcc}
+\toprule
+检测器 & 条件 & HOTA & IDF1 \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & real\_clean & 15.8\% & 12.1\% \\
+ & real\_short & 8.7\% & 6.5\% \\
+ & real\_video & 10.0\% & 8.7\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & real\_clean & 14.2\% & 10.4\% \\
+ & real\_short & 8.1\% & 5.2\% \\
+ & real\_video & 9.6\% & 6.8\% \\
+\midrule
+\multirow{3}{*}{Faster~R-CNN}
+ & real\_clean & 14.4\% & 9.6\% \\
+ & real\_short & 6.8\% & 6.0\% \\
+ & real\_video & 10.5\% & 7.1\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & real\_clean & 14.2\% & 9.8\% \\
+ & real\_short & 5.1\% & 4.4\% \\
+ & real\_video & 6.8\% & 5.9\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+短曝光条件下四个检测器的~mAP50~由未保护实拍基线的~39.2--50.2\%~降至~1.6--5.8\%，相对下降均超过~85\%。real\_video~条件为~3.0--7.3\%，同样低于其各自~real\_clean~基线。该现象与受保护条件下视觉特征退化一致，但由于只有一个相机、一个检测位置和~150~张图，本文不将其外推为跨设备结论。停帧跟踪中，四个检测器的~HOTA~由~14.2--15.8\%~降至短曝光的~5.1--8.7\%，IDF1~由~9.6--12.1\%~降至~4.4--6.5\%。真机基线的~MOTA~为负且非单调，故这里只报告~HOTA/IDF1。停帧流程也不能替代连续视频跟踪实验。
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/real_detection_drop.pdf}
+\caption{真机检测：四个检测器~mAP50~在受保护条件下的跌幅}
+\label{fig:real_det_drop}
+\end{figure}
+
+% ----------------------------------------------------------
+\subsection{软件模拟补充实验}
+\label{sec:simulation}
+
+上述实验给出了当前物理拍摄设置下的结果。本节通过软件模拟补充两个问题：（1）若攻击者只能获得显示合成后的单个受保护子帧，该帧的机器可读性如何？（2）攻击者在无相机噪声且精确对齐时的恢复边界在哪里？如果恶意软件在掩模前截获原始帧，或读取并累加完整周期，本方法不能提供保护。因此，这里不是一般意义上的”防截屏”保证。
+
+\textbf{合成单子帧~OCR}：使用~Tesseract~\cite{b_smith2007}、EasyOCR~\cite{b_easyocr2020}、Surya~\cite{b_surya2024}~在~120~条合成语料上评测，三个引擎的字符恢复率从~94.0--97.0\%~降至~0--2.6\%（表~\ref{tab:ocr_corpus}）。该结果只覆盖当前语料、参数和三个引擎。分层结果可用于检查类别间趋势，但不足以证明对所有语言、版式或识别器均有效。
+
+\begin{table}[!t]
+\caption{合成单子帧：三引擎~OCR~字符恢复率（120~语料，$n=4$, $\varepsilon=8/255$）}
+\label{tab:ocr_corpus}
+\centering
+\begin{tabular}{lccc}
+\toprule
+OCR~引擎 & 原始帧 & 单子帧 & 降幅 \\
+\midrule
+Tesseract & 94.0\% & 0.0\% & 93.9\% \\
+EasyOCR & 94.1\% & 0.0\% & 94.1\% \\
+Surya & 97.0\% & 2.6\% & 94.4\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/multiengine_ocr.pdf}
+\caption{三个~OCR~引擎在原始帧和单个受保护子帧上的字符恢复率，误差棒为以语料样本重采样的~95\%~bootstrap~区间。}
+\label{fig:multiengine_ocr}
+\end{figure}
+
+图~\ref{fig:multiengine_ocr}~将表~\ref{tab:ocr_corpus}~的三引擎结果可视化。三者在当前数据上的单子帧字符恢复率均不高于~2.6\%，表明结果不是由其中某一个引擎单独造成。更广泛的识别器泛化仍需额外实验。
+
+\label{sec:security_frontier}
+\textbf{理论安全边界}：
+当攻击者在理想条件下叠加~$\geq n$~帧覆盖完整周期时，互补性被精确利用，对抗噪声因式~(\ref{eq:noise_complement})~同时被抵消，恢复率升至~95.2\%（逐样本最强攻击）。这是线性时域方案的\emph{原理性边界}。抗拍强化档在当前真机积分条件下降低了恢复率，但视频平均仍有~42.3\%~字符恢复率，故只能称为缓解，不能称为闭合该边界。
+
+\textbf{与软件代理基线对比}：在~9~个分层样本的探索性模拟中，调暗、高斯模糊、像素化、离轴隐私膜代理和单个时域掩模子帧的字符恢复率分别为~92.9\%、52.6\%、0\%、84.7\%~和~0\%。这些处理的参数、物理条件和用户体验并未等价匹配，尤其“隐私膜”只是软件离轴代理而非实物测试。因此图~\ref{fig:baselines_scatter}~仅展示当前代理设置下的权衡，不支持优于所有被动方案的结论。
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/baselines_scatter.pdf}
+\caption{9~个样本上的软件代理基线：横轴为~OCR~字符恢复率，纵轴为数字重建视图的~$\Delta E_{00}$。各方法参数和物理条件并未等价匹配，图仅作探索性比较。}
+\label{fig:baselines_scatter}
+\end{figure}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/antiocr_heatmap.pdf}
+\caption{抗~OCR~档位的条纹~$\times$~字形幅度网格（时域平均攻击）：左为字符恢复率，右为数字重建漂移。高条纹和高字形幅度区域的字符恢复率在当前~16~个参数格点中描述性地降至~$\sim$11\%，同时重建代价上升。未进行显著性检验。}
+\label{fig:antiocr_heatmap}
+\end{figure*}
+
+抗~OCR~档位的条纹/字形参数取舍见图~\ref{fig:antiocr_heatmap}。
+
+\textbf{检测与跟踪模拟评测}：
+在~COCO~val2017~\cite{b_coco2014}和~MOT17~\cite{b_mot16}~上运行补充模拟。四个检测器为~YOLO26x~\cite{b_yolo26}、RT-DETR-x~\cite{b_rtdetr2024}、Faster R-CNN~\cite{b_fasterrcnn2015}~和~RetinaNet~\cite{b_retinanet2017}。COCO~模拟只有~8~张图，定位为实现管线诊断。MOT~模拟覆盖~7~条序列共~5316~帧，使用受~ByteTrack~\cite{b_bytetrack2022}~启发的贪心关联回退实现。由于~TrackEval~运行失败，表中~MOTA/MOTP/IDF1~来自项目内近似评测后端，不等同于官方~ByteTrack/TrackEval~结果。
+
+\begin{table}[!t]
+\caption{COCO~val2017~模拟检测管线诊断（4~检测器，8~张，不作数据集级性能估计）}
+\label{tab:coco_sim}
+\centering
+\small
+\begin{tabular}{llccc}
+\toprule
+检测器 & 条件 & mAP & mAP50 & AR \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & clean & 48.1\% & 58.3\% & 51.0\% \\
+ & 单子帧 & 0.0\% & 0.0\% & 0.0\% \\
+ & 时域平均 & 14.3\% & 18.3\% & 14.3\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & clean & 47.1\% & 58.7\% & 53.4\% \\
+ & 单子帧 & 5.2\% & 6.0\% & 5.2\% \\
+ & 时域平均 & 16.8\% & 23.7\% & 17.9\% \\
+\midrule
+\multirow{3}{*}{Faster R-CNN}
+ & clean & 38.2\% & 52.7\% & 43.6\% \\
+ & 单子帧 & 3.0\% & 4.4\% & 3.0\% \\
+ & 时域平均 & 11.1\% & 16.5\% & 11.1\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & clean & 33.2\% & 47.1\% & 35.3\% \\
+ & 单子帧 & 3.3\% & 4.2\% & 3.3\% \\
+ & 时域平均 & 9.6\% & 13.2\% & 9.6\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!t]
+\caption{MOT17~模拟跟踪（ByteTrack~风格贪心关联，项目内近似指标，5316~帧）}
+\label{tab:mot_sim}
+\centering
+\begin{tabular}{llccc}
+\toprule
+检测器 & 条件 & MOTA & MOTP & IDF1 \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & clean & 31.1\% & 81.7\% & 27.1\% \\
+ & 单子帧 & 0.1\% & 74.8\% & 0.1\% \\
+ & 时域平均 & 9.1\% & 78.1\% & 12.0\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & clean & 24.1\% & 79.8\% & 38.2\% \\
+ & 单子帧 & $-$2.3\% & 73.2\% & 5.4\% \\
+ & 时域平均 & $-$11.4\% & 75.0\% & 14.7\% \\
+\midrule
+\multirow{3}{*}{Faster~R-CNN}
+ & clean & 3.8\% & 77.9\% & 35.6\% \\
+ & 单子帧 & $-$2.5\% & 71.2\% & 4.5\% \\
+ & 时域平均 & $-$2.7\% & 73.2\% & 14.0\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & clean & $-$5.4\% & 77.1\% & 30.5\% \\
+ & 单子帧 & 0.4\% & 70.6\% & 2.7\% \\
+ & 时域平均 & $-$2.9\% & 73.8\% & 11.9\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+在这~8~张图上，单子帧条件下四个检测器的~mAP50~为~0--6.0\%。该样本量只足以检查趋势，不能估计~COCO~总体性能。5316~帧的近似跟踪结果中，单子帧~IDF1~为~0.1--5.4\%，但~MOTA~存在负值和非单调现象。图~\ref{fig:all_attackers}~汇总当前评测中单子帧相对~clean~基线的剩余能力，不代表未测试模型。
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/all_attackers.pdf}
+\caption{当前评测中单个受保护子帧的相对剩余能力（clean~=~100\%），OCR、检测和跟踪约为~0--9.7\%。该图仅汇总所测模型与指标。}
+\label{fig:all_attackers}
+\end{figure}
+
+\textbf{安全-可用性权衡}：模型扫描在候选集合中选出~$n=6$~@~360\,Hz（FPI\,=\,0.033，归一化互信息代理~$=0.249$，$\Delta E_{00}=0.60$，SSIM\,=\,0.9995）。这只是由简化数字模型筛出的候选配置，尚未在~360\,Hz~实体显示器或用户研究中验证，故不称为部署推荐。图~\ref{fig:pareto}~展示不同~$n$~与刷新率组合下两个代理轴的~Pareto~前沿。
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/pareto_sweep.pdf}
+\caption{数字模型中的安全--可用性代理~Pareto~前沿：$n \times$~刷新率，FPI~与归一化互信息均非用户体验或真实攻击成功率的直接测量。}
+\label{fig:pareto}
+\end{figure}
+
+
+%% ============================================================
+%% VI. 讨论
+%% ============================================================
+\section{讨论}
+\label{sec:discussion}
+
+\subsection{线性积分的数学张力}
+
+本方案利用的是人眼积分与相机单帧采样之间的差异。然而人眼积分本质上是线性求和（$\sum\mathbf{I}_k = \mathbf{I}$），相机如果能做同样的多帧累加也能还原原始信息。这是所有基于视觉暂留的时域方案共有的原理性边界。此外，视觉语言模型的对抗鲁棒性研究~\cite{b_li2025}~表明大模型在受扰图像上仍可能提取部分语义信息，未来工作需评估~VLM~级攻击者的能力。\S\ref{sec:security_frontier}~诚实量化了这一边界：完整周期积分可恢复~95.2\%。
+
+\subsection{抗拍强化档的作用与代价}
+
+抗拍强化档通过条纹和字形扰动打破严格完备性，使当前完整周期积分条件下的恢复率下降。其数字重建指标同时变差，表明该增强并非无代价。\S\ref{sec:real_capture}~中，该档的短曝光~exact-match~为~0\%，视频时域平均~exact-match~为~4.6\%。后者的字符恢复率仍为~42.3\%，因此只能视为缓解而非完全阻断。条纹和颗粒是否可被用户接受，必须由待完成的用户实验回答，本文不提前作判断。
+
+\subsection{部署路径}
+
+实际部署可能需要~OS~驱动级帧缓冲注入（DXGI / KMS-DRM / CoreDisplay）、与面板/背光时序协同以及满足目标周期率的高刷面板。这些环节会引入色彩管理、亮度饱和、丢帧和同步误差，可能改变算法在真实链路中的效果，不能视为不影响结论的简单工程封装。
+
+\subsection{伦理声明}
+
+本研究是防御性的，旨在保护屏幕内容免受未授权拍摄。攻击分析（\S\ref{sec:security_frontier}）的目的是诚实评估安全边界而非提供攻击指南。
+
+\subsection{局限性}
+
+\begin{enumerate}
+\item 用户调研（\S\ref{sec:user_study}）在~240\,Hz~实验室环境下进行，\TODO{被试规模有限（N=XX），需更大样本量验证外部效度。}
+\item 当前~PoC~为应用层，未集成~OS~驱动和硬件背光。亮度、HDR~和色差结论来自数字模型，缺少光度计、面板响应和高速相机测量。
+\item 真机~OCR~仅使用一款网络相机，环境照度未记录，曝光值也有两组校准。数据集包含重复内容且设计不平衡，bootstrap~区间不能替代跨设备、跨场景复现。
+\item 真机检测仅有~COCO~150~图和单一位置。真机跟踪是~MOT17~单序列的~450~帧停帧采集，不是连续视频同步实验。模拟检测只有~8~图，跟踪使用项目内贪心关联和近似指标。
+\item 本文未评测~VLM、多周期自适应重构、滚动快门相位搜索或在掩模前读取原始帧的恶意软件。完整周期积分仍是原理性边界。
+\end{enumerate}
+
+
+%% ============================================================
+%% VII. 结论
+%% ============================================================
+\section{结论}
+\label{sec:conclusion}
+
+本文实现并评估了一种基于时间积分差异的时域像素掩模方法，目标是在短曝光抓拍条件下降低机器恢复能力，同时让观察者能够跨子帧整合内容。该目标不等同于“任意相机不可读”，完整周期曝光或视频重构仍可恢复信息。
+
+在由组件、参数和攻击实验构成的~10\,575~张不平衡真机数据中，核心短曝光子集的~best-of-engine~字符恢复率由~92.5\%~降至~14.1\%（deployed~档）和~4.2\%（抗拍强化档），exact-match~由~66.0\%~降至~0.4\%~/~0\%。单一位置的真机~COCO~子集上，四个检测器的~mAP50~由~39.2--50.2\%~降至~1.6--5.8\%。受控合成评测中，三个~OCR~引擎的单子帧字符恢复率为~0--2.6\%。基础配置的数字代理为~FPI\,=\,0.030、$\Delta E_{00}=0.34$，不能替代用户或光度实验。视频时域平均仍是残余攻击前沿：抗拍强化档为~42.3\%~char~/~4.6\%~exact，未阻断该攻击。
+
+这些结果支持把时域像素掩模作为短曝光屏幕抓拍的候选缓解机制。其实际可用性、跨设备泛化和对完整周期重构的鲁棒性仍需进一步验证。\EOD
+
+
+%% ============================================================
+%% 致谢
+%% ============================================================
+\section*{Acknowledgment}
+\TODO{致谢待填。}
+
+
+%% ============================================================
+%% 参考文献
+%% ============================================================
+\clearpage
+\begin{thebibliography}{99}
+
+%% --- 屏幕视觉窃听威胁 ---
+\bibitem{b_backes2009}
+M.~Backes, T.~Chen, M.~D{\"u}rmuth, H.~P.~A.~Lensch, and M.~Welk,
+``Tempest in a teapot: Compromising reflections revisited,''
+in \emph{Proc. IEEE Symp. Security and Privacy (S\&P)}, 2009, pp.~315--327.
+
+\bibitem{b_raguram2011}
+R.~Raguram, A.~M.~White, D.~Goswami, F.~Monrose, and J.-M.~Frahm,
+``iSpy: Automatic reconstruction of typed input from compromising reflections,''
+in \emph{Proc. 18th ACM Conf. Computer and Communications Security (CCS)}, 2011, pp.~527--536.
+
+\bibitem{b_ponemon2016}
+Ponemon Institute,
+``Global visual hacking experiment,''
+3M, Tech. Rep., 2016. [Online]. Available: \url{https://www.3m.com/3M/en_US/privacy-screen-protectors-us/expertise/visualhacking/}
+
+\bibitem{b_eiband2017}
+M.~Eiband, M.~Khamis, E.~von Zezschwitz, H.~Hussmann, and F.~Alt,
+``Understanding shoulder surfing in the wild: Stories from users and observers,''
+in \emph{Proc. CHI Conf. Human Factors in Computing Systems}, 2017, pp.~4254--4265.
+
+\bibitem{b_fernandez2024}
+S.~Fern{\'a}ndez, E.~Mart{\'i}nez, G.~Varela, P.~Mus{\'e}, and F.~Larroca,
+``Deep-TEMPEST: Using deep learning to eavesdrop on HDMI from its unintended electromagnetic emanations,''
+\emph{arXiv preprint arXiv:2407.09717}, 2024.
+
+%% --- 智能眼镜隐私威胁 ---
+\bibitem{b_wang2026}
+X.~Wang, K.~Peng, X.~Yi, and H.~Li,
+``Mind the gap: Mapping wearer-bystander privacy tensions and context-adaptive pathways for camera glasses,''
+in \emph{Proc. CHI Conf. Human Factors in Computing Systems}, 2026, pp.~1--28,
+doi: 10.1145/3772318.3791848.
+
+%% --- 肩窥主动防护 ---
+\bibitem{b_tang2023}
+B.~Tang and K.~G.~Shin,
+``Eye-Shield: Real-time protection of mobile device screen information from shoulder surfing,''
+in \emph{Proc. 32nd USENIX Security Symp.}, 2023, pp.~6695--6712.
+
+%% --- POV 显示防窃取（前人工作） ---
+\bibitem{b_yerazunis2001}
+W.~S.~Yerazunis and M.~Carbone,
+``Privacy-enhanced displays by time-masking images,''
+in \emph{Proc. Australian Conf. Computer-Human Interaction (OzCHI)}, Nov.~2001.
+[Online]. Available: \url{https://www.merl.com/publications/TR2002-11}
+
+\bibitem{b_lim2007}
+Y.~S.~Lim,
+``Defeat spyware with anti-screen capture technology using visual persistence,''
+in \emph{Proc. 3rd Symp. Usable Privacy and Security (SOUPS)}, 2007, pp.~147--148.
+
+\bibitem{b_wu2013}
+X.~Wu and G.~Zhai,
+``Temporal psychovisual modulation: A new paradigm of information display,''
+\emph{IEEE Signal Process. Mag.}, vol.~30, no.~1, pp.~136--141, 2013,
+doi: 10.1109/MSP.2012.2219678.
+
+\bibitem{b_gao2014}
+Z.~Gao, G.~Zhai, and X.~Min,
+``Information security display system based on temporal psychovisual modulation,''
+in \emph{Proc. IEEE Int. Symp. Circuits and Systems (ISCAS)}, 2014, pp.~449--452,
+doi: 10.1109/ISCAS.2014.6865167.
+
+%% --- 硬件级隐私防护 ---
+\bibitem{b_zhu2017}
+S.~Zhu, C.~Zhang, and X.~Zhang,
+``Automating visual privacy protection using a smart LED,''
+in \emph{Proc. 23rd ACM Int. Conf. Mobile Computing and Networking (MobiCom)}, 2017, pp.~329--342.
+
+%% --- 屏-相机可见光通信 ---
+\bibitem{b_nguyen2016}
+V.~Nguyen, Y.~Tang, A.~Ashok, M.~Gruteser, K.~Dana, W.~Hu, E.~Wengrowski, and N.~Mandayam,
+``High-rate flicker-free screen-camera communication with spatially adaptive embedding,''
+in \emph{Proc. IEEE INFOCOM}, 2016, pp.~1--9.
+
+\bibitem{b_tran2021}
+V.~Tran, G.~Jayatilaka, A.~Ashok, and A.~Misra,
+``DeepLight: Robust \& unobtrusive real-time screen-camera communication for real-world displays,''
+in \emph{Proc. 20th ACM/IEEE Int. Conf. Information Processing in Sensor Networks (IPSN)}, 2021, pp.~97--110.
+
+\bibitem{b_ghiasi2024}
+K.~Ghiasi, M.~Kouhestani, and O.~Abari,
+``Passive screen-to-camera communication,''
+\emph{arXiv preprint arXiv:2403.16185}, 2024.
+
+%% --- 对抗扰动 ---
+\bibitem{b_goodfellow2015}
+I.~J.~Goodfellow, J.~Shlens, and C.~Szegedy,
+``Explaining and harnessing adversarial examples,''
+in \emph{Proc. Int. Conf. Learning Representations (ICLR)}, 2015.
+
+\bibitem{b_eykholt2018}
+K.~Eykholt, I.~Evtimov, E.~Fernandes, B.~Li, A.~Rahmati, C.~Xiao, A.~Prakash, T.~Kohno, and D.~Song,
+``Robust physical-world attacks on deep learning visual classification,''
+in \emph{Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, 2018, pp.~1625--1634.
+
+\bibitem{b_madry2018}
+A.~Madry, A.~Makelov, L.~Schmidt, D.~Tsipras, and A.~Vladu,
+``Towards deep learning models resistant to adversarial attacks,''
+in \emph{Proc. Int. Conf. Learning Representations (ICLR)}, 2018.
+
+\bibitem{b_carlini2017}
+N.~Carlini and D.~Wagner,
+``Towards evaluating the robustness of neural networks,''
+in \emph{Proc. IEEE Symp. Security and Privacy (S\&P)}, 2017, pp.~39--57.
+
+\bibitem{b_thys2019}
+S.~Thys, W.~Van Ranst, and T.~Goedeme,
+``Fooling automated surveillance cameras: Adversarial patches to attack person detection,''
+in \emph{Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition Workshops (CVPRW)}, 2019.
+
+\bibitem{b_xu2020}
+K.~Xu, G.~Zhang, S.~Liu, Q.~Fan, M.~Sun, H.~Chen, P.-Y.~Chen, Y.~Wang, and X.~Lin,
+``Adversarial T-shirt! Evading person detectors in a physical world,''
+in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2020, pp.~665--681.
+
+\bibitem{b_athalye2018}
+A.~Athalye, L.~Engstrom, A.~Ilyas, and K.~Kwok,
+``Synthesizing robust adversarial examples,''
+in \emph{Proc. Int. Conf. Machine Learning (ICML)}, 2018, pp.~284--293.
+
+\bibitem{b_wei2022}
+H.~Wei, H.~Tang, X.~Jia, Z.~Wang, H.~Yu, Z.~Li, S.~Satoh, L.~Van~Gool, and Z.~Wang,
+``Physical adversarial attack meets computer vision: A decade survey,''
+\emph{IEEE Trans. Pattern Anal. Mach. Intell.}, 2024.
+
+\bibitem{b_zhao2023}
+Q.~Zhao, Y.~Zhu, Z.~Zhang, T.~Zhang, and B.~Li,
+``A survey on transferability of adversarial examples across deep neural networks,''
+\emph{arXiv preprint arXiv:2310.17626}, 2023.
+
+\bibitem{b_niu2021}
+D.~Niu, R.~Guo, and Y.~Wang,
+``Moir{\'e} attack (MA): A new potential risk of screen photos,''
+in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~34, 2021, pp.~25~543--25~554.
+
+%% --- OCR 引擎 ---
+\bibitem{b_smith2007}
+R.~Smith,
+``An overview of the Tesseract OCR engine,''
+in \emph{Proc. Int. Conf. Document Analysis and Recognition (ICDAR)}, 2007, pp.~629--633.
+
+\bibitem{b_easyocr2020}
+JaidedAI,
+``EasyOCR: Ready-to-use OCR with 80+ supported languages,''
+2020. [Online]. Available: \url{https://github.com/JaidedAI/EasyOCR}
+
+\bibitem{b_surya2024}
+V.~Paruchuri,
+``Surya: Multilingual document OCR toolkit,''
+2024. [Online]. Available: \url{https://github.com/VikParuchuri/surya}
+
+\bibitem{b_shi2023}
+Y.~Shi, D.~Peng, W.~Liao, Z.~Lin, X.~Chen, C.~Liu, Y.~Zhang, and L.~Jin,
+``Exploring OCR capabilities of GPT-4V(ision): A quantitative and in-depth evaluation,''
+\emph{arXiv preprint arXiv:2310.16809}, 2023.
+
+%% --- 目标检测器 ---
+\bibitem{b_yolo26}
+G.~Jocher and J.~Qiu,
+``Ultralytics YOLO26,''
+2025. [Online]. Available: \url{https://github.com/ultralytics/ultralytics}
+%% Technical overview: arXiv:2509.25164
+
+\bibitem{b_rtdetr2024}
+Y.~Zhao, W.~Lv, S.~Xu, J.~Wei, G.~Wang, Q.~Dang, Y.~Liu, and J.~Chen,
+``DETRs beat YOLOs on real-time object detection,''
+in \emph{Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, 2024, pp.~16~965--16~974.
+
+\bibitem{b_fasterrcnn2015}
+S.~Ren, K.~He, R.~Girshick, and J.~Sun,
+``Faster R-CNN: Towards real-time object detection with region proposal networks,''
+in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~28, 2015, pp.~91--99.
+
+\bibitem{b_retinanet2017}
+T.-Y.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll{\'a}r,
+``Focal loss for dense object detection,''
+in \emph{Proc. IEEE Int. Conf. Computer Vision (ICCV)}, 2017, pp.~2980--2988.
+
+%% --- MOT 跟踪 ---
+\bibitem{b_bytetrack2022}
+Y.~Zhang, P.~Sun, Y.~Jiang, D.~Yu, F.~Weng, Z.~Yuan, P.~Luo, W.~Liu, and X.~Wang,
+``ByteTrack: Multi-object tracking by associating every detection box,''
+in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2022, pp.~1--21.
+
+\bibitem{b_mot16}
+A.~Milan, L.~Leal-Taix{\'e}, I.~Reid, S.~Roth, and K.~Schindler,
+``MOT16: A benchmark for multi-object tracking,''
+\emph{arXiv preprint arXiv:1603.00831}, 2016.
+
+%% --- COCO 数据集 ---
+\bibitem{b_coco2014}
+T.-Y.~Lin, M.~Maire, S.~Belongie, J.~Hays, P.~Perona, D.~Ramanan, P.~Doll{\'a}r, and C.~L.~Zitnick,
+``Microsoft COCO: Common objects in context,''
+in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2014, pp.~740--755.
+
+%% --- CSPRNG / 随机化 ---
+\bibitem{b_chacha2008}
+D.~J.~Bernstein,
+``ChaCha, a variant of Salsa20,''
+in \emph{Workshop Record of SASC}, vol.~8, 2008, pp.~3--5.
+
+\bibitem{b_knuth1997}
+D.~E.~Knuth,
+\emph{The Art of Computer Programming, Volume~2: Seminumerical Algorithms}, 3rd~ed.\hskip 1em
+Addison-Wesley, 1997.
+
+%% --- 图像质量评估 ---
+\bibitem{b_wang2004}
+Z.~Wang, A.~C.~Bovik, H.~R.~Sheikh, and E.~P.~Simoncelli,
+``Image quality assessment: From error visibility to structural similarity,''
+\emph{IEEE Trans. Image Process.}, vol.~13, no.~4, pp.~600--612, 2004.
+
+%% --- 视觉感知 / 色彩 / 闪烁 ---
+\bibitem{b_ciede2000}
+G.~Sharma, W.~Wu, and E.~N.~Dalal,
+``The CIEDE2000 color-difference formula: Implementation notes, supplementary test data, and mathematical observations,''
+\emph{Color Research \& Application}, vol.~30, no.~1, pp.~21--30, 2005.
+
+\bibitem{b_davis2015}
+J.~Davis, Y.-H.~Hsieh, and H.-C.~Lee,
+``Humans perceive flicker artifacts at 500~Hz,''
+\emph{Scientific Reports}, vol.~5, no.~7861, pp.~1--4, 2015.
+
+\bibitem{b_cai2024}
+Y.~Cai, A.~Bozorgian, M.~Ashraf, R.~Wanat, and R.~K.~Mantiuk,
+``elaTCSF: A temporal contrast sensitivity function for flicker detection and modeling variable refresh rate flicker,''
+in \emph{Proc. SIGGRAPH Asia}, 2024.
+
+%% --- 防截屏 / 水印 ---
+\bibitem{b_naor1994}
+M.~Naor and A.~Shamir,
+``Visual cryptography,''
+in \emph{Proc. EUROCRYPT}, 1994, pp.~1--12.
+
+%% --- 数字水印 ---
+\bibitem{b_zhong2023}
+X.~Zhong, A.~Das, F.~Alrasheedi, and A.~Tanvir,
+``A brief yet in-depth survey of deep learning-based image watermarking,''
+\emph{arXiv preprint arXiv:2308.04603}, 2023.
+
+\bibitem{b_fang2019}
+H.~Fang, W.~Zhang, H.~Zhou, H.~Cui, and N.~Yu,
+``Screen-shooting resilient watermarking,''
+\emph{IEEE Trans. Information Forensics and Security}, vol.~14, no.~6, pp.~1403--1418, 2019.
+
+%% --- VLM 对抗鲁棒性 ---
+\bibitem{b_li2025}
+Y.~Li, Y.~Gao, T.~Guo, H.~Wei, and Y.~Sun,
+``Survey of adversarial robustness in multimodal large language models,''
+\emph{arXiv preprint arXiv:2503.13962}, 2025.
+
+\end{thebibliography}
+
+\vfill
+
+\end{document}

@@ -563,6 +563,7 @@ def run_corpus_multi_engine(
     engines: list[str] | None = None,
     output_dir: str = "experiments/results",
     merge_existing: bool = False,
+    progress_interval: int = 0,
 ) -> dict:
     """
     语料级多 OCR 引擎评测（改进项 C2）。
@@ -576,6 +577,9 @@ def run_corpus_multi_engine(
     import sys
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
     from experiments.build_corpus import load_corpus, load_corpus_metadata
+
+    if progress_interval < 0:
+        raise ValueError("progress_interval must be non-negative")
 
     images, truths, names = load_corpus()
     metadata = load_corpus_metadata()
@@ -594,7 +598,17 @@ def run_corpus_multi_engine(
     for engine in avail:
         orig_accs, sf_accs, reductions = [], [], []
         sample_rows = []
+        total_samples = len(images)
         for sample_idx, (img, gt, name) in enumerate(zip(images, truths, names)):
+            if progress_interval and (
+                sample_idx == 0
+                or (sample_idx + 1) % progress_interval == 0
+                or sample_idx + 1 == total_samples
+            ):
+                print(
+                    f"  [{engine}] OCR 进度 {sample_idx + 1}/{total_samples}: {name}",
+                    flush=True,
+                )
             subframes = compose_protected_subframes(
                 img,
                 n=n,

@@ -378,7 +378,7 @@ def test_anti_ocr_supplemental_rows_prioritize_profile_and_alpha_sweep():
         "block1/off",
         "block1/strong@overlay",
         "block1/strong@deployed",
-        "block1/vlm",
+        "block1/capture_hardened",
     ]
     assert rows[0]["headline_metric"] == "temporal_average"
     assert rows[0]["exact_match"] == 0.50

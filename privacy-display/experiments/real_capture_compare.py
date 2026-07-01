@@ -25,10 +25,14 @@ DEFAULT_OUT = "experiments/results/real_vs_sim.md"
 
 # real ablation label -> simulation block1 summary key (same operating points).
 SIM_LABEL_MAP = {
-    "mask_noise": "block1/off",
-    "anti_ocr": "block1/strong@overlay",
-    "deployed": "block1/strong@deployed",
-    "vlm": "block1/vlm",
+    "mask_noise": ("block1/off",),
+    "anti_ocr": ("block1/strong@overlay",),
+    "deployed": ("block1/strong@deployed",),
+    "capture_hardened": ("block1/capture_hardened", "block1/vlm"),
+}
+
+REAL_LABEL_ALIASES = {
+    "capture_hardened": ("capture_hardened", "vlm"),
 }
 
 
@@ -56,9 +60,20 @@ def build_comparison(
     sim_summary = sim_report.get("summary", {})
     real_summary = real_report.get("summary", {}).get("by_ablation_attack", {})
     rows: list[dict] = []
-    for ablation, sim_key in SIM_LABEL_MAP.items():
+    for ablation, sim_keys in SIM_LABEL_MAP.items():
+        sim_key = next((key for key in sim_keys if key in sim_summary), sim_keys[0])
         sim_value = _nested_mean(sim_summary.get(sim_key), metric)
-        real_value = _nested_mean(real_summary.get(f"{ablation}|{real_attack}"), metric)
+        real_labels = REAL_LABEL_ALIASES.get(ablation, (ablation,))
+        real_value = next(
+            (
+                value
+                for label in real_labels
+                if (value := _nested_mean(
+                    real_summary.get(f"{label}|{real_attack}"), metric
+                )) is not None
+            ),
+            None,
+        )
         gap = None
         if sim_value is not None and real_value is not None:
             gap = real_value - sim_value

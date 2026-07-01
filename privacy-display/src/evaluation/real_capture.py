@@ -363,6 +363,7 @@ def render_real_capture_markdown(report: dict) -> str:
         "|---|---:|---:|---:|---:|---:|",
     ])
     for condition, stats in sorted(report["summary"]["by_condition"].items()):
+        condition = _canonical_profile_label(condition)
         lines.append(
             f"| {condition} | {stats['char_accuracy']['count']} | "
             f"{_pct(stats['char_accuracy']['mean'])} | "
@@ -380,6 +381,7 @@ def render_real_capture_markdown(report: dict) -> str:
         ])
         for key, stats in sorted(report["summary"]["by_ablation_attack"].items()):
             ablation, attack = key.split("|", 1)
+            ablation = _canonical_profile_label(ablation)
             lines.append(
                 f"| {ablation} | {attack} | {stats['char_accuracy']['count']} | "
                 f"{_pct(stats['char_accuracy']['mean'])} | "
@@ -400,7 +402,7 @@ def render_real_capture_markdown(report: dict) -> str:
         ])
         for key, stats in sorted(report["summary"]["protection_delta"].items()):
             lines.append(
-                f"| {stats['ablation']} | {stats['attack']} | "
+                f"| {_canonical_profile_label(stats['ablation'])} | {stats['attack']} | "
                 f"{_pct(stats['char_accuracy_drop'])} | "
                 f"{_pct(stats['exact_match_drop'])} | "
                 f"{_pct(stats['baseline_char_accuracy'])} | "
@@ -408,6 +410,14 @@ def render_real_capture_markdown(report: dict) -> str:
             )
         lines.append("")
     return "\n".join(lines)
+
+
+def _canonical_profile_label(value: str) -> str:
+    """Normalize the legacy aggressive-profile label for publication display."""
+    text = str(value)
+    if text == "vlm" or text.startswith("vlm|"):
+        return "capture_hardened" + text[len("vlm"):]
+    return text
 
 
 def _group_summary(rows: list[dict], field: str) -> dict:

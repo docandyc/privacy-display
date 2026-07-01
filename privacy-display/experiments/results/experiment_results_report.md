@@ -165,9 +165,9 @@ python experiments\pareto_sweep.py --samples-per-category 20 --max-samples 120
 | EasyOCR | 10575 | 0 | 24.9% | 2.9% | 25.3% | 36.7% |
 | Surya | 10575 | 0 | 19.7% | 8.3% | 54.1% | 24.5% |
 
-关键距离/角度结果如下，数值为字符恢复率。`VLM` 对应当前 metadata 中的 `vlm` ablation，不是在线 VLM 模型读取结果。
+关键距离/角度结果如下，数值为字符恢复率。“抗拍强化档”对应历史 metadata 中的 `vlm` ablation，不是在线 VLM 模型读取结果。
 
-| 场景 | original short | deployed short | deployed temporal mean | VLM short | VLM long |
+| 场景 | original short | deployed short | deployed temporal mean | 抗拍强化 short | 抗拍强化 long |
 |---|---:|---:|---:|---:|---:|
 | `d0.5_a0` | 78.1% | 0.0% | 0.0% | 0.8% | 18.2% |
 | `d0.5_a15` | 91.0% | 2.6% | 2.6% | 0.5% | 5.2% |
@@ -180,7 +180,7 @@ python experiments\pareto_sweep.py --samples-per-category 20 --max-samples 120
 | `d1.5_a30` | 95.6% | 28.9% | 87.2% | 7.1% | 16.7% |
 | **总体** | **92.5%** | **14.1%** | **65.4%** | **4.2%** | **11.1%** |
 
-解释：`deployed short` 在所有距离/角度下均显著低于 unprotected original，但距离变远或角度变化后仍可能出现 10% 到 30% 左右的字符恢复。`vlm short` 在 9 组中最稳定，整体字符恢复率为 4.2%、泄露率为 3.4%。然而 `deployed temporal mean` 在 0.5m/30deg 及多个更远距离场景下恢复率超过 80%，说明真实相机多帧时间聚合仍然是必须写入限制条件的主要攻击路径。
+解释：`deployed short` 在所有距离/角度下均显著低于 unprotected original，但距离变远或角度变化后仍可能出现 10% 到 30% 左右的字符恢复。抗拍强化档的 short 条件在 9 组中最稳定，整体字符恢复率为 4.2%、泄露率为 3.4%。然而 `deployed temporal mean` 在 0.5m/30deg 及多个更远距离场景下恢复率超过 80%，说明真实相机多帧时间聚合仍然是必须写入限制条件的主要攻击路径。
 
 ## VLM 可读性：模型能读 temporal/phase 攻击帧
 
@@ -212,7 +212,7 @@ VLM prompt ablation 中，strict transcription、relaxed readability、sensitive
 | `vlm_model_ablation.json` | 可用 | 三个 VLM family 对恢复帧均可读，字符恢复率约 93% 到 96% |
 | `brightness_compensation_ablation.json` | 可用 | gamma 1/2/4 下 single-frame OCR 仍接近 0% |
 | `mask_granularity_ablation.json` | 可用 | block 1/2/4 接近 0%，block 8 升到 0.8% |
-| `anti_ocr_profile_ablation.json` | 可用 | block2/s0.30_g0.22 temporal average 降到 10.7%；block1/vlm 降到 49.1% |
+| `anti_ocr_profile_ablation.json` | 可用 | block2/s0.30_g0.22 temporal average 降到 10.7%；抗拍强化档（历史键 `block1/vlm`）降到 49.1% |
 | `seed_sensitivity.json` | 可用 | 10 seeds、45 samples 下 single-frame OCR 均值约 0.04%，seed 敏感性很低 |
 | `usability_pilot.json` | 缺失 | 有 `usability_pilot.py`，但没有对应结果 JSON |
 

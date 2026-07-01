@@ -95,6 +95,22 @@ def _is_json_mode_unsupported(error: Exception) -> bool:
     return any(marker in text for marker in _JSON_MODE_UNSUPPORTED_MARKERS)
 
 
+# Hints that a model rejected the SiliconFlow ``enable_thinking`` switch (a
+# vendor extension most models silently ignore). Require both the field name and
+# a rejection word so a stray mention of "thinking" never trips the fallback.
+_THINKING_REJECTION_HINTS = (
+    "not support", "unsupported", "invalid", "unknown",
+    "unrecognized", "not allowed", "does not",
+)
+
+
+def _is_thinking_unsupported(error: Exception) -> bool:
+    text = str(error).casefold()
+    return "enable_thinking" in text and any(
+        hint in text for hint in _THINKING_REJECTION_HINTS
+    )
+
+
 def _coerce_bool(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -123,6 +139,7 @@ class VLMClient:
         timeout: float = 60.0,
         transport: Transport | None = None,
         json_mode: bool | None = None,
+        enable_thinking: bool | None = None,
     ):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
@@ -135,6 +152,13 @@ class VLMClient:
         # transparently retry without it and remember the decision for this
         # client so the remaining calls skip the doomed first attempt.
         self._send_json_mode: bool | None = json_mode
+        # SiliconFlow `enable_thinking` switch for hybrid reasoning VLMs
+        # (e.g. Qwen3.5): False suppresses the reasoning trace, which keeps a
+        # transcription task cheap and direct. None leaves the field off so the
+        # model uses its own default. If a model rejects the field it is dropped
+        # and the decision is remembered, mirroring the JSON-mode fallback.
+        self._enable_thinking: bool | None = enable_thinking
+        self._send_thinking: bool | None = None
 
     @property
     def endpoint(self) -> str:
@@ -212,26 +236,49 @@ class VLMClient:
         }
 
     def _request_chat(self, payload: dict) -> dict:
-        """POST a chat payload, adding JSON mode unless the model rejects it."""
-        if self._send_json_mode is False:
-            return self.transport(self.endpoint, payload, self._headers(), self.timeout)
+        """POST a chat payload, dropping any vendor option the model rejects.
 
-        json_payload = dict(payload)
-        json_payload["response_format"] = {"type": "json_object"}
+        Two optional features are attached opportunistically and, if the model
+        rejects one, disabled and remembered before retrying: response_format
+        JSON mode and the SiliconFlow ``enable_thinking`` switch.
+        """
+        attempt = dict(payload)
+        sending_thinking = (
+            self._enable_thinking is not None and self._send_thinking is not False
+        )
+        if sending_thinking:
+            attempt["enable_thinking"] = self._enable_thinking
+        sending_json = self._send_json_mode is not False
+        if sending_json:
+            attempt["response_format"] = {"type": "json_object"}
+
         try:
             response = self.transport(
-                self.endpoint, json_payload, self._headers(), self.timeout
+                self.endpoint, attempt, self._headers(), self.timeout
             )
         except RuntimeError as exc:
-            if self._send_json_mode is None and _is_json_mode_unsupported(exc):
+            if (
+                sending_json
+                and self._send_json_mode is None
+                and _is_json_mode_unsupported(exc)
+            ):
                 # Model does not support JSON mode; remember and retry plainly.
                 self._send_json_mode = False
-                return self.transport(
-                    self.endpoint, payload, self._headers(), self.timeout
-                )
+                return self._request_chat(payload)
+            if (
+                sending_thinking
+                and self._send_thinking is None
+                and _is_thinking_unsupported(exc)
+            ):
+                # Model does not accept enable_thinking; drop it and retry.
+                self._send_thinking = False
+                return self._request_chat(payload)
             raise
-        if self._send_json_mode is None:
+
+        if sending_json and self._send_json_mode is None:
             self._send_json_mode = True
+        if sending_thinking and self._send_thinking is None:
+            self._send_thinking = True
         return response
 
     @staticmethod

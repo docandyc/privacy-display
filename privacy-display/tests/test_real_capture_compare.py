@@ -1,14 +1,14 @@
 from experiments.real_capture_compare import build_comparison, render_markdown
 
 
-def _sim(off, overlay, deployed, vlm):
+def _sim(off, overlay, deployed, capture_hardened):
     def block(v):
         return {"exact_match": {"mean": v}}
     return {"summary": {
         "block1/off": block(off),
         "block1/strong@overlay": block(overlay),
         "block1/strong@deployed": block(deployed),
-        "block1/vlm": block(vlm),
+        "block1/vlm": block(capture_hardened),
     }}
 
 
@@ -27,6 +27,8 @@ def test_build_comparison_aligns_labels_and_computes_gap():
     assert by_abl["deployed"]["sim"] == 0.02
     assert by_abl["deployed"]["real"] == 0.05
     assert abs(by_abl["deployed"]["real_minus_sim"] - 0.03) < 1e-9
+    assert by_abl["capture_hardened"]["sim_key"] == "block1/vlm"
+    assert by_abl["capture_hardened"]["real"] == 0.0
 
 
 def test_build_comparison_tolerates_missing_real_rows():

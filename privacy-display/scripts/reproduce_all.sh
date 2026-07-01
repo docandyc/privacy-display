@@ -167,10 +167,14 @@ fi
 run_python experiments/publication_summary.py
 run_python experiments/reproducibility_manifest.py
 
+# Paper figures (matplotlib data figures F3-F7 + supplementary S1-S4) -> paper/figures/*.pdf
+run_python experiments/paper_figures/make_all.py
+
 cat <<'EOF'
 
 [reproduce] Artifacts refreshed:
   experiments/results/publication_summary.json
   experiments/results/publication_summary.md
   experiments/results/reproducibility_manifest.json
+  ../paper/figures/*.pdf  (F3-F7 + S1-S4)
 EOF

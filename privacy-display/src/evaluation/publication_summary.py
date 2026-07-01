@@ -52,7 +52,7 @@ ANTI_OCR_PROFILE_PRIORITY = [
     "block1/off",
     "block1/strong@overlay",
     "block1/strong@deployed",
-    "block1/vlm",
+    "block1/capture_hardened",
     "block2/s0.00_g0.00",
     "block2/s0.10_g0.12",
     "block2/s0.18_g0.22",
@@ -1235,6 +1235,17 @@ def _anti_ocr_profile_rows(report: dict) -> list[dict]:
     if not isinstance(summary, dict):
         return []
     rows_by_name = _supplemental_rows({"summary": summary}, limit=None)
+    rows_by_name = [
+        {
+            **row,
+            "name": (
+                "block1/capture_hardened"
+                if row.get("name") == "block1/vlm"
+                else row.get("name")
+            ),
+        }
+        for row in rows_by_name
+    ]
     lookup = {row.get("name"): row for row in rows_by_name}
     selected = [
         lookup[name] for name in ANTI_OCR_PROFILE_PRIORITY

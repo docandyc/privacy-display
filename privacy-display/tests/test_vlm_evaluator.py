@@ -117,6 +117,64 @@ def test_vlm_client_forced_json_mode_off_never_sends_response_format():
     assert "response_format" not in captured["payload"]
 
 
+def test_vlm_client_disables_thinking_when_enable_thinking_false():
+    captured = {}
+
+    def fake_transport(url, payload, headers, timeout):
+        captured["payload"] = payload
+        return {"choices": [{"message": {"content": '{"visible_text": "X"}'}}], "usage": {}}
+
+    client = VLMClient(
+        api_key="test-key", transport=fake_transport, enable_thinking=False
+    )
+    client.analyze_image(np.zeros((4, 4, 3), dtype=np.uint8))
+
+    assert captured["payload"]["enable_thinking"] is False
+
+
+def test_vlm_client_omits_thinking_field_by_default():
+    captured = {}
+
+    def fake_transport(url, payload, headers, timeout):
+        captured["payload"] = payload
+        return {"choices": [{"message": {"content": '{"visible_text": "X"}'}}], "usage": {}}
+
+    client = VLMClient(api_key="test-key", transport=fake_transport)
+    client.analyze_image(np.zeros((4, 4, 3), dtype=np.uint8))
+
+    assert "enable_thinking" not in captured["payload"]
+
+
+def test_vlm_client_falls_back_when_model_rejects_enable_thinking():
+    """A model that 400s on enable_thinking should drop it and retry, then cache."""
+    calls = []
+
+    def fake_transport(url, payload, headers, timeout):
+        calls.append("thinking" if "enable_thinking" in payload else "plain")
+        if "enable_thinking" in payload:
+            raise RuntimeError(
+                "VLM API request failed with status 400: "
+                '{"code":20042,"message":"Parameter enable_thinking is not supported."}'
+            )
+        return {
+            "choices": [{"message": {"content": '{"visible_text": "HELLO"}'}}],
+            "usage": {},
+        }
+
+    client = VLMClient(
+        api_key="test-key", transport=fake_transport, enable_thinking=False
+    )
+    first = client.analyze_image(np.zeros((4, 4, 3), dtype=np.uint8), ground_truth="HELLO")
+    second = client.analyze_image(np.zeros((4, 4, 3), dtype=np.uint8), ground_truth="HELLO")
+
+    # First call tries the field, gets rejected, drops it and succeeds.
+    assert calls == ["thinking", "plain", "plain"]
+    # The decision is cached so the second call skips the doomed first attempt.
+    assert client._send_thinking is False
+    assert first["visible_text"] == "HELLO"
+    assert second["visible_text"] == "HELLO"
+
+
 def test_vlm_client_requires_env_api_key_without_leaking_secret(monkeypatch):
     monkeypatch.delenv("SILICONFLOW_API_KEY", raising=False)
     client = VLMClient(transport=lambda *_args: {})

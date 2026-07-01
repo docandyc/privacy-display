@@ -9,6 +9,7 @@ from src.evaluation.real_capture import (
     REAL_CAPTURE_JSON,
     REAL_CAPTURE_MD,
     load_capture_metadata,
+    render_real_capture_markdown,
     run_real_capture_ocr,
     write_capture_template,
 )
@@ -92,3 +93,35 @@ def test_run_real_capture_ocr_rejects_missing_image(tmp_path):
             engines=["fakeocr"],
             evaluator=FakeEvaluator(),
         )
+
+
+def test_render_real_capture_markdown_uses_canonical_profile_name():
+    stat = {
+        "char_accuracy": {"count": 1, "mean": 0.1},
+        "exact_match": {"mean": 0.0},
+        "sensitive_token_recall": {"mean": 0.2},
+        "leak_rate_char_ge_20pct": {"mean": 0.0},
+    }
+    report = {
+        "config": {"n_captures": 1, "n_rows": 1},
+        "summary": {
+            "by_condition": {"vlm|short": stat},
+            "by_ablation_attack": {"vlm|short": stat},
+            "protection_delta": {
+                "vlm|short": {
+                    "ablation": "vlm",
+                    "attack": "short",
+                    "char_accuracy_drop": 0.8,
+                    "exact_match_drop": 0.6,
+                    "baseline_char_accuracy": 0.9,
+                    "baseline_exact_match": 0.6,
+                }
+            },
+        },
+    }
+
+    markdown = render_real_capture_markdown(report)
+
+    assert "capture_hardened|short" in markdown
+    assert "| capture_hardened | short |" in markdown
+    assert "| vlm | short |" not in markdown

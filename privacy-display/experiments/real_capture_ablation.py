@@ -87,6 +87,7 @@ DEFAULT_PLAYBACK_SHUTDOWN_TIMEOUT = 300.0
 
 ATTACKS = ("short", "long", "video")
 STUDIES = ("1", "2", "3", "all")
+LEGACY_CONDITION_ALIASES = {"vlm": "capture_hardened"}
 
 
 @dataclass(frozen=True)
@@ -132,7 +133,12 @@ COMPONENT_CONDITIONS: tuple[ConditionSpec, ...] = (
         inversion=True,
         inversion_alpha=DEPLOYED_INVERSION_ALPHA,
     ),
-    ConditionSpec("vlm", profile="vlm", inversion=True, inversion_alpha=DEPLOYED_INVERSION_ALPHA),
+    ConditionSpec(
+        "capture_hardened",
+        profile="capture_hardened",
+        inversion=True,
+        inversion_alpha=DEPLOYED_INVERSION_ALPHA,
+    ),
 )
 
 
@@ -231,6 +237,7 @@ def condition_to_playback_args(condition: str | ConditionSpec) -> list[str]:
 def _resolve_condition(condition: str | ConditionSpec) -> ConditionSpec:
     if isinstance(condition, ConditionSpec):
         return condition
+    condition = LEGACY_CONDITION_ALIASES.get(condition, condition)
     for spec in COMPONENT_CONDITIONS + _parameter_conditions():
         if spec.label == condition:
             return spec
@@ -313,7 +320,10 @@ def build_study_plan(
     unknown_attacks = selected_attacks - set(ATTACKS)
     if unknown_attacks:
         raise ValueError(f"unknown attacks: {', '.join(sorted(unknown_attacks))}")
-    condition_filter = set(conditions or [])
+    condition_filter = {
+        LEGACY_CONDITION_ALIASES.get(condition, condition)
+        for condition in (conditions or [])
+    }
     specs = _condition_specs_for_study(study)
     if condition_filter:
         specs = tuple(spec for spec in specs if spec.label in condition_filter)

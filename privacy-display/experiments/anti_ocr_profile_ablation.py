@@ -24,7 +24,7 @@ Three blocks (security headline = exact-match recovery, per memory; char-accurac
 kept as a secondary signal):
 
   Block 1  profile: off / strong@overlay (0.10·0.12) /
-           strong@deployed (0.10·0.12 + α=0.2) / vlm — single-frame,
+           strong@deployed (0.10·0.12 + α=0.2) / capture_hardened — single-frame,
            temporal-average, screen-camera-suite best, and best-observed
            measured attack; readability drift + ΔE + SSIM.
   Block 2  stripe_alpha × glyph_alpha grid (profile=strong) — temporal-average
@@ -87,7 +87,7 @@ PROFILE_CONDITIONS = [
         DEPLOYED_GLYPH_ALPHA,
         DEPLOYED_INVERSION_ALPHA,
     ),
-    ("vlm", "vlm", None, None, None),
+    ("capture_hardened", "capture_hardened", None, None, None),
 ]
 
 # Block 2 grid (profile=strong). Includes the deployed (0.10, 0.12) cell and the

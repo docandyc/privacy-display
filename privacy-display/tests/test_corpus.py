@@ -3,6 +3,7 @@ import json
 import numpy as np
 
 from experiments import build_corpus
+from src.evaluation import benchmark as benchmark_module
 from src.attack.ocr_evaluator import OCRResult
 from src.evaluation.benchmark import (
     _mean_std,
@@ -66,6 +67,47 @@ def test_run_corpus_multi_engine_can_merge_existing_without_running_engines(tmp_
     assert report == existing
     stored = json.loads(report_path.read_text(encoding="utf-8"))
     assert stored == existing
+
+
+def test_run_corpus_multi_engine_reports_requested_progress(tmp_path, monkeypatch, capsys):
+    images = [np.zeros((4, 4, 3), dtype=np.uint8) for _ in range(2)]
+    truths = ["alpha", "beta"]
+    names = ["a.png", "b.png"]
+    monkeypatch.setattr(build_corpus, "load_corpus", lambda: (images, truths, names))
+    monkeypatch.setattr(
+        build_corpus,
+        "load_corpus_metadata",
+        lambda: {name: {"category": "text"} for name in names},
+    )
+
+    class FakeEvaluator:
+        engines = ["surya"]
+
+        def evaluate_protection(self, image, subframes, ground_truth, engine):
+            return {
+                "original_char_acc": 1.0,
+                "mean_subframe_acc": 0.0,
+                "accuracy_reduction": 1.0,
+                "original_word_acc": 1.0,
+                "mean_subframe_word_acc": 0.0,
+                "original_exact_match": 1.0,
+                "mean_subframe_exact_match": 0.0,
+                "original_sensitive_token_recall": 0.0,
+                "mean_subframe_sensitive_token_recall": 0.0,
+                "sensitive_token_count": 0,
+            }
+
+    monkeypatch.setattr(benchmark_module, "OCREvaluator", FakeEvaluator)
+
+    run_corpus_multi_engine(
+        engines=["surya"],
+        output_dir=str(tmp_path),
+        progress_interval=1,
+    )
+
+    output = capsys.readouterr().out
+    assert "[surya] OCR 进度 1/2: a.png" in output
+    assert "[surya] OCR 进度 2/2: b.png" in output
 
 
 def test_mean_std_reports_deterministic_ci95():

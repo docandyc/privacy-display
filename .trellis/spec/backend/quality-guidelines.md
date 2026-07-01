@@ -165,6 +165,7 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - `recognize(image: np.ndarray, engine: str = "tesseract") -> str`
 - `_parse_surya_text(result) -> str`
 - `run_corpus_multi_engine(engines: list[str] | None = None) -> dict`
+- `scripts/rerun_corpus_surya.sh` reruns only Surya for the simulated Table 5 corpus result.
 
 ### 3. Contracts
 - Auto-detection must only list an engine when importing the package and any cheap local availability check succeeds.
@@ -178,6 +179,9 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - Windows PowerShell scripts must resolve external executables to one scalar path. For `curl.exe`, prefer `%SystemRoot%\\System32\\curl.exe`; fallback discovery must use `Get-Command -All | Select-Object -First 1` before reading `.Source`, because activated Conda environments can expose multiple `curl.exe` applications and PowerShell otherwise coerces their paths into one invalid command string.
 - Surya output parsing must accept `OCRResult.text_lines[*].text` objects and equivalent dictionaries.
 - Corpus result JSON must include the exact engine keys that were run, and documentation values should match that file after reruns.
+- The Surya-only corpus rerun must write inference output to a temporary directory, retain only the existing `tesseract`/`easyocr` payloads, add the completed `surya` payload, and atomically replace the publication JSON with exactly those three keys. A failed or interrupted run must leave the old JSON untouched.
+- Directly executable files under `experiments/` that import `src` must insert their project root into `sys.path` before those imports; invoking `python experiments/<script>.py` otherwise exposes `experiments/` rather than the repository root as `sys.path[0]`.
+- macOS Surya environments must install `pycryptodome`, never the unrelated `crypto` package. On a case-insensitive filesystem, `crypto` collides with PyCryptodome's `Crypto` package and can leave valid `pycryptodome` metadata while `from Crypto.Cipher import ChaCha20` fails.
 
 ### 4. Validation & Error Matrix
 - Engine package import fails -> omit the engine from `engines` and keep other engines available.
@@ -186,19 +190,29 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - Surya output has no recognized text lines -> return an empty string rather than crashing.
 - Heavy model download or runtime setup failure -> keep it out of unit tests; verify with an explicit integration command when the environment has cached models or network access.
 - Multiple `curl.exe` entries on PATH -> select one executable explicitly and verify a real manifest download; do not invoke an array-valued `.Source` result.
+- Existing corpus JSON missing valid `tesseract` or `easyocr` objects -> abort before starting Surya inference.
+- Surya inference error or `SIGINT` -> discard temporary output and preserve the existing corpus JSON.
+- Direct experiment execution cannot import `src` -> derive `ROOT = Path(__file__).resolve().parents[1]` and insert `str(ROOT)` at the front of `sys.path` before importing project packages.
+- `pycryptodome` is listed but `Crypto` cannot import on macOS -> uninstall both `crypto` and `pycryptodome`, then reinstall only `pycryptodome`.
 
 ### 5. Good/Base/Bad Cases
 - Good: add an engine with parser-only regression tests plus one fake-reader dispatch test.
 - Good: Windows machines with Tesseract installed under `C:\Program Files\Tesseract-OCR` are detected without requiring users to edit PATH.
+- Good: `scripts/rerun_corpus_surya.sh` prints per-sample progress, runs only Surya, and finishes with `tesseract`, `easyocr`, and `surya` keys.
 - Base: existing Tesseract/EasyOCR behavior remains unchanged when Surya is unavailable.
+- Base: stopping the Surya-only rerun keeps the previous PaddleOCR-era JSON intact rather than publishing a partial merge.
 - Bad: unit tests instantiate Surya predictors directly and trigger model downloads.
 - Bad: hand-edit `corpus_multi_engine.json` without rerunning `run_corpus_multi_engine`.
+- Bad: use `merge_existing=True` for a PaddleOCR-to-Surya replacement without explicitly filtering stale engine keys.
+- Bad: test an experiment only through `import experiments.<module>`; that can hide a broken direct-script import path.
 
 ### 6. Tests Required
 - Assert `OCREvaluator().engines` includes the engine in an environment where the dependency is installed.
 - Assert Windows default Tesseract install path is used when `tesseract` is not on PATH.
 - Assert parser coverage for every supported output shape.
 - Assert `recognize(..., engine)` uses a cached/fake reader and returns joined text.
+- Assert the Surya-only merge preserves Tesseract/EasyOCR objects, removes PaddleOCR/unknown engines, writes only after success, and exposes progress without loading model weights in unit tests.
+- Assert the real script file bootstraps the repository root when executed from outside the project directory.
 - Run `pytest tests/ -q` and, for corpus changes, rerun `run_corpus_multi_engine(...)`.
 
 ### 7. Wrong vs Correct
@@ -206,6 +220,8 @@ where `_target_gradient` tries the differentiable shadow model first and records
 ```python
 result = RecognitionPredictor()([image], det_predictor=DetectionPredictor())
 return result[0].text_lines[0].text
+# Stale PaddleOCR remains in the publication result.
+run_corpus_multi_engine(engines=["surya"], merge_existing=True)
 ```
 
 #### Correct
@@ -218,6 +234,11 @@ if self._surya_readers is None:
 return self._parse_surya_text(
     self._surya_readers[0]([image], det_predictor=self._surya_readers[1])
 )
+# At the top of directly executable experiment scripts:
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+# Shell: ./scripts/rerun_corpus_surya.sh
+# Runs Surya in temporary storage, then strictly merges the three cited engines.
 ```
 
 ## Scenario: Detection Suite Server Experiments
@@ -523,6 +544,9 @@ json.dump(report, out_file, ensure_ascii=False, indent=2)
 - `select_stratified_samples(names, metadata, samples_per_category=1, max_samples=None) -> list[int]`
 - `run_vlm_benchmark(client=None, output_dir="experiments/results", n=4, epsilon=8/255, cycles=2, samples_per_category=1, max_samples=None, attacks=None, save=True, corpus=None, metadata=None) -> dict`
 - Command: `python experiments/vlm_readability_analysis.py --samples-per-category 1`
+- `load_real_captures(experiments_dir=..., positions=None, profiles=("capture_hardened",), baseline_position="d0.5_a0", max_samples=None) -> list[dict]`
+- Command: `python experiments/real_capture_vlm_evaluation.py --dry-run [--positions d0.5_a0] [--max-samples 1]`
+- Resume command: `python experiments/real_capture_vlm_evaluation.py --resume [same selection/model/output arguments]`
 
 ### 3. Contracts
 - API keys must come only from the `SILICONFLOW_API_KEY` environment variable or an in-memory constructor argument for tests; never store keys in source, docs, command examples, logs, or JSON result files.
@@ -532,6 +556,11 @@ json.dump(report, out_file, ensure_ascii=False, indent=2)
 - The model must be instructed to return JSON only with `visible_text`, `can_read_sensitive`, `confidence`, and `notes`.
 - Corpus VLM reports must include model/base_url, sample-selection config, attack name, metadata, `visible_text` preview, recovery metrics, confidence, row-level errors, per-attack summaries, and best-attacker summaries.
 - Corpus VLM summaries must include `call_status` with total, successful, and failed call counts. If every row failed, the live CLI must return nonzero after writing the diagnostic JSON.
+- Remote/API/parse failures are missing observations, not recognition failures. Publication-facing means and confidence intervals must use successful rows only; error rows remain in raw output and `call_status`, and an all-error metric cell must be `null`/unavailable rather than `0.0`.
+- Long real-capture runs must checkpoint with same-directory atomic JSON replacement. The partial file follows the selected output stem, records a model/sample-selection fingerprint, replaces prior rows by `(model, position, capture_id)`, and is retained while any planned call is failed or pending.
+- Real-capture metadata selection is strict: missing metadata/images/truth, duplicate `(position, capture_id)`, invalid positions, and non-positive sample caps must fail before live calls instead of silently shrinking the sample.
+- `max_tokens` must be explicit and recorded for real-capture transcription. It must be large enough for the longest ground truth; silently inheriting the 256-token client default can force baseline truncation and invalidate exact-match checks.
+- Position summaries for protected-display robustness must exclude a baseline collected at only one position; baseline remains available in condition summaries.
 - Result JSON must not include authorization headers, API keys, full request payloads, or any secret-bearing environment values.
 - Unit tests must use a fake transport/client; online calls are explicit integration runs only.
 
@@ -544,15 +573,21 @@ json.dump(report, out_file, ensure_ascii=False, indent=2)
 - Unknown requested attack name -> `ValueError`.
 - Per-row VLM failure during corpus benchmark -> record empty visible text, zero/derived recovery metrics, and continue.
 - All live VLM rows fail due API/DNS/parse errors -> write diagnostic JSON, set `call_status.all_calls_failed=True`, and return nonzero so scripts do not treat zero recovery metrics as valid evidence.
+- Some real-capture calls still fail after bounded retries -> write the diagnostic final JSON, exclude failures from aggregate denominators, keep the partial file, set `run_complete=False`, and return nonzero so `--resume` can replace those rows later.
+- Resume config/model/sample fingerprint differs -> reject the partial file before constructing clients or issuing calls.
 
 ### 5. Good/Base/Bad Cases
 - Good: dry-run command reports the selected samples and attack calls without requiring an API key.
+- Good: default real-capture dry-run reports 1,116 captures and 3,348 calls; a single-position `--max-samples 1` smoke plan preserves all seven conditions and reports 21 calls for three models.
+- Good: a transient failed row is retried; if it later succeeds under `--resume`, keyed upsert replaces the failure instead of double-counting both rows.
 - Good: fake transport test asserts the request contains an image URL data URL and no ground-truth text.
 - Base: live command reads `SILICONFLOW_API_KEY` from the shell environment and writes `experiments/results/vlm_qwen3_siliconflow.json`.
 - Base: some VLM rows fail, but successful rows remain summarized and the failure count is visible.
 - Bad: adding `--api-key` CLI flags, hard-coding a key, or putting a secret in README examples.
 - Bad: sending the ground-truth text to the VLM prompt and then using its answer as a readability metric.
 - Bad: citing a 0.0% VLM recovery rate from a result file where all rows have `vlm_error`.
+- Bad: treating an API timeout row as `exact_match=False` in an aggregate; this biases attacker success downward and makes the defense look artificially stronger.
+- Bad: saving only after a whole model completes or using one global partial filename for different selections/outputs.
 
 ### 6. Tests Required
 - Assert `image_to_data_url` emits a PNG data URL for uint8 arrays.
@@ -562,6 +597,10 @@ json.dump(report, out_file, ensure_ascii=False, indent=2)
 - Assert stratified sample selection is deterministic by metadata category.
 - Assert `run_vlm_benchmark` works with an injected fake client, writes JSON, and contains no secret fields.
 - Assert VLM row summaries report call-status counts and all-failed state.
+- Assert real-capture error rows are excluded from metric denominators and all-error cross-model cells are unavailable.
+- Assert real-capture checkpoints are atomic, output-specific, config-validated, written by position, and preserve completed rows across interruption.
+- Assert resume upsert replaces failed rows without duplicates and rejects rows outside the selected model/capture matrix.
+- Assert real-capture dry-run counts match the metadata matrix without making online calls.
 - Run `pytest tests/test_vlm_evaluator.py tests/test_vlm_benchmark.py -q` after changing VLM paths.
 - Run `pytest tests/ -q` before citing VLM scaffolding in publication-facing docs.
 
@@ -579,6 +618,21 @@ payload["messages"][1]["content"] = [
     {"type": "image_url", "image_url": {"url": image_to_data_url(frame)}},
 ]
 api_key = os.environ["SILICONFLOW_API_KEY"]
+```
+
+For publication aggregates, this same rule applies:
+
+#### Wrong
+```python
+exact_match = _mean_std([float(row["exact_match"]) for row in rows])
+# API errors have exact_match=False and silently become evidence for the defense.
+```
+
+#### Correct
+```python
+successful = [row for row in rows if not row.get("vlm_error")]
+exact_match = metric_stats([float(row["exact_match"]) for row in successful])
+error_count = len(rows) - len(successful)
 ```
 
 ## Scenario: Publication Result Summary
@@ -861,7 +915,7 @@ sub_noises, pedestal = sub_noises_to_pixel_space(sub_noises_f, cfg.epsilon)
 - `generate_cell_masks(width, height, n, cycle, cell_size, key=None) -> list[np.ndarray]`
 - `extract_text_saliency_mask(image) -> np.ndarray`
 - `apply_anti_ocr_artifacts(frame, original, saliency_mask, cycle, slot, stripe_width, stripe_alpha, glyph_alpha, profile="strong") -> np.ndarray`
-- CLI flags: `--demo document|cet6`, `--pdf-page`, `--anti-ocr-profile off|strong|vlm`, `--mask-cell-size`, `--stripe-width`, `--stripe-alpha`, `--glyph-alpha`.
+- CLI flags: `--demo document|cet6`, `--pdf-page`, `--anti-ocr-profile off|strong|capture_hardened`, `--mask-cell-size`, `--stripe-width`, `--stripe-alpha`, `--glyph-alpha`; legacy `vlm` remains an accepted input alias.
 
 ### 3. Contracts
 - `--image` takes precedence over built-in `--demo`; otherwise `--demo document` generates the synthetic document and `--demo cet6` renders the local CET6 PDF.
@@ -870,12 +924,14 @@ sub_noises, pedestal = sub_noises_to_pixel_space(sub_noises_f, cfg.epsilon)
 - `anti_ocr_profile == "off"` is the default and must preserve existing playback output for the same key, image, `n`, cycles, noise, and inversion settings.
 - `anti_ocr_profile == "strong"` is a demonstration/OCR-suppression mode, not a strict completeness proof; it may intentionally perturb full-cycle averages.
 - Strong mode defaults are readability-first: default `mask_cell_size` must stay at `1`, and default artifacts must preserve measurable text-vs-background contrast. Users can manually raise cell size/alphas for more aggressive OCR suppression.
-- `anti_ocr_profile == "vlm"` is a camera/VLM stress profile. Its defaults should be more aggressive than strong (`mask_cell_size=2`, `stripe_width=6`, `stripe_alpha=0.42`, `glyph_alpha=0.55`) and may reduce human readability; it exists for phone-photo VLM/OCR suppression experiments, not for clean reading demos.
-- Strong and VLM modes may coexist with requested playback inversion. The inversion frame must be a weak amplitude-scaled frame `alpha * (255 - I)` generated by `compose_partial_inversion_frame`, not a full `255 - I` slot. This preserves the long-exposure defence while keeping playback readable.
+- `anti_ocr_profile == "capture_hardened"` is the camera-capture stress profile. Its defaults are more aggressive than strong (`mask_cell_size=2`, `stripe_width=6`, `stripe_alpha=0.42`, `glyph_alpha=0.55`) and may reduce human readability; it targets machine readability after phone/camera capture rather than one specific VLM family.
+- `vlm` is an input-only compatibility alias for `capture_hardened`. Runtime metadata, HUD output, and new capture conditions must emit `capture_hardened`; historical result JSON keeps the old label for provenance, and loaders/renderers normalize it at the boundary.
+- Real-capture `--conditions vlm` is also a legacy input alias; new plans must emit `ablation=capture_hardened`, `condition=capture_hardened|<attack>`, and `profile=capture_hardened`.
+- Strong and capture-hardened modes may coexist with requested playback inversion. The inversion frame must be a weak amplitude-scaled frame `alpha * (255 - I)` generated by `compose_partial_inversion_frame`, not a full `255 - I` slot. This preserves the long-exposure defence while keeping playback readable.
 - When inversion is enabled, metadata must expose `insert_inversion=True`, `inversion_alpha`, and `per_cycle_slots == n + 1`; when disabled, `inversion_alpha` is `None` and `per_cycle_slots == n`.
-- Strong and VLM modes must do all extra NumPy work during precomputation only. The playback loop remains blit/HUD/flip and does not run per-frame image processing.
-- Strong and VLM modes must keep masks mutually exclusive and complete before artifacts are applied; large cells are generated through `MaskGenerator`, not ad hoc modulo randomness.
-- Strong and VLM mode metadata must record the selected profile and effective tunable parameters under `meta["anti_ocr"]`, so HUD/tests can expose what was displayed.
+- Strong and capture-hardened modes must do all extra NumPy work during precomputation only. The playback loop remains blit/HUD/flip and does not run per-frame image processing.
+- Strong and capture-hardened modes must keep masks mutually exclusive and complete before artifacts are applied; large cells are generated through `MaskGenerator`, not ad hoc modulo randomness.
+- Strong and capture-hardened mode metadata must record the canonical selected profile and effective tunable parameters under `meta["anti_ocr"]`, so HUD/tests can expose what was displayed.
 
 ### 4. Validation & Error Matrix
 - Unknown `anti_ocr_profile` -> `ValueError` or argparse choices rejection.
@@ -890,8 +946,9 @@ sub_noises, pedestal = sub_noises_to_pixel_space(sub_noises_f, cfg.epsilon)
 ### 5. Good/Base/Bad Cases
 - Good: `python main.py playback --n 4 --anti-ocr-profile strong` shows OCR suppression parameters in HUD, keeps small text readable by default, and keeps the hot loop lightweight.
 - Good: `python main.py playback --demo cet6 --pdf-page 1 --width 900 --height 1280 --n 4` renders the first CET6 PDF page as a portrait playback demo without stretching.
-- Good: `python main.py playback --demo cet6 --pdf-page 1 --width 900 --height 1280 --n 4 --anti-ocr-profile vlm` uses the VLM stress defaults and records them in HUD/metadata.
-- Base: if a user passes `--anti-ocr-profile strong --inversion` or `--anti-ocr-profile vlm --inversion`, playback appends the weak inversion frame after each cycle and records the extra slot plus alpha in metadata/HUD.
+- Good: `python main.py playback --demo cet6 --pdf-page 1 --width 900 --height 1280 --n 4 --anti-ocr-profile capture_hardened` uses the camera-capture stress defaults and records the canonical profile in HUD/metadata.
+- Base: if a user passes legacy `--anti-ocr-profile vlm`, playback behaves identically to `capture_hardened` but records `capture_hardened` in metadata.
+- Base: if a user passes `--anti-ocr-profile strong --inversion` or `--anti-ocr-profile capture_hardened --inversion`, playback appends the weak inversion frame after each cycle and records the extra slot plus alpha in metadata/HUD.
 - Base: existing `python main.py playback --n 4` stays visually/mathematically equivalent to the previous playback path.
 - Bad: stretching an A4 PDF page into the 1280x720 canvas and making text unreadable.
 - Bad: enabling strong artifacts by default and breaking existing visual-completeness tests.
@@ -903,11 +960,12 @@ sub_noises, pedestal = sub_noises_to_pixel_space(sub_noises_f, cfg.epsilon)
 - Assert explicit `anti_ocr_profile="off"` matches the default output.
 - Assert cell masks are deterministic, mutually exclusive, complete, and spatially enlarged.
 - Assert strong mode changes generated subframes and records metadata.
-- Assert VLM mode uses stronger defaults than strong, changes generated subframes, and records metadata.
+- Assert capture-hardened mode uses stronger defaults than strong, changes generated subframes, and records canonical metadata.
+- Assert legacy `vlm` input produces the same behavior and canonical `capture_hardened` metadata.
 - Assert strong mode disrupts integrated glyph/saliency regions enough to affect OCR-oriented averages.
-- Assert VLM mode disrupts integrated glyph/saliency regions more than default strong mode.
+- Assert capture-hardened mode disrupts integrated glyph/saliency regions more than default strong mode.
 - Assert default strong mode preserves text contrast so the human-readable demo does not regress.
-- Assert strong and VLM modes coexist with weak inversion, append one inversion frame per cycle, keep inversion frames free of anti-OCR artifacts, and set `per_cycle_slots == n + 1`.
+- Assert strong and capture-hardened modes coexist with weak inversion, append one inversion frame per cycle, keep inversion frames free of anti-OCR artifacts, and set `per_cycle_slots == n + 1`.
 - Assert CLI parsing covers the profile and all tunable parameters.
 
 ### 7. Wrong vs Correct

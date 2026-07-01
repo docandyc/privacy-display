@@ -236,12 +236,37 @@ def test_strong_profile_changes_frames_and_records_metadata():
     )
 
 
-def test_vlm_profile_uses_stronger_defaults_and_records_metadata():
+def test_capture_hardened_profile_uses_stronger_defaults_and_records_metadata():
     img = make_demo_document(320, 180)
     off_frames, _ = build_playback_frames(
         img, n=2, cycles=1, key=KEY, use_noise=False
     )
-    vlm_frames, meta = build_playback_frames(
+    hardened_frames, meta = build_playback_frames(
+        img,
+        n=2,
+        cycles=1,
+        key=KEY,
+        use_noise=False,
+        anti_ocr_profile="capture_hardened",
+    )
+
+    anti = meta["anti_ocr"]
+    assert anti["profile"] == "capture_hardened"
+    assert anti["mask_cell_size"] == 2
+    assert anti["stripe_width"] == 6
+    assert anti["stripe_alpha"] == 0.42
+    assert anti["glyph_alpha"] == 0.55
+    assert anti["saliency_pixels"] > 0
+    assert any(
+        not np.array_equal(a[0], b[0])
+        for a, b in zip(off_frames, hardened_frames)
+    )
+
+
+def test_legacy_vlm_profile_alias_emits_canonical_metadata():
+    img = make_demo_document(320, 180)
+
+    _, meta = build_playback_frames(
         img,
         n=2,
         cycles=1,
@@ -250,20 +275,10 @@ def test_vlm_profile_uses_stronger_defaults_and_records_metadata():
         anti_ocr_profile="vlm",
     )
 
-    anti = meta["anti_ocr"]
-    assert anti["profile"] == "vlm"
-    assert anti["mask_cell_size"] == 2
-    assert anti["stripe_width"] == 6
-    assert anti["stripe_alpha"] == 0.42
-    assert anti["glyph_alpha"] == 0.55
-    assert anti["saliency_pixels"] > 0
-    assert any(
-        not np.array_equal(a[0], b[0])
-        for a, b in zip(off_frames, vlm_frames)
-    )
+    assert meta["anti_ocr"]["profile"] == "capture_hardened"
 
 
-@pytest.mark.parametrize("profile", ["strong", "vlm"])
+@pytest.mark.parametrize("profile", ["strong", "capture_hardened"])
 def test_anti_ocr_profiles_coexist_with_inversion(profile):
     img = make_demo_document(320, 180)
     frames, meta = build_playback_frames(
@@ -338,7 +353,7 @@ def test_strong_profile_disrupts_integrated_glyph_regions():
     assert float(diff[saliency].mean()) > 8.0
 
 
-def test_vlm_profile_disrupts_integrated_glyph_regions_more_than_strong():
+def test_capture_hardened_profile_disrupts_glyph_regions_more_than_strong():
     img = make_demo_document(320, 180)
     strong_frames, strong_meta = build_playback_frames(
         img,
@@ -348,13 +363,13 @@ def test_vlm_profile_disrupts_integrated_glyph_regions_more_than_strong():
         use_noise=False,
         anti_ocr_profile="strong",
     )
-    vlm_frames, vlm_meta = build_playback_frames(
+    hardened_frames, hardened_meta = build_playback_frames(
         img,
         n=2,
         cycles=1,
         key=KEY,
         use_noise=False,
-        anti_ocr_profile="vlm",
+        anti_ocr_profile="capture_hardened",
     )
 
     composer = SubframeComposer(n=2, gamma=1.0)
@@ -362,17 +377,21 @@ def test_vlm_profile_disrupts_integrated_glyph_regions_more_than_strong():
         [frame for frame, kind in strong_frames if kind == "subframe"],
         pedestal=strong_meta["pedestal"],
     )
-    vlm_integrated = composer.integrate_subframes(
-        [frame for frame, kind in vlm_frames if kind == "subframe"],
-        pedestal=vlm_meta["pedestal"],
+    hardened_integrated = composer.integrate_subframes(
+        [frame for frame, kind in hardened_frames if kind == "subframe"],
+        pedestal=hardened_meta["pedestal"],
     )
     saliency = extract_text_saliency_mask(img)
     strong_diff = np.abs(
         strong_integrated.astype(np.int16) - img.astype(np.int16)
     )
-    vlm_diff = np.abs(vlm_integrated.astype(np.int16) - img.astype(np.int16))
+    hardened_diff = np.abs(
+        hardened_integrated.astype(np.int16) - img.astype(np.int16)
+    )
 
-    assert float(vlm_diff[saliency].mean()) > float(strong_diff[saliency].mean()) * 2
+    assert float(hardened_diff[saliency].mean()) > float(
+        strong_diff[saliency].mean()
+    ) * 2
 
 
 def test_default_strong_profile_preserves_readable_text_contrast():
@@ -469,14 +488,20 @@ def test_parse_args_anti_ocr_options():
     assert cfg.glyph_alpha == 0.8
 
 
-def test_parse_args_vlm_profile_defaults():
-    cfg = parse_args(["--anti-ocr-profile", "vlm"])
+def test_parse_args_capture_hardened_profile_defaults():
+    cfg = parse_args(["--anti-ocr-profile", "capture_hardened"])
 
-    assert cfg.anti_ocr_profile == "vlm"
+    assert cfg.anti_ocr_profile == "capture_hardened"
     assert cfg.mask_cell_size == 2
     assert cfg.stripe_width == 6
     assert cfg.stripe_alpha == 0.42
     assert cfg.glyph_alpha == 0.55
+
+
+def test_parse_args_legacy_vlm_profile_is_canonicalized():
+    cfg = parse_args(["--anti-ocr-profile", "vlm"])
+
+    assert cfg.anti_ocr_profile == "capture_hardened"
 
 
 def test_parse_args_cet6_demo_options():

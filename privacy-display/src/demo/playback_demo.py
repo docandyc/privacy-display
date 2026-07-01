@@ -35,7 +35,8 @@ from src.demo.privacy_window import (
 )
 
 
-ANTI_OCR_PROFILES = ("off", "strong", "vlm")
+CANONICAL_ANTI_OCR_PROFILES = ("off", "strong", "capture_hardened")
+ANTI_OCR_PROFILE_ALIASES = {"vlm": "capture_hardened"}
 DEMO_NAMES = ("document", "cet6")
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CET6_PDF_PATH = PROJECT_ROOT / "2025年6月英语六级真题(第3套).pdf"
@@ -62,13 +63,24 @@ ANTI_OCR_PROFILE_DEFAULTS = {
         stripe_alpha=0.18,
         glyph_alpha=0.22,
     ),
-    "vlm": AntiOcrOptions(
+    "capture_hardened": AntiOcrOptions(
         mask_cell_size=2,
         stripe_width=6,
         stripe_alpha=0.42,
         glyph_alpha=0.55,
     ),
 }
+
+
+def canonical_anti_ocr_profile(profile: str) -> str:
+    """Return the canonical profile name while accepting legacy CLI/data labels."""
+    canonical = ANTI_OCR_PROFILE_ALIASES.get(profile, profile)
+    if canonical not in CANONICAL_ANTI_OCR_PROFILES:
+        raise ValueError(
+            "anti_ocr_profile must be one of "
+            f"{CANONICAL_ANTI_OCR_PROFILES} (legacy alias: 'vlm')"
+        )
+    return canonical
 
 
 # ----------------------------------------------------------------------
@@ -385,12 +397,11 @@ def apply_anti_ocr_artifacts(
 
     - 条纹：奇偶 slot 切换横/竖方向，制造手机采样和滚动快门别名。
     - 字形扰动：对暗笔画打孔、在邻域生成假笔画，让平均后的字符边缘变脏。
-    - VLM 档：在文字邻域加入更密集的伪笔画网格，降低拍照后版面重建稳定性。
+    - 抗拍强化档：在文字邻域加入更密集的伪笔画网格，降低拍照后版面重建稳定性。
     """
+    profile = canonical_anti_ocr_profile(profile)
     if profile == "off":
         return frame.copy()
-    if profile not in {"strong", "vlm"}:
-        raise ValueError("profile must be one of {'strong', 'vlm'}")
     if frame.dtype != np.uint8 or original.dtype != np.uint8:
         raise ValueError("frame and original must be uint8")
     if frame.shape != original.shape:
@@ -428,7 +439,7 @@ def apply_anti_ocr_artifacts(
     _blend_where(out, erase, background_rgb, glyph_alpha)
     _blend_where(out, fake, ink_rgb, glyph_alpha)
 
-    if profile == "vlm":
+    if profile == "capture_hardened":
         wide_halo = _dilate_bool(stroke, radius=4)
         far_halo = wide_halo & ~halo
         fine_period = max(3, stripe_width // 2)
@@ -459,8 +470,7 @@ def resolve_anti_ocr_options(
     glyph_alpha: float | None = None,
 ) -> AntiOcrOptions:
     """合并 profile 默认值与用户显式覆盖值，并统一做参数校验。"""
-    if profile not in ANTI_OCR_PROFILES:
-        raise ValueError(f"anti_ocr_profile must be one of {ANTI_OCR_PROFILES}")
+    profile = canonical_anti_ocr_profile(profile)
 
     defaults = ANTI_OCR_PROFILE_DEFAULTS[profile]
     options = AntiOcrOptions(
@@ -488,8 +498,7 @@ def _validate_anti_ocr_options(
     stripe_alpha: float,
     glyph_alpha: float,
 ) -> None:
-    if profile not in ANTI_OCR_PROFILES:
-        raise ValueError(f"anti_ocr_profile must be one of {ANTI_OCR_PROFILES}")
+    canonical_anti_ocr_profile(profile)
     if mask_cell_size <= 0:
         raise ValueError("mask_cell_size must be positive")
     if stripe_width <= 0:
@@ -532,7 +541,7 @@ def build_playback_frames(
         use_noise: False 时跳过噪声（pedestal=0）
         key: 32 字节掩模密钥，None 时随机生成（传入固定 key 可复现）
         anti_ocr_profile: "off" 保持原行为，"strong" 偏人眼可读，
-            "vlm" 偏拍照后 VLM/OCR 压制
+            "capture_hardened" 偏拍照后机器可读性压制
         mask_cell_size: 掩模颗粒边长（像素），None 时按 profile 默认
         stripe_width: 条纹宽度（像素），None 时按 profile 默认
         stripe_alpha: 条纹混合强度，None 时按 profile 默认
@@ -547,6 +556,7 @@ def build_playback_frames(
         raise ValueError("image 须为 uint8 (H, W, 3) RGB 数组")
     if cycles <= 0:
         raise ValueError(f"cycles 须为正，实际为 {cycles}")
+    anti_ocr_profile = canonical_anti_ocr_profile(anti_ocr_profile)
     anti_options = resolve_anti_ocr_options(
         anti_ocr_profile,
         mask_cell_size,
@@ -1092,11 +1102,12 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
                         help="直接显示原图作为无防护基线，不生成保护子帧")
     parser.add_argument(
         "--anti-ocr-profile",
-        choices=ANTI_OCR_PROFILES,
+        type=canonical_anti_ocr_profile,
+        choices=CANONICAL_ANTI_OCR_PROFILES,
         default="off",
         help=(
             "反 OCR 预生成档位：off 保持原行为，strong 偏人眼可读，"
-            "vlm 偏手机拍摄后 VLM/OCR 压制"
+            "capture_hardened 偏手机拍摄后机器可读性压制"
         ),
     )
     parser.add_argument("--mask-cell-size", type=int, default=None,
@@ -1114,6 +1125,7 @@ def parse_args(argv: list[str] | None = None) -> PlaybackConfig:
                         help="常驻推进：轮询该 JSON 控制文件 {frames_dir, epoch}，"
                              "mtime 变化时热切换显示帧（MOT 逐帧停拍）")
     args = parser.parse_args(argv)
+    args.anti_ocr_profile = canonical_anti_ocr_profile(args.anti_ocr_profile)
     try:
         anti_options = resolve_anti_ocr_options(
             args.anti_ocr_profile,

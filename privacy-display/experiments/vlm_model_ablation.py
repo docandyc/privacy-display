@@ -36,7 +36,6 @@ from experiments.build_corpus import load_corpus, load_corpus_metadata  # noqa: 
 from src.attack.vlm_evaluator import (  # noqa: E402
     API_KEY_ENV,
     DEFAULT_SILICONFLOW_BASE_URL,
-    DEFAULT_VLM_MODEL,
     VLMClient,
 )
 from src.evaluation.benchmark import _mean_std  # noqa: E402
@@ -48,7 +47,7 @@ RESULT_FILE = "vlm_model_ablation.json"
 # Three VLM families. Verify these IDs against the live SiliconFlow catalog
 # before any paid run; override with --models if an ID is unavailable.
 DEFAULT_MODELS = (
-    DEFAULT_VLM_MODEL,                  # Qwen/Qwen3-VL-32B-Instruct (incumbent)
+    "Qwen/Qwen3-VL-32B-Instruct",       # Qwen-VL family (incumbent)
     "Pro/moonshotai/Kimi-K2.6",         # Kimi-K2 family
     "zai-org/GLM-4.5V",                 # GLM-V family
 )

@@ -44,6 +44,32 @@ def test_condition_to_playback_args_deployed_matches_selected_profile():
     ]
 
 
+def test_condition_to_playback_args_capture_hardened_uses_canonical_profile():
+    args = condition_to_playback_args("capture_hardened")
+
+    assert args == [
+        "--anti-ocr-profile", "capture_hardened",
+        "--inversion",
+        "--inversion-alpha", "0.20",
+    ]
+
+
+def test_legacy_vlm_condition_alias_builds_canonical_capture_plan():
+    plan = build_study_plan(
+        study="1",
+        names=["doc_a"],
+        truths=["A"],
+        subset_size=1,
+        attacks=("short",),
+        conditions=("vlm",),
+    )
+
+    assert len(plan) == 1
+    assert plan[0]["ablation"] == "capture_hardened"
+    assert plan[0]["condition"] == "capture_hardened|short"
+    assert plan[0]["profile"] == "capture_hardened"
+
+
 def test_build_study1_plan_filters_conditions_and_attacks():
     plan = build_study_plan(
         study="1",
