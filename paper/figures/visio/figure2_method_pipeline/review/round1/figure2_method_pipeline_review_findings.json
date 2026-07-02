@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1",
+  "figure_id": "figure2_method_pipeline",
+  "round": 1,
+  "overall_verdict": "needs_rebuild",
+  "rebuild_required": true,
+  "reviewer_inputs": {
+    "original_path": "E:/毕设/privacy-display/paper/figures/visio/figure2_method_pipeline/source/original.png",
+    "replica_path": "E:/毕设/privacy-display/paper/figures/visio/figure2_method_pipeline/round1/figure2_method_pipeline.scene.png"
+  },
+  "topology_checklist": [
+    {"id": "A001", "focus_region": "stage_1", "source_fact": "Input display flows horizontally to the security module.", "replica_status": "Horizontal arrow is present with correct direction and endpoints.", "status": "pass", "certainty": "certain"},
+    {"id": "A002", "focus_region": "stage_1", "source_fact": "Security module flows horizontally to the complementary masks.", "replica_status": "Horizontal arrow is present and reaches the mask cluster.", "status": "pass", "certainty": "certain"},
+    {"id": "A003", "focus_region": "stage_1_to_stage_2", "source_fact": "Complementary masks feed GPU subframe synthesis.", "replica_status": "Cross-stage horizontal handoff is present and points into the GPU module.", "status": "pass", "certainty": "certain"},
+    {"id": "A004", "focus_region": "stage_2", "source_fact": "Optional anti-OCR/inversion connects downward to GPU synthesis without an arrowhead.", "replica_status": "Dashed vertical annotation route is present above the GPU module.", "status": "pass", "certainty": "certain"},
+    {"id": "A005", "focus_region": "stage_2", "source_fact": "Complementary adversarial noise feeds GPU synthesis from below.", "replica_status": "Magenta upward route and arrowhead are present.", "status": "pass", "certainty": "certain"},
+    {"id": "A006", "focus_region": "stage_2", "source_fact": "GPU synthesis emits the sparse displayed subframe sequence.", "replica_status": "Horizontal output arrow reaches the first subframe.", "status": "pass", "certainty": "certain"},
+    {"id": "A007", "focus_region": "stage_2", "source_fact": "A horizontal time arrow runs beneath the subframes.", "replica_status": "Time arrow is present below the subframe row and points right.", "status": "pass", "certainty": "certain"},
+    {"id": "A008", "focus_region": "arrow_dense", "source_fact": "The subframe sequence reaches a single observer fork.", "replica_status": "The main navy lane reaches one fork before branching.", "status": "pass", "certainty": "certain"},
+    {"id": "A009", "focus_region": "stage_3_human", "source_fact": "The fork routes upward to the human visual system.", "replica_status": "Green orthogonal upper branch reaches the eye node.", "status": "pass", "certainty": "certain"},
+    {"id": "A010", "focus_region": "stage_3_human", "source_fact": "Human visual system feeds temporal integration.", "replica_status": "Green horizontal arrow connects eye to the integration stack.", "status": "pass", "certainty": "certain"},
+    {"id": "A011", "focus_region": "stage_3_human", "source_fact": "Temporal integration produces a readable reconstruction.", "replica_status": "Green horizontal arrow reaches the readable output display.", "status": "pass", "certainty": "certain"},
+    {"id": "A012", "focus_region": "stage_3_camera", "source_fact": "The fork routes downward to camera/machine vision.", "replica_status": "Orange-red dashed lower branch reaches the camera node.", "status": "pass", "certainty": "certain"},
+    {"id": "A013", "focus_region": "stage_3_camera", "source_fact": "Camera/machine vision receives the short-exposure subframe row.", "replica_status": "Orange-red horizontal arrow reaches the camera-frame row.", "status": "pass", "certainty": "certain"},
+    {"id": "A014", "focus_region": "stage_3_camera", "source_fact": "The sampled sequence produces one sparse fragment.", "replica_status": "Orange-red horizontal arrow connects the camera row to the fragment.", "status": "pass", "certainty": "certain"},
+    {"id": "A015", "focus_region": "stage_3_camera", "source_fact": "The sparse fragment reaches an OCR-failure mark.", "replica_status": "Orange-red horizontal arrow reaches the OCR-failure mark.", "status": "pass", "certainty": "certain"}
+  ],
+  "visual_checklist": [
+    {"id": "V001", "focus_region": "global_layout", "source_expectation": "Three stage titles are legible and aligned on one top baseline.", "replica_status": "All three stage titles are legible and aligned.", "status": "pass", "certainty": "certain"},
+    {"id": "V002", "focus_region": "stage_1", "source_expectation": "Input, security, mask label, and mask formula remain readable without broken words or overlap.", "replica_status": "PRIVATE DATA, security labels, mask label, and mask formula wrap into cramped fragments and collide visually.", "status": "fail", "certainty": "certain"},
+    {"id": "V003", "focus_region": "core", "source_expectation": "Optional tag, GPU title/formula, and noise title/formula are cleanly separated and readable.", "replica_status": "GPU formula has irregular gaps; optional tag is cramped; noise text and formula collapse into vertical fragments.", "status": "fail", "certainty": "certain"},
+    {"id": "V004", "focus_region": "stage_2", "source_expectation": "Four subframes, refresh label, time axis, and time label are visually separated.", "replica_status": "Subframes and arrows are clear, but the refresh label sits too close to the row and the time label is split.", "status": "fail", "certainty": "certain"},
+    {"id": "V005", "focus_region": "stage_3_human", "source_expectation": "Human title, integration text, readable display, and output label do not overlap.", "replica_status": "Integration wording overlaps the icon/stack area and readable-output text is clipped and stacked into narrow columns.", "status": "fail", "certainty": "certain"},
+    {"id": "V006", "focus_region": "stage_3_camera", "source_expectation": "Camera title, icon, selected exposure window, sampling labels, fragment, and OCR failure remain distinct.", "replica_status": "Camera title wraps heavily; CAMERA and OCR are split into vertical letters; sampling and outcome labels overlap the frame row.", "status": "fail", "certainty": "certain"},
+    {"id": "V007", "focus_region": "arrow_dense", "source_expectation": "Main flow and both branches are axis-aligned and do not cross visible text.", "replica_status": "Main flow and branch routes are visually clear and avoid text.", "status": "pass", "certainty": "certain"},
+    {"id": "V008", "focus_region": "global_layout", "source_expectation": "Human and camera outcomes remain distinguishable without relying only on color.", "replica_status": "Solid versus dashed routes, panel labels, and outcome wording provide redundant distinction.", "status": "pass", "certainty": "certain"},
+    {"id": "V009", "focus_region": "small_text", "source_expectation": "All labels and formulas are readable at the final 7.16-inch width.", "replica_status": "Multiple labels are too compressed or broken for final-size publication use.", "status": "fail", "certainty": "certain"}
+  ],
+  "findings": [
+    {
+      "id": "F001",
+      "severity": "blocking",
+      "summary": "Stage 1 typography collapses around the input and masks",
+      "visible_diff": "The source keeps input/security/mask labels readable, while the replica breaks several words into narrow vertical fragments and compresses the mask equation.",
+      "source_appearance": "Distinct display, security module, mask tiles, centered mask label, and one-line summation formula.",
+      "replica_appearance": "Broken PRIVATE DATA and security words plus crowded mask label/formula under the tiles.",
+      "impact_on_fidelity": "The secure-decomposition stage cannot be read reliably at manuscript size.",
+      "focus_regions": ["stage_1", "small_text"],
+      "checklist_refs": ["V002", "V009"],
+      "expected_visible_change": "Allocate larger text boxes, use explicit two-line labels, and keep the mask formula on a clean baseline."
+    },
+    {
+      "id": "F002",
+      "severity": "blocking",
+      "summary": "GPU and adversarial-noise modules have broken text layout",
+      "visible_diff": "The GPU formula is fragmented by large inter-character gaps and the noise module collapses its title/formula into a narrow vertical stack.",
+      "source_appearance": "A clear central GPU module with a single readable equation and a smaller subordinate noise module below.",
+      "replica_appearance": "Cramped labels and formulas with irregular spacing and overlapping vertical fragments.",
+      "impact_on_fidelity": "The central mechanism and its secondary-input hierarchy are not publication readable.",
+      "focus_regions": ["core", "small_text"],
+      "checklist_refs": ["V003", "V009"],
+      "expected_visible_change": "Use wider module interiors, larger formula boxes, and separate title/formula baselines without overlap."
+    },
+    {
+      "id": "F003",
+      "severity": "blocking",
+      "summary": "Human outcome labels overlap and clip",
+      "visible_diff": "The human branch topology is correct, but integration text overlaps the icons and the readable output label becomes clipped columns.",
+      "source_appearance": "Eye, temporal integration, readable display, and concise labels are clearly separated.",
+      "replica_appearance": "Labels sit on top of the integration stack and output display with clipped line endings.",
+      "impact_on_fidelity": "The upper outcome is visually ambiguous despite correct arrows.",
+      "focus_regions": ["stage_3_human"],
+      "checklist_refs": ["V005", "V009"],
+      "expected_visible_change": "Move labels into dedicated rows and widen the readable-output display and caption."
+    },
+    {
+      "id": "F004",
+      "severity": "blocking",
+      "summary": "Camera outcome panel is overpacked",
+      "visible_diff": "The camera title, CAMERA icon text, sampling label, OCR mark, and unreadable-fragment caption overlap or split vertically.",
+      "source_appearance": "Camera icon, selected short exposure, sparse fragment, OCR failure, and labels occupy separate visual zones.",
+      "replica_appearance": "The frame row and outcome labels compete for the same narrow horizontal band.",
+      "impact_on_fidelity": "The short-exposure mechanism cannot be read cleanly at final size.",
+      "focus_regions": ["stage_3_camera", "small_text"],
+      "checklist_refs": ["V006", "V009"],
+      "expected_visible_change": "Simplify the camera title, widen key objects, and place sampling/action/outcome labels on non-overlapping rows."
+    }
+  ]
+}

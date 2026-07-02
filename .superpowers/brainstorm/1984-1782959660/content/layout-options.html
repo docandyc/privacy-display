@@ -1,0 +1,80 @@
+<style>
+  .figure-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:22px; }
+  .figure-card { border:1px solid #d7deea; border-radius:14px; overflow:hidden; background:#fff; cursor:pointer; transition:.18s ease; }
+  .figure-card:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(15,35,70,.10); }
+  .figure-card.selected { border:2px solid #0b5cab; box-shadow:0 0 0 3px rgba(11,92,171,.12); }
+  .preview { padding:12px; background:#f7f9fc; min-height:205px; display:flex; align-items:center; }
+  .figure-card h3 { margin:12px 14px 5px; }
+  .figure-card p { margin:0 14px 14px; color:#566276; font-size:14px; line-height:1.45; }
+  .badge { display:inline-block; margin-left:7px; padding:2px 7px; border-radius:999px; background:#e7f3ff; color:#0b5cab; font-size:11px; vertical-align:middle; }
+  svg text { font-family:Arial,Helvetica,sans-serif; fill:#14213d; }
+  @media (max-width: 1050px) { .figure-grid { grid-template-columns:1fr; } }
+</style>
+
+<h2>Figure 2 应采用哪种信息结构？</h2>
+<p class="subtitle">三种方案都保持原论文语义；区别在于对原图的忠实度与缩印后的阅读效率。点击卡片选择。</p>
+
+<div class="figure-grid">
+  <div class="figure-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="preview">
+      <svg viewBox="0 0 560 230" width="100%" aria-label="Option A source-faithful layout">
+        <defs><marker id="aa" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#17365d"/></marker></defs>
+        <rect x="12" y="84" width="62" height="55" fill="#fff" stroke="#17365d" stroke-width="2"/><text x="43" y="112" text-anchor="middle" font-size="9" font-weight="700">PRIVATE</text>
+        <path d="M78 111H104" stroke="#17365d" stroke-width="2" marker-end="url(#aa)"/>
+        <rect x="110" y="84" width="72" height="55" rx="7" fill="#fff" stroke="#17365d" stroke-width="2"/><text x="146" y="106" text-anchor="middle" font-size="8">CSPRNG</text><text x="146" y="122" text-anchor="middle" font-size="8">Fisher–Yates</text>
+        <path d="M186 111H209" stroke="#17365d" stroke-width="2" marker-end="url(#aa)"/>
+        <g fill="#e7f7fd" stroke="#149ed2"><rect x="215" y="71" width="26" height="26"/><rect x="246" y="71" width="26" height="26"/><rect x="215" y="103" width="26" height="26"/><rect x="246" y="103" width="26" height="26"/></g>
+        <path d="M278 111H300" stroke="#17365d" stroke-width="2" marker-end="url(#aa)"/>
+        <rect x="306" y="74" width="80" height="74" rx="7" fill="#fff" stroke="#17365d" stroke-width="2"/><text x="346" y="103" text-anchor="middle" font-size="9" font-weight="700">GPU synthesis</text><text x="346" y="122" text-anchor="middle" font-size="9" font-family="Times New Roman">Iₖ=I⊙Mₖ+Nₖ</text>
+        <path d="M391 111H412" stroke="#17365d" stroke-width="2" marker-end="url(#aa)"/>
+        <g fill="#fff" stroke="#17365d"><rect x="418" y="91" width="24" height="40"/><rect x="446" y="91" width="24" height="40"/><rect x="474" y="91" width="24" height="40"/></g>
+        <path d="M502 111H522V53H542" fill="none" stroke="#1b7f39" stroke-width="3" marker-end="url(#aa)"/>
+        <path d="M502 111H522V173H542" fill="none" stroke="#e0441e" stroke-width="3" marker-end="url(#aa)"/>
+        <text x="510" y="31" font-size="9" fill="#1b7f39">Human integration</text><text x="504" y="205" font-size="9" fill="#e0441e">Short exposure</text>
+      </svg>
+    </div>
+    <h3>A. 原图忠实型</h3>
+    <p>最大限度复刻当前横向链路。改动小，但中段和右侧缩印后仍偏拥挤。</p>
+  </div>
+
+  <div class="figure-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="preview">
+      <svg viewBox="0 0 560 230" width="100%" aria-label="Option B three-stage IEEE layout">
+        <defs><marker id="ab" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#17365d"/></marker></defs>
+        <rect x="8" y="25" width="155" height="178" rx="8" fill="#fbfdff" stroke="#b9c7da"/><rect x="176" y="25" width="201" height="178" rx="8" fill="#fbfdff" stroke="#b9c7da"/><rect x="390" y="25" width="162" height="178" rx="8" fill="#fbfdff" stroke="#b9c7da"/>
+        <text x="20" y="45" font-size="10" font-weight="700">1  Secure decomposition</text><text x="188" y="45" font-size="10" font-weight="700">2  Subframe synthesis</text><text x="402" y="45" font-size="10" font-weight="700">3  Observer asymmetry</text>
+        <rect x="20" y="86" width="44" height="42" fill="#fff" stroke="#17365d" stroke-width="1.6"/><text x="42" y="109" text-anchor="middle" font-size="7" font-weight="700">DATA</text>
+        <path d="M67 107H83" stroke="#17365d" stroke-width="1.8" marker-end="url(#ab)"/><rect x="88" y="82" width="52" height="50" rx="6" fill="#fff" stroke="#17365d" stroke-width="1.6"/><text x="114" y="102" text-anchor="middle" font-size="7">CSPRNG</text><text x="114" y="116" text-anchor="middle" font-size="7">shuffle</text>
+        <g fill="#e7f7fd" stroke="#149ed2"><rect x="145" y="77" width="13" height="13"/><rect x="145" y="94" width="13" height="13"/><rect x="145" y="111" width="13" height="13"/><rect x="145" y="128" width="13" height="13"/></g>
+        <rect x="193" y="77" width="79" height="63" rx="7" fill="#fff" stroke="#17365d" stroke-width="1.8"/><text x="233" y="101" text-anchor="middle" font-size="8" font-weight="700">GPU synthesis</text><text x="233" y="119" text-anchor="middle" font-size="8">Iₖ=I⊙Mₖ+Nₖ</text>
+        <rect x="211" y="155" width="58" height="27" rx="5" fill="#fff" stroke="#a50064"/><text x="240" y="171" text-anchor="middle" font-size="7" fill="#a50064">ΣNₖ=0</text><path d="M240 155V143" stroke="#a50064" stroke-width="1.5" marker-end="url(#ab)"/>
+        <path d="M278 108H294" stroke="#17365d" stroke-width="1.8" marker-end="url(#ab)"/>
+        <g fill="#fff" stroke="#17365d"><rect x="300" y="88" width="26" height="40"/><rect x="330" y="88" width="26" height="40"/></g><text x="328" y="151" text-anchor="middle" font-size="8">240–360 Hz</text>
+        <circle cx="405" cy="108" r="3" fill="#17365d"/><path d="M405 108H422V75H438" fill="none" stroke="#1b7f39" stroke-width="2.5" marker-end="url(#ab)"/><path d="M405 108H422V153H438" fill="none" stroke="#e0441e" stroke-width="2.5" marker-end="url(#ab)"/>
+        <rect x="444" y="58" width="92" height="39" rx="5" fill="#f2fbf5" stroke="#1b7f39"/><text x="490" y="76" text-anchor="middle" font-size="8" fill="#1b7f39">Eye: integrate all</text><text x="490" y="88" text-anchor="middle" font-size="7" fill="#1b7f39">→ readable</text>
+        <rect x="444" y="136" width="92" height="39" rx="5" fill="#fff6f2" stroke="#e0441e"/><text x="490" y="154" text-anchor="middle" font-size="8" fill="#e0441e">Camera: sample one</text><text x="490" y="166" text-anchor="middle" font-size="7" fill="#e0441e">→ unreadable</text>
+      </svg>
+    </div>
+    <h3>B. 三阶段期刊型 <span class="badge">推荐</span></h3>
+    <p>用浅色分区固定阅读顺序，公式与分支对齐；最适合 7.16 in 双栏缩印和审稿阅读。</p>
+  </div>
+
+  <div class="figure-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="preview">
+      <svg viewBox="0 0 560 230" width="100%" aria-label="Option C compact comparison layout">
+        <defs><marker id="ac" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#17365d"/></marker></defs>
+        <rect x="18" y="75" width="75" height="70" rx="7" fill="#fff" stroke="#17365d" stroke-width="2"/><text x="55" y="105" text-anchor="middle" font-size="9" font-weight="700">Secure</text><text x="55" y="119" text-anchor="middle" font-size="9">decomposition</text>
+        <path d="M98 110H126" stroke="#17365d" stroke-width="2" marker-end="url(#ac)"/>
+        <rect x="132" y="75" width="100" height="70" rx="7" fill="#fff" stroke="#17365d" stroke-width="2"/><text x="182" y="104" text-anchor="middle" font-size="9" font-weight="700">GPU + display</text><text x="182" y="120" text-anchor="middle" font-size="8">240–360 Hz</text>
+        <path d="M237 110H264" stroke="#17365d" stroke-width="2" marker-end="url(#ac)"/>
+        <rect x="272" y="40" width="270" height="63" rx="8" fill="#f2fbf5" stroke="#1b7f39" stroke-width="1.8"/><text x="288" y="62" font-size="9" font-weight="700" fill="#1b7f39">HUMAN OBSERVER</text><text x="288" y="82" font-size="8">all subframes + temporal integration → PRIVATE DATA</text>
+        <rect x="272" y="117" width="270" height="73" rx="8" fill="#fff6f2" stroke="#e0441e" stroke-width="1.8"/><text x="288" y="139" font-size="9" font-weight="700" fill="#e0441e">CAMERA OBSERVER</text><text x="288" y="159" font-size="8">single short exposure → sparse fragment → OCR failure</text>
+        <path d="M264 110V72H272" fill="none" stroke="#1b7f39" stroke-width="2.5" marker-end="url(#ac)"/><path d="M264 110V153H272" fill="none" stroke="#e0441e" stroke-width="2.5" marker-end="url(#ac)"/>
+      </svg>
+    </div>
+    <h3>C. 对照结论型</h3>
+    <p>把右侧结论做成上下对照，最紧凑；但会弱化子帧序列、短曝光采样窗等机制细节。</p>
+  </div>
+</div>
+
+<p style="margin-top:18px;color:#596579">判断标准：双栏缩印后的标签可读性、机制完整性、灰度打印辨识度，以及能否在 Visio 中保持完全可编辑。</p>

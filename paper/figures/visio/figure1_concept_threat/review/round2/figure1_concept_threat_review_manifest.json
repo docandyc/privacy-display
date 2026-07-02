@@ -1,0 +1,442 @@
+{
+  "schema_version": "0.1",
+  "figure_id": "figure1_concept_threat",
+  "round": 2,
+  "scene_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\figure1_concept_threat.round2.scene.json",
+  "original_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\source\\original.png",
+  "replica_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\final\\figure1_concept_threat.png",
+  "reviewer_inputs": {
+    "original_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\source\\original.png",
+    "replica_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\final\\figure1_concept_threat.png"
+  },
+  "debug_pair_paths": [
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_pair_global.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_01_region_global_layout.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_02_region_physical_input.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_03_region_subframe_core.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_04_region_human_output.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_05_region_camera_output.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_06_region_arrow_dense.png",
+    "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_crop_07_region_small_text.png"
+  ],
+  "debug_overlay_paths": [],
+  "regions": [
+    {
+      "region": "global_layout",
+      "categories": [
+        "global"
+      ],
+      "source_bbox_px": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "target_bbox_px": [
+        0,
+        0,
+        1050,
+        700
+      ]
+    },
+    {
+      "region": "physical_input",
+      "categories": [
+        "input"
+      ],
+      "source_bbox_px": [
+        0,
+        0,
+        730,
+        1024
+      ],
+      "target_bbox_px": [
+        14,
+        14,
+        485,
+        684
+      ]
+    },
+    {
+      "region": "subframe_core",
+      "categories": [
+        "core"
+      ],
+      "source_bbox_px": [
+        760,
+        350,
+        1500,
+        650
+      ],
+      "target_bbox_px": [
+        513,
+        253,
+        1032,
+        472
+      ]
+    },
+    {
+      "region": "human_output",
+      "categories": [
+        "output"
+      ],
+      "source_bbox_px": [
+        900,
+        60,
+        1510,
+        350
+      ],
+      "target_bbox_px": [
+        567,
+        55,
+        1032,
+        301
+      ]
+    },
+    {
+      "region": "camera_output",
+      "categories": [
+        "output"
+      ],
+      "source_bbox_px": [
+        870,
+        610,
+        1536,
+        940
+      ],
+      "target_bbox_px": [
+        581,
+        444,
+        1039,
+        684
+      ]
+    },
+    {
+      "region": "arrow_dense",
+      "categories": [
+        "arrow_dense"
+      ],
+      "source_bbox_px": [
+        760,
+        120,
+        1536,
+        900
+      ],
+      "target_bbox_px": [
+        520,
+        82,
+        1039,
+        636
+      ]
+    },
+    {
+      "region": "small_text",
+      "categories": [
+        "caption",
+        "small_text"
+      ],
+      "source_bbox_px": [
+        20,
+        0,
+        1536,
+        960
+      ],
+      "target_bbox_px": [
+        14,
+        0,
+        1039,
+        656
+      ]
+    }
+  ],
+  "arrow_plan_checklist": [
+    {
+      "id": "A001",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A001",
+      "focus_region": "physical_scene",
+      "source_fact": "Upper dashed capture ray runs from the display to the smartphone.",
+      "expected_from": "sensitive_display",
+      "expected_from_anchor": "right edge upper half",
+      "expected_to": "smartphone",
+      "expected_to_anchor": "left edge upper half",
+      "expected_route_shape": "diagonal",
+      "expected_line_style": "dashed",
+      "expected_arrowhead": "none",
+      "semantic_intent": "callout",
+      "source_bbox_px": [
+        425,
+        395,
+        640,
+        550
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A002",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A002",
+      "focus_region": "physical_scene",
+      "source_fact": "Lower dashed capture ray runs from the display to the smartphone.",
+      "expected_from": "sensitive_display",
+      "expected_from_anchor": "right edge lower half",
+      "expected_to": "smartphone",
+      "expected_to_anchor": "left edge lower half",
+      "expected_route_shape": "diagonal",
+      "expected_line_style": "dashed",
+      "expected_arrowhead": "none",
+      "semantic_intent": "callout",
+      "source_bbox_px": [
+        420,
+        455,
+        640,
+        650
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A003",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A003",
+      "focus_region": "subframe_row",
+      "source_fact": "Fast-time arrow runs rightward above the four subframes.",
+      "expected_from": "time_start",
+      "expected_from_anchor": "free point",
+      "expected_to": "time_end",
+      "expected_to_anchor": "free point",
+      "expected_route_shape": "straight_horizontal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "annotation",
+      "source_bbox_px": [
+        780,
+        410,
+        1410,
+        450
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A004",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A004",
+      "focus_region": "human_output",
+      "source_fact": "First subframe feeds the human eye.",
+      "expected_from": "subframe_1",
+      "expected_from_anchor": "top edge",
+      "expected_to": "human_eye",
+      "expected_to_anchor": "lower-left edge",
+      "expected_route_shape": "diagonal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        820,
+        220,
+        1080,
+        500
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A005",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A005",
+      "focus_region": "human_output",
+      "source_fact": "Second subframe feeds the human eye.",
+      "expected_from": "subframe_2",
+      "expected_from_anchor": "top edge",
+      "expected_to": "human_eye",
+      "expected_to_anchor": "lower-left center",
+      "expected_route_shape": "diagonal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        950,
+        220,
+        1100,
+        500
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A006",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A006",
+      "focus_region": "human_output",
+      "source_fact": "Third subframe feeds the human eye.",
+      "expected_from": "subframe_3",
+      "expected_from_anchor": "top edge",
+      "expected_to": "human_eye",
+      "expected_to_anchor": "lower-right center",
+      "expected_route_shape": "diagonal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        1080,
+        220,
+        1160,
+        500
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A007",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A007",
+      "focus_region": "human_output",
+      "source_fact": "Fourth subframe feeds the human eye.",
+      "expected_from": "subframe_4",
+      "expected_from_anchor": "top edge",
+      "expected_to": "human_eye",
+      "expected_to_anchor": "lower-right edge",
+      "expected_route_shape": "diagonal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        1170,
+        220,
+        1330,
+        500
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A008",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A008",
+      "focus_region": "human_output",
+      "source_fact": "The human eye feeds the readable display.",
+      "expected_from": "human_eye",
+      "expected_from_anchor": "right edge midpoint",
+      "expected_to": "readable_display",
+      "expected_to_anchor": "left edge midpoint",
+      "expected_route_shape": "straight_horizontal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        1180,
+        170,
+        1310,
+        230
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A009",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A009",
+      "focus_region": "camera_output",
+      "source_fact": "The selected second subframe feeds the camera.",
+      "expected_from": "subframe_2",
+      "expected_from_anchor": "bottom edge midpoint",
+      "expected_to": "camera_icon",
+      "expected_to_anchor": "top edge midpoint",
+      "expected_route_shape": "straight_vertical",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        970,
+        540,
+        1030,
+        730
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A010",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A010",
+      "focus_region": "camera_output",
+      "source_fact": "The camera outputs one unreadable fragment.",
+      "expected_from": "camera_icon",
+      "expected_from_anchor": "right edge midpoint",
+      "expected_to": "fragment_display",
+      "expected_to_anchor": "left edge midpoint",
+      "expected_route_shape": "straight_horizontal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        1040,
+        720,
+        1190,
+        770
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    },
+    {
+      "id": "A011",
+      "kind": "arrow_plan",
+      "arrow_plan_id": "A011",
+      "focus_region": "camera_output",
+      "source_fact": "The unreadable fragment reaches OCR failure.",
+      "expected_from": "fragment_display",
+      "expected_from_anchor": "right edge midpoint",
+      "expected_to": "ocr_failure",
+      "expected_to_anchor": "left edge midpoint",
+      "expected_route_shape": "straight_horizontal",
+      "expected_line_style": "solid",
+      "expected_arrowhead": "end",
+      "semantic_intent": "data_flow",
+      "source_bbox_px": [
+        1300,
+        720,
+        1420,
+        780
+      ],
+      "status": "uncertain",
+      "certainty": "certain",
+      "replica_status": "not_reviewed"
+    }
+  ],
+  "debug_asset_policy": {
+    "global_pair": "off_by_default; generate only with --include-global-pair for human navigation or audit records",
+    "crops": "targeted_only; generate named crops with --crops or scene regions with --region-crops all",
+    "overlays": "off_by_default; generate only with --include-overlays when checking alignment drift",
+    "reviewer_prompt": "send original_path and replica_path only; optionally send a small number of targeted local crops when a specific detail is under review"
+  },
+  "review_only_inputs": [
+    "original_path",
+    "replica_path"
+  ],
+  "review_prompt_reference": "references/reviewer-two-image-prompt.md",
+  "required_finding_fields": [
+    "id",
+    "severity",
+    "summary",
+    "visible_diff",
+    "source_appearance",
+    "replica_appearance",
+    "impact_on_fidelity",
+    "focus_regions",
+    "expected_visible_change"
+  ],
+  "post_review_action": "rebuild_full_scene",
+  "review_rule": "The reviewer should compare only original_path and replica_path. Pair/crop/overlay files are debug aids for the author and should not be given to the reviewer."
+}

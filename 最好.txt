@@ -1,0 +1,2 @@
+python main.py playback --n 4 --inversion --stripe-alpha 0.10 --glyph-alpha 0.12
+python main.py playback --demo cet6 --pdf-page 1 --width 900 --height 1280 --n 4 --anti-ocr-profile vlm 

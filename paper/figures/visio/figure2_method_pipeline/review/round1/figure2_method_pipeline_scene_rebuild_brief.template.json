@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "figure_id": "figure2_method_pipeline",
+  "round": 1,
+  "source_findings_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure2_method_pipeline\\review\\round1\\figure2_method_pipeline_review_findings.template.json",
+  "mode": "rebuild_full_scene",
+  "authoring_policy": "fresh_full_scene_from_source_and_review",
+  "prior_scene_policy": "do_not_patch_or_copy_prior_scene_geometry",
+  "review_prompt_reference": "references/reviewer-two-image-prompt.md",
+  "regeneration_prompt_reference": "references/full-scene-regeneration-prompt.md",
+  "next_step_script": "scripts/prepare_regeneration_packet.py",
+  "reviewer_inputs": {
+    "original_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure2_method_pipeline\\source\\original.png",
+    "replica_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure2_method_pipeline\\round1\\figure2_method_pipeline.scene.png"
+  },
+  "findings_digest": [],
+  "arrow_plan_repair_targets": []
+}
