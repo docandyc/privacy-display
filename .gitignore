@@ -1,4 +1,21 @@
-# 本地/个人配置
+# LaTeX build artifacts inside paper/
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.synctex.gz
+paper/*.xdv
+paper/main.pdf
+
+# Large generated evaluation artifacts
+real_captures_d0.5_a0_final/
+ACCESS_latex_template_20260513/
+ACCESS_latex_template_20260513-1-1.zip
+
+# macOS noise
+.DS_Store# 本地/个人配置
 .env
 .env.*
 !.env.example

@@ -1,0 +1,5 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "Code quality standards for new figure scripts"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "Where the paper_figures package and outputs belong"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse existing pareto/benchmark/visual_integration plotting code"}
+{"file": "/Users/andyhuang/.claude/plans/python-matplotlib-python-wild-hare.md", "reason": "Approved figure plan: data sources, chart types, reuse points, LaTeX wiring"}
