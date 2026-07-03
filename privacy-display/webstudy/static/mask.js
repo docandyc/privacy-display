@@ -388,9 +388,9 @@
     // Optional partial inversion frame alpha*(255-I) per cycle (long-exposure
     // defence, mirrors playback compose_partial_inversion_frame). It adds one
     // slot per cycle, so the inversion recurs at refresh/(n+1). When that drops
-    // below the flicker threshold we keep temporal mode (the dim alpha=0.2 flash
-    // is a mild, accepted flicker, validated on a 240 Hz panel) and only warn --
-    // we do NOT fall back to a static, unprotected frame.
+    // below the base threshold we keep temporal mode and record a warning. The
+    // alpha=0.2 frame has lower modulation than full inversion, but its comfort
+    // is measured by this study rather than assumed from the panel refresh rate.
     const insertInversion = Boolean(options.insertInversion);
     const inversionAlpha = insertInversion
       ? Math.max(0, Math.min(1, Number(options.inversionAlpha) || 0.2))
@@ -532,6 +532,7 @@
       this.meta = null;
       this.rafId = 0;
       this.frameIndex = 0;
+      this.resetTimingStats();
     }
 
     load(text, options) {
@@ -544,6 +545,107 @@
       this.frameIndex = 0;
       this.draw();
       return this.meta;
+    }
+
+    loadSource(text, options) {
+      this.stop();
+      const width = options.width || 900;
+      const height = options.height || 260;
+      const sourceCanvas = renderSourceCanvas(text, {
+        width,
+        height,
+        fontSize: options.fontSize
+      });
+      const refreshHz = Number(options.refreshHz) > 0 ? Number(options.refreshHz) : null;
+      this.frames = [sourceCanvas];
+      this.meta = {
+        n: 1,
+        width,
+        height,
+        mode: "source_control",
+        cycle_hz: refreshHz,
+        refresh_hz: refreshHz,
+        safe_flicker_hz: Number(options.safeFlickerHz) || DEFAULT_SAFE_FLICKER_HZ,
+        cycles: 1,
+        frame_count: 1,
+        per_cycle_slots: 1,
+        insert_inversion: false,
+        anti_ocr: { profile: "off" }
+      };
+      this.canvas.width = width;
+      this.canvas.height = height;
+      this.frameIndex = 0;
+      this.draw();
+      return this.meta;
+    }
+
+    resetTimingStats() {
+      this.timing = {
+        lastTimestamp: null,
+        intervalSum: 0,
+        intervalMax: 0,
+        intervals: 0,
+        droppedFrames: 0,
+        longIntervals: 0,
+        renderedFrames: 0
+      };
+      if (this.meta) {
+        this.updateTimingMeta();
+      }
+    }
+
+    recordFrame(timestamp) {
+      const ts = Number(timestamp);
+      const expectedMs = this.meta && Number(this.meta.refresh_hz) > 0
+        ? 1000 / Number(this.meta.refresh_hz)
+        : 0;
+      if (Number.isFinite(ts) && this.timing.lastTimestamp !== null) {
+        const delta = ts - this.timing.lastTimestamp;
+        if (delta > 0) {
+          this.timing.intervalSum += delta;
+          this.timing.intervalMax = Math.max(this.timing.intervalMax, delta);
+          this.timing.intervals += 1;
+          if (expectedMs > 0 && delta > expectedMs * 1.5) {
+            this.timing.longIntervals += 1;
+            this.timing.droppedFrames += Math.max(1, Math.round(delta / expectedMs) - 1);
+          }
+        }
+      }
+      if (Number.isFinite(ts)) {
+        this.timing.lastTimestamp = ts;
+      }
+      this.timing.renderedFrames += 1;
+    }
+
+    updateTimingMeta() {
+      if (!this.meta || !this.timing) {
+        return;
+      }
+      const meanMs = this.timing.intervals > 0
+        ? this.timing.intervalSum / this.timing.intervals
+        : null;
+      const observedHz = meanMs ? 1000 / meanMs : null;
+      const n = Math.max(1, Number(this.meta.n) || 1);
+      const slots = Math.max(1, Number(this.meta.per_cycle_slots) || n);
+      Object.assign(this.meta, {
+        timing_intervals: this.timing.intervals,
+        rendered_frames: this.timing.renderedFrames,
+        dropped_frames: this.timing.droppedFrames,
+        long_frame_intervals: this.timing.longIntervals,
+        dropped_frame_rate: this.timing.intervals > 0
+          ? this.timing.droppedFrames / (this.timing.intervals + this.timing.droppedFrames)
+          : 0,
+        mean_frame_interval_ms: meanMs,
+        max_frame_interval_ms: this.timing.intervals > 0 ? this.timing.intervalMax : null,
+        observed_refresh_hz: observedHz,
+        observed_effective_cycle_hz: observedHz ? observedHz / n : null,
+        observed_full_cycle_hz: observedHz ? observedHz / slots : null
+      });
+    }
+
+    getTimingStats() {
+      this.updateTimingMeta();
+      return this.meta || {};
     }
 
     draw() {
@@ -559,6 +661,7 @@
 
     start() {
       this.stop();
+      this.resetTimingStats();
       // Safety gate: below the flicker-fusion threshold we do NOT animate.
       // Show one static subframe (the camera-view) instead of flickering.
       if (this.meta && this.meta.mode === "static_fallback") {
@@ -566,7 +669,8 @@
         this.draw();
         return;
       }
-      const tick = () => {
+      const tick = (timestamp) => {
+        this.recordFrame(timestamp);
         this.draw();
         this.frameIndex = (this.frameIndex + 1) % this.frames.length;
         this.rafId = global.requestAnimationFrame(tick);
@@ -579,6 +683,7 @@
         global.cancelAnimationFrame(this.rafId);
         this.rafId = 0;
       }
+      this.updateTimingMeta();
     }
   }
 
@@ -619,6 +724,7 @@
     createRng,
     uniformInt,
     shuffle,
+    renderSourceCanvas,
     makeSubframes,
     MaskedPlayer,
     estimateRefreshRate,

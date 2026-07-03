@@ -4,6 +4,7 @@
   const root = document.getElementById("adminApp");
   const params = new URLSearchParams(global.location.search);
   let token = params.get("token") || global.localStorage.getItem("webstudyAdminToken") || "";
+  const includeDebug = params.get("include_debug") === "1";
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -15,10 +16,14 @@
   }
 
   function endpoint(path) {
-    if (!token) {
-      return path;
+    const query = new URLSearchParams();
+    if (token) {
+      query.set("token", token);
     }
-    return `${path}?token=${encodeURIComponent(token)}`;
+    if (includeDebug) {
+      query.set("include_debug", "1");
+    }
+    return query.size ? `${path}?${query}` : path;
   }
 
   function fmt(value, digits = 1, suffix = "") {
@@ -85,6 +90,7 @@
         <div>
           <h1>${escapeHtml(title)}</h1>
           <p>查看被试级结果、成对打字对比、评分以及导出数据。</p>
+          <p>${includeDebug ? "当前包含 debug/demo 会话，仅用于排障。" : "默认仅显示正式研究会话；debug/demo 已排除。"}</p>
         </div>
         <div class="admin-actions">
           <input id="adminToken" type="password" placeholder="导出令牌" value="${escapeHtml(token)}">
@@ -165,15 +171,16 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>编号</th><th>学号</th><th>姓名</th><th>刷新率</th><th>原文词速</th>
+              <th>数据库编号</th><th>登记序号 k</th><th>学号</th><th>姓名</th><th>刷新率</th><th>原文词速</th>
               <th>遮罩词速</th><th>差值</th><th>差值%</th><th>可读性</th>
-              <th>闪烁感</th><th>疲劳感</th><th>隐私感</th>
+              <th>闪烁感</th><th>即时视觉不适</th><th>感知隐私</th>
             </tr>
           </thead>
           <tbody>
             ${rows.map((row) => `
               <tr>
                 <td>${row.participant_id}</td>
+                <td>${row.registration_index}</td>
                 <td>${escapeHtml(row.student_id)}</td>
                 <td>${escapeHtml(row.name)}</td>
                 <td>${fmt(row.refresh_hz, 1, " 赫兹")}${row.refresh_ok ? "" : " *"}</td>
@@ -203,7 +210,7 @@
           <thead>
             <tr>
               <th>条件</th><th>样本数</th><th>组件</th><th>行数</th>
-              <th>可读性</th><th>闪烁感</th><th>疲劳感</th><th>隐私感</th>
+              <th>可读性</th><th>闪烁感</th><th>即时视觉不适</th><th>感知隐私</th>
             </tr>
           </thead>
           <tbody>
@@ -234,8 +241,8 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>被试</th><th>条件</th><th>样本数</th><th>模式</th><th>周期</th>
-              <th>词/分</th><th>字/分</th><th>准确率</th><th>正确字符</th><th>时长</th>
+              <th>被试</th><th>条件</th><th>重复</th><th>样本数</th><th>模式</th><th>观测周期</th>
+              <th>丢帧</th><th>词/分</th><th>字/分</th><th>准确率</th><th>MSD</th><th>首击</th><th>时长</th>
             </tr>
           </thead>
           <tbody>
@@ -243,13 +250,16 @@
               <tr>
                 <td>${escapeHtml(row.student_id)} · ${escapeHtml(row.name)}</td>
                 <td>${escapeHtml(row.condition)}</td>
+                <td>${row.condition_repetition}</td>
                 <td>${row.n}</td>
                 <td>${escapeHtml(maskMode(row))}</td>
-                <td>${cycleHz(row)}</td>
+                <td>${row.mask_meta ? fmt(row.mask_meta.observed_effective_cycle_hz, 1, " 赫兹") : cycleHz(row)}</td>
+                <td>${row.mask_meta ? row.mask_meta.dropped_frames : "-"}</td>
                 <td>${fmt(row.wpm, 1)}</td>
                 <td>${fmt(row.cpm, 0)}</td>
                 <td>${pct(row.accuracy)}</td>
-                <td>${row.correct_chars}/${row.total_chars}</td>
+                <td>${fmt(row.msd_error_rate, 3)}</td>
+                <td>${fmt(row.first_key_latency_ms, 0, "ms")}</td>
                 <td>${fmt(row.duration_s, 1, "s")}</td>
               </tr>
             `).join("")}
@@ -269,7 +279,7 @@
           <thead>
             <tr>
               <th>被试</th><th>条件</th><th>样本数</th><th>模式</th><th>周期</th>
-              <th>可读性</th><th>闪烁感</th><th>疲劳感</th><th>隐私感</th><th>顺序</th>
+              <th>可读性</th><th>闪烁感</th><th>即时视觉不适</th><th>感知隐私</th><th>观看</th><th>顺序</th>
             </tr>
           </thead>
           <tbody>
@@ -284,6 +294,7 @@
                 <td>${row.flicker}</td>
                 <td>${row.fatigue}</td>
                 <td>${row.privacy}</td>
+                <td>${fmt(row.view_duration_ms / 1000, 1, "s")}</td>
                 <td>${row.order_index + 1}</td>
               </tr>
             `).join("")}
