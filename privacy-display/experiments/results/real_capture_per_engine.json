@@ -1,1037 +1,1037 @@
 {
-  "original|short|tesseract": {
-    "char_accuracy": {
-      "mean": 0.7800366688878295,
-      "ci95": {
-        "half_width": 0.033170283529669775
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.42592592592592593,
-      "ci95": {
-        "half_width": 0.05555555555555555
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6707561035129169,
-      "ci95": {
-        "half_width": 0.045202045411688985
-      },
-      "count": 324
-    }
+ "original|short|tesseract": {
+  "char_accuracy": {
+   "mean": 0.7800366688878295,
+   "ci95": {
+    "half_width": 0.03272493176666669
+   },
+   "count": 324
   },
-  "original|short|easyocr": {
-    "char_accuracy": {
-      "mean": 0.7172035252959196,
-      "ci95": {
-        "half_width": 0.03630413918872416
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.24074074074074073,
-      "ci95": {
-        "half_width": 0.04783950617283951
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5725333599547436,
-      "ci95": {
-        "half_width": 0.0479489035306645
-      },
-      "count": 324
-    }
+  "exact_match": {
+   "mean": 0.42592592592592593,
+   "ci95": {
+    "half_width": 0.05246913580246915
+   },
+   "count": 324
   },
-  "original|short|surya": {
-    "char_accuracy": {
-      "mean": 0.42564804425821945,
-      "ci95": {
-        "half_width": 0.051580429064270544
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.2777777777777778,
-      "ci95": {
-        "half_width": 0.04783950617283951
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.884565960090069,
-      "ci95": {
-        "half_width": 0.032354996505939926
-      },
-      "count": 324
-    }
-  },
-  "original|long|tesseract": {
-    "char_accuracy": {
-      "mean": 0.1747462684362522,
-      "ci95": {
-        "half_width": 0.03758740772742328
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.09259259259259259,
-      "ci95": {
-        "half_width": 0.03240740740740741
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.15558300888489568,
-      "ci95": {
-        "half_width": 0.0356333122580502
-      },
-      "count": 324
-    }
-  },
-  "original|long|easyocr": {
-    "char_accuracy": {
-      "mean": 0.21019662180148052,
-      "ci95": {
-        "half_width": 0.0361356200210603
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.033950617283950615,
-      "ci95": {
-        "half_width": 0.020061728395061727
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6033218528501547,
-      "ci95": {
-        "half_width": 0.045806711923064125
-      },
-      "count": 324
-    }
-  },
-  "original|long|surya": {
-    "char_accuracy": {
-      "mean": 0.12487519982706093,
-      "ci95": {
-        "half_width": 0.03312735541455647
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.012345679012345678,
-      "ci95": {
-        "half_width": 0.010802469135802469
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.831190309806662,
-      "ci95": {
-        "half_width": 0.039900225172761816
-      },
-      "count": 324
-    }
-  },
-  "original|video_temporal_mean|tesseract": {
-    "char_accuracy": {
-      "mean": 0.5546337603815574,
-      "ci95": {
-        "half_width": 0.08047163687073225
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.3611111111111111,
-      "ci95": {
-        "half_width": 0.09259259259259259
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5111635220125786,
-      "ci95": {
-        "half_width": 0.08825995807127882
-      },
-      "count": 108
-    }
-  },
-  "original|video_temporal_mean|easyocr": {
-    "char_accuracy": {
-      "mean": 0.5740340460909165,
-      "ci95": {
-        "half_width": 0.07796971518807552
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.17592592592592593,
-      "ci95": {
-        "half_width": 0.06944444444444445
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.44561911417257327,
-      "ci95": {
-        "half_width": 0.0840516954510665
-      },
-      "count": 108
-    }
-  },
-  "original|video_temporal_mean|surya": {
-    "char_accuracy": {
-      "mean": 0.4996519977409568,
-      "ci95": {
-        "half_width": 0.08322208512701862
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.3333333333333333,
-      "ci95": {
-        "half_width": 0.08796296296296297
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.7053858440650893,
-      "ci95": {
-        "half_width": 0.0761509600346078
-      },
-      "count": 108
-    }
-  },
-  "mask_only|short|tesseract": {
-    "char_accuracy": {
-      "mean": 0.03207080823237364,
-      "ci95": {
-        "half_width": 0.011057933018063277
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.00780007320887824,
-      "ci95": {
-        "half_width": 0.007209410668530166
-      },
-      "count": 324
-    }
-  },
-  "mask_only|short|easyocr": {
-    "char_accuracy": {
-      "mean": 0.1394663555355775,
-      "ci95": {
-        "half_width": 0.01758384442934876
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.006481481481481482,
-      "ci95": {
-        "half_width": 0.0037698412698412695
-      },
-      "count": 324
-    }
-  },
-  "mask_only|short|surya": {
-    "char_accuracy": {
-      "mean": 0.04104815913143124,
-      "ci95": {
-        "half_width": 0.01704589697835089
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.0030864197530864196,
-      "ci95": {
-        "half_width": 0.004629629629629629
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.262857586547314,
-      "ci95": {
-        "half_width": 0.043059576497731636
-      },
-      "count": 324
-    }
-  },
-  "mask_only|long|tesseract": {
-    "char_accuracy": {
-      "mean": 0.5739632543907693,
-      "ci95": {
-        "half_width": 0.04536948296720261
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.3271604938271605,
-      "ci95": {
-        "half_width": 0.05092592592592593
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6720979889742992,
-      "ci95": {
-        "half_width": 0.04400962807671399
-      },
-      "count": 324
-    }
-  },
-  "mask_only|long|easyocr": {
-    "char_accuracy": {
-      "mean": 0.24658315443107887,
-      "ci95": {
-        "half_width": 0.03526710608772683
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.027777777777777776,
-      "ci95": {
-        "half_width": 0.016975308641975308
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6697497587434694,
-      "ci95": {
-        "half_width": 0.04365509189932665
-      },
-      "count": 324
-    }
-  },
-  "mask_only|long|surya": {
-    "char_accuracy": {
-      "mean": 0.15371975115408276,
-      "ci95": {
-        "half_width": 0.036799527629675574
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.021604938271604937,
-      "ci95": {
-        "half_width": 0.016975308641975308
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.8608878794937496,
-      "ci95": {
-        "half_width": 0.03486295519838495
-      },
-      "count": 324
-    }
-  },
-  "mask_only|video_temporal_mean|tesseract": {
-    "char_accuracy": {
-      "mean": 0.643168525449905,
-      "ci95": {
-        "half_width": 0.07705648912835833
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.3055555555555556,
-      "ci95": {
-        "half_width": 0.08333333333333334
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5654204518984393,
-      "ci95": {
-        "half_width": 0.08785522944327975
-      },
-      "count": 108
-    }
-  },
-  "mask_only|video_temporal_mean|easyocr": {
-    "char_accuracy": {
-      "mean": 0.48340033325316334,
-      "ci95": {
-        "half_width": 0.0685642221873623
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.06481481481481481,
-      "ci95": {
-        "half_width": 0.046296296296296294
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.25321287145186516,
-      "ci95": {
-        "half_width": 0.06802851818575088
-      },
-      "count": 108
-    }
-  },
-  "mask_only|video_temporal_mean|surya": {
-    "char_accuracy": {
-      "mean": 0.37758741745174307,
-      "ci95": {
-        "half_width": 0.08372180795955284
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.2962962962962963,
-      "ci95": {
-        "half_width": 0.08333333333333334
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6659678546471,
-      "ci95": {
-        "half_width": 0.08215408805031443
-      },
-      "count": 108
-    }
-  },
-  "mask_noise|short|tesseract": {
-    "char_accuracy": {
-      "mean": 0.04553793105058216,
-      "ci95": {
-        "half_width": 0.017233575983814173
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.025205761316872428,
-      "ci95": {
-        "half_width": 0.014351851851851852
-      },
-      "count": 324
-    }
-  },
-  "mask_noise|short|easyocr": {
-    "char_accuracy": {
-      "mean": 0.17170254427616322,
-      "ci95": {
-        "half_width": 0.019219353760294003
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.01403586125808348,
-      "ci95": {
-        "half_width": 0.00940623162845385
-      },
-      "count": 324
-    }
-  },
-  "mask_noise|short|surya": {
-    "char_accuracy": {
-      "mean": 0.10985122755038115,
-      "ci95": {
-        "half_width": 0.029489550915759645
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.027777777777777776,
-      "ci95": {
-        "half_width": 0.016975308641975308
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.30667781438221686,
-      "ci95": {
-        "half_width": 0.04695060064556922
-      },
-      "count": 324
-    }
-  },
-  "mask_noise|long|tesseract": {
-    "char_accuracy": {
-      "mean": 0.6026421726021447,
-      "ci95": {
-        "half_width": 0.045147796459064915
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.36728395061728397,
-      "ci95": {
-        "half_width": 0.05246913580246912
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6794699011680143,
-      "ci95": {
-        "half_width": 0.04513133229066141
-      },
-      "count": 324
-    }
-  },
-  "mask_noise|long|easyocr": {
-    "char_accuracy": {
-      "mean": 0.29156734536214457,
-      "ci95": {
-        "half_width": 0.041193947694435656
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.05864197530864197,
-      "ci95": {
-        "half_width": 0.026234567901234566
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.7248843632491431,
-      "ci95": {
-        "half_width": 0.039059848257961494
-      },
-      "count": 324
-    }
-  },
-  "mask_noise|long|surya": {
-    "char_accuracy": {
-      "mean": 0.14789417430106452,
-      "ci95": {
-        "half_width": 0.03478338230885117
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.8697297926857674,
-      "ci95": {
-        "half_width": 0.03573161736159636
-      },
-      "count": 324
-    }
-  },
-  "mask_noise|video_temporal_mean|tesseract": {
-    "char_accuracy": {
-      "mean": 0.6502301727643738,
-      "ci95": {
-        "half_width": 0.07230477171349159
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.3055555555555556,
-      "ci95": {
-        "half_width": 0.08796296296296297
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5677140527769459,
-      "ci95": {
-        "half_width": 0.08624837775781169
-      },
-      "count": 108
-    }
-  },
-  "mask_noise|video_temporal_mean|easyocr": {
-    "char_accuracy": {
-      "mean": 0.5142581499725303,
-      "ci95": {
-        "half_width": 0.06624050438757917
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.07407407407407407,
-      "ci95": {
-        "half_width": 0.05092592592592592
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.2876085654387541,
-      "ci95": {
-        "half_width": 0.06871693121693122
-      },
-      "count": 108
-    }
-  },
-  "mask_noise|video_temporal_mean|surya": {
-    "char_accuracy": {
-      "mean": 0.337478581153231,
-      "ci95": {
-        "half_width": 0.08098115823557683
-      },
-      "count": 108
-    },
-    "exact_match": {
-      "mean": 0.26851851851851855,
-      "ci95": {
-        "half_width": 0.08333333333333334
-      },
-      "count": 108
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6743535988819007,
-      "ci95": {
-        "half_width": 0.08892382948986721
-      },
-      "count": 108
-    }
-  },
-  "capture_hardened|short|tesseract": {
-    "char_accuracy": {
-      "mean": 0.017391018328531193,
-      "ci95": {
-        "half_width": 0.0046209430295274965
-      },
-      "count": 648
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 648
-    },
-    "sensitive_token_recall": {
-      "mean": 0.0056312601910086186,
-      "ci95": {
-        "half_width": 0.0043695162667909005
-      },
-      "count": 648
-    }
-  },
-  "capture_hardened|short|easyocr": {
-    "char_accuracy": {
-      "mean": 0.08399102049757232,
-      "ci95": {
-        "half_width": 0.010313677504467406
-      },
-      "count": 648
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 648
-    },
-    "sensitive_token_recall": {
-      "mean": 0.007003233392122281,
-      "ci95": {
-        "half_width": 0.004659024103468548
-      },
-      "count": 648
-    }
-  },
-  "capture_hardened|short|surya": {
-    "char_accuracy": {
-      "mean": 0.03953361185075092,
-      "ci95": {
-        "half_width": 0.011784471652717862
-      },
-      "count": 648
-    },
-    "exact_match": {
-      "mean": 0.0030864197530864196,
-      "ci95": {
-        "half_width": 0.0038580246913580245
-      },
-      "count": 648
-    },
-    "sensitive_token_recall": {
-      "mean": 0.17500000000000002,
-      "ci95": {
-        "half_width": 0.025515720497376673
-      },
-      "count": 648
-    }
-  },
-  "capture_hardened|long|tesseract": {
-    "char_accuracy": {
-      "mean": 0.28979760841505564,
-      "ci95": {
-        "half_width": 0.03162877975296674
-      },
-      "count": 648
-    },
-    "exact_match": {
-      "mean": 0.18981481481481483,
-      "ci95": {
-        "half_width": 0.0300925925925926
-      },
-      "count": 648
-    },
-    "sensitive_token_recall": {
-      "mean": 0.35822684769225654,
-      "ci95": {
-        "half_width": 0.034006425188291
-      },
-      "count": 648
-    }
-  },
-  "capture_hardened|long|easyocr": {
-    "char_accuracy": {
-      "mean": 0.14353386797637094,
-      "ci95": {
-        "half_width": 0.021491677682438988
-      },
-      "count": 648
-    },
-    "exact_match": {
-      "mean": 0.032407407407407406,
-      "ci95": {
-        "half_width": 0.013888888888888888
-      },
-      "count": 648
-    },
-    "sensitive_token_recall": {
-      "mean": 0.36075657493372376,
-      "ci95": {
-        "half_width": 0.033965106541102325
-      },
-      "count": 648
-    }
-  },
-  "capture_hardened|long|surya": {
-    "char_accuracy": {
-      "mean": 0.09119161230130415,
-      "ci95": {
-        "half_width": 0.018812017026414843
-      },
-      "count": 648
-    },
-    "exact_match": {
-      "mean": 0.027777777777777776,
-      "ci95": {
-        "half_width": 0.013117283950617283
-      },
-      "count": 648
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5763084700453673,
-      "ci95": {
-        "half_width": 0.03320840681951798
-      },
-      "count": 648
-    }
-  },
-  "capture_hardened|video_temporal_mean|tesseract": {
-    "char_accuracy": {
-      "mean": 0.3312327728453954,
-      "ci95": {
-        "half_width": 0.05677955554936584
-      },
-      "count": 216
-    },
-    "exact_match": {
-      "mean": 0.17592592592592593,
-      "ci95": {
-        "half_width": 0.04861111111111112
-      },
-      "count": 216
-    },
-    "sensitive_token_recall": {
-      "mean": 0.28523426841036903,
-      "ci95": {
-        "half_width": 0.059165668363781565
-      },
-      "count": 216
-    }
-  },
-  "capture_hardened|video_temporal_mean|easyocr": {
-    "char_accuracy": {
-      "mean": 0.33248885454802357,
-      "ci95": {
-        "half_width": 0.044889164637012036
-      },
-      "count": 216
-    },
-    "exact_match": {
-      "mean": 0.037037037037037035,
-      "ci95": {
-        "half_width": 0.02546296296296296
-      },
-      "count": 216
-    },
-    "sensitive_token_recall": {
-      "mean": 0.1455662873115703,
-      "ci95": {
-        "half_width": 0.03991277328541479
-      },
-      "count": 216
-    }
-  },
-  "capture_hardened|video_temporal_mean|surya": {
-    "char_accuracy": {
-      "mean": 0.36113674281970554,
-      "ci95": {
-        "half_width": 0.05500519185779382
-      },
-      "count": 216
-    },
-    "exact_match": {
-      "mean": 0.1574074074074074,
-      "ci95": {
-        "half_width": 0.04861111111111112
-      },
-      "count": 216
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5156475658047985,
-      "ci95": {
-        "half_width": 0.05989609330804299
-      },
-      "count": 216
-    }
-  },
-  "deployed|short|tesseract": {
-    "char_accuracy": {
-      "mean": 0.030478705074517172,
-      "ci95": {
-        "half_width": 0.010050203776199867
-      },
-      "count": 459
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 459
-    },
-    "sensitive_token_recall": {
-      "mean": 0.019305024595442647,
-      "ci95": {
-        "half_width": 0.010675381263616559
-      },
-      "count": 459
-    }
-  },
-  "deployed|short|easyocr": {
-    "char_accuracy": {
-      "mean": 0.10812030631610456,
-      "ci95": {
-        "half_width": 0.01379768360830707
-      },
-      "count": 459
-    },
-    "exact_match": {
-      "mean": 0.0,
-      "ci95": {
-        "half_width": 0.0
-      },
-      "count": 459
-    },
-    "sensitive_token_recall": {
-      "mean": 0.008994708994708995,
-      "ci95": {
-        "half_width": 0.005425874053325033
-      },
-      "count": 459
-    }
-  },
-  "deployed|short|surya": {
-    "char_accuracy": {
-      "mean": 0.03167897681632612,
-      "ci95": {
-        "half_width": 0.013376633991453083
-      },
-      "count": 459
-    },
-    "exact_match": {
-      "mean": 0.004357298474945534,
-      "ci95": {
-        "half_width": 0.0054466230936819175
-      },
-      "count": 459
-    },
-    "sensitive_token_recall": {
-      "mean": 0.20186741363211952,
-      "ci95": {
-        "half_width": 0.034223290993546276
-      },
-      "count": 459
-    }
-  },
-  "deployed|long|tesseract": {
-    "char_accuracy": {
-      "mean": 0.525642146923479,
-      "ci95": {
-        "half_width": 0.047116949599563446
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.33641975308641975,
-      "ci95": {
-        "half_width": 0.05246913580246915
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6678216476434506,
-      "ci95": {
-        "half_width": 0.04405330382793693
-      },
-      "count": 324
-    }
-  },
-  "deployed|long|easyocr": {
-    "char_accuracy": {
-      "mean": 0.27276065893793805,
-      "ci95": {
-        "half_width": 0.03770424253546051
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.07407407407407407,
-      "ci95": {
-        "half_width": 0.029320987654320986
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6991300899581823,
-      "ci95": {
-        "half_width": 0.04367478065067165
-      },
-      "count": 324
-    }
-  },
-  "deployed|long|surya": {
-    "char_accuracy": {
-      "mean": 0.15444201784306683,
-      "ci95": {
-        "half_width": 0.03665785730636468
-      },
-      "count": 324
-    },
-    "exact_match": {
-      "mean": 0.04938271604938271,
-      "ci95": {
-        "half_width": 0.023148148148148147
-      },
-      "count": 324
-    },
-    "sensitive_token_recall": {
-      "mean": 0.883851618914512,
-      "ci95": {
-        "half_width": 0.03141742371302125
-      },
-      "count": 324
-    }
-  },
-  "deployed|video_temporal_mean|tesseract": {
-    "char_accuracy": {
-      "mean": 0.5668073088215416,
-      "ci95": {
-        "half_width": 0.06616708253784928
-      },
-      "count": 153
-    },
-    "exact_match": {
-      "mean": 0.3333333333333333,
-      "ci95": {
-        "half_width": 0.07516339869281044
-      },
-      "count": 153
-    },
-    "sensitive_token_recall": {
-      "mean": 0.5372595998567142,
-      "ci95": {
-        "half_width": 0.07423585786515863
-      },
-      "count": 153
-    }
-  },
-  "deployed|video_temporal_mean|easyocr": {
-    "char_accuracy": {
-      "mean": 0.3989178230014686,
-      "ci95": {
-        "half_width": 0.054672630989115234
-      },
-      "count": 153
-    },
-    "exact_match": {
-      "mean": 0.013071895424836602,
-      "ci95": {
-        "half_width": 0.016339869281045753
-      },
-      "count": 153
-    },
-    "sensitive_token_recall": {
-      "mean": 0.2441948687231706,
-      "ci95": {
-        "half_width": 0.054637704138259094
-      },
-      "count": 153
-    }
-  },
-  "deployed|video_temporal_mean|surya": {
-    "char_accuracy": {
-      "mean": 0.3112509003519605,
-      "ci95": {
-        "half_width": 0.06549392649740853
-      },
-      "count": 153
-    },
-    "exact_match": {
-      "mean": 0.24183006535947713,
-      "ci95": {
-        "half_width": 0.06209150326797387
-      },
-      "count": 153
-    },
-    "sensitive_token_recall": {
-      "mean": 0.6197434948822296,
-      "ci95": {
-        "half_width": 0.07214206437291898
-      },
-      "count": 153
-    }
+  "sensitive_token_recall": {
+   "mean": 0.6707561035129169,
+   "ci95": {
+    "half_width": 0.04312599137022621
+   },
+   "count": 324
   }
+ },
+ "original|short|easyocr": {
+  "char_accuracy": {
+   "mean": 0.7172035252959196,
+   "ci95": {
+    "half_width": 0.034257647194682994
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.24074074074074073,
+   "ci95": {
+    "half_width": 0.046296296296296294
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.5725333599547436,
+   "ci95": {
+    "half_width": 0.04779291870486835
+   },
+   "count": 324
+  }
+ },
+ "original|short|surya": {
+  "char_accuracy": {
+   "mean": 0.42564804425821945,
+   "ci95": {
+    "half_width": 0.05184244956272133
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.2777777777777778,
+   "ci95": {
+    "half_width": 0.046296296296296294
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.884565960090069,
+   "ci95": {
+    "half_width": 0.03329936330460437
+   },
+   "count": 324
+  }
+ },
+ "original|long|tesseract": {
+  "char_accuracy": {
+   "mean": 0.1747462684362522,
+   "ci95": {
+    "half_width": 0.03709053172397317
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.09259259259259259,
+   "ci95": {
+    "half_width": 0.03240740740740741
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.15558300888489568,
+   "ci95": {
+    "half_width": 0.036890480627377896
+   },
+   "count": 324
+  }
+ },
+ "original|long|easyocr": {
+  "char_accuracy": {
+   "mean": 0.21019662180148052,
+   "ci95": {
+    "half_width": 0.03545496723135218
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.033950617283950615,
+   "ci95": {
+    "half_width": 0.020061728395061727
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6033218528501547,
+   "ci95": {
+    "half_width": 0.04819778598604596
+   },
+   "count": 324
+  }
+ },
+ "original|long|surya": {
+  "char_accuracy": {
+   "mean": 0.12487519982706093,
+   "ci95": {
+    "half_width": 0.03313509057514679
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.012345679012345678,
+   "ci95": {
+    "half_width": 0.012345679012345678
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.831190309806662,
+   "ci95": {
+    "half_width": 0.038037697026166606
+   },
+   "count": 324
+  }
+ },
+ "original|video_temporal_mean|tesseract": {
+  "char_accuracy": {
+   "mean": 0.5546337603815574,
+   "ci95": {
+    "half_width": 0.0866642397797659
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.3611111111111111,
+   "ci95": {
+    "half_width": 0.08796296296296294
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.5111635220125786,
+   "ci95": {
+    "half_width": 0.08930817610062894
+   },
+   "count": 108
+  }
+ },
+ "original|video_temporal_mean|easyocr": {
+  "char_accuracy": {
+   "mean": 0.5740340460909165,
+   "ci95": {
+    "half_width": 0.07727081037366412
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.17592592592592593,
+   "ci95": {
+    "half_width": 0.06944444444444445
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.44561911417257327,
+   "ci95": {
+    "half_width": 0.08913555289341452
+   },
+   "count": 108
+  }
+ },
+ "original|video_temporal_mean|surya": {
+  "char_accuracy": {
+   "mean": 0.4996519977409568,
+   "ci95": {
+    "half_width": 0.08085817407068777
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.3333333333333333,
+   "ci95": {
+    "half_width": 0.08333333333333334
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.7053858440650893,
+   "ci95": {
+    "half_width": 0.07641093474426808
+   },
+   "count": 108
+  }
+ },
+ "mask_only|short|tesseract": {
+  "char_accuracy": {
+   "mean": 0.03207080823237364,
+   "ci95": {
+    "half_width": 0.011260387934314385
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.00780007320887824,
+   "ci95": {
+    "half_width": 0.007372050846893613
+   },
+   "count": 324
+  }
+ },
+ "mask_only|short|easyocr": {
+  "char_accuracy": {
+   "mean": 0.1394663555355775,
+   "ci95": {
+    "half_width": 0.01797961485114543
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.006481481481481482,
+   "ci95": {
+    "half_width": 0.003791887125220458
+   },
+   "count": 324
+  }
+ },
+ "mask_only|short|surya": {
+  "char_accuracy": {
+   "mean": 0.04104815913143124,
+   "ci95": {
+    "half_width": 0.017124058394730572
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0030864197530864196,
+   "ci95": {
+    "half_width": 0.004629629629629629
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.262857586547314,
+   "ci95": {
+    "half_width": 0.0420708406819518
+   },
+   "count": 324
+  }
+ },
+ "mask_only|long|tesseract": {
+  "char_accuracy": {
+   "mean": 0.5739632543907693,
+   "ci95": {
+    "half_width": 0.04606289981501038
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.3271604938271605,
+   "ci95": {
+    "half_width": 0.05246913580246915
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6720979889742992,
+   "ci95": {
+    "half_width": 0.043240934855190594
+   },
+   "count": 324
+  }
+ },
+ "mask_only|long|easyocr": {
+  "char_accuracy": {
+   "mean": 0.24658315443107887,
+   "ci95": {
+    "half_width": 0.03621211453142768
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.027777777777777776,
+   "ci95": {
+    "half_width": 0.016975308641975308
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6697497587434694,
+   "ci95": {
+    "half_width": 0.04378570319345998
+   },
+   "count": 324
+  }
+ },
+ "mask_only|long|surya": {
+  "char_accuracy": {
+   "mean": 0.15371975115408276,
+   "ci95": {
+    "half_width": 0.03586588618296319
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.021604938271604937,
+   "ci95": {
+    "half_width": 0.016975308641975308
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.8608878794937496,
+   "ci95": {
+    "half_width": 0.0351201568444755
+   },
+   "count": 324
+  }
+ },
+ "mask_only|video_temporal_mean|tesseract": {
+  "char_accuracy": {
+   "mean": 0.643168525449905,
+   "ci95": {
+    "half_width": 0.07440959045087997
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.3055555555555556,
+   "ci95": {
+    "half_width": 0.08796296296296297
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.5654204518984393,
+   "ci95": {
+    "half_width": 0.08638190076869323
+   },
+   "count": 108
+  }
+ },
+ "mask_only|video_temporal_mean|easyocr": {
+  "char_accuracy": {
+   "mean": 0.48340033325316334,
+   "ci95": {
+    "half_width": 0.06658976897061519
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.06481481481481481,
+   "ci95": {
+    "half_width": 0.046296296296296294
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.25321287145186516,
+   "ci95": {
+    "half_width": 0.06785797477621376
+   },
+   "count": 108
+  }
+ },
+ "mask_only|video_temporal_mean|surya": {
+  "char_accuracy": {
+   "mean": 0.37758741745174307,
+   "ci95": {
+    "half_width": 0.08307393431162513
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.2962962962962963,
+   "ci95": {
+    "half_width": 0.08796296296296297
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6659678546471,
+   "ci95": {
+    "half_width": 0.08604122990915447
+   },
+   "count": 108
+  }
+ },
+ "mask_noise|short|tesseract": {
+  "char_accuracy": {
+   "mean": 0.04553793105058216,
+   "ci95": {
+    "half_width": 0.016805678894318908
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.025205761316872428,
+   "ci95": {
+    "half_width": 0.014557613168724278
+   },
+   "count": 324
+  }
+ },
+ "mask_noise|short|easyocr": {
+  "char_accuracy": {
+   "mean": 0.17170254427616322,
+   "ci95": {
+    "half_width": 0.01981510634299259
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.01403586125808348,
+   "ci95": {
+    "half_width": 0.00925191064079953
+   },
+   "count": 324
+  }
+ },
+ "mask_noise|short|surya": {
+  "char_accuracy": {
+   "mean": 0.10985122755038115,
+   "ci95": {
+    "half_width": 0.029880964643453987
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.027777777777777776,
+   "ci95": {
+    "half_width": 0.016975308641975308
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.30667781438221686,
+   "ci95": {
+    "half_width": 0.045705079143234295
+   },
+   "count": 324
+  }
+ },
+ "mask_noise|long|tesseract": {
+  "char_accuracy": {
+   "mean": 0.6026421726021447,
+   "ci95": {
+    "half_width": 0.045166496723828775
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.36728395061728397,
+   "ci95": {
+    "half_width": 0.05246913580246912
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6794699011680143,
+   "ci95": {
+    "half_width": 0.04484016061584195
+   },
+   "count": 324
+  }
+ },
+ "mask_noise|long|easyocr": {
+  "char_accuracy": {
+   "mean": 0.29156734536214457,
+   "ci95": {
+    "half_width": 0.03914123906033995
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.05864197530864197,
+   "ci95": {
+    "half_width": 0.026234567901234566
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.7248843632491431,
+   "ci95": {
+    "half_width": 0.039986467449779795
+   },
+   "count": 324
+  }
+ },
+ "mask_noise|long|surya": {
+  "char_accuracy": {
+   "mean": 0.14789417430106452,
+   "ci95": {
+    "half_width": 0.035084850363758024
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.8697297926857674,
+   "ci95": {
+    "half_width": 0.03389723581023363
+   },
+   "count": 324
+  }
+ },
+ "mask_noise|video_temporal_mean|tesseract": {
+  "char_accuracy": {
+   "mean": 0.6502301727643738,
+   "ci95": {
+    "half_width": 0.07565891062489849
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.3055555555555556,
+   "ci95": {
+    "half_width": 0.08333333333333334
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.5677140527769459,
+   "ci95": {
+    "half_width": 0.0833449802003261
+   },
+   "count": 108
+  }
+ },
+ "mask_noise|video_temporal_mean|easyocr": {
+  "char_accuracy": {
+   "mean": 0.5142581499725303,
+   "ci95": {
+    "half_width": 0.06782873854689409
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.07407407407407407,
+   "ci95": {
+    "half_width": 0.05092592592592592
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.2876085654387541,
+   "ci95": {
+    "half_width": 0.0705026455026455
+   },
+   "count": 108
+  }
+ },
+ "mask_noise|video_temporal_mean|surya": {
+  "char_accuracy": {
+   "mean": 0.337478581153231,
+   "ci95": {
+    "half_width": 0.08279594819429392
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.26851851851851855,
+   "ci95": {
+    "half_width": 0.08333333333333334
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6743535988819007,
+   "ci95": {
+    "half_width": 0.08294025157232704
+   },
+   "count": 108
+  }
+ },
+ "deployed|short|tesseract": {
+  "char_accuracy": {
+   "mean": 0.030478705074517172,
+   "ci95": {
+    "half_width": 0.010016847904213217
+   },
+   "count": 459
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 459
+  },
+  "sensitive_token_recall": {
+   "mean": 0.019305024595442647,
+   "ci95": {
+    "half_width": 0.010597572362278245
+   },
+   "count": 459
+  }
+ },
+ "deployed|short|easyocr": {
+  "char_accuracy": {
+   "mean": 0.10812030631610456,
+   "ci95": {
+    "half_width": 0.01388627999383784
+   },
+   "count": 459
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 459
+  },
+  "sensitive_token_recall": {
+   "mean": 0.008994708994708995,
+   "ci95": {
+    "half_width": 0.005067953107168793
+   },
+   "count": 459
+  }
+ },
+ "deployed|short|surya": {
+  "char_accuracy": {
+   "mean": 0.03167897681632612,
+   "ci95": {
+    "half_width": 0.012950044477807636
+   },
+   "count": 459
+  },
+  "exact_match": {
+   "mean": 0.004357298474945534,
+   "ci95": {
+    "half_width": 0.0054466230936819175
+   },
+   "count": 459
+  },
+  "sensitive_token_recall": {
+   "mean": 0.20186741363211952,
+   "ci95": {
+    "half_width": 0.03339499321741275
+   },
+   "count": 459
+  }
+ },
+ "deployed|long|tesseract": {
+  "char_accuracy": {
+   "mean": 0.525642146923479,
+   "ci95": {
+    "half_width": 0.046827337624101045
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.33641975308641975,
+   "ci95": {
+    "half_width": 0.05246913580246915
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6678216476434506,
+   "ci95": {
+    "half_width": 0.04421635996583584
+   },
+   "count": 324
+  }
+ },
+ "deployed|long|easyocr": {
+  "char_accuracy": {
+   "mean": 0.27276065893793805,
+   "ci95": {
+    "half_width": 0.03895877559142977
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.07407407407407407,
+   "ci95": {
+    "half_width": 0.026234567901234566
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6991300899581823,
+   "ci95": {
+    "half_width": 0.04273887169589474
+   },
+   "count": 324
+  }
+ },
+ "deployed|long|surya": {
+  "char_accuracy": {
+   "mean": 0.15444201784306683,
+   "ci95": {
+    "half_width": 0.0364308661366534
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.04938271604938271,
+   "ci95": {
+    "half_width": 0.023148148148148147
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.883851618914512,
+   "ci95": {
+    "half_width": 0.03311107228822108
+   },
+   "count": 324
+  }
+ },
+ "deployed|video_temporal_mean|tesseract": {
+  "char_accuracy": {
+   "mean": 0.5668073088215416,
+   "ci95": {
+    "half_width": 0.06836057546802948
+   },
+   "count": 153
+  },
+  "exact_match": {
+   "mean": 0.3333333333333333,
+   "ci95": {
+    "half_width": 0.0784313725490196
+   },
+   "count": 153
+  },
+  "sensitive_token_recall": {
+   "mean": 0.5372595998567142,
+   "ci95": {
+    "half_width": 0.07402415892981934
+   },
+   "count": 153
+  }
+ },
+ "deployed|video_temporal_mean|easyocr": {
+  "char_accuracy": {
+   "mean": 0.3989178230014686,
+   "ci95": {
+    "half_width": 0.05804264307299317
+   },
+   "count": 153
+  },
+  "exact_match": {
+   "mean": 0.013071895424836602,
+   "ci95": {
+    "half_width": 0.016339869281045753
+   },
+   "count": 153
+  },
+  "sensitive_token_recall": {
+   "mean": 0.2441948687231706,
+   "ci95": {
+    "half_width": 0.054715219421101774
+   },
+   "count": 153
+  }
+ },
+ "deployed|video_temporal_mean|surya": {
+  "char_accuracy": {
+   "mean": 0.3112509003519605,
+   "ci95": {
+    "half_width": 0.06679807454812686
+   },
+   "count": 153
+  },
+  "exact_match": {
+   "mean": 0.24183006535947713,
+   "ci95": {
+    "half_width": 0.06862745098039215
+   },
+   "count": 153
+  },
+  "sensitive_token_recall": {
+   "mean": 0.6197434948822296,
+   "ci95": {
+    "half_width": 0.0744543100258972
+   },
+   "count": 153
+  }
+ },
+ "capture_hardened|short|tesseract": {
+  "char_accuracy": {
+   "mean": 0.015482314451015677,
+   "ci95": {
+    "half_width": 0.004396716815854185
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.0014345057846106065,
+   "ci95": {
+    "half_width": 0.0012054507337526206
+   },
+   "count": 324
+  }
+ },
+ "capture_hardened|short|easyocr": {
+  "char_accuracy": {
+   "mean": 0.013470508870218122,
+   "ci95": {
+    "half_width": 0.003426258993394584
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  }
+ },
+ "capture_hardened|short|surya": {
+  "char_accuracy": {
+   "mean": 0.017935830288819433,
+   "ci95": {
+    "half_width": 0.006294553440214173
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.04605614899115947,
+   "ci95": {
+    "half_width": 0.018581328408372434
+   },
+   "count": 324
+  }
+ },
+ "capture_hardened|long|tesseract": {
+  "char_accuracy": {
+   "mean": 0.047672584575973134,
+   "ci95": {
+    "half_width": 0.013981679296130142
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.035416735993255906,
+   "ci95": {
+    "half_width": 0.016778143822168978
+   },
+   "count": 324
+  }
+ },
+ "capture_hardened|long|easyocr": {
+  "char_accuracy": {
+   "mean": 0.043386715521877305,
+   "ci95": {
+    "half_width": 0.006977425429528391
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.0030331769325480018,
+   "ci95": {
+    "half_width": 0.0019516821403613859
+   },
+   "count": 324
+  }
+ },
+ "capture_hardened|long|surya": {
+  "char_accuracy": {
+   "mean": 0.036494789302710905,
+   "ci95": {
+    "half_width": 0.011030006861259786
+   },
+   "count": 324
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 324
+  },
+  "sensitive_token_recall": {
+   "mean": 0.27825751777533747,
+   "ci95": {
+    "half_width": 0.0376669384268965
+   },
+   "count": 324
+  }
+ },
+ "capture_hardened|video_temporal_mean|tesseract": {
+  "char_accuracy": {
+   "mean": 0.02478940842088814,
+   "ci95": {
+    "half_width": 0.01501591529101639
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.006149545772187282,
+   "ci95": {
+    "half_width": 0.007101677148846961
+   },
+   "count": 108
+  }
+ },
+ "capture_hardened|video_temporal_mean|easyocr": {
+  "char_accuracy": {
+   "mean": 0.1362177561957467,
+   "ci95": {
+    "half_width": 0.02726612976156318
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.0,
+   "ci95": {
+    "half_width": 0.0
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.001939203354297694,
+   "ci95": {
+    "half_width": 0.00286512928022362
+   },
+   "count": 108
+  }
+ },
+ "capture_hardened|video_temporal_mean|surya": {
+  "char_accuracy": {
+   "mean": 0.37135823940833257,
+   "ci95": {
+    "half_width": 0.07142809740486675
+   },
+   "count": 108
+  },
+  "exact_match": {
+   "mean": 0.046296296296296294,
+   "ci95": {
+    "half_width": 0.041666666666666664
+   },
+   "count": 108
+  },
+  "sensitive_token_recall": {
+   "mean": 0.3585138597717214,
+   "ci95": {
+    "half_width": 0.0760789990349739
+   },
+   "count": 108
+  }
+ }
 }

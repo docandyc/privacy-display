@@ -1,12 +1,6 @@
-# Privacy Display User Study Web Demo
+# Privacy Display User Study
 
-This is the first 240 Hz-assumed lab web demo for the masking user study.
-It keeps the implementation intentionally small:
-
-- frontend: HTML, CSS, native JavaScript, Canvas2D
-- masking playback: seeded random temporal pixel assignment plus optional complementary noise
-- backend: Flask and SQLite
-- output: local SQLite database plus CSV export
+This is the controlled 240Hz laboratory WebStudy for the privacy-display user experiment. It uses native JavaScript/Canvas2D, a Flask API, and SQLite. Formal-study and demo sessions are deliberately separated so an adaptive low-refresh demonstration cannot contaminate the paper dataset.
 
 ## Run
 
@@ -17,110 +11,115 @@ From `privacy-display/`:
 .venv/bin/python webstudy/server.py
 ```
 
-Open:
+Open `http://127.0.0.1:5000`. Formal mode requires a measured refresh rate of at least 200Hz and always uses deployed `n=4`; it never silently reduces `n`.
 
-```text
-http://127.0.0.1:5000
-```
-
-For a quick operator test, use:
+Operator-only modes:
 
 ```text
 http://127.0.0.1:5000/?debug=1&selftest=1
+http://127.0.0.1:5000/?demo=1
 ```
 
-`debug=1` shortens each typing trial to 5 seconds. `selftest=1` prints mask
-completeness, noise residual, and playback permutation metadata to the browser
-console.
+- `debug=1` shortens timing for software checks.
+- `demo=1` allows 144–199Hz and adaptively lowers `n`.
+- Both flags are persisted. Admin statistics, JSON, and CSV exclude these sessions by default. Add `include_debug=1` only for troubleshooting.
 
-## Study Flow
+## Formal study flow
 
-1. Consent and photosensitive safety notice.
-2. Student ID, name, and optional vision/class fields.
-3. Browser refresh-rate check using `requestAnimationFrame`; the test cannot
-   start unless the measured rate is at least 144 Hz.
-4. 20-second original-text typing trial.
-5. 20-second masked-text typing trial with `n=4, mask+noise`.
-6. Four randomized ablation rating conditions:
-   - `n=2, mask+noise`
-   - `n=4, mask+noise`
-   - `n=8, mask+noise`
-   - `n=4, mask-only`
-7. Submit to SQLite.
+1. Separate informed-consent and photosensitivity-screening confirmations.
+2. Operator-assigned, zero-based registration index `k`, required student ID/name, plus optional vision, class, age, and gender fields. Formal mode checks `k` with the server before leaving this page; an occupied index or failed preflight blocks the experiment before any trial data can be lost.
+3. Browser rAF refresh measurement, 200Hz hard gate, and operator environment confirmation.
+4. One 12-second unscored source-Canvas warm-up, followed by one 10-second unscored deployed-mask preview.
+5. Four scored 20-second typing trials: two control and two deployed masked trials in ABBA or BAAB order. The typing order is `k mod 2`.
+6. Six rating conditions in a six-row balanced Latin order selected by `floor(k / 2) mod 6`:
+   - unmasked `n=1` source-Canvas anchor;
+   - `n=2`, `n=3`, and `n=4` mask+noise;
+   - `n=4` mask-only;
+   - deployed `n=4` mask+noise+anti-OCR+weak inversion.
+7. Each rating requires at least 10 seconds of viewing before submission.
+8. Submit four typing rows and six rating rows under one idempotent session UUID.
 
-The demo assumes the lab machines use 240 Hz monitors. Before any typing or
-rating trial starts, the browser check must measure at least 144 Hz, matching
-the minimum in the technology disclosure. Each submission still records the
-measured refresh rate. The requested `n` is kept unchanged after the global
-gate passes. If the measured subframe cycle `refresh_hz / n` is below 50 Hz,
-the masking player uses `static_fallback` instead of temporal animation and
-stores that mode in `mask_meta_json`.
+Control and masked typing stimuli both come from the same `renderSourceCanvas` path (dark background, light 23px bold text). The only treatment difference is the temporal protection pipeline. Typing uses target-prefix Levenshtein/MSD alignment; an insertion or omission therefore does not invalidate all following characters. The database also stores first-key latency, the original/typed text, edit distance, scoring method, viewing duration, and rAF dropped-frame metadata.
 
-## Data
+## Laboratory protocol
 
-The default database is:
+Before every participant, the operator must verify and tick the on-page checklist:
 
-```text
-webstudy/study.db
-```
+- use the same 240Hz monitor and display mode;
+- fix brightness at the lab-defined value and record that value in the lab log;
+- disable automatic brightness, power saving, variable refresh, and browser/background throttling;
+- use the designated browser in full-screen mode;
+- keep viewing distance at approximately 60cm;
+- close unrelated GPU/CPU-heavy applications;
+- re-run refresh measurement after any display-mode change.
 
-It is intentionally ignored by Git. The schema has three tables:
+Stop immediately if the participant reports eye discomfort, dizziness, nausea, headache, or other adverse effects. Do not enroll participants who self-report photosensitive epilepsy or sensitivity to flicker.
 
-- `participants`
-- `typing`
-- `ratings`
+## Data and idempotency
 
-Export all rows:
+The default formal database is `webstudy/study_formal.db` and is ignored by Git. It contains personally identifying participation-management fields and must not be published directly. The older `webstudy/study.db` is a legacy trial database and is deliberately not opened or migrated by the no-argument server, analysis, or backup commands.
 
-```text
-http://127.0.0.1:5000/admin/export.csv
-```
+Tables:
 
-Open the operator dashboard:
+- `participants`: unique formal registration index, identity, optional demographics, consent/screening trace, session UUID, counterbalancing, refresh and environment fields;
+- `typing`: four scored rows per completed participant, MSD metrics, first-key latency, and display timing metadata;
+- `ratings`: six rows per completed participant, 10-second view duration/timestamps, and display timing metadata.
+
+`participants.session_uuid` is unique. Formal `registration_index` values are also unique; the server recomputes the expected ABBA/BAAB and Latin-row indexes from `k` and rejects mismatches. The mapping crosses 2 typing orders with 6 rating rows over every 12 consecutive registrations. If the server commits a submission but the response is lost, retrying the same browser submission returns the existing participant instead of inserting duplicate rows. Existing pre-migration databases are upgraded in place, assigned `legacy-<id>` UUIDs, and keep `registration_index=-1`.
+
+Operator endpoints:
 
 ```text
 http://127.0.0.1:5000/admin
-```
-
-Export all rows as JSON:
-
-```text
+http://127.0.0.1:5000/admin/export.csv
 http://127.0.0.1:5000/admin/data.json
-```
-
-Preview aggregate means as API JSON:
-
-```text
 http://127.0.0.1:5000/admin/stats
 ```
 
-If the server is exposed beyond localhost, set an export token first:
+Set `WEBSTUDY_EXPORT_TOKEN` before exposing the service beyond localhost. The same `?token=...` query protects all export/stat endpoints.
+
+## Daily backup
+
+At the end of each collection day, stop new submissions and run:
 
 ```bash
-export WEBSTUDY_EXPORT_TOKEN="change-me"
-.venv/bin/python webstudy/server.py --host 0.0.0.0
+.venv/bin/python webstudy/backup_db.py \
+  --db webstudy/study_formal.db \
+  --output webstudy/backups
 ```
 
-Then export with:
+The script uses SQLite's Online Backup API and runs `PRAGMA integrity_check` on the timestamped snapshot. Store a second copy on the approved encrypted research drive; never use a raw file copy while a write transaction may be active.
 
-```text
-http://<host>:5000/admin/export.csv?token=change-me
+## Predeclared analysis
+
+Target at least `N=24`, which is within the planned paired-effect power range and fills exactly two complete 12-participant joint counterbalance cycles. Run:
+
+```bash
+.venv/bin/python webstudy/analyze_study.py \
+  --db webstudy/study_formal.db \
+  --output webstudy/analysis_output
 ```
 
-The same token query works for:
+Outputs:
 
-```text
-http://<host>:5000/admin?token=change-me
-http://<host>:5000/admin/data.json?token=change-me
-http://<host>:5000/admin/stats?token=change-me
+- `analysis_report.json`: inclusion/exclusion audit, paired inference, effect sizes, confidence intervals, Friedman and Holm-adjusted Wilcoxon results;
+- `typing_participant_means.csv`: de-identified participant-level condition means;
+- `typing_table.tex` and `ratings_table.tex`: paper-ready table bodies.
+
+The participant is the unit of analysis: the two typing repetitions are averaged before paired inference. Default exclusions are debug/demo sessions, incomplete submissions, refresh below 200Hz, any typing trial with fewer than 5 attempted characters, control accuracy below 50%, non-temporal masked trials, and observed effective base cycle below 50Hz. WPM/CPM and accuracy are interpreted jointly rather than treating speed without correctness as improvement; attempted characters and first-key latency provide additional engagement/readability checks. These metrics use a paired t test when the predeclared Shapiro check does not reject normality, otherwise Wilcoxon signed-rank. Ratings use Friedman tests and Holm-adjusted pairwise Wilcoxon tests. All reported comparisons include an effect size and deterministic participant-bootstrap confidence interval where defined.
+
+## Reproducibility notes
+
+- Stimuli and mask patterns are seeded and stored with source text. Typing/rating orders are deterministically assigned from the auditable registration index `k`.
+
+## Tests
+
+From `privacy-display/`:
+
+```bash
+node --test
+.venv/bin/pytest -q
 ```
-
-## Notes
-
-- The JavaScript implementation follows the same principle as the Python PoC:
-  every pixel is assigned to exactly one temporal subframe, and complementary
-  noise sums to zero before display clipping.
-- The web demo uses a seeded JS PRNG for reproducible study stimuli, not
-  ChaCha20. It is visually and statistically suitable for the user study demo,
-  but it is not the cryptographic implementation used by the core Python PoC.
-- Do not publish the SQLite database directly; it contains student IDs and names.
+- The browser PRNG is deterministic for study reproducibility; it is not the ChaCha20 implementation used by the core security PoC.
+- rAF dropped-frame monitoring measures browser presentation timing, not panel scan-out or photometric output. A physical 240Hz preflight remains mandatory.
+- “感知隐私” is a subjective appearance rating, not objective anti-camera evidence. “即时视觉不适” is a single item after short exposure, not a clinical fatigue measure.

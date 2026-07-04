@@ -1,6 +1,6 @@
 """webstudy 弱反色帧（α=0.2）移植的源文件断言（沿用现有读文本断字符串模式）。
 
-masked 打字试次须叠加弱反色并保持 temporal；ratings/消融刺激路径须保持不加反色。
+masked 打字试次须叠加弱反色并保持 temporal；ratings 中只有 deployed_full 使用反色。
 """
 
 from pathlib import Path
@@ -41,13 +41,9 @@ def test_mask_js_inserts_partial_inversion_and_records_meta():
     assert 'const mode = refreshHz > 0 && cycleHz < safeFlickerHz ? "static_fallback" : "temporal";' in mask
 
 
-def test_ratings_stimulus_path_has_no_inversion():
-    """消融评分刺激不得传 insertInversion（避免污染分量评分）。"""
+def test_ratings_only_threads_inversion_from_deployed_condition():
     app = APP_JS.read_text(encoding="utf-8")
-    # 定位 ratings 的 currentPlayer.load(text, {...}) 块，确认其中不含 insertInversion。
-    marker = "currentPlayer.load(text, {"
-    idx = app.find(marker)
-    assert idx != -1, "ratings load block not found"
-    block = app[idx:idx + 400]
-    assert "insertInversion" not in block
-    assert "antiOcr" not in block
+    assert 'id: "deployed_full"' in app
+    assert 'cycles: condition.id === "deployed_full" ? ANTI_CAPTURE_CYCLES : 1' in app
+    assert "insertInversion: condition.insertInversion || false" in app
+    assert "antiOcr: condition.antiOcr || null" in app
