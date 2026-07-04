@@ -1,6 +1,6 @@
 # Privacy Display 实验结果整理报告
 
-生成日期：2026-06-30
+生成日期：2026-07-04
 范围：`privacy-display/experiments` 下当前已有的结构化结果文件、真实拍摄元数据、检测/跟踪结果和自动汇总文档。原始图片仅作为数据规模统计，不逐张展开。
 
 ## 技术摘要
@@ -11,7 +11,7 @@
 
 强相机攻击结果显示，global shutter 单槽、差分亮度、差分蓝通道均无法恢复文本；但 temporal average、phase search、blue-channel max 等多帧攻击可以恢复约 94% 到 95% 字符，best attack exact match 达到 91.7%。这说明威胁模型边界必须写清楚。
 
-真实设备结果支持物理验证：9 组距离/角度 final capture 均已完成 Tesseract、EasyOCR、Surya 三引擎 OCR 行写入与总表合并，三个引擎均无 OCR error。按 attacker-favorable best-of-engine 口径，original short 字符恢复率为 92.5%，deployed short 降到 14.1%，VLM short 降到 4.2%；但 deployed temporal mean 仍达 65.4%，说明多帧聚合仍是主要真实拍摄风险。
+真实设备结果支持物理验证：9 组距离/角度 final capture 均已完成 Tesseract、EasyOCR、Surya 三引擎 OCR 行写入与总表合并，三个引擎均无 OCR error。按 attacker-favorable best-of-engine 口径，original short 字符恢复率为 94.1%，deployed short 降到 15.1%，capture-hardened short 降到 5.0%；但 deployed temporal mean 仍达 71.1%，说明多帧聚合仍是主要真实拍摄风险。
 
 检测/跟踪实验同样呈现“单帧防护明显，时间平均可部分恢复”的模式。合成 COCO 检测跨模型平均 mAP 从 clean 41.6% 降到 single subframe 2.9%，temporal average 回升到 13.0%；MOT17 视频检测平均 mAP 从 30.1% 降到 single subframe 2.0%，temporal average 回升到 8.1%。
 
@@ -161,15 +161,15 @@ python experiments\pareto_sweep.py --samples-per-category 20 --max-samples 120
 
 | OCR 引擎 | OCR rows | Error rows | 字符恢复率 | Exact match | Sensitive recall | 泄露率 |
 |---|---:|---:|---:|---:|---:|---:|
-| Tesseract | 10575 | 0 | 30.4% | 12.5% | 30.9% | 37.3% |
-| EasyOCR | 10575 | 0 | 24.9% | 2.9% | 25.3% | 36.7% |
-| Surya | 10575 | 0 | 19.7% | 8.3% | 54.1% | 24.5% |
+| Tesseract | 10575 | 0 | 32.6% | 13.3% | 33.8% | 40.0% |
+| EasyOCR | 10575 | 0 | 26.1% | 2.9% | 27.3% | 38.0% |
+| Surya | 10575 | 0 | 18.6% | 8.0% | 56.4% | 23.6% |
 
 关键距离/角度结果如下，数值为字符恢复率。“抗拍强化档”对应历史 metadata 中的 `vlm` ablation，不是在线 VLM 模型读取结果。
 
 | 场景 | original short | deployed short | deployed temporal mean | 抗拍强化 short | 抗拍强化 long |
 |---|---:|---:|---:|---:|---:|
-| `d0.5_a0` | 78.1% | 0.0% | 0.0% | 0.8% | 18.2% |
+| `d0.5_a0` | 92.4% | 9.4% | 51.3% | 8.4% | 2.1% |
 | `d0.5_a15` | 91.0% | 2.6% | 2.6% | 0.5% | 5.2% |
 | `d0.5_a30` | 94.1% | 7.8% | 82.5% | 3.2% | 5.8% |
 | `d1_a0` | 94.3% | 11.4% | 77.9% | 3.6% | 16.2% |
@@ -178,9 +178,9 @@ python experiments\pareto_sweep.py --samples-per-category 20 --max-samples 120
 | `d1.5_a0` | 94.4% | 19.8% | 87.3% | 6.5% | 13.2% |
 | `d1.5_a15` | 94.2% | 30.0% | 86.4% | 6.5% | 10.1% |
 | `d1.5_a30` | 95.6% | 28.9% | 87.2% | 7.1% | 16.7% |
-| **总体** | **92.5%** | **14.1%** | **65.4%** | **4.2%** | **11.1%** |
+| **总体** | **94.1%** | **15.1%** | **71.1%** | **5.0%** | **9.3%** |
 
-解释：`deployed short` 在所有距离/角度下均显著低于 unprotected original，但距离变远或角度变化后仍可能出现 10% 到 30% 左右的字符恢复。抗拍强化档的 short 条件在 9 组中最稳定，整体字符恢复率为 4.2%、泄露率为 3.4%。然而 `deployed temporal mean` 在 0.5m/30deg 及多个更远距离场景下恢复率超过 80%，说明真实相机多帧时间聚合仍然是必须写入限制条件的主要攻击路径。
+解释：`deployed short` 在所有距离/角度下均低于 unprotected original，但距离变远或角度变化后仍可能出现 10% 到 30% 左右的字符恢复。抗拍强化档的 short 条件在 9 组中最稳定，整体字符恢复率为 5.0%、泄露率为 3.7%。然而 `deployed temporal mean` 在 0.5m/30deg 及多个更远距离场景下恢复率超过 80%，说明真实相机多帧时间聚合仍然是必须写入限制条件的主要攻击路径。
 
 ## VLM 可读性：模型能读 temporal/phase 攻击帧
 
@@ -242,6 +242,6 @@ VLM prompt ablation 中，strict transcription、relaxed readability、sensitive
 
 在强攻击设定下，多帧 temporal average、phase search 和 blue-channel max 可恢复约 94% 到 95% 的字符，并达到最高 91.7% 的 exact match。这说明系统的安全性依赖于攻击者是否能够跨完整周期采样并进行时间聚合。
 
-真实设备拍摄进一步验证了短曝光防护效果：9 组距离/角度下，original short 的 best-of-engine 字符恢复率为 92.5%，deployed short 降至 14.1%，VLM short 降至 4.2%。但 deployed temporal mean 仍达到 65.4%，在多个远距离或斜视角场景超过 80%，需作为多帧时间聚合限制说明。真实设备 OCR 结论现基于 Tesseract、EasyOCR、Surya 三引擎及 attacker-favorable best-of 结果。
+真实设备拍摄进一步验证了短曝光防护效果：9 组距离/角度下，original short 的 best-of-engine 字符恢复率为 94.1%，deployed short 降至 15.1%，capture-hardened short 降至 5.0%。但 deployed temporal mean 合并值仍达到 71.1%，需作为多帧时间聚合限制说明。真实设备 OCR 结论现基于 Tesseract、EasyOCR、Surya 三引擎及 attacker-favorable best-of 结果。
 
 目标检测与跟踪实验显示，隐私帧也会干扰视觉检测链路。COCO 合成检测跨模型平均 mAP 从 clean 的 41.6% 降至 single subframe 的 2.9%；MOT17 视频检测平均 mAP 从 30.1% 降至 2.0%。真实设备 COCO/MOT 结果同样显示 protected short 条件显著降低检测与跟踪指标。

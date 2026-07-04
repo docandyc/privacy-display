@@ -194,7 +194,18 @@ def test_write_publication_summary_emits_json_and_markdown(tmp_path):
         "mot_tracking": {"available": False},
         "view_attack": {"available": False},
         "vlm": {"available": False, "interpretation": "missing"},
-        "real_capture": {"available": False, "interpretation": "missing"},
+        "real_capture": {
+            "available": True,
+            "aggregation": "engine_rows_pooled",
+            "source_summary": "summary.by_condition",
+            "paper_main_table": {
+                "aggregation": "best_of_engine_per_capture",
+                "source_summary": "summary.by_ablation_attack",
+            },
+            "config": {"n_captures": 1, "n_positions": 1},
+            "positions": [],
+            "conditions": [],
+        },
         "supplemental_ablations": {},
     }
 
@@ -203,6 +214,9 @@ def test_write_publication_summary_emits_json_and_markdown(tmp_path):
     assert (tmp_path / SUMMARY_JSON).exists()
     assert (tmp_path / SUMMARY_MD).exists()
     assert json.loads((tmp_path / SUMMARY_JSON).read_text(encoding="utf-8"))["ocr"]["engines"] == []
+    markdown = (tmp_path / SUMMARY_MD).read_text(encoding="utf-8")
+    assert "engine_rows_pooled" in markdown
+    assert "summary.by_ablation_attack" in markdown
 
 
 def test_publication_summary_marks_all_error_vlm_result_uncitable(tmp_path):
@@ -326,6 +340,12 @@ def test_real_capture_summary_surfaces_position_matrix():
     out = summarize_real_capture(report)
 
     assert out["available"] is True
+    assert out["aggregation"] == "engine_rows_pooled"
+    assert out["source_summary"] == "summary.by_condition"
+    assert out["paper_main_table"] == {
+        "aggregation": "best_of_engine_per_capture",
+        "source_summary": "summary.by_ablation_attack",
+    }
     assert len(out["positions"]) == 2
     assert out["positions"][0]["position"] == "d0.5_a0"
     assert out["positions"][1]["n_captures"] == 1175

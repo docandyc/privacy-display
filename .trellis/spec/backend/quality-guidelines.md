@@ -717,6 +717,7 @@ error_count = len(rows) - len(successful)
 
 ### 2. Signatures
 - `build_publication_summary(results_dir="experiments/results") -> dict`
+- `summarize_real_capture(report: dict | None) -> dict`
 - `render_markdown(summary: dict) -> str`
 - `write_publication_summary(results_dir="experiments/results", summary=None) -> dict`
 - Command: `python experiments/publication_summary.py --results-dir experiments/results`
@@ -730,6 +731,9 @@ error_count = len(rows) - len(successful)
 - Missing VLM output must say the online benchmark is implemented but no live result has been generated; thesis text must not cite VLM numbers until the file exists.
 - A VLM result file where every sample row has `vlm_error` must be represented as `available=False`, `reason=all_calls_failed`; thesis/paper text must not cite its zero recovery metrics.
 - Markdown percentages must be derived from the loaded JSON values, including confidence intervals where present.
+- `real_capture.conditions` is a pooled engine-row view sourced from `real_capture_ocr.json#summary.by_condition`; it must declare `aggregation="engine_rows_pooled"` and `source_summary="summary.by_condition"`.
+- The paper's main real-capture OCR table is not the pooled `conditions` view. The same block must expose `paper_main_table={aggregation: "best_of_engine_per_capture", source_summary: "summary.by_ablation_attack"}` so consumers can locate the capture-level attacker-favorable values and denominators.
+- Generated Markdown and `experiments/results/README.md` must state this distinction. For three engines, a pooled condition can have three times the paper-table row count and a lower mean without either result being incorrect.
 - Paper/thesis tables should be updated from `publication_summary.{json,md}` rather than hand-copying from multiple raw result files.
 
 ### 4. Validation & Error Matrix
@@ -739,16 +743,19 @@ error_count = len(rows) - len(successful)
 - Optional VLM result exists but all rows failed -> keep summary generation successful and mark VLM unavailable with an explicit all-failed interpretation.
 - Older result JSON missing CI fields -> render mean-only percentages instead of failing.
 - Unknown extra OCR engines or attack names -> include them after the known ordered entries.
+- Real-capture summary has `by_condition` but no aggregation label -> generated publication summary is ambiguous and not archive-ready; add the fixed label and paper-table pointer rather than inferring the paper uses pooled rows.
 
 ### 5. Good/Base/Bad Cases
 - Good: rerun experiments, then run `python experiments/publication_summary.py`, then update thesis tables from the generated Markdown.
 - Good: VLM result is absent and the summary explicitly records that no live VLM number should be cited.
 - Good: real-capture COCO/MOT sections are rendered only when every model/attack row has the same positive captured sample count and includes a `real_clean` baseline.
 - Good: VLM result file exists only as an API-error diagnostic and the summary says it is not available for citation.
+- Good: `deployed|short` can show 1377 pooled engine rows in `publication_summary.real_capture.conditions` while the paper uses 459 capture-level best-of-engine observations; both blocks declare their aggregation and source path.
 - Base: detection or view-attack result is absent in a lightweight environment, but OCR and strong attack summaries still render.
 - Bad: editing `publication_summary.md` by hand while raw JSON disagrees.
 - Bad: copying OCR values into the thesis from console logs instead of the generated summary.
 - Bad: treating an all-error VLM JSON file as proof that the VLM could not read the protected frame.
+- Bad: compare the pooled engine-row mean directly with the paper's best-of-engine mean, or tell reviewers to use `publication_summary.real_capture.conditions` for the paper main table without explaining the different denominator.
 
 ### 6. Tests Required
 - Assert summary building reads minimal OCR and strong-camera fixtures and reports expected means.
@@ -757,6 +764,8 @@ error_count = len(rows) - len(successful)
 - Assert real-capture COCO/MOT result files with incomplete coverage, missing `real_clean`, zero samples, or mismatched attack counts are marked unavailable and not rendered as citable tables.
 - Assert Markdown includes OCR, strong-camera, detection, view, and VLM sections.
 - Assert `write_publication_summary` writes both JSON and Markdown outputs.
+- Assert real-capture summaries label pooled engine rows, point to `summary.by_condition`, and expose the paper-table `best_of_engine_per_capture` pointer to `summary.by_ablation_attack`.
+- Assert generated Markdown renders both aggregation labels and source paths.
 - Run `pytest tests/test_publication_summary.py -q` after changing the summary builder.
 - Run `python experiments/publication_summary.py` before updating publication-facing tables.
 
@@ -764,12 +773,79 @@ error_count = len(rows) - len(successful)
 #### Wrong
 ```python
 README_TABLE = "Tesseract | 94.0% | 0.0%"
+# Ambiguous: readers may mistake pooled engine rows for the paper table.
+summary["real_capture"] = {"conditions": pooled_conditions}
 ```
 
 #### Correct
-```bash
-python experiments/publication_summary.py
-sed -n '1,120p' experiments/results/publication_summary.md
+```python
+summary["real_capture"] = {
+    "aggregation": "engine_rows_pooled",
+    "source_summary": "summary.by_condition",
+    "paper_main_table": {
+        "aggregation": "best_of_engine_per_capture",
+        "source_summary": "summary.by_ablation_attack",
+    },
+    "conditions": pooled_conditions,
+}
+```
+
+## Scenario: Deterministic Real-Capture Publication Aggregation
+
+### 1. Scope / Trigger
+- Trigger: merging position-specific real-camera OCR reports into the canonical publication JSON or changing bootstrap settings used by paper-facing confidence intervals.
+
+### 2. Signatures
+- `merge_ocr_position_reports(root: Path, paths: list[Path]) -> dict`
+- Command: `python experiments/finalize_real_capture_artifacts.py --skip-mot`
+- Output: `experiments/results/real_capture_ocr.json` and `experiments/results/real_capture_ocr.md`
+- Bootstrap constants: `src.evaluation.benchmark.BOOTSTRAP_SEED` and `BOOTSTRAP_RESAMPLES`
+
+### 3. Contracts
+- Position reports must be merged in numeric `(distance_m, angle_degrees)` order, not lexicographic path order. For example, `d1_a0` precedes `d1.5_a0`.
+- A capture has one OCR row per engine. Duplicate detection therefore uses `(capture_id, engine)`, while repeated `capture_id` values across different engines are valid and required.
+- The canonical JSON must expose `config.bootstrap = {seed, resamples, confidence, method, resampling_unit}`; paper-facing intervals use `resampling_unit="capture"` and `method="bootstrap_percentile"`.
+- Fixed RNG seed alone is not sufficient for byte-stable bootstrap output. Because sampled integer indexes are mapped onto the input array, stable row ordering is also part of the reproducibility contract.
+- Re-running finalization twice against unchanged position reports must produce byte-identical canonical JSON and Markdown files.
+- Manuscript confidence intervals must be formatted from the canonical JSON after finalization, never retained from an older bootstrap run.
+
+### 4. Validation & Error Matrix
+- Missing `captures` list -> `ValueError` naming the source report.
+- Capture row missing `id` -> `ValueError` naming the source report.
+- Duplicate `(capture_id, engine)` across inputs -> `ValueError`; do not double-count the row.
+- Same `capture_id` with different engines -> accept and preserve all engine rows.
+- Unknown position label -> sort after recognized numeric positions using a stable path tie-breaker; do not silently reorder recognized positions lexicographically.
+- Final JSON missing bootstrap metadata or manuscript CI mismatch -> artifact is not publication-ready.
+
+### 5. Good/Base/Bad Cases
+- Good: merge `d0.5`, `d1`, and `d1.5` reports numerically, preserve three engine rows per capture, regenerate the paper summary, and verify a second run has identical hashes.
+- Base: one-position fixtures still record the full bootstrap contract even when no cross-position ordering is needed.
+- Bad: `sorted(paths)` puts `d1.5` before `d1`; finite bootstrap resamples can then drift even with the same seed.
+- Bad: reject the second OCR engine row because its capture ID already appeared.
+- Bad: hand-edit confidence intervals in the paper without checking them against the final JSON.
+
+### 6. Tests Required
+- Assert two OCR engines for the same capture are accepted and summarized.
+- Assert an identical `(capture_id, engine)` row is rejected.
+- Assert input paths supplied as `d1.5` then `d1` yield capture rows and position metadata in `d1`, `d1.5` order.
+- Assert the canonical config records the imported bootstrap seed/resample constants and capture-level resampling unit.
+- Run `pytest tests/test_real_capture_finalization.py tests/test_real_capture.py tests/test_real_capture_merge.py tests/test_publication_summary.py -q` after aggregation changes.
+- Run finalization twice and compare SHA-256 hashes before copying CI endpoints into a manuscript.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+for path in sorted(paths):
+    if capture_id in seen_ids:
+        raise ValueError("duplicate capture")
+```
+
+#### Correct
+```python
+for path in sorted(paths, key=numeric_position_key):
+    row_key = (capture_id, engine)
+    if row_key in seen_rows:
+        raise ValueError("duplicate capture/engine row")
 ```
 
 ## Scenario: Reproducibility Manifest

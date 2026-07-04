@@ -614,6 +614,12 @@ def summarize_real_capture(report: dict | None) -> dict:
         })
     return {
         "available": True,
+        "aggregation": "engine_rows_pooled",
+        "source_summary": "summary.by_condition",
+        "paper_main_table": {
+            "aggregation": "best_of_engine_per_capture",
+            "source_summary": "summary.by_ablation_attack",
+        },
         "config": report.get("config", {}),
         "positions": _real_capture_positions(report),
         "conditions": conditions,
@@ -809,9 +815,13 @@ def render_markdown(summary: dict) -> str:
     real = summary["real_capture"]
     lines.extend(["", "## Real Camera Capture", ""])
     if real["available"]:
+        paper_main = real.get("paper_main_table", {})
         lines.extend([
             f"- Captures: {real['config'].get('n_captures', 0)}",
             f"- Positions: {real['config'].get('n_positions', len(real.get('positions', [])))}",
+            f"- Condition aggregation: `{real.get('aggregation', '')}` from `{real.get('source_summary', '')}`",
+            f"- Paper main table: `{paper_main.get('aggregation', '')}` from `real_capture_ocr.json` "
+            f"`{paper_main.get('source_summary', '')}`",
             "",
         ])
         positions = real.get("positions", [])

@@ -18,6 +18,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.evaluation.benchmark import (  # noqa: E402
+    BOOTSTRAP_RESAMPLES,
+    BOOTSTRAP_SEED,
+)
 from src.evaluation.real_capture import (  # noqa: E402
     REAL_CAPTURE_JSON,
     REAL_CAPTURE_MD,
@@ -120,17 +124,20 @@ def merge_ocr_position_reports(root: Path, paths: list[Path]) -> dict:
     rows: list[dict] = []
     positions: list[dict] = []
     engines: list[str] = []
-    source_results: list[str] = []
-    seen_ids: set[str] = set()
+    source_reports: list[str] = []
+    seen_rows: set[tuple[str, str]] = set()
+    ocr_timeout: float | None = None
 
-    for path in paths:
+    for path in sorted(paths, key=_result_path_position_sort_key):
         report = _load_json(path)
         captures = report.get("captures")
         if not isinstance(captures, list):
             raise ValueError(f"{path} does not contain a captures list")
         position = _position_from_report(path, report)
-        source_result = _project_relative(path, root)
-        source_results.append(source_result)
+        source_report = _project_relative(path, root)
+        source_reports.append(source_report)
+        if ocr_timeout is None:
+            ocr_timeout = report.get("config", {}).get("ocr_timeout")
 
         position_rows: list[dict] = []
         for row in captures:
@@ -140,12 +147,14 @@ def merge_ocr_position_reports(root: Path, paths: list[Path]) -> dict:
             capture_id = str(merged.get("id", ""))
             if not capture_id:
                 raise ValueError(f"{path} contains a capture row without id")
-            if capture_id in seen_ids:
-                raise ValueError(f"duplicate capture id across OCR reports: {capture_id}")
-            seen_ids.add(capture_id)
-            merged["position"] = position["position"]
-            merged["source_capture_dir"] = report.get("capture_dir", "")
-            merged["source_result_file"] = source_result
+            engine = str(merged.get("engine", ""))
+            row_key = (capture_id, engine)
+            if row_key in seen_rows:
+                raise ValueError(
+                    f"duplicate capture/engine row across OCR reports: {capture_id}/{engine}"
+                )
+            seen_rows.add(row_key)
+            merged.setdefault("position", position["position"])
             rows.append(merged)
             position_rows.append(merged)
 
@@ -156,8 +165,7 @@ def merge_ocr_position_reports(root: Path, paths: list[Path]) -> dict:
             **position,
             "n_captures": len({str(row["id"]) for row in position_rows}),
             "n_rows": len(position_rows),
-            "capture_dir": report.get("capture_dir", ""),
-            "source_result_file": source_result,
+            "source_report": source_report,
         })
 
     positions.sort(key=lambda p: (float(p.get("distance_m") or 0), float(p.get("angle_degrees") or 0)))
@@ -170,8 +178,16 @@ def merge_ocr_position_reports(root: Path, paths: list[Path]) -> dict:
             "n_captures": len({str(row["id"]) for row in rows}),
             "n_rows": len(rows),
             "n_positions": len(positions),
-            "source_results": source_results,
-            "aggregation": "position_matrix",
+            "ocr_timeout": ocr_timeout,
+            "source_reports": source_reports,
+            "surya_rerun": "surya" in engines,
+            "bootstrap": {
+                "seed": BOOTSTRAP_SEED,
+                "resamples": BOOTSTRAP_RESAMPLES,
+                "confidence": 0.95,
+                "method": "bootstrap_percentile",
+                "resampling_unit": "capture",
+            },
         },
         "positions": positions,
         "summary": summarize_real_capture_rows(rows),
@@ -255,6 +271,16 @@ def _parse_position_label(label: str) -> tuple[float | None, float | None]:
         return float(d_part.removeprefix("d")), float(a_part.removeprefix("a"))
     except (ValueError, AttributeError):
         return None, None
+
+
+def _result_path_position_sort_key(path: Path) -> tuple[float, float, str]:
+    label = path.parent.name.removeprefix("results_").removesuffix("_final")
+    distance, angle = _parse_position_label(label)
+    return (
+        float("inf") if distance is None else distance,
+        float("inf") if angle is None else angle,
+        path.as_posix(),
+    )
 
 
 def _first_float(*values: Any) -> float | None:
