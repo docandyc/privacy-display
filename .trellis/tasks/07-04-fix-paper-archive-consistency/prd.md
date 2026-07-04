@@ -19,6 +19,8 @@
 * 在探索性基线段补一句：调暗 50% 的字符恢复率与未保护条件相同，说明该设置没有降低当前 OCR 恢复率，避免把探索性比较写成有效防护。
 * 为 `publication_summary.real_capture.conditions` 明确标注 `engine_rows_pooled` 口径，并机器可读地指向论文主表采用的 `summary.by_ablation_attack` / `best_of_engine_per_capture` 口径；README 同步解释两者的分母差异。
 * 更新人工结果整理报告中两处旧版真机 OCR 数字，避免归档内继续出现 92.5%/14.1%/4.2%/65.4% 的旧口径。
+* 在 VLM 数据来源段显式披露 0.5 m/0° 的 012715 替代会话：该会话图像近乎全黑、三模型强化档短曝光转写全空，作为欠曝诊断留档但不进入正文聚合；正文采用与 OCR 参照同批、曝光更充分且对攻击者更有利的 141107/3.91 ms 会话。
+* 在真机 OCR 主表补入不含反色帧的 strong（`anti_ocr`）档，报告 short、video temporal mean 和 long 三种攻击结果；正文用 strong 与 deployed 的短曝光结果作描述性对比，并说明样本数不等使其不构成严格配对因果估计。
 * 编译论文并检查 PDF；已知每页 505 pt overfull hbox 来自 IEEE Access 页眉 logo 条，不作为本文正文排版缺陷处理，但需目视确认页眉。
 
 ## Acceptance Criteria
@@ -33,6 +35,8 @@
 * [x] 与 bootstrap 元数据相关的自动化测试通过。
 * [x] `publication_summary.real_capture` 明确区分引擎行合并口径和论文逐拍摄 best-of-engine 口径，README 与 Markdown 汇总均可见。
 * [x] 人工结果整理报告不再包含旧版 92.5%/14.1%/4.2%/65.4% 真机 OCR 数字。
+* [x] 论文正文披露 012715 欠曝替代会话、排除理由及 141107 会话的保守选择原则。
+* [x] 真机 OCR 主表包含 strong（`anti_ocr`）档三种攻击的 best-of-engine 结果，数值与 canonical JSON 一致。
 
 ## Definition of Done
 

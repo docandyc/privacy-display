@@ -88,27 +88,25 @@
 \newlabel{tab:real_ocr_main}{{2}{6}{}{table.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 真机拍摄蒙太奇：左列为数字积分重建视图，用于检查完整周期的图像一致性，中列为短曝光拍摄，右列为长曝光拍摄。数字积分视图不是人眼可读性或视觉舒适性的直接证据。}}{6}{}\protected@file@percent }
 \newlabel{fig:montage}{{3}{6}{}{figure.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 真机防护效果：档位 $\times $ 攻击模式的~OCR~恢复率}}{6}{}\protected@file@percent }
-\newlabel{fig:bar_attack}{{4}{6}{}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}真机拍摄~VLM~探针}{6}{}\protected@file@percent }
+\newlabel{sec:vlm}{{\mbox  {V-C}}{6}{}{subsection.5.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 真机防护效果：档位 $\times $ 攻击模式的~OCR~恢复率}}{7}{}\protected@file@percent }
+\newlabel{fig:bar_attack}{{4}{7}{}{figure.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 数字重建质量与积分攻击鲁棒性的取舍：随抗~OCR~叠加增强（无叠加~$\to $~strong~叠加~$\to $~deployed（叠加加~$\alpha =0.2$~反色帧）~$\to $~抗拍强化），时域平均字符恢复率下降（左轴），完整周期数字重建的~SSIM~\cite  {b_wang2004}~也下降（右轴）。数据来自合成语料上的抗~OCR~档位消融（数字管线，非真机拍摄）；SSIM~是图像代理，不等同于用户可读性。}}{7}{}\protected@file@percent }
 \newlabel{fig:tradeoff}{{5}{7}{}{figure.5}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 真机短曝光~OCR：三引擎分别结果（9~几何条件汇总）}}{7}{}\protected@file@percent }
 \newlabel{tab:real_ocr_engine}{{3}{7}{}{table.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}真机拍摄~VLM~探针}{7}{}\protected@file@percent }
-\newlabel{sec:vlm}{{\mbox  {V-C}}{7}{}{subsection.5.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 真机短曝光下三个~OCR~引擎在~original、deployed~与抗拍强化档的字符恢复率（表~\ref {tab:real_ocr_engine}~中三档的可视化），误差棒为以拍摄样本重采样的~95\%~bootstrap~区间。三个引擎均被抑制，但引擎家族有限，不能据此声称与任意识别器无关。}}{7}{}\protected@file@percent }
 \newlabel{fig:real_engine_ocr}{{6}{7}{}{figure.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 真机~VLM~探针（0$^{\circ }$~轴向距离；除~original~short~基线行外均为抗拍强化档）。每个~VLM~单元格为~Exact~/~Char~/$N$（\%~/~\%~/有效调用数）；OCR~BoE~列为同批文件上的三引擎~best-of-engine~参照（Exact~/~Char，\%）。}}{8}{}\protected@file@percent }
-\newlabel{tab:real_vlm}{{4}{8}{}{table.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 0.5\,m~强化档短曝光按内容类型的~VLM~字符恢复率。基线列为同会话未保护~original~short~上~Qwen~的结果（Kimi/GLM~相近）；GLM~个别调用失败，括号内为其实际~$N$。1.5\,m~复跑中~CET6~密集页在三模型下均为~0\%~char。}}{8}{}\protected@file@percent }
-\newlabel{tab:vlm_content}{{5}{8}{}{table.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}用户体验调研}{8}{}\protected@file@percent }
 \newlabel{sec:user_study}{{\mbox  {V-D}}{8}{}{subsection.5.4}{}}
 \citation{b_soukoreff2003}
 \citation{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}
 \citation{b_bytetrack2022}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}真机拍摄目标检测与跟踪实验}{9}{}\protected@file@percent }
-\newlabel{sec:detection}{{\mbox  {V-E}}{9}{}{subsection.5.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 真机~VLM~探针（0$^{\circ }$~轴向距离；除~original~short~基线行外均为抗拍强化档）。每个~VLM~单元格为~Exact~/~Char~/$N$（\%~/~\%~/有效调用数）；OCR~BoE~列为同批文件上的三引擎~best-of-engine~参照（Exact~/~Char，\%）。}}{9}{}\protected@file@percent }
+\newlabel{tab:real_vlm}{{4}{9}{}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 0.5\,m~强化档短曝光按内容类型的~VLM~字符恢复率。基线列为同会话未保护~original~short~上~Qwen~的结果（Kimi/GLM~相近）；GLM~个别调用失败，括号内为其实际~$N$。1.5\,m~复跑中~CET6~密集页在三模型下均为~0\%~char。}}{9}{}\protected@file@percent }
+\newlabel{tab:vlm_content}{{5}{9}{}{table.5}{}}
 \citation{b_smith2007}
 \citation{b_easyocr2020}
 \citation{b_surya2024}
@@ -116,15 +114,15 @@
 \newlabel{tab:real_coco}{{6}{10}{}{table.6}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces 真机~MOT17-09-FRCNN~停帧采集跟踪（ByteTrack~风格贪心关联，450~帧）}}{10}{}\protected@file@percent }
 \newlabel{tab:real_mot}{{7}{10}{}{table.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}软件模拟补充实验}{10}{}\protected@file@percent }
-\newlabel{sec:simulation}{{\mbox  {V-F}}{10}{}{subsection.5.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}1}合成单子帧~OCR}{10}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}真机拍摄目标检测与跟踪实验}{10}{}\protected@file@percent }
+\newlabel{sec:detection}{{\mbox  {V-E}}{10}{}{subsection.5.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces 真机检测：四个检测器~mAP50~在受保护条件下的跌幅}}{10}{}\protected@file@percent }
 \newlabel{fig:real_det_drop}{{7}{10}{}{figure.7}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces 合成单子帧：三引擎~OCR~字符恢复率（120~语料，$n=4$, $\varepsilon =8/255$）}}{10}{}\protected@file@percent }
 \newlabel{tab:ocr_corpus}{{8}{10}{}{table.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces 三个~OCR~引擎在原始帧和单个受保护子帧上的字符恢复率，误差棒为以语料样本重采样的~95\%~bootstrap~区间。}}{10}{}\protected@file@percent }
-\newlabel{fig:multiengine_ocr}{{8}{10}{}{figure.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}软件模拟补充实验}{10}{}\protected@file@percent }
+\newlabel{sec:simulation}{{\mbox  {V-F}}{10}{}{subsection.5.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}1}合成单子帧~OCR}{10}{}\protected@file@percent }
 \citation{b_coco2014}
 \citation{b_mot16}
 \citation{b_yolo26}
@@ -132,29 +130,31 @@
 \citation{b_fasterrcnn2015}
 \citation{b_retinanet2017}
 \citation{b_bytetrack2022}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces 9~个样本上的软件代理基线：横轴为~OCR~字符恢复率，纵轴为数字重建视图的~$\Delta E_{00}$。各方法参数和物理条件并未等价匹配，图仅作探索性比较。}}{11}{}\protected@file@percent }
-\newlabel{fig:baselines_scatter}{{9}{11}{}{figure.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces 三个~OCR~引擎在原始帧和单个受保护子帧上的字符恢复率，误差棒为以语料样本重采样的~95\%~bootstrap~区间。}}{11}{}\protected@file@percent }
+\newlabel{fig:multiengine_ocr}{{8}{11}{}{figure.8}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}2}理论安全边界}{11}{}\protected@file@percent }
 \newlabel{sec:security_frontier}{{\mbox  {V-F}2}{11}{}{subsubsection.5.6.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}3}与软件代理基线对比}{11}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}4}检测与跟踪模拟评测}{11}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces 9~个样本上的软件代理基线：横轴为~OCR~字符恢复率，纵轴为数字重建视图的~$\Delta E_{00}$。各方法参数和物理条件并未等价匹配，图仅作探索性比较。}}{11}{}\protected@file@percent }
+\newlabel{fig:baselines_scatter}{{9}{11}{}{figure.9}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces COCO~val2017~模拟检测管线诊断（4~检测器，8~张，不作数据集级性能估计）}}{11}{}\protected@file@percent }
 \newlabel{tab:coco_sim}{{9}{11}{}{table.9}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces MOT17~模拟跟踪（ByteTrack~风格贪心关联，项目内近似指标，5316~帧）}}{11}{}\protected@file@percent }
 \newlabel{tab:mot_sim}{{10}{11}{}{table.10}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}5}安全--可用性权衡}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VI}讨论}{11}{}\protected@file@percent }
-\newlabel{sec:discussion}{{VI}{11}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}证据层级与主张范围}{11}{}\protected@file@percent }
-\citation{b_li2025}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces 抗~OCR~档位的条纹~$\times $~字形幅度网格（时域平均攻击）：左为字符恢复率，右为数字重建漂移。高条纹和高字形幅度区域的字符恢复率在当前~12~个参数格点（每格点~16~个样本）中描述性地降至~$\sim $11\%，同时重建代价上升。未进行显著性检验。}}{12}{}\protected@file@percent }
 \newlabel{fig:antiocr_heatmap}{{10}{12}{}{figure.10}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces 当前评测中单个受保护子帧的相对剩余能力（clean~=~100\%），OCR、检测和跟踪约为~0--9.7\%。该图仅汇总所测模型与指标。}}{12}{}\protected@file@percent }
 \newlabel{fig:all_attackers}{{11}{12}{}{figure.11}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}线性积分的数学张力}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}5}安全--可用性权衡}{12}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces 数字模型中的安全--可用性代理~Pareto~前沿：$n \times $~刷新率，FPI~与归一化互信息均非用户体验或真实攻击成功率的直接测量。}}{12}{}\protected@file@percent }
 \newlabel{fig:pareto}{{12}{12}{}{figure.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}抗拍强化档的作用与代价}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}讨论}{12}{}\protected@file@percent }
+\newlabel{sec:discussion}{{VI}{12}{}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}证据层级与主张范围}{12}{}\protected@file@percent }
+\citation{b_li2025}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}线性积分的数学张力}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}抗拍强化档的作用与代价}{13}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM~攻击者与对策方向}{13}{}\protected@file@percent }
 \newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{13}{}{subsection.6.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}部署路径}{13}{}\protected@file@percent }

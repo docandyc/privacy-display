@@ -734,6 +734,9 @@ error_count = len(rows) - len(successful)
 - `real_capture.conditions` is a pooled engine-row view sourced from `real_capture_ocr.json#summary.by_condition`; it must declare `aggregation="engine_rows_pooled"` and `source_summary="summary.by_condition"`.
 - The paper's main real-capture OCR table is not the pooled `conditions` view. The same block must expose `paper_main_table={aggregation: "best_of_engine_per_capture", source_summary: "summary.by_ablation_attack"}` so consumers can locate the capture-level attacker-favorable values and denominators.
 - Generated Markdown and `experiments/results/README.md` must state this distinction. For three engines, a pooled condition can have three times the paper-table row count and a lower mean without either result being incorrect.
+- If the public archive retains an alternative capture session whose result materially differs from the manuscript session, the manuscript must identify the selected session and state the selection rule near the affected experiment. A README-only explanation is insufficient because reviewers may inspect result files before archive guidance.
+- Session exclusion may be described as an underexposure diagnosis when near-black inputs and empty transcriptions support it, but absent independent photometry it must not be promoted to a proven camera-ISP causal claim. Preserve the excluded session and report why the selected session is the conservative attacker-favorable comparison.
+- A paper-facing ablation table must include a method-defined intermediate profile when canonical `summary.by_ablation_attack` data are complete and the profile is needed to interpret the next stage's contribution. For this project, `strong` maps to canonical `anti_ocr`; it is reported before `deployed`, which adds the weak inversion frame.
 - Paper/thesis tables should be updated from `publication_summary.{json,md}` rather than hand-copying from multiple raw result files.
 
 ### 4. Validation & Error Matrix
@@ -744,6 +747,8 @@ error_count = len(rows) - len(successful)
 - Older result JSON missing CI fields -> render mean-only percentages instead of failing.
 - Unknown extra OCR engines or attack names -> include them after the known ordered entries.
 - Real-capture summary has `by_condition` but no aggregation label -> generated publication summary is ambiguous and not archive-ready; add the fixed label and paper-table pointer rather than inferring the paper uses pooled rows.
+- Public archive contains a near-black alternative session with all-empty VLM transcriptions while the manuscript cites a different session without explanation -> not archive-ready; disclose both sessions and the input-alignment/conservative-selection rule in the manuscript.
+- Method defines `strong`, canonical best-of-engine data are complete, and the main ablation table jumps from `mask_noise` to `deployed` -> table is incomplete unless the intermediate profile is reported or its omission is explicitly justified.
 
 ### 5. Good/Base/Bad Cases
 - Good: rerun experiments, then run `python experiments/publication_summary.py`, then update thesis tables from the generated Markdown.
@@ -751,11 +756,15 @@ error_count = len(rows) - len(successful)
 - Good: real-capture COCO/MOT sections are rendered only when every model/attack row has the same positive captured sample count and includes a `real_clean` baseline.
 - Good: VLM result file exists only as an API-error diagnostic and the summary says it is not available for citation.
 - Good: `deployed|short` can show 1377 pooled engine rows in `publication_summary.real_capture.conditions` while the paper uses 459 capture-level best-of-engine observations; both blocks declare their aggregation and source path.
+- Good: retain the 012715 diagnostic VLM rerun, disclose its near-black inputs and empty transcriptions, and select the aligned 141107/3.91 ms session because it is more exposed and therefore more favorable to the attacker.
+- Good: report `anti_ocr|short` as the method's `strong` row before `deployed`, then describe their 20.7% versus 15.1% difference as descriptive rather than a paired causal estimate because the sample counts differ.
 - Base: detection or view-attack result is absent in a lightweight environment, but OCR and strong attack summaries still render.
 - Bad: editing `publication_summary.md` by hand while raw JSON disagrees.
 - Bad: copying OCR values into the thesis from console logs instead of the generated summary.
 - Bad: treating an all-error VLM JSON file as proof that the VLM could not read the protected frame.
 - Bad: compare the pooled engine-row mean directly with the paper's best-of-engine mean, or tell reviewers to use `publication_summary.real_capture.conditions` for the paper main table without explaining the different denominator.
+- Bad: hide or delete an unfavorable alternative session, or explain it only in the archive README while the manuscript remains silent about why another session was selected.
+- Bad: claim the strong-to-deployed difference is an isolated causal inversion effect when the two rows have unequal sampling schedules.
 
 ### 6. Tests Required
 - Assert summary building reads minimal OCR and strong-camera fixtures and reports expected means.
@@ -766,8 +775,11 @@ error_count = len(rows) - len(successful)
 - Assert `write_publication_summary` writes both JSON and Markdown outputs.
 - Assert real-capture summaries label pooled engine rows, point to `summary.by_condition`, and expose the paper-table `best_of_engine_per_capture` pointer to `summary.by_ablation_attack`.
 - Assert generated Markdown renders both aggregation labels and source paths.
+- Assert the manuscript names a materially different archived alternative session, its diagnostic status, the selected session, and the attacker-favorable selection rule.
+- Assert the real-capture main table includes `strong`/`anti_ocr` short, temporal-mean, and long rows formatted directly from `summary.by_ablation_attack`.
 - Run `pytest tests/test_publication_summary.py -q` after changing the summary builder.
 - Run `python experiments/publication_summary.py` before updating publication-facing tables.
+- Compile the manuscript and visually inspect the pages containing an expanded ablation table and session-selection disclosure.
 
 ### 7. Wrong vs Correct
 #### Wrong
@@ -788,6 +800,22 @@ summary["real_capture"] = {
     },
     "conditions": pooled_conditions,
 }
+```
+
+#### Wrong
+```latex
+% Archive contains a materially different alternative session, but the paper is silent.
+\multirow{3}{*}{deployed} ...
+```
+
+#### Correct
+```latex
+\multirow{3}{*}{strong（anti\_ocr）} ...
+\multirow{3}{*}{deployed} ...
+
+\textbf{Session-selection transparency}: the archived alternative session is
+retained as an underexposure diagnostic; the aligned, attacker-favorable
+session is used for the reported comparison.
 ```
 
 ## Scenario: Deterministic Real-Capture Publication Aggregation
