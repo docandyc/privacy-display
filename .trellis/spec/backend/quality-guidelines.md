@@ -38,66 +38,141 @@ Questions to answer:
 ## Scenario: Web Study Submission Backend
 
 ### 1. Scope / Trigger
-- Trigger: `privacy-display/webstudy` adds or changes the Flask + SQLite user-study demo used to collect participant identity, refresh-rate covariates, typing performance, and ablation ratings.
+- Trigger: `privacy-display/webstudy` adds or changes the controlled Flask + SQLite user study used to collect consent, demographics, display timing, repeated typing performance, and six-condition ratings.
 
 ### 2. Signatures
-- Command: `python webstudy/server.py --host 127.0.0.1 --port 5000 --db webstudy/study.db`
+- Command: `python webstudy/server.py --host 127.0.0.1 --port 5000 --db webstudy/study_formal.db`
 - API: `POST /api/submit` with JSON `{participant, session, typing, ratings}`
+- API: `GET /api/registration-status?registration_index=<k>` returns `{registration_index, available}` for formal-row occupancy.
 - Page: `GET /admin`
 - API: `GET /admin/data.json?token=...`
 - API: `GET /admin/export.csv?token=...`
 - API: `GET /admin/stats`
+- Analysis: `python webstudy/analyze_study.py --db webstudy/study_formal.db --output webstudy/analysis_output`
+- Backup: `python webstudy/backup_db.py --db webstudy/study_formal.db --output webstudy/backups`
 - DB tables: `participants`, `typing`, `ratings`
 - Env: `WEBSTUDY_DB`, `WEBSTUDY_HOST`, `WEBSTUDY_PORT`, optional `WEBSTUDY_EXPORT_TOKEN`
 
 ### 3. Contracts
-- `participant.student_id` and `participant.name` are required non-empty strings; optional fields include `glasses` and `major`.
-- `session` must preserve measured display timing: `assumed_monitor_hz`, `refresh_hz`, `refresh_ok`, `refresh_samples`, and `mean_frame_ms`.
-- `typing` must contain exactly two rows: one `control` and one `masked`; each row stores `target_text`, `typed_text`, accuracy metrics, `duration_s`, `n`, `requested_n`, and `components`.
-- `ratings` must contain exactly four rows for the ablation conditions; each row stores 1-5 integer ratings for `readability`, `flicker`, `fatigue`, and `privacy`, plus `order_index`.
+- `participant.student_id` and `participant.name` are required; `consent_confirmed` and `photosensitivity_screen_passed` must be true. `age` and `gender` are optional demographic fields.
+- `session.session_uuid` is a valid UUID and the database uniqueness key. Retrying the same UUID returns the existing participant with `created=false` and must not duplicate event rows.
+- Every formal session requires an operator-assigned zero-based `session.registration_index = k`. Formal `participants.registration_index` values are unique; migrated legacy rows use `-1`, and debug/demo sessions are outside the partial uniqueness constraint.
+- Formal identity submission must preflight `k` through `/api/registration-status` before any refresh check or trial begins. An occupied index or failed request keeps the form populated and blocks navigation; the final unique index remains authoritative against races.
+- The no-argument server, analysis, and backup commands target `study_formal.db`. The old `study.db` contains legacy trial rows and must remain untouched unless an operator explicitly supplies it with `--db`/`WEBSTUDY_DB`.
+- Counterbalancing is derived only from `k`: `typing_order_index = k % 2`, `rating_order_index = floor(k / 2) % 6`. This crosses both typing orders with all six Latin rows once per 12 consecutive registrations; `N=24` is two complete joint cycles. Do not use a participant/session hash for allocation.
+- Formal sessions require `refresh_hz >= 200`, `refresh_ok=true`, `environment_confirmed=true`, fixed masked `n=4`, and `demo=false`. A `demo=1` or `debug=1` session is accepted for operator checks but excluded from default administration, statistics, and exports.
+- `session` preserves `registration_index`, `typing_order` (`ABBA` or `BAAB`), counterbalance/rating-order indexes, measured display timing, environment confirmation, and debug/demo provenance. The backend recomputes all assigned indexes/order from `k` and validates the row sequence rather than trusting the browser.
+- `typing` contains exactly four scored rows: two `control` source-Canvas rows (`n=1`) and two deployed `masked` rows. Unique `trial_index` is 0-3 and each condition has repetitions 1 and 2. Rows preserve target/transcribed text, MSD target-prefix metrics, WPM/CPM, first-key latency, and `mask_meta` timing.
+- `ratings` contains exactly six unique rows: `control_anchor`, `n2_mask_noise`, `n3_mask_noise`, `n4_mask_noise`, `n4_mask_only`, and `deployed_full`. Each has a unique order 0-5, a view duration of at least 10 seconds in non-debug sessions, timestamps, four 1-5 ratings, and `mask_meta`.
+- Control and masked text must use the same `renderSourceCanvas` dimensions, font, polarity, and weight. Only the temporal treatment may differ.
+- Before scored trials, the formal flow includes an unscored source-Canvas typing warm-up and a 10-second unscored deployed-mask preview. Typing textareas prevent paste.
+- The masked preview canvas is hidden after frame precomputation and becomes visible only when the participant clicks Start; do not expose the static first subframe drawn by `MaskedPlayer.load()`.
+- Empty typed input has `accuracy=0` and `msd_error_rate=1`. Analysis excludes a participant when any scored typing trial has fewer than five `attempted_chars`; speed and accuracy are interpreted jointly.
+- `mask_meta` records mode plus rAF observed refresh, effective/full cycle rates, rendered intervals, estimated dropped frames/rate, and mean/max frame interval. An interval over 1.5 expected frames is a long interval.
 - CSV export is a long table with `row_type` set to `typing` or `rating`, repeating participant/session columns on each row.
-- `/admin/data.json` returns `summary`, `participants`, `typing`, and `ratings`; event rows must expose parsed `mask_meta` so operators can stratify `temporal` vs `static_fallback` sessions without reparsing CSV.
-- `/admin` is an operator dashboard over `/admin/data.json`; it must expose participant summaries, paired typing deltas, rating means, typing rows, rating rows, and CSV/JSON export links.
+- `/admin/data.json` returns parsed `mask_meta`. Participant paired deltas use the mean of two repetitions per condition, not the first row.
+- `analyze_study.py` treats participants as the unit of analysis, audits preregistered exclusions, and emits de-identified CSV, JSON, and LaTeX tables.
+- `init_db` migrates pre-contract databases in place; legacy participants receive `legacy-<id>` UUIDs before the unique index is created.
 
 ### 4. Validation & Error Matrix
 - Missing participant object -> HTTP 400.
 - Empty `student_id` or `name` -> HTTP 400.
-- `typing` length not equal to 2 -> HTTP 400.
-- Duplicate or unknown typing condition -> HTTP 400.
-- `ratings` length not equal to 4 -> HTTP 400.
+- Consent or photosensitivity screening not true -> HTTP 400.
+- Invalid session UUID or typing order -> HTTP 400.
+- Missing/negative formal `registration_index`, or a typing/rating index/order that does not match `k` -> HTTP 400.
+- Missing, fractional, non-numeric, or negative `registration_index` on `/api/registration-status` -> HTTP 400.
+- Occupied formal registration preflight -> HTTP 200 with `available=false`; debug/demo rows do not make an index unavailable.
+- Registration preflight network/server failure -> frontend remains on identity and displays a blocking error.
+- Reusing a formal `registration_index` under a different session UUID -> HTTP 400; retrying the identical UUID remains idempotent.
+- Formal refresh below 200Hz or missing environment confirmation -> HTTP 400.
+- `typing` length not equal to 4, condition counts not 2+2, or duplicate trial/repetition -> HTTP 400.
+- A formal masked row whose effective/requested `n` is not 4 -> HTTP 400.
+- `ratings` length not equal to 6, duplicate/unknown condition, wrong condition spec, or duplicate order -> HTTP 400.
+- Non-debug rating view shorter than 10,000ms -> HTTP 400.
 - Rating outside `[1, 5]` -> HTTP 400.
-- `accuracy` outside `[0, 1]` -> HTTP 400.
+- `accuracy` or `msd_error_rate` outside `[0, 1]`, or negative edit/timing values -> HTTP 400.
 - `WEBSTUDY_EXPORT_TOKEN` set and query token missing/mismatched -> HTTP 403 for admin JSON exports, CSV exports, and stats.
 
 ### 5. Good/Base/Bad Cases
-- Good: run a debug browser session, submit once, then confirm `/admin/stats` reports one participant, two typing groups, and four rating groups.
-- Good: open `/admin`, confirm the participant appears in the summary table, paired WPM delta is visible, and export links point to CSV/JSON endpoints.
-- Base: low-refresh browser sessions are accepted but must preserve `refresh_ok=false` and the effective `n`/`requested_n` distinction.
+- Good: complete the formal 240Hz flow, submit four typing/six rating rows, retry the identical UUID, and observe one participant with `created=false` on retry.
+- Good: assign consecutive `k=0..23` and observe each of the 12 `(typing_order_index, rating_order_index)` pairs exactly twice.
+- Good: preflight an unused `k`, proceed, then retain the SQLite unique constraint at submission as race protection.
+- Good: run `?debug=1` and `?demo=1` checks, then confirm default stats/export exclude both while `include_debug=1` includes them.
+- Good: migrate a legacy database, run the analysis, and verify inclusion/exclusion audit plus both LaTeX tables.
+- Base: 144-199Hz is allowed only in explicitly tagged demo mode; formal sessions are blocked instead of silently lowering `n`.
 - Bad: storing only aggregate WPM and dropping `target_text`/`typed_text`, because later analysis cannot audit scoring.
+- Bad: position-by-position character comparison; one insertion/deletion invalidates all following characters. Use MSD target-prefix alignment.
+- Bad: derive both counterbalances from a hash modulo six. Small samples can leave cells empty, and reusing one modulo result couples typing order to the parity of the Latin row.
+- Bad: return perfect accuracy for empty input or include near-empty trials in participant means.
+- Bad: discover a duplicate `k` only after all trials, or silently change the roster index to `k+12`; both hide an operator input error.
+- Bad: start formal collection against the legacy `study.db`, because an old `debug=0` incomplete row appears in default admin/export summaries.
+- Bad: showing control as DOM text or opposite polarity; that confounds mask effect with rendering and enables copy/select.
+- Bad: including debug/demo rows in paper statistics by default.
 - Bad: exporting separate participant-only rows without event rows, because CSV consumers cannot join typing/rating outcomes without extra queries.
 - Bad: requiring the operator to query raw SQLite manually during collection; the web backend must expose read-only summary/export endpoints.
 
 ### 6. Tests Required
-- Assert valid payload submission returns 200 and inserts one participant, two typing rows, and four rating rows.
-- Assert malformed payloads return 400 for missing identity, wrong typing count, wrong rating count, invalid rating, and invalid accuracy.
-- Assert `/admin/export.csv` includes participant columns plus typing/rating event columns.
-- Assert `/admin/data.json` includes participant summaries, paired typing deltas, parsed `mask_meta`, and the same row counts as the database.
-- Assert `/admin` renders the dashboard tables and CSV/JSON export links in a browser.
+- Assert valid payload submission inserts one participant, four typing rows, and six rating rows; identical UUID retry does not add rows.
+- Assert malformed payloads return 400 for consent/screening, formal refresh, counts, repeats/orders, condition specs, short views, ratings, and MSD ranges.
+- Assert 199.9Hz formal sessions are blocked, 200Hz formal sessions pass, and demo sessions are tagged/excluded.
+- Assert MSD alignment handles a one-character insertion and deletion without shifting all following matches.
+- Assert ABBA/BAAB and all six balanced Latin rows contain the expected conditions.
+- Assert the six Latin rows contain all 30 directed immediate-predecessor pairs exactly once.
+- Assert `k=0..23` covers all 12 joint assignment pairs twice; reject negative, duplicate, or payload-mismatched formal registration indexes.
+- Assert registration preflight reports unused/used formal indexes, rejects invalid values, and ignores debug/demo rows.
+- Assert all no-argument formal workflows use `study_formal.db`; separately verify the repository legacy `study.db` hash/schema/row count is unchanged.
+- Assert empty input scores zero accuracy and analysis excludes any participant with a trial below five attempted characters.
+- Assert `MaskedPlayer` marks intervals over 1.5 expected frames and exposes observed cycle rates.
+- Assert legacy schema migration preserves rows and creates a unique populated `session_uuid` index.
+- Assert CSV/JSON/stats exclude debug/demo by default and expose all new fields/parsed metadata when requested.
+- Assert analysis outputs JSON, de-identified participant means CSV, and two LaTeX tables; assert SQLite backup passes integrity check.
+- Browser smoke: formal-mode branding, dual consent gate, registration index, refresh+environment gate, paste prevention, source Canvas warm-up, deployed masked preview, and four-trial plan render without page errors. `?selftest=1` must not assume `mask_meta.counts` exists for source-control canvases.
+- Browser smoke must also prove occupied and failed registration preflights cannot leave the identity page, and the preview canvas is hidden before Start and visible afterward.
+- Browser-side Node tests use `*.test.js` names so `node --test` discovers them without an explicit glob.
 - Assert token-protected admin endpoints reject missing or incorrect tokens when `WEBSTUDY_EXPORT_TOKEN` is set.
 
 ### 7. Wrong vs Correct
 #### Wrong
-```python
-conn.execute("INSERT INTO typing (condition, wpm) VALUES (?, ?)", (condition, wpm))
+```javascript
+if (refresh_hz >= 144) {
+  n = Math.floor(refresh_hz / 50); // silently changes a formal condition
+}
 ```
 
 #### Correct
-```python
-conn.execute(
-    "INSERT INTO typing (participant_id, condition, target_text, typed_text, wpm, duration_s) "
-    "VALUES (?, ?, ?, ?, ?, ?)",
-    (participant_id, condition, target_text, typed_text, wpm, duration_s),
-)
+```javascript
+const minimumHz = demo ? 144 : 200;
+if (!demo && refreshHz < minimumHz) {
+  blockFormalStudy();
+}
+// Formal masked trials remain n=4; adaptive n exists only in tagged demo data.
+```
+
+#### Wrong
+```javascript
+const index = stableHash(studentId + sessionUuid) % 6;
+const typingOrder = index % 2;
+const ratingRow = index;
+```
+
+#### Correct
+```javascript
+const typingOrder = registrationIndex % 2;
+const ratingRow = Math.floor(registrationIndex / 2) % 6;
+// The backend recomputes both values and formal registrationIndex is unique.
+```
+
+#### Wrong
+```javascript
+setStep("refresh"); // duplicate k is discovered only at final submission
+```
+
+#### Correct
+```javascript
+if (await checkRegistrationAvailability(registrationIndex)) {
+  setStep("refresh");
+}
+// Submission still relies on the database unique index for race safety.
 ```
 
 ## Scenario: Noise Injector Adversarial Loop
