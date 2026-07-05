@@ -1,0 +1,43 @@
+# LaTeX temporary files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.xdv
+*.out
+*.synctex.gz
+*.synctex(busy)
+
+# PDF and compiled documents
+*.pdf
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Build directories
+build/
+dist/
+*.egg-info/
+
+# OS generated files
+Thumbs.db
