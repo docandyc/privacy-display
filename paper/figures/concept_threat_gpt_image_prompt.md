@@ -13,19 +13,29 @@ Composition/framing: landscape 3:2 canvas suitable for one-column placement. Two
 Left panel, label exactly "(a) Physical visual eavesdropping":
 
 - Show a clean office scene as simple flat line art: an authorized user seated directly in front of a desktop display reading sensitive information.
+
 - The display visibly contains the exact sample text "PRIVATE DATA".
+
 - From an oblique or distant position, show one unauthorized smartphone camera aimed at the display.
+
 - Use subtle orange-red dashed capture rays or a view cone from the smartphone toward the screen.
+
 - Add the exact labels "Authorized user", "Sensitive display", and "Smartphone camera".
+
 - Make it unmistakably a physical smartphone camera-capture threat, not a digital screenshot or network attack.
+
 - IMPORTANT: show no smart glasses, no eyeglasses, no wearable camera, and no second attacker device.
 
 Right panel, label exactly "(b) Asymmetric perception":
 
 - In the center, show a compact horizontal sequence of four different sparse complementary subframe thumbnails with a fast time arrow, labeled exactly "Rapid complementary subframes".
+
 - Upper green branch: an eye icon accumulates all four subframes, followed by a clean readable display thumbnail containing "PRIVATE DATA". Use the exact labels "Human eye", "Temporal integration", and "Readable"; do not state a fixed integration time.
+
 - Lower orange-red branch: a camera icon with a narrow shutter bracket selects only one subframe, followed by a sparse unreadable fragment and a crossed-out OCR symbol. Use the exact labels "Camera", "Short-exposure sampling", and "Unreadable fragment".
+
 - The human path must visibly sum the full sequence; the camera path must visibly sample only one moment.
+
 - In the camera path, highlight exactly one selected subframe with a narrow shutter bracket. Do not place plus signs between all four camera-path thumbnails, because that would incorrectly imply temporal summation by the camera.
 
 Style/medium: flat vector-like scientific infographic, crisp simple geometry, restrained IEEE journal aesthetic, consistent medium-weight sans-serif typography, thin dark-navy outlines. Use navy and cyan for the display/subframes, green only for the human-readable path, orange-red only for the unauthorized smartphone and unreadable path.
