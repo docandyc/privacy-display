@@ -16,6 +16,7 @@ def test_real_engine_ocr_covers_every_table_profile_in_order():
         ("original", "Original"),
         ("mask_only", "Mask only"),
         ("mask_noise", "Mask + noise"),
+        ("strong", "Strong"),
         ("deployed", "Deployed"),
         ("capture_hardened", "Capture-\nhardened"),
     ]

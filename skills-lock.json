@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "skills": {
+    "academic-paper-reviewer": {
+      "source": "imbad0202/academic-research-skills",
+      "sourceType": "github",
+      "skillPath": "academic-paper-reviewer/SKILL.md",
+      "computedHash": "e3f7020c4fc4db07a0573c74b7826b29cfb96ac53788689298f6cae7fd8af2d9"
+    },
+    "academic-search": {
+      "source": "claude-office-skills/skills",
+      "sourceType": "github",
+      "skillPath": "academic-search/SKILL.md",
+      "computedHash": "b82b97a44b44bad390009ccdd7f0adf35390fe7b6690cb05843d752629fdaaeb"
+    },
+    "brainstorming": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/brainstorming/SKILL.md",
+      "computedHash": "253570c46990ea018dd4520dba80cd77c35f9e5a8654057da1812face7be30cd"
+    },
+    "humanizer-zh": {
+      "source": "op7418/humanizer-zh",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "559f73948d6b9d67d67d463b53b692207931cc074039058ac0a5fcdbb3f513ee"
+    },
+    "ml-paper-writing": {
+      "source": "zechenzhangagi/ai-research-skills",
+      "sourceType": "github",
+      "skillPath": "20-ml-paper-writing/ml-paper-writing/SKILL.md",
+      "computedHash": "3d5dd06f6a0369a6576fd1098a20dc0204d92286c161da9a4e26ef360e8d6072"
+    },
+    "nature-polishing": {
+      "source": "yuan1z0825/nature-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nature-polishing/SKILL.md",
+      "computedHash": "b6b8867b8e093c7ffb5763eb74db04902f6e905d7b315a91846930fd9648a580"
+    },
+    "nature-reader": {
+      "source": "yuan1z0825/nature-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nature-reader/SKILL.md",
+      "computedHash": "762de47bef586d3fb2f1eb2502fdda7849dcf0a05cffa38fb544e75aff1aa549"
+    },
+    "nature-writing": {
+      "source": "yuan1z0825/nature-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nature-writing/SKILL.md",
+      "computedHash": "e92985604dc8ed05cc2c5394776f847807035c2f6e12ad6061d6c1ba8225a112"
+    },
+    "research-paper-writer": {
+      "source": "ailabs-393/ai-labs-claude-skills",
+      "sourceType": "github",
+      "skillPath": "packages/skills/research-paper-writer/SKILL.md",
+      "computedHash": "67be14e704ff0c2972e4fcfd164bffa4504898590ed43276d6ada1a376934748"
+    },
+    "scientific-writing": {
+      "source": "boom5426/nature-paper-skills",
+      "sourceType": "github",
+      "skillPath": "skills/core/scientific-writing/SKILL.md",
+      "computedHash": "10a180a20b728969a893c6cafe2a4bcea32730836aef447ee2433c8d8d0f2884"
+    },
+    "weights-and-biases": {
+      "source": "zechenzhangagi/ai-research-skills",
+      "sourceType": "github",
+      "skillPath": "13-mlops/weights-and-biases/SKILL.md",
+      "computedHash": "6d98bac42f756c4ab15701e9aedd9f62d6f1d65dedf050d6c9814dc1525005fa"
+    }
+  }
+}

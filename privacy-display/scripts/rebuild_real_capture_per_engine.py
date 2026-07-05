@@ -25,6 +25,7 @@ PROFILE_MAP = {
     "original": "original",
     "mask_only": "mask_only",
     "mask_noise": "mask_noise",
+    "strong": "anti_ocr",
     "deployed": "deployed",
     "capture_hardened": "vlm",  # historical label for the capture-hardened profile
 }

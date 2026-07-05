@@ -20,6 +20,7 @@ PROFILES = [
     ("original", "Original"),
     ("mask_only", "Mask only"),
     ("mask_noise", "Mask + noise"),
+    ("strong", "Strong"),
     ("deployed", "Deployed"),
     ("capture_hardened", "Capture-\nhardened"),
 ]
@@ -30,7 +31,7 @@ def main() -> None:
 
     x = np.arange(len(ENGINES))
     n_profiles = len(PROFILES)
-    w = 0.16
+    w = 0.135
     offsets = np.arange(n_profiles) * w - (n_profiles - 1) * w / 2
 
     colors = [
