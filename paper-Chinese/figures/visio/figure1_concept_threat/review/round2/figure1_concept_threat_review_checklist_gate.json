@@ -1,0 +1,9 @@
+{
+  "findings_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure1_concept_threat\\review\\round2\\figure1_concept_threat_review_findings.json",
+  "status": "pass",
+  "failures": [],
+  "warnings": [],
+  "topology_count": 11,
+  "visual_count": 8,
+  "failed_checklist_ids": []
+}

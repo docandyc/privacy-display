@@ -1,0 +1,2909 @@
+{
+  "version": "0.1",
+  "metadata": {
+    "title": "Physical visual eavesdropping and asymmetric perception",
+    "created_by": "codex.visiomaster.fresh_round1",
+    "style_profile": "paper_white",
+    "fidelity": "exact",
+    "replica_review_mode": "strict_replica",
+    "replica_stage": "layout_topology",
+    "source_image": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/source/original.png",
+    "source_aspect_ratio": 1.5,
+    "region_strategy": "region_first",
+    "font_scale": {
+      "panel_title": 8.3,
+      "body": 7.0,
+      "small_label": 6.7,
+      "display_text": 7.5
+    },
+    "notes": [
+      "Fresh source-driven editorial vector reconstruction.",
+      "All scientific labels, displays, subframes, and connectors remain editable.",
+      "Office decoration is simplified only where it does not carry scientific meaning."
+    ],
+    "source_visual_inventory": {
+      "analysis_basis": "visual_llm_source_image",
+      "language_profile": "english_labels",
+      "do_not_translate": true,
+      "unknown_text_policy": "mark_unreadable_do_not_invent",
+      "scene_authoring_mode": "fresh_from_source_inventory",
+      "prior_scene_policy": "do_not_read_or_patch_prior_round_scene",
+      "regions": [
+        {
+          "id": "global_layout",
+          "source_bbox_px": [
+            0,
+            0,
+            1536,
+            1024
+          ],
+          "required_crop_types": [
+            "global"
+          ],
+          "required_labels": [
+            "(a) Physical visual eavesdropping",
+            "(b) Asymmetric perception"
+          ],
+          "required_formulas": [],
+          "required_component_motifs": [
+            "two-panel 3:2 concept figure",
+            "central divider"
+          ],
+          "required_edge_motifs": [
+            "physical capture cone",
+            "human and camera outcome branches"
+          ],
+          "required_ports_or_boundaries": [
+            "central panel divider"
+          ],
+          "text_layout_facts": [
+            "panel headings share the top band"
+          ],
+          "box_style_facts": [
+            "white background",
+            "no visible outer frame"
+          ],
+          "line_style_facts": [
+            "navy structural line art",
+            "green and orange-red semantic routes"
+          ],
+          "shadow_facts": [
+            "none"
+          ],
+          "density_facts": [
+            "balanced left scene and right mechanism"
+          ],
+          "uncertain_text": []
+        },
+        {
+          "id": "physical_scene",
+          "source_bbox_px": [
+            0,
+            0,
+            730,
+            1024
+          ],
+          "required_crop_types": [
+            "input",
+            "small_text"
+          ],
+          "required_labels": [
+            "(a) Physical visual eavesdropping",
+            "Authorized user",
+            "Sensitive display",
+            "Smartphone camera",
+            "PRIVATE DATA"
+          ],
+          "required_formulas": [],
+          "required_component_motifs": [
+            "seated authorized user",
+            "desktop sensitive display",
+            "one smartphone camera",
+            "office desk and chair"
+          ],
+          "required_edge_motifs": [
+            "two dashed orange-red capture rays"
+          ],
+          "required_ports_or_boundaries": [
+            "thin central panel divider"
+          ],
+          "text_layout_facts": [
+            "panel heading is one line",
+            "object labels occupy dedicated rows",
+            "PRIVATE and DATA use two centered lines"
+          ],
+          "box_style_facts": [
+            "flat white office line art",
+            "pale blue monitor screen"
+          ],
+          "line_style_facts": [
+            "navy structural outlines",
+            "dashed orange-red capture cone"
+          ],
+          "shadow_facts": [
+            "none"
+          ],
+          "density_facts": [
+            "main person-screen-phone triangle dominates"
+          ],
+          "uncertain_text": []
+        },
+        {
+          "id": "subframe_row",
+          "source_bbox_px": [
+            760,
+            350,
+            1500,
+            610
+          ],
+          "required_crop_types": [
+            "core",
+            "arrow_dense",
+            "small_text"
+          ],
+          "required_labels": [
+            "Rapid complementary subframes",
+            "Fast time"
+          ],
+          "required_formulas": [],
+          "required_component_motifs": [
+            "four sparse display thumbnails",
+            "one selected exposure bracket"
+          ],
+          "required_edge_motifs": [
+            "right-pointing fast-time arrow"
+          ],
+          "required_ports_or_boundaries": [
+            "selected second subframe"
+          ],
+          "text_layout_facts": [
+            "four thumbnails share one baseline"
+          ],
+          "box_style_facts": [
+            "light-cyan screens",
+            "navy sparse pixels"
+          ],
+          "line_style_facts": [
+            "navy time axis",
+            "orange-red selection bracket"
+          ],
+          "shadow_facts": [
+            "none"
+          ],
+          "density_facts": [
+            "compact row with equal gaps"
+          ],
+          "uncertain_text": []
+        },
+        {
+          "id": "human_output",
+          "source_bbox_px": [
+            900,
+            60,
+            1510,
+            350
+          ],
+          "required_crop_types": [
+            "output",
+            "arrow_dense",
+            "small_text"
+          ],
+          "required_labels": [
+            "Human eye",
+            "Temporal integration ≈ 50 ms",
+            "Readable",
+            "PRIVATE DATA"
+          ],
+          "required_formulas": [],
+          "required_component_motifs": [
+            "eye",
+            "readable display"
+          ],
+          "required_edge_motifs": [
+            "four green subframe-to-eye arrows",
+            "green eye-to-display arrow"
+          ],
+          "required_ports_or_boundaries": [
+            "four-to-one integration"
+          ],
+          "text_layout_facts": [
+            "integration label uses two dedicated lines"
+          ],
+          "box_style_facts": [
+            "green outline and labels"
+          ],
+          "line_style_facts": [
+            "solid green arrows"
+          ],
+          "shadow_facts": [
+            "none"
+          ],
+          "density_facts": [
+            "eye and readable display dominate"
+          ],
+          "uncertain_text": []
+        },
+        {
+          "id": "camera_output",
+          "source_bbox_px": [
+            870,
+            610,
+            1536,
+            940
+          ],
+          "required_crop_types": [
+            "output",
+            "arrow_dense",
+            "small_text"
+          ],
+          "required_labels": [
+            "Camera",
+            "Instantaneous sampling",
+            "Unreadable fragment",
+            "OCR"
+          ],
+          "required_formulas": [],
+          "required_component_motifs": [
+            "camera",
+            "sparse fragment",
+            "OCR failure"
+          ],
+          "required_edge_motifs": [
+            "selected frame to camera",
+            "camera to fragment",
+            "fragment to OCR"
+          ],
+          "required_ports_or_boundaries": [
+            "one-frame selection"
+          ],
+          "text_layout_facts": [
+            "labels use separate rows below objects"
+          ],
+          "box_style_facts": [
+            "orange-red outline and labels"
+          ],
+          "line_style_facts": [
+            "solid orange-red local arrows"
+          ],
+          "shadow_facts": [
+            "none"
+          ],
+          "density_facts": [
+            "three-object horizontal outcome chain"
+          ],
+          "uncertain_text": []
+        }
+      ]
+    },
+    "region_plan": [
+      {
+        "id": "global_layout",
+        "crop_type": "global",
+        "source_bbox_px": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "target_bbox": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "review_focus": "global layout, two panels, page aspect"
+      },
+      {
+        "id": "physical_input",
+        "crop_type": "input",
+        "source_bbox_px": [
+          0,
+          0,
+          730,
+          1024
+        ],
+        "target_bbox": [
+          20,
+          20,
+          710,
+          1000
+        ],
+        "container_id": "physical_scene",
+        "review_focus": "physical input threat and labels"
+      },
+      {
+        "id": "subframe_core",
+        "crop_type": "core",
+        "source_bbox_px": [
+          760,
+          350,
+          1500,
+          610
+        ],
+        "target_bbox": [
+          750,
+          350,
+          1510,
+          620
+        ],
+        "container_id": "subframe_region",
+        "review_focus": "core subframe row and selection"
+      },
+      {
+        "id": "human_output",
+        "crop_type": "output",
+        "source_bbox_px": [
+          900,
+          60,
+          1510,
+          350
+        ],
+        "target_bbox": [
+          830,
+          80,
+          1510,
+          350
+        ],
+        "container_id": "human_region",
+        "review_focus": "right output human integration"
+      },
+      {
+        "id": "camera_output",
+        "crop_type": "output",
+        "source_bbox_px": [
+          870,
+          610,
+          1536,
+          940
+        ],
+        "target_bbox": [
+          850,
+          650,
+          1520,
+          940
+        ],
+        "container_id": "camera_region",
+        "review_focus": "right output camera sampling"
+      },
+      {
+        "id": "arrow_dense",
+        "crop_type": "arrow_dense",
+        "source_bbox_px": [
+          760,
+          120,
+          1536,
+          900
+        ],
+        "target_bbox": [
+          760,
+          120,
+          1520,
+          930
+        ],
+        "review_focus": "arrow dense topology and selected-frame route"
+      },
+      {
+        "id": "small_text",
+        "crop_type": "small_text",
+        "source_bbox_px": [
+          20,
+          0,
+          1536,
+          960
+        ],
+        "target_bbox": [
+          20,
+          0,
+          1520,
+          960
+        ],
+        "review_focus": "small text labels and display words"
+      }
+    ],
+    "arrow_plan": [
+      {
+        "id": "A001",
+        "source_region": "physical_scene",
+        "source_fact": "Upper dashed capture ray runs from the display to the smartphone.",
+        "from_visual_object": "sensitive_display",
+        "from": "sensitive_display (right edge upper half)",
+        "from_anchor_description": "right edge upper half",
+        "to_visual_object": "smartphone",
+        "to": "smartphone (left edge upper half)",
+        "to_anchor_description": "left edge upper half",
+        "direction": "left_to_right",
+        "route_shape": "diagonal",
+        "line_style": "dashed",
+        "arrowhead": "none",
+        "semantic_intent": "callout",
+        "source_bbox_px": [
+          425,
+          395,
+          640,
+          550
+        ],
+        "must_not_cross": [
+          "PRIVATE DATA",
+          "Smartphone camera"
+        ],
+        "relative_position_facts": [
+          "upper boundary of capture cone"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A002",
+        "source_region": "physical_scene",
+        "source_fact": "Lower dashed capture ray runs from the display to the smartphone.",
+        "from_visual_object": "sensitive_display",
+        "from": "sensitive_display (right edge lower half)",
+        "from_anchor_description": "right edge lower half",
+        "to_visual_object": "smartphone",
+        "to": "smartphone (left edge lower half)",
+        "to_anchor_description": "left edge lower half",
+        "direction": "left_to_right",
+        "route_shape": "diagonal",
+        "line_style": "dashed",
+        "arrowhead": "none",
+        "semantic_intent": "callout",
+        "source_bbox_px": [
+          420,
+          455,
+          640,
+          650
+        ],
+        "must_not_cross": [
+          "desk label",
+          "Smartphone camera"
+        ],
+        "relative_position_facts": [
+          "lower boundary of capture cone"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A003",
+        "source_region": "subframe_row",
+        "source_fact": "Fast-time arrow runs rightward above the four subframes.",
+        "from_visual_object": "time_start",
+        "from": "time_start (free point)",
+        "from_anchor_description": "free point",
+        "to_visual_object": "time_end",
+        "to": "time_end (free point)",
+        "to_anchor_description": "free point",
+        "direction": "left_to_right",
+        "route_shape": "straight_horizontal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "annotation",
+        "source_bbox_px": [
+          780,
+          410,
+          1410,
+          450
+        ],
+        "must_not_cross": [
+          "Rapid complementary subframes"
+        ],
+        "relative_position_facts": [
+          "above subframe row"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A004",
+        "source_region": "human_output",
+        "source_fact": "First subframe feeds the human eye.",
+        "from_visual_object": "subframe_1",
+        "from": "subframe_1 (top edge)",
+        "from_anchor_description": "top edge",
+        "to_visual_object": "human_eye",
+        "to": "human_eye (lower-left edge)",
+        "to_anchor_description": "lower-left edge",
+        "direction": "bottom_to_top",
+        "route_shape": "diagonal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          820,
+          220,
+          1080,
+          500
+        ],
+        "must_not_cross": [
+          "Rapid complementary subframes"
+        ],
+        "relative_position_facts": [
+          "leftmost integration leg"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A005",
+        "source_region": "human_output",
+        "source_fact": "Second subframe feeds the human eye.",
+        "from_visual_object": "subframe_2",
+        "from": "subframe_2 (top edge)",
+        "from_anchor_description": "top edge",
+        "to_visual_object": "human_eye",
+        "to": "human_eye (lower-left center)",
+        "to_anchor_description": "lower-left center",
+        "direction": "bottom_to_top",
+        "route_shape": "diagonal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          950,
+          220,
+          1100,
+          500
+        ],
+        "must_not_cross": [
+          "Rapid complementary subframes"
+        ],
+        "relative_position_facts": [
+          "second integration leg"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A006",
+        "source_region": "human_output",
+        "source_fact": "Third subframe feeds the human eye.",
+        "from_visual_object": "subframe_3",
+        "from": "subframe_3 (top edge)",
+        "from_anchor_description": "top edge",
+        "to_visual_object": "human_eye",
+        "to": "human_eye (lower-right center)",
+        "to_anchor_description": "lower-right center",
+        "direction": "bottom_to_top",
+        "route_shape": "diagonal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          1080,
+          220,
+          1160,
+          500
+        ],
+        "must_not_cross": [
+          "Rapid complementary subframes"
+        ],
+        "relative_position_facts": [
+          "third integration leg"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A007",
+        "source_region": "human_output",
+        "source_fact": "Fourth subframe feeds the human eye.",
+        "from_visual_object": "subframe_4",
+        "from": "subframe_4 (top edge)",
+        "from_anchor_description": "top edge",
+        "to_visual_object": "human_eye",
+        "to": "human_eye (lower-right edge)",
+        "to_anchor_description": "lower-right edge",
+        "direction": "bottom_to_top",
+        "route_shape": "diagonal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          1170,
+          220,
+          1330,
+          500
+        ],
+        "must_not_cross": [
+          "Rapid complementary subframes"
+        ],
+        "relative_position_facts": [
+          "rightmost integration leg"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A008",
+        "source_region": "human_output",
+        "source_fact": "The human eye feeds the readable display.",
+        "from_visual_object": "human_eye",
+        "from": "human_eye (right edge midpoint)",
+        "from_anchor_description": "right edge midpoint",
+        "to_visual_object": "readable_display",
+        "to": "readable_display (left edge midpoint)",
+        "to_anchor_description": "left edge midpoint",
+        "direction": "left_to_right",
+        "route_shape": "straight_horizontal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          1180,
+          170,
+          1310,
+          230
+        ],
+        "must_not_cross": [
+          "Temporal integration label"
+        ],
+        "relative_position_facts": [
+          "upper human lane"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A009",
+        "source_region": "camera_output",
+        "source_fact": "The selected second subframe feeds the camera.",
+        "from_visual_object": "subframe_2",
+        "from": "subframe_2 (bottom edge midpoint)",
+        "from_anchor_description": "bottom edge midpoint",
+        "to_visual_object": "camera_icon",
+        "to": "camera_icon (top edge midpoint)",
+        "to_anchor_description": "top edge midpoint",
+        "direction": "top_to_bottom",
+        "route_shape": "straight_vertical",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          970,
+          540,
+          1030,
+          730
+        ],
+        "must_not_cross": [
+          "Instantaneous sampling"
+        ],
+        "relative_position_facts": [
+          "vertical selection lane"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A010",
+        "source_region": "camera_output",
+        "source_fact": "The camera outputs one unreadable fragment.",
+        "from_visual_object": "camera_icon",
+        "from": "camera_icon (right edge midpoint)",
+        "from_anchor_description": "right edge midpoint",
+        "to_visual_object": "fragment_display",
+        "to": "fragment_display (left edge midpoint)",
+        "to_anchor_description": "left edge midpoint",
+        "direction": "left_to_right",
+        "route_shape": "straight_horizontal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          1040,
+          720,
+          1190,
+          770
+        ],
+        "must_not_cross": [
+          "Instantaneous sampling"
+        ],
+        "relative_position_facts": [
+          "lower camera lane"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A011",
+        "source_region": "camera_output",
+        "source_fact": "The unreadable fragment reaches OCR failure.",
+        "from_visual_object": "fragment_display",
+        "from": "fragment_display (right edge midpoint)",
+        "from_anchor_description": "right edge midpoint",
+        "to_visual_object": "ocr_failure",
+        "to": "ocr_failure (left edge midpoint)",
+        "to_anchor_description": "left edge midpoint",
+        "direction": "left_to_right",
+        "route_shape": "straight_horizontal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "data_flow",
+        "source_bbox_px": [
+          1300,
+          720,
+          1420,
+          780
+        ],
+        "must_not_cross": [
+          "Unreadable fragment"
+        ],
+        "relative_position_facts": [
+          "lower outcome lane"
+        ],
+        "certainty": "certain"
+      }
+    ]
+  },
+  "page": {
+    "width": 1536,
+    "height": 1024,
+    "units": "px",
+    "origin": "top-left",
+    "target_width_in": 3.5,
+    "background": "#FFFFFF"
+  },
+  "nodes": [
+    {
+      "id": "page_background",
+      "type": "page_background",
+      "x": 0,
+      "y": 0,
+      "w": 1536,
+      "h": 1024,
+      "text": "",
+      "z": -100
+    },
+    {
+      "id": "physical_scene",
+      "type": "audit_region",
+      "x": 20,
+      "y": 20,
+      "w": 690,
+      "h": 980,
+      "text": "",
+      "z": -10,
+      "label": "Physical visual eavesdropping",
+      "source_bbox_px": [
+        0,
+        0,
+        730,
+        1024
+      ],
+      "source_aspect_ratio": 0.713,
+      "style": {
+        "fill": "none",
+        "line": "none"
+      }
+    },
+    {
+      "id": "subframe_region",
+      "type": "audit_region",
+      "x": 750,
+      "y": 350,
+      "w": 760,
+      "h": 270,
+      "text": "",
+      "z": -10,
+      "label": "Rapid complementary subframes",
+      "source_bbox_px": [
+        760,
+        350,
+        1500,
+        610
+      ],
+      "source_aspect_ratio": 2.846,
+      "style": {
+        "fill": "none",
+        "line": "none"
+      }
+    },
+    {
+      "id": "human_region",
+      "type": "audit_region",
+      "x": 830,
+      "y": 80,
+      "w": 680,
+      "h": 270,
+      "text": "",
+      "z": -10,
+      "label": "Human integration",
+      "source_bbox_px": [
+        900,
+        60,
+        1510,
+        350
+      ],
+      "source_aspect_ratio": 2.103,
+      "style": {
+        "fill": "none",
+        "line": "none"
+      }
+    },
+    {
+      "id": "camera_region",
+      "type": "audit_region",
+      "x": 850,
+      "y": 650,
+      "w": 670,
+      "h": 290,
+      "text": "",
+      "z": -10,
+      "label": "Camera sampling",
+      "source_bbox_px": [
+        870,
+        610,
+        1536,
+        940
+      ],
+      "source_aspect_ratio": 2.018,
+      "style": {
+        "fill": "none",
+        "line": "none"
+      }
+    },
+    {
+      "id": "panel_divider",
+      "type": "polygon_node",
+      "x": 720,
+      "y": 20,
+      "w": 4,
+      "h": 980,
+      "text": "",
+      "z": 5,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.6
+      }
+    },
+    {
+      "id": "panel_a_title",
+      "type": "text_block",
+      "x": 38,
+      "y": 22,
+      "w": 665,
+      "h": 60,
+      "text": "(a)  Physical visual eavesdropping",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "panel_title",
+      "text_role": "panel_title",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.2,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 0,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "authorized_line1",
+      "type": "text_block",
+      "x": 38,
+      "y": 235,
+      "w": 190,
+      "h": 48,
+      "text": "Authorized",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "authorized_line2",
+      "type": "text_block",
+      "x": 38,
+      "y": 278,
+      "w": 190,
+      "h": 48,
+      "text": "user",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "sensitive_line1",
+      "type": "text_block",
+      "x": 278,
+      "y": 175,
+      "w": 190,
+      "h": 48,
+      "text": "Sensitive",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "sensitive_line2",
+      "type": "text_block",
+      "x": 278,
+      "y": 218,
+      "w": 190,
+      "h": 48,
+      "text": "display",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "phone_line1",
+      "type": "text_block",
+      "x": 505,
+      "y": 765,
+      "w": 190,
+      "h": 48,
+      "text": "Smartphone",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "phone_line2",
+      "type": "text_block",
+      "x": 505,
+      "y": 808,
+      "w": 190,
+      "h": 48,
+      "text": "camera",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "chair_back",
+      "type": "rounded_process",
+      "x": 55,
+      "y": 500,
+      "w": 120,
+      "h": 300,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.2,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "chair_seat",
+      "type": "rounded_process",
+      "x": 105,
+      "y": 725,
+      "w": 185,
+      "h": 52,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.2,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "chair_post",
+      "type": "process_box",
+      "x": 150,
+      "y": 777,
+      "w": 25,
+      "h": 115,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "chair_base",
+      "type": "polygon_node",
+      "x": 95,
+      "y": 875,
+      "w": 150,
+      "h": 75,
+      "text": "",
+      "z": 8,
+      "container_id": "physical_scene",
+      "points": [
+        [
+          0.5,
+          0
+        ],
+        [
+          0.5,
+          0.35
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0.5,
+          0.35
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "style": {
+        "fill": "none",
+        "line": "#17365D",
+        "line_weight_pt": 1.1
+      }
+    },
+    {
+      "id": "user_torso",
+      "type": "polygon_node",
+      "x": 90,
+      "y": 455,
+      "w": 230,
+      "h": 290,
+      "text": "",
+      "z": 11,
+      "container_id": "physical_scene",
+      "points": [
+        [
+          0.32,
+          0
+        ],
+        [
+          0.62,
+          0.08
+        ],
+        [
+          0.85,
+          0.35
+        ],
+        [
+          1,
+          0.75
+        ],
+        [
+          0.75,
+          1
+        ],
+        [
+          0.18,
+          0.88
+        ],
+        [
+          0,
+          0.38
+        ]
+      ],
+      "style": {
+        "fill": "#F7FAFC",
+        "line": "#17365D",
+        "line_weight_pt": 1.2
+      }
+    },
+    {
+      "id": "user_head",
+      "type": "ellipse_node",
+      "x": 145,
+      "y": 335,
+      "w": 90,
+      "h": 115,
+      "text": "",
+      "z": 12,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.2
+      }
+    },
+    {
+      "id": "user_hair",
+      "type": "polygon_node",
+      "x": 132,
+      "y": 320,
+      "w": 105,
+      "h": 83,
+      "text": "",
+      "z": 13,
+      "container_id": "physical_scene",
+      "points": [
+        [
+          0.05,
+          0.6
+        ],
+        [
+          0.2,
+          0.18
+        ],
+        [
+          0.55,
+          0
+        ],
+        [
+          0.9,
+          0.18
+        ],
+        [
+          1,
+          0.48
+        ],
+        [
+          0.72,
+          0.55
+        ],
+        [
+          0.62,
+          1
+        ],
+        [
+          0.35,
+          0.8
+        ]
+      ],
+      "style": {
+        "fill": "#3B4F75",
+        "line": "#17365D",
+        "line_weight_pt": 1.0
+      }
+    },
+    {
+      "id": "user_arm",
+      "type": "polygon_node",
+      "x": 220,
+      "y": 500,
+      "w": 175,
+      "h": 110,
+      "text": "",
+      "z": 13,
+      "container_id": "physical_scene",
+      "points": [
+        [
+          0,
+          0.1
+        ],
+        [
+          0.22,
+          0
+        ],
+        [
+          0.62,
+          0.55
+        ],
+        [
+          1,
+          0.55
+        ],
+        [
+          1,
+          0.82
+        ],
+        [
+          0.55,
+          0.9
+        ],
+        [
+          0.18,
+          0.5
+        ]
+      ],
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.1
+      }
+    },
+    {
+      "id": "desk_top",
+      "type": "process_box",
+      "x": 45,
+      "y": 575,
+      "w": 535,
+      "h": 45,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.2,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "desk_cabinet",
+      "type": "process_box",
+      "x": 425,
+      "y": 620,
+      "w": 150,
+      "h": 260,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.2,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "desk_leg",
+      "type": "process_box",
+      "x": 65,
+      "y": 620,
+      "w": 25,
+      "h": 225,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "keyboard",
+      "type": "process_box",
+      "x": 270,
+      "y": 535,
+      "w": 145,
+      "h": 34,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "bookshelf",
+      "type": "process_box",
+      "x": 560,
+      "y": 225,
+      "w": 105,
+      "h": 250,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "shelf_1",
+      "type": "process_box",
+      "x": 565,
+      "y": 305,
+      "w": 95,
+      "h": 8,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "shelf_2",
+      "type": "process_box",
+      "x": 565,
+      "y": 390,
+      "w": 95,
+      "h": 8,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "sensitive_display",
+      "type": "rounded_process",
+      "x": 250,
+      "y": 280,
+      "w": 230,
+      "h": 205,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.35,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "display_screen",
+      "type": "process_box",
+      "x": 265,
+      "y": 300,
+      "w": 200,
+      "h": 145,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#DFF3FA",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "display_private",
+      "type": "text_block",
+      "x": 280,
+      "y": 320,
+      "w": 170,
+      "h": 52,
+      "text": "PRIVATE",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "node_text",
+      "text_role": "node_text",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.6,
+        "min_font_size_pt": 6.8999999999999995,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "display_data",
+      "type": "text_block",
+      "x": 280,
+      "y": 382,
+      "w": 170,
+      "h": 52,
+      "text": "DATA",
+      "z": 20,
+      "container_id": "physical_scene",
+      "semantic_role": "node_text",
+      "text_role": "node_text",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.6,
+        "min_font_size_pt": 6.8999999999999995,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "display_stand",
+      "type": "process_box",
+      "x": 345,
+      "y": 485,
+      "w": 38,
+      "h": 48,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "display_base",
+      "type": "rounded_process",
+      "x": 310,
+      "y": 528,
+      "w": 110,
+      "h": 18,
+      "text": "",
+      "z": 10,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "phone_hand",
+      "type": "ellipse_node",
+      "x": 585,
+      "y": 625,
+      "w": 100,
+      "h": 190,
+      "text": "",
+      "z": 9,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFF7F2",
+        "line": "#D94722",
+        "line_weight_pt": 1.0
+      }
+    },
+    {
+      "id": "smartphone",
+      "type": "rounded_process",
+      "x": 610,
+      "y": 520,
+      "w": 68,
+      "h": 150,
+      "text": "",
+      "z": 14,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#D94722",
+        "line_weight_pt": 1.35,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "phone_screen",
+      "type": "process_box",
+      "x": 619,
+      "y": 540,
+      "w": 50,
+      "h": 105,
+      "text": "",
+      "z": 15,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFF6F2",
+        "line": "#D94722",
+        "line_weight_pt": 0.8,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "phone_lens",
+      "type": "ellipse_node",
+      "x": 621,
+      "y": 526,
+      "w": 10,
+      "h": 10,
+      "text": "",
+      "z": 16,
+      "container_id": "physical_scene",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#D94722",
+        "line_weight_pt": 0.8
+      }
+    },
+    {
+      "id": "panel_b_title",
+      "type": "text_block",
+      "x": 760,
+      "y": 22,
+      "w": 740,
+      "h": 60,
+      "text": "(b)  Asymmetric perception",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "panel_title",
+      "text_role": "panel_title",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.8,
+        "min_font_size_pt": 7.1,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "human_eye_label",
+      "type": "text_block",
+      "x": 1010,
+      "y": 92,
+      "w": 220,
+      "h": 48,
+      "text": "Human eye",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.2,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#177A36",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "human_eye",
+      "type": "ellipse_node",
+      "x": 1020,
+      "y": 150,
+      "w": 160,
+      "h": 90,
+      "text": "",
+      "z": 13,
+      "container_id": "human_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#177A36",
+        "line_weight_pt": 1.35
+      }
+    },
+    {
+      "id": "human_pupil",
+      "type": "ellipse_node",
+      "x": 1080,
+      "y": 167,
+      "w": 42,
+      "h": 56,
+      "text": "",
+      "z": 14,
+      "container_id": "human_region",
+      "style": {
+        "fill": "#179447",
+        "line": "#177A36",
+        "line_weight_pt": 1.0
+      }
+    },
+    {
+      "id": "integration_label",
+      "type": "text_block",
+      "x": 1280,
+      "y": 285,
+      "w": 210,
+      "h": 42,
+      "text": "Temporal integration",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.6,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#177A36",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "integration_time",
+      "type": "text_block",
+      "x": 1280,
+      "y": 325,
+      "w": 210,
+      "h": 42,
+      "text": "≈ 50 ms",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#177A36",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "readable_display",
+      "type": "rounded_process",
+      "x": 1320,
+      "y": 130,
+      "w": 170,
+      "h": 145,
+      "text": "",
+      "z": 10,
+      "container_id": "human_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.35,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "readable_screen",
+      "type": "process_box",
+      "x": 1332,
+      "y": 145,
+      "w": 146,
+      "h": 100,
+      "text": "",
+      "z": 10,
+      "container_id": "human_region",
+      "style": {
+        "fill": "#DFF3FA",
+        "line": "#17365D",
+        "line_weight_pt": 0.9,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "readable_private",
+      "type": "text_block",
+      "x": 1340,
+      "y": 153,
+      "w": 130,
+      "h": 40,
+      "text": "PRIVATE",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "node_text",
+      "text_role": "node_text",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.2,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "readable_data",
+      "type": "text_block",
+      "x": 1340,
+      "y": 198,
+      "w": 130,
+      "h": 40,
+      "text": "DATA",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "node_text",
+      "text_role": "node_text",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.2,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "readable_stand",
+      "type": "process_box",
+      "x": 1390,
+      "y": 275,
+      "w": 30,
+      "h": 28,
+      "text": "",
+      "z": 10,
+      "container_id": "human_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 0.9,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "readable_base",
+      "type": "process_box",
+      "x": 1365,
+      "y": 300,
+      "w": 80,
+      "h": 12,
+      "text": "",
+      "z": 10,
+      "container_id": "human_region",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "readable_label",
+      "type": "text_block",
+      "x": 1120,
+      "y": 285,
+      "w": 140,
+      "h": 42,
+      "text": "Readable",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "output_label",
+      "text_role": "output_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#177A36",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "subframe_label",
+      "type": "text_block",
+      "x": 1090,
+      "y": 600,
+      "w": 400,
+      "h": 52,
+      "text": "Rapid complementary subframes",
+      "z": 20,
+      "container_id": "subframe_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "fast_time_label",
+      "type": "text_block",
+      "x": 1360,
+      "y": 400,
+      "w": 130,
+      "h": 42,
+      "text": "Fast time",
+      "z": 20,
+      "container_id": "subframe_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "subframe_1",
+      "type": "rounded_process",
+      "x": 785,
+      "y": 470,
+      "w": 120,
+      "h": 100,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.1,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_grid_1",
+      "type": "grid_matrix",
+      "x": 795,
+      "y": 480,
+      "w": 100,
+      "h": 72,
+      "text": "",
+      "z": 13,
+      "container_id": "subframe_region",
+      "rows": 4,
+      "cols": 5,
+      "colored_cells": [
+        [
+          0,
+          0,
+          "#17365D"
+        ],
+        [
+          0,
+          2,
+          "#17365D"
+        ],
+        [
+          2,
+          4,
+          "#17365D"
+        ],
+        [
+          3,
+          1,
+          "#17365D"
+        ]
+      ],
+      "style": {
+        "cell_fill": "#DFF3FA",
+        "grid_line": "#C5DEEA",
+        "grid_line_weight_pt": 0.25
+      }
+    },
+    {
+      "id": "subframe_1_base",
+      "type": "process_box",
+      "x": 820,
+      "y": 570,
+      "w": 50,
+      "h": 12,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_2",
+      "type": "rounded_process",
+      "x": 935,
+      "y": 470,
+      "w": 120,
+      "h": 100,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.1,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_grid_2",
+      "type": "grid_matrix",
+      "x": 945,
+      "y": 480,
+      "w": 100,
+      "h": 72,
+      "text": "",
+      "z": 13,
+      "container_id": "subframe_region",
+      "rows": 4,
+      "cols": 5,
+      "colored_cells": [
+        [
+          0,
+          1,
+          "#17365D"
+        ],
+        [
+          0,
+          3,
+          "#17365D"
+        ],
+        [
+          0,
+          4,
+          "#17365D"
+        ],
+        [
+          2,
+          2,
+          "#17365D"
+        ]
+      ],
+      "style": {
+        "cell_fill": "#DFF3FA",
+        "grid_line": "#C5DEEA",
+        "grid_line_weight_pt": 0.25
+      }
+    },
+    {
+      "id": "subframe_2_base",
+      "type": "process_box",
+      "x": 970,
+      "y": 570,
+      "w": 50,
+      "h": 12,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_3",
+      "type": "rounded_process",
+      "x": 1085,
+      "y": 470,
+      "w": 120,
+      "h": 100,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.1,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_grid_3",
+      "type": "grid_matrix",
+      "x": 1095,
+      "y": 480,
+      "w": 100,
+      "h": 72,
+      "text": "",
+      "z": 13,
+      "container_id": "subframe_region",
+      "rows": 4,
+      "cols": 5,
+      "colored_cells": [
+        [
+          1,
+          0,
+          "#17365D"
+        ],
+        [
+          2,
+          1,
+          "#17365D"
+        ],
+        [
+          3,
+          2,
+          "#17365D"
+        ],
+        [
+          2,
+          3,
+          "#17365D"
+        ],
+        [
+          1,
+          4,
+          "#17365D"
+        ]
+      ],
+      "style": {
+        "cell_fill": "#DFF3FA",
+        "grid_line": "#C5DEEA",
+        "grid_line_weight_pt": 0.25
+      }
+    },
+    {
+      "id": "subframe_3_base",
+      "type": "process_box",
+      "x": 1120,
+      "y": 570,
+      "w": 50,
+      "h": 12,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_4",
+      "type": "rounded_process",
+      "x": 1235,
+      "y": 470,
+      "w": 120,
+      "h": 100,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.1,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "subframe_grid_4",
+      "type": "grid_matrix",
+      "x": 1245,
+      "y": 480,
+      "w": 100,
+      "h": 72,
+      "text": "",
+      "z": 13,
+      "container_id": "subframe_region",
+      "rows": 4,
+      "cols": 5,
+      "colored_cells": [
+        [
+          0,
+          2,
+          "#17365D"
+        ],
+        [
+          0,
+          3,
+          "#17365D"
+        ],
+        [
+          1,
+          3,
+          "#17365D"
+        ],
+        [
+          2,
+          0,
+          "#17365D"
+        ],
+        [
+          3,
+          3,
+          "#17365D"
+        ]
+      ],
+      "style": {
+        "cell_fill": "#DFF3FA",
+        "grid_line": "#C5DEEA",
+        "grid_line_weight_pt": 0.25
+      }
+    },
+    {
+      "id": "subframe_4_base",
+      "type": "process_box",
+      "x": 1270,
+      "y": 570,
+      "w": 50,
+      "h": 12,
+      "text": "",
+      "z": 10,
+      "container_id": "subframe_region",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "selection_left",
+      "type": "bracket",
+      "x": 925,
+      "y": 455,
+      "w": 16,
+      "h": 135,
+      "text": "",
+      "z": 18,
+      "container_id": "subframe_region",
+      "orientation": "left",
+      "shape": "square",
+      "tick_positions": [
+        0,
+        1
+      ],
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.2
+      }
+    },
+    {
+      "id": "selection_right",
+      "type": "bracket",
+      "x": 1050,
+      "y": 455,
+      "w": 16,
+      "h": 135,
+      "text": "",
+      "z": 18,
+      "container_id": "subframe_region",
+      "orientation": "right",
+      "shape": "square",
+      "tick_positions": [
+        0,
+        1
+      ],
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.2
+      }
+    },
+    {
+      "id": "camera_icon",
+      "type": "rounded_process",
+      "x": 920,
+      "y": 700,
+      "w": 120,
+      "h": 90,
+      "text": "",
+      "z": 10,
+      "container_id": "camera_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#D94722",
+        "line_weight_pt": 1.35,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "camera_lens",
+      "type": "ellipse_node",
+      "x": 958,
+      "y": 720,
+      "w": 44,
+      "h": 44,
+      "text": "",
+      "z": 14,
+      "container_id": "camera_region",
+      "allow_overlap": true,
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#D94722",
+        "line_weight_pt": 1.2
+      }
+    },
+    {
+      "id": "camera_top",
+      "type": "process_box",
+      "x": 945,
+      "y": 685,
+      "w": 34,
+      "h": 18,
+      "text": "",
+      "z": 13,
+      "container_id": "camera_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#D94722",
+        "line_weight_pt": 1.0,
+        "rounding_in": 0.0,
+        "shadow": null
+      },
+      "allow_overlap": true
+    },
+    {
+      "id": "camera_label",
+      "type": "text_block",
+      "x": 905,
+      "y": 800,
+      "w": 150,
+      "h": 42,
+      "text": "Camera",
+      "z": 20,
+      "container_id": "camera_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "sampling_label",
+      "type": "text_block",
+      "x": 1040,
+      "y": 615,
+      "w": 190,
+      "h": 42,
+      "text": "Instantaneous",
+      "z": 20,
+      "container_id": "camera_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "sampling_label_2",
+      "type": "text_block",
+      "x": 1040,
+      "y": 655,
+      "w": 190,
+      "h": 42,
+      "text": "sampling",
+      "z": 20,
+      "container_id": "camera_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "fragment_display",
+      "type": "rounded_process",
+      "x": 1190,
+      "y": 700,
+      "w": 115,
+      "h": 90,
+      "text": "",
+      "z": 10,
+      "container_id": "camera_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#17365D",
+        "line_weight_pt": 1.1,
+        "rounding_in": 0.025,
+        "shadow": null
+      }
+    },
+    {
+      "id": "fragment_grid",
+      "type": "grid_matrix",
+      "x": 1200,
+      "y": 710,
+      "w": 95,
+      "h": 62,
+      "text": "",
+      "z": 13,
+      "container_id": "camera_region",
+      "rows": 4,
+      "cols": 5,
+      "colored_cells": [
+        [
+          0,
+          0,
+          "#17365D"
+        ],
+        [
+          3,
+          3,
+          "#17365D"
+        ]
+      ],
+      "style": {
+        "cell_fill": "#DFF3FA",
+        "grid_line": "#C5DEEA",
+        "grid_line_weight_pt": 0.25
+      }
+    },
+    {
+      "id": "fragment_base",
+      "type": "process_box",
+      "x": 1222,
+      "y": 790,
+      "w": 50,
+      "h": 12,
+      "text": "",
+      "z": 10,
+      "container_id": "camera_region",
+      "style": {
+        "fill": "#17365D",
+        "line": "#17365D",
+        "line_weight_pt": 0.5,
+        "rounding_in": 0.0,
+        "shadow": null
+      }
+    },
+    {
+      "id": "fragment_label",
+      "type": "text_block",
+      "x": 1160,
+      "y": 820,
+      "w": 175,
+      "h": 42,
+      "text": "Unreadable",
+      "z": 20,
+      "container_id": "camera_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "fragment_label_2",
+      "type": "text_block",
+      "x": 1160,
+      "y": 858,
+      "w": 175,
+      "h": 42,
+      "text": "fragment",
+      "z": 20,
+      "container_id": "camera_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#D94722",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "ocr_failure",
+      "type": "ellipse_node",
+      "x": 1390,
+      "y": 700,
+      "w": 105,
+      "h": 95,
+      "text": "OCR ×",
+      "z": 13,
+      "container_id": "camera_region",
+      "style": {
+        "fill": "#FFFFFF",
+        "line": "#D94722",
+        "line_weight_pt": 1.25,
+        "text_color": "#17365D",
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 7.0,
+        "min_font_size_pt": 6.5,
+        "font_weight": "bold",
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "capture_ray_upper",
+      "type": "line_segment",
+      "arrow_plan_id": "A001",
+      "from_point": [
+        465,
+        365
+      ],
+      "to_point": [
+        612,
+        545
+      ],
+      "route": "straight",
+      "allow_diagonal": true,
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.0,
+        "line_dash": "dash",
+        "end_arrow": "none"
+      },
+      "z": 30
+    },
+    {
+      "id": "capture_ray_lower",
+      "type": "line_segment",
+      "arrow_plan_id": "A002",
+      "from_point": [
+        465,
+        430
+      ],
+      "to_point": [
+        612,
+        630
+      ],
+      "route": "straight",
+      "allow_diagonal": true,
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.0,
+        "line_dash": "dash",
+        "end_arrow": "none"
+      },
+      "z": 30
+    },
+    {
+      "id": "time_axis",
+      "type": "lane_arrow",
+      "arrow_plan_id": "A003",
+      "from_point": [
+        785,
+        440
+      ],
+      "to_point": [
+        1350,
+        440
+      ],
+      "route": "horizontal",
+      "lane_axis": "horizontal",
+      "style": {
+        "line": "#17365D",
+        "line_weight_pt": 1.15,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "frame1_to_eye",
+      "type": "arrow_connector",
+      "arrow_plan_id": "A004",
+      "from": "subframe_1:top@0.50",
+      "to": "human_eye:bottom@0.15",
+      "route": "straight",
+      "allow_diagonal": true,
+      "allow_cross_container": true,
+      "style": {
+        "line": "#177A36",
+        "line_weight_pt": 1.2,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "frame2_to_eye",
+      "type": "arrow_connector",
+      "arrow_plan_id": "A005",
+      "from": "subframe_2:top@0.50",
+      "to": "human_eye:bottom@0.38",
+      "route": "straight",
+      "allow_diagonal": true,
+      "allow_cross_container": true,
+      "style": {
+        "line": "#177A36",
+        "line_weight_pt": 1.2,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "frame3_to_eye",
+      "type": "arrow_connector",
+      "arrow_plan_id": "A006",
+      "from": "subframe_3:top@0.50",
+      "to": "human_eye:bottom@0.62",
+      "route": "straight",
+      "allow_diagonal": true,
+      "allow_cross_container": true,
+      "style": {
+        "line": "#177A36",
+        "line_weight_pt": 1.2,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "frame4_to_eye",
+      "type": "arrow_connector",
+      "arrow_plan_id": "A007",
+      "from": "subframe_4:top@0.50",
+      "to": "human_eye:bottom@0.85",
+      "route": "straight",
+      "allow_diagonal": true,
+      "allow_cross_container": true,
+      "style": {
+        "line": "#177A36",
+        "line_weight_pt": 1.2,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "eye_to_readable",
+      "type": "lane_arrow",
+      "arrow_plan_id": "A008",
+      "from": "human_eye:right@0.50",
+      "to": "readable_display:left@0.50",
+      "route": "horizontal",
+      "lane_axis": "horizontal",
+      "style": {
+        "line": "#177A36",
+        "line_weight_pt": 1.25,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "selected_to_camera",
+      "type": "lane_arrow",
+      "arrow_plan_id": "A009",
+      "from": "subframe_2:bottom@0.50",
+      "to": "camera_icon:top@0.50",
+      "route": "vertical",
+      "lane_axis": "vertical",
+      "allow_cross_container": true,
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.25,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "camera_to_fragment",
+      "type": "lane_arrow",
+      "arrow_plan_id": "A010",
+      "from": "camera_icon:right@0.50",
+      "to": "fragment_display:left@0.50",
+      "route": "horizontal",
+      "lane_axis": "horizontal",
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.25,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    },
+    {
+      "id": "fragment_to_ocr",
+      "type": "lane_arrow",
+      "arrow_plan_id": "A011",
+      "from": "fragment_display:right@0.50",
+      "to": "ocr_failure:left@0.50",
+      "route": "horizontal",
+      "lane_axis": "horizontal",
+      "style": {
+        "line": "#D94722",
+        "line_weight_pt": 1.25,
+        "end_arrow": "triangle",
+        "arrow_size": "small"
+      },
+      "z": 25
+    }
+  ],
+  "assets": []
+}

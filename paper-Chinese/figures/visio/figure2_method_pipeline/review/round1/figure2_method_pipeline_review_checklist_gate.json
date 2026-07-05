@@ -1,0 +1,16 @@
+{
+  "findings_path": "E:\\毕设\\privacy-display\\paper\\figures\\visio\\figure2_method_pipeline\\review\\round1\\figure2_method_pipeline_review_findings.json",
+  "status": "pass",
+  "failures": [],
+  "warnings": [],
+  "topology_count": 15,
+  "visual_count": 9,
+  "failed_checklist_ids": [
+    "V002",
+    "V003",
+    "V004",
+    "V005",
+    "V006",
+    "V009"
+  ]
+}
