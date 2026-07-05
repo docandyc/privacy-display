@@ -228,6 +228,10 @@ A.~Milan, L.~Leal-Taix{\'e}, I.~Reid, S.~Roth, and K.~Schindler, ``{MOT16: A
   benchmark for multi-object tracking},'' \emph{arXiv preprint
   arXiv:1603.00831}, 2016.
 
+\bibitem{b_ieee1789}
+{IEEE}, ``{IEEE Recommended Practices for Modulating Current in High-Brightness
+  LEDs for Mitigating Health Risks to Viewers},'' IEEE Std 1789-2015, 2015.
+
 \bibitem{b_surya2024}
 \BIBentryALTinterwordspacing
 V.~Paruchuri, ``{Surya: Multilingual document OCR toolkit},'' 2024. [Online].
@@ -253,6 +257,11 @@ Y.~Shi, D.~Peng, W.~Liao, Z.~Lin, X.~Chen, C.~Liu, Y.~Zhang, and L.~Jin,
 Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``{Image quality
   assessment: From error visibility to structural similarity},'' \emph{IEEE
   Trans. Image Process.}, vol.~13, no.~4, pp. 600--612, 2004.
+
+\bibitem{b_li2025}
+Y.~Li, Y.~Gao, T.~Guo, H.~Wei, and Y.~Sun, ``{Survey of adversarial robustness
+  in multimodal large language models},'' \emph{arXiv preprint
+  arXiv:2503.13962}, 2025.
 
 \bibitem{b_soukoreff2003}
 R.~W. Soukoreff and I.~S. MacKenzie, ``{Metrics for text entry research: An
@@ -286,10 +295,5 @@ Y.~Zhang, P.~Sun, Y.~Jiang, D.~Yu, F.~Weng, Z.~Yuan, P.~Luo, W.~Liu, and
   X.~Wang, ``{ByteTrack: Multi-object tracking by associating every detection
   box},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2022, pp.
   1--21.
-
-\bibitem{b_li2025}
-Y.~Li, Y.~Gao, T.~Guo, H.~Wei, and Y.~Sun, ``{Survey of adversarial robustness
-  in multimodal large language models},'' \emph{arXiv preprint
-  arXiv:2503.13962}, 2025.
 
 \end{thebibliography}
