@@ -18,6 +18,8 @@ ENGINES = [
 
 PROFILES = [
     ("original", "Original"),
+    ("mask_only", "Mask only"),
+    ("mask_noise", "Mask + noise"),
     ("deployed", "Deployed"),
     ("capture_hardened", "Capture-\nhardened"),
 ]
@@ -28,14 +30,14 @@ def main() -> None:
 
     x = np.arange(len(ENGINES))
     n_profiles = len(PROFILES)
-    w = 0.24
+    w = 0.16
     offsets = np.arange(n_profiles) * w - (n_profiles - 1) * w / 2
 
     colors = [
         fs.GRADE_COLORS.get(p, "gray") for p, _ in PROFILES
     ]
 
-    fig, ax = fs.plt.subplots(figsize=(fs.COL_W, 2.6))
+    fig, ax = fs.plt.subplots(figsize=(fs.COL_W, 2.75))
 
     for i, (prof_key, prof_label) in enumerate(PROFILES):
         vals = []
@@ -59,7 +61,7 @@ def main() -> None:
     ax.set_xticklabels([lbl for _, lbl in ENGINES])
     ax.grid(axis="y")
     ax.legend(ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.02),
-              handlelength=1.0, columnspacing=0.8, frameon=False, fontsize=7)
+              handlelength=0.9, columnspacing=0.7, frameon=False, fontsize=6.8)
     # title in LaTeX caption
     fs.save(fig, "real_engine_ocr")
 

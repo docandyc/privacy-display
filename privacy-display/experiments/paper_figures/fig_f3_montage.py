@@ -1,7 +1,7 @@
 """F3 - Real-capture montage: readable to the eye, unreadable to the lens.
 
-Three columns: Human-eye view (source image) | Short exposure | Long exposure.
-Three rows: Unprotected | Deployed | Capture-hardened.
+Nine vertically stacked panels, grouped by protection profile. Within each
+group: Human-eye view (source image) | Short exposure | Long exposure.
 
 The human-eye column shows the original content (what the viewer sees on-screen
 after temporal integration). Short and long columns show genuine EMEET S600
@@ -25,7 +25,7 @@ FILES = {
     ("vlm", "short"):      "emeet_smartcam_s600_vlm_short_15deg_0.5m_en_sentence_00_n4_164533_s00.jpg",
     ("vlm", "long"):       "emeet_smartcam_s600_vlm_long_15deg_0.5m_en_sentence_00_n4_164538_s00.jpg",
 }
-GRADES = [("Unprotected", "original"), ("Deployed", "deployed"), ("Hardened", "vlm")]
+GRADES = [("Unprotected", "original"), ("Deployed", "deployed"), ("Capture-hardened", "vlm")]
 COLS = [("eye", "Human eye\n(integrated)"), ("short", "Short exposure\n(single frame)"), ("long", "Long exposure")]
 
 GAIN = {"short": 1.9, "long": 1.05, "eye": 1.0}
@@ -47,16 +47,25 @@ def _load_source(path, target_shape):
     return np.asarray(img_r, dtype=float) / 255.0
 
 
-def main() -> None:
+def build_figure():
     ref = _load_capture(CAP_DIR / FILES[("original", "short")], GAIN["short"])
     ref_shape = ref.shape
 
-    fig, axes = fs.plt.subplots(len(GRADES), len(COLS),
-                                figsize=(fs.FULL_W * 0.88, fs.FULL_W * 0.32),
-                                layout="constrained")
-    for r, (glabel, gkey) in enumerate(GRADES):
-        for c, (mkey, mlabel) in enumerate(COLS):
-            ax = axes[r, c]
+    fig = fs.plt.figure(figsize=(fs.COL_W, 5.25), layout="constrained")
+    grid = fig.add_gridspec(
+        11,
+        1,
+        height_ratios=(1, 1, 1, 0.28, 1, 1, 1, 0.28, 1, 1, 1),
+        hspace=0.16,
+    )
+    axes = []
+    grid_row = 0
+    for grade_index, (glabel, gkey) in enumerate(GRADES):
+        if grade_index:
+            grid_row += 1
+        for mkey, mlabel in COLS:
+            ax = fig.add_subplot(grid[grid_row, 0])
+            axes.append(ax)
             if mkey == "eye":
                 panel = _load_source(SRC_IMG, ref_shape)
             else:
@@ -68,11 +77,20 @@ def main() -> None:
             for sp in ax.spines.values():
                 sp.set_edgecolor("#BBBBBB")
                 sp.set_linewidth(0.5)
-            if r == 0:
-                ax.set_title(mlabel, fontsize=8)
-            if c == 0:
-                ax.set_ylabel(glabel, fontsize=7.5, labelpad=3)
-    # suptitle in LaTeX caption
+            panel_label = mlabel.replace("\n", " ")
+            ax.set_title(
+                f"{glabel} - {panel_label}",
+                loc="left",
+                fontsize=8.5,
+                fontweight="bold" if mkey == "eye" else "normal",
+                pad=2,
+            )
+            grid_row += 1
+    return fig
+
+
+def main() -> None:
+    fig = build_figure()
     fs.save(fig, "real_capture_montage")
 
 
