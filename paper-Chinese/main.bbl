@@ -71,6 +71,12 @@ B.~Tang and K.~G. Shin, ``{Eye-Shield: Real-time protection of mobile device
   screen information from shoulder surfing},'' in \emph{Proc. 32nd USENIX
   Security Symp.}, 2023, pp. 6695--6712.
 
+\bibitem{b_hidescreen2019}
+C.-Y. Chen, B.-Y. Lin, J.~Wang, and K.~G. Shin, ``{Keep Others from Peeking at
+  Your Mobile Device Screen!}'' in \emph{Proc. 25th Annu. Int. Conf. Mobile
+  Computing and Networking (MobiCom)}, 2019, pp. 1--16, doi:
+  10.1145/3300061.3300119.
+
 \bibitem{b_zhu2017}
 S.~Zhu, C.~Zhang, and X.~Zhang, ``{Automating visual privacy protection using a
   smart LED},'' in \emph{Proc. 23rd ACM Int. Conf. Mobile Computing and

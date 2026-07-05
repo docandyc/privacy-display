@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "figure_id": "figure1_concept_threat",
+  "round": 2,
+  "overall_verdict": "acceptable",
+  "rebuild_required": false,
+  "reviewer_inputs": {
+    "original_path": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/source/original.png",
+    "replica_path": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/final/figure1_concept_threat.png"
+  },
+  "topology_checklist": [
+    {"id":"A001","focus_region":"physical_scene","source_fact":"Upper dashed capture ray connects display and smartphone.","replica_status":"Upper dashed orange-red capture ray is present and unobstructed.","status":"pass","certainty":"certain"},
+    {"id":"A002","focus_region":"physical_scene","source_fact":"Lower dashed capture ray connects display and smartphone.","replica_status":"Lower dashed orange-red capture ray is present and unobstructed.","status":"pass","certainty":"certain"},
+    {"id":"A003","focus_region":"subframe_row","source_fact":"Fast-time arrow points right above the four subframes.","replica_status":"Right-pointing navy time arrow spans the four-subframe row.","status":"pass","certainty":"certain"},
+    {"id":"A004","focus_region":"human_output","source_fact":"First subframe feeds the human eye.","replica_status":"First green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A005","focus_region":"human_output","source_fact":"Second subframe feeds the human eye.","replica_status":"Second green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A006","focus_region":"human_output","source_fact":"Third subframe feeds the human eye.","replica_status":"Third green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A007","focus_region":"human_output","source_fact":"Fourth subframe feeds the human eye.","replica_status":"Fourth green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A008","focus_region":"human_output","source_fact":"The eye feeds the readable display.","replica_status":"Solid green horizontal arrow reaches the readable display.","status":"pass","certainty":"certain"},
+    {"id":"A009","focus_region":"camera_output","source_fact":"The selected second subframe feeds the camera.","replica_status":"Orange-red vertical arrow leaves the bracketed second subframe and reaches the camera.","status":"pass","certainty":"certain"},
+    {"id":"A010","focus_region":"camera_output","source_fact":"Camera output feeds one sparse fragment.","replica_status":"Orange-red horizontal arrow connects camera and sparse fragment.","status":"pass","certainty":"certain"},
+    {"id":"A011","focus_region":"camera_output","source_fact":"The sparse fragment reaches OCR failure.","replica_status":"Orange-red horizontal arrow terminates at OCR ×.","status":"pass","certainty":"certain"}
+  ],
+  "visual_checklist": [
+    {"id":"V001","focus_region":"global_layout","source_expectation":"Two panel headings are clear and balanced.","replica_status":"Both headings are single-line, aligned, and readable at 3.50-inch width.","status":"pass","certainty":"certain"},
+    {"id":"V002","focus_region":"physical_scene","source_expectation":"Authorized user, sensitive display, and smartphone labels remain readable.","replica_status":"All physical-scene labels and both PRIVATE DATA lines are intact without overlap.","status":"pass","certainty":"certain"},
+    {"id":"V003","focus_region":"physical_scene","source_expectation":"The user-screen-phone triangle reads as one physical eavesdropping scene.","replica_status":"Editable office line art clearly shows one authorized user, one display, and one smartphone threat.","status":"pass","certainty":"certain"},
+    {"id":"V004","focus_region":"human_output","source_expectation":"Eye, integration label, readable display, and output label occupy separate zones.","replica_status":"Human eye, integration text, readable label, output display, and green arrows are separated and legible.","status":"pass","certainty":"certain"},
+    {"id":"V005","focus_region":"subframe_row","source_expectation":"Four thumbnails, fast-time arrow, selection bracket, and subframe label remain distinct.","replica_status":"All four thumbnails share a baseline; the second is bracketed; time and caption zones are distinct.","status":"pass","certainty":"certain"},
+    {"id":"V006","focus_region":"camera_output","source_expectation":"Camera, instantaneous-sampling label, fragment, and OCR failure are cleanly separated.","replica_status":"Sampling caption has its own band; camera, fragment, labels, arrows, and OCR × do not overlap.","status":"pass","certainty":"certain"},
+    {"id":"V007","focus_region":"small_text","source_expectation":"All labels remain readable at final publication size.","replica_status":"The 300 dpi, 3.50-inch render contains no broken words or clipped labels.","status":"pass","certainty":"certain"},
+    {"id":"V008","focus_region":"global_layout","source_expectation":"Human and camera paths remain distinguishable without color alone.","replica_status":"Eye/camera icons, four-to-one versus one-frame topology, bracket selection, and outcome wording provide redundant encoding.","status":"pass","certainty":"certain"}
+  ],
+  "findings": []
+}

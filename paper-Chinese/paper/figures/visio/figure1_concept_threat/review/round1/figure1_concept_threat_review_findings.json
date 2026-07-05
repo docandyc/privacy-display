@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "figure_id": "figure1_concept_threat",
+  "round": 1,
+  "overall_verdict": "needs_rebuild",
+  "rebuild_required": true,
+  "reviewer_inputs": {
+    "original_path": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/source/original.png",
+    "replica_path": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/round1/figure1_concept_threat.png"
+  },
+  "topology_checklist": [
+    {"id":"A001","focus_region":"physical_scene","source_fact":"Upper dashed capture ray connects display and smartphone.","replica_status":"Upper dashed orange-red ray is present.","status":"pass","certainty":"certain"},
+    {"id":"A002","focus_region":"physical_scene","source_fact":"Lower dashed capture ray connects display and smartphone.","replica_status":"Lower dashed orange-red ray is present.","status":"pass","certainty":"certain"},
+    {"id":"A003","focus_region":"subframe_row","source_fact":"Fast-time arrow points right above the four subframes.","replica_status":"Right-pointing navy time arrow is present.","status":"pass","certainty":"certain"},
+    {"id":"A004","focus_region":"human_output","source_fact":"First subframe feeds the human eye.","replica_status":"First green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A005","focus_region":"human_output","source_fact":"Second subframe feeds the human eye.","replica_status":"Second green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A006","focus_region":"human_output","source_fact":"Third subframe feeds the human eye.","replica_status":"Third green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A007","focus_region":"human_output","source_fact":"Fourth subframe feeds the human eye.","replica_status":"Fourth green diagonal arrow reaches the eye.","status":"pass","certainty":"certain"},
+    {"id":"A008","focus_region":"human_output","source_fact":"The eye feeds the readable display.","replica_status":"Green horizontal arrow reaches the output display.","status":"pass","certainty":"certain"},
+    {"id":"A009","focus_region":"camera_output","source_fact":"The selected second subframe feeds the camera.","replica_status":"Orange-red vertical arrow reaches the camera.","status":"pass","certainty":"certain"},
+    {"id":"A010","focus_region":"camera_output","source_fact":"Camera output feeds one sparse fragment.","replica_status":"Orange-red horizontal arrow reaches the fragment.","status":"pass","certainty":"certain"},
+    {"id":"A011","focus_region":"camera_output","source_fact":"The sparse fragment reaches OCR failure.","replica_status":"Orange-red horizontal arrow reaches OCR ×.","status":"pass","certainty":"certain"}
+  ],
+  "visual_checklist": [
+    {"id":"V001","focus_region":"global_layout","source_expectation":"Two panel headings are clear and balanced.","replica_status":"Both panel headings are present and readable.","status":"pass","certainty":"certain"},
+    {"id":"V002","focus_region":"physical_scene","source_expectation":"Authorized user, sensitive display, and smartphone labels remain readable.","replica_status":"Authorized, PRIVATE, Smartphone, and camera words break into narrow fragments.","status":"fail","certainty":"certain"},
+    {"id":"V003","focus_region":"physical_scene","source_expectation":"The user-screen-phone triangle reads as one physical eavesdropping scene.","replica_status":"The simplified editable office scene preserves the intended threat geometry.","status":"pass","certainty":"certain"},
+    {"id":"V004","focus_region":"human_output","source_expectation":"Eye, integration label, readable display, and output label occupy separate zones.","replica_status":"Human-eye and integration text overlap arrows and the readable display text is clipped.","status":"fail","certainty":"certain"},
+    {"id":"V005","focus_region":"subframe_row","source_expectation":"Four thumbnails, fast-time arrow, and subframe label remain distinct.","replica_status":"The subframe label collides with the lower outcome labels and green routes crowd the row.","status":"fail","certainty":"certain"},
+    {"id":"V006","focus_region":"camera_output","source_expectation":"Camera, instantaneous-sampling label, fragment, and OCR failure are cleanly separated.","replica_status":"Instantaneous sampling and fragment labels overlap the object row and each other.","status":"fail","certainty":"certain"},
+    {"id":"V007","focus_region":"small_text","source_expectation":"All labels remain readable at 3.50-inch width.","replica_status":"Several English words are broken or compressed beyond publication quality.","status":"fail","certainty":"certain"},
+    {"id":"V008","focus_region":"global_layout","source_expectation":"Human and camera paths remain distinguishable without color alone.","replica_status":"Icons, solid/dashed grammar, selection bracket, and outcome labels provide redundant distinction.","status":"pass","certainty":"certain"}
+  ],
+  "findings": [
+    {
+      "id":"F001",
+      "severity":"blocking",
+      "summary":"Physical-scene labels break at single-column size",
+      "visible_diff":"The source keeps Authorized user, PRIVATE DATA, and Smartphone camera intact, while the replica splits several words into narrow fragments.",
+      "source_appearance":"Large dedicated label zones around the user, monitor, and smartphone.",
+      "replica_appearance":"Narrow text boxes compete with the editable office geometry.",
+      "impact_on_fidelity":"The threat scenario cannot be read reliably after reduction.",
+      "focus_regions":["physical_scene","small_text"],
+      "checklist_refs":["V002","V007"],
+      "expected_visible_change":"Widen label zones, reduce local type slightly, and enlarge the two display text areas."
+    },
+    {
+      "id":"F002",
+      "severity":"blocking",
+      "summary":"Human-integration panel is overpacked",
+      "visible_diff":"Green arrows, Human eye, Temporal integration, Readable, and PRIVATE DATA occupy the same narrow band.",
+      "source_appearance":"Eye and readable display are dominant objects with labels in separate whitespace.",
+      "replica_appearance":"Labels overlap arrows and the readable display text clips.",
+      "impact_on_fidelity":"The perceptual asymmetry is visually ambiguous.",
+      "focus_regions":["human_output","arrow_dense","small_text"],
+      "checklist_refs":["V004","V007"],
+      "expected_visible_change":"Create a dedicated top object row, a separate lower caption row, and wider output display text boxes."
+    },
+    {
+      "id":"F003",
+      "severity":"blocking",
+      "summary":"Subframe and camera captions collide",
+      "visible_diff":"The rapid-subframe caption and instantaneous-sampling labels crowd the frame row and lower camera chain.",
+      "source_appearance":"Subframe, camera, sampling, fragment, and OCR labels use separate vertical zones.",
+      "replica_appearance":"Captions overlap adjacent routes and objects.",
+      "impact_on_fidelity":"The selected-one-frame mechanism is difficult to parse.",
+      "focus_regions":["subframe_row","camera_output","small_text"],
+      "checklist_refs":["V005","V006","V007"],
+      "expected_visible_change":"Reserve a caption band under the frame row and move camera-path labels below their object row."
+    }
+  ]
+}
