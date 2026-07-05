@@ -6,6 +6,10 @@
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
 \newlabel{sec:introduction}{{I}{1}{}{section.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {I-A}}Existing Approaches and Their Limitations}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {I-B}}Core Idea}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {I-C}}Contributions}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Threat scenario and operating boundary of temporal pixel masking. (a) A nearby camera can capture sensitive on-screen content without accessing the host system. (b) Human vision integrates complementary subframes, while a short camera exposure can intersect only part of a display cycle and leave OCR with an incomplete fragment. The camera path is conceptual: it does not assume zero-duration sampling or a fixed human integration time, and long exposure or multi-frame reconstruction can recover substantially more information.}}{2}{}\protected@file@percent }
+\newlabel{fig:concept}{{1}{2}{}{figure.1}{}}
 \citation{b_backes2009}
 \citation{b_fernandez2024}
 \citation{b_wang2026}
@@ -13,12 +17,6 @@
 \citation{b_ponemon2016}
 \citation{b_eiband2017}
 \citation{b_tang2023}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Threat scenario and operating boundary of temporal pixel masking. (a) A nearby camera can capture sensitive on-screen content without accessing the host system. (b) Human vision integrates complementary subframes, while a short camera exposure can intersect only part of a display cycle and leave OCR with an incomplete fragment. The camera path is conceptual: it does not assume zero-duration sampling or a fixed human integration time, and long exposure or multi-frame reconstruction can recover substantially more information.}}{2}{}\protected@file@percent }
-\newlabel{fig:concept}{{1}{2}{}{figure.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {I-B}}Core Idea}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {I-C}}Contributions}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{}\protected@file@percent }
-\newlabel{sec:related}{{II}{2}{}{section.2}{}}
 \citation{b_hidescreen2019}
 \citation{b_zhu2017}
 \citation{b_naor1994}
@@ -39,18 +37,19 @@
 \citation{b_thys2019,b_xu2020}
 \citation{b_zhao2023}
 \citation{b_niu2021}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{3}{}\protected@file@percent }
+\newlabel{sec:related}{{II}{3}{}{section.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Screen Visual Eavesdropping Threats}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Display Privacy Protection}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Adversarial Perturbations and Physical-World Robustness}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {III}Threat Model}{3}{}\protected@file@percent }
 \newlabel{sec:threat}{{III}{3}{}{section.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Protected Assets}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Attacker Capabilities}{3}{}\protected@file@percent }
 \citation{b_chacha2008}
 \citation{b_knuth1997}
 \citation{b_song2018}
 \citation{b_goodfellow2015}
-\citation{b_ciede2000}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Protected Assets}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Attacker Capabilities}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Attacker Knowledge}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Protection Goals}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {IV}System Design}{4}{}\protected@file@percent }
@@ -58,35 +57,35 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Temporal Subframe Decomposition}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Complementary Adversarial Noise}{4}{}\protected@file@percent }
 \newlabel{eq:noise_complement}{{1}{4}{}{equation.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Luminance Compensation}{4}{}\protected@file@percent }
+\citation{b_ciede2000}
 \citation{b_cai2024,b_davis2015}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Temporal pixel masking system pipeline from source content to protected display. The input frame is decomposed into CSPRNG-assigned complementary pixel masks; optional complementary OCR-oriented noise, profile-dependent stripe/glyph overlays, and an optional partial inversion frame are then inserted before high-refresh playback. A human observer is expected to integrate multiple slots into a readable view, whereas a short-exposure camera may capture only a sparse subframe. Long exposure and video temporal averaging can accumulate multiple slots and are therefore evaluated separately as boundary attacks rather than assumed away.}}{5}{}\protected@file@percent }
 \newlabel{fig:pipeline}{{2}{5}{}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Luminance Compensation}{5}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Timing and Bandwidth}{5}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Capture-Hardened Profile}{5}{}\protected@file@percent }
 \newlabel{sec:hardened}{{\mbox  {IV-E}}{5}{}{subsection.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Partial Inversion Frame}{5}{}\protected@file@percent }
 \citation{b_coco2014}
 \citation{b_mot16}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Inversion Frame Strength $\alpha $ Ablation on the Fixed Strong Overlay ($\alpha _s=0.10$, $\alpha _g=0.12$): Real-Capture Best-of-Engine Character Recovery (Mean and 95\% Bootstrap CI, Five Account/Code/CET6 Items Pooled Across 9 Geometric Conditions; $N=135$ per Setting for Long Exposure, $N=45$ for Video Temporal Averaging). This Five-Item Subset Differs from the 12-Item Deployed Rows in Table~\ref {tab:real_ocr_main}.}}{6}{}\protected@file@percent }
 \newlabel{tab:inversion_ablation}{{1}{6}{}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Partial Inversion Frame}{6}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-G}}Implementation Scope}{6}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {V}Experimental Evaluation}{6}{}\protected@file@percent }
 \newlabel{sec:evaluation}{{V}{6}{}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Experimental Setup}{6}{}\protected@file@percent }
 \newlabel{sec:setup}{{\mbox  {V-A}}{6}{}{subsection.5.1}{}}
+\citation{b_ieee1789}
 \citation{b_surya2024}
 \citation{b_easyocr2020}
 \citation{b_smith2007}
 \citation{b_shi2023}
-\citation{b_wang2004}
-\citation{b_wang2004}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Real-Capture OCR Experiment}{7}{}\protected@file@percent }
 \newlabel{sec:real_capture}{{\mbox  {V-B}}{7}{}{subsection.5.2}{}}
+\citation{b_wang2004}
+\citation{b_wang2004}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Single-UVC Real-Capture OCR Core Conditions (Best-of-Engine; $N$ = Independent Captures per Row; Pooled Across 9 Geometric Conditions)}}{8}{}\protected@file@percent }
 \newlabel{tab:real_ocr_main}{{2}{8}{}{table.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Real-Capture Short-Exposure OCR: Per-Engine Results (Pooled Across 9 Geometric Conditions)}}{8}{}\protected@file@percent }
-\newlabel{tab:real_ocr_engine}{{3}{8}{}{table.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Real-Capture VLM Probes}{8}{}\protected@file@percent }
 \newlabel{sec:vlm}{{\mbox  {V-C}}{8}{}{subsection.5.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Real-capture montage. Within each vertically stacked profile group (unprotected, deployed, and capture-hardened), panels show, from top to bottom, the digital integrated reconstruction view (for checking full-cycle image consistency), short-exposure capture, and long-exposure capture. Digital integrated views are not direct evidence of human readability or visual comfort.}}{9}{}\protected@file@percent }
@@ -95,38 +94,33 @@
 \newlabel{fig:bar_attack}{{4}{9}{}{figure.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Trade-off between digital reconstruction quality and integration-attack robustness: as anti-OCR enhancement increases (no overlay $\to $ strong overlay $\to $ deployed (overlay + $\alpha =0.2$ inversion) $\to $ capture-hardened), temporal-average character recovery decreases (left axis) and full-cycle digital reconstruction SSIM~\cite  {b_wang2004} also decreases (right axis). Data from anti-OCR profile ablation on synthetic corpus (digital pipeline, not real capture); SSIM is an image proxy, not a user readability measure.}}{9}{}\protected@file@percent }
 \newlabel{fig:tradeoff}{{5}{9}{}{figure.5}{}}
+\citation{b_shi2023,b_li2025}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Real-Capture Short-Exposure OCR: Per-Engine Results (Pooled Across 9 Geometric Conditions)}}{10}{}\protected@file@percent }
+\newlabel{tab:real_ocr_engine}{{3}{10}{}{table.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Real-capture short-exposure character recovery for three OCR engines across all six profiles in Table~\ref {tab:real_ocr_engine}; error bars are 95\% bootstrap intervals resampled by capture. All three engines are suppressed, but with a limited engine family this cannot be claimed as recognizer-agnostic.}}{10}{}\protected@file@percent }
 \newlabel{fig:real_engine_ocr}{{6}{10}{}{figure.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}User Experience Study}{10}{}\protected@file@percent }
-\newlabel{sec:user_study}{{\mbox  {V-D}}{10}{}{subsection.5.4}{}}
-\citation{b_soukoreff2003}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Real-Capture VLM Probes (0$^{\circ }$ On-Axis; All Rows Except the Original Short Baseline Are Capture-Hardened). Each VLM Cell Reports Exact / Char / $N$ (\% / \% / Effective Calls); OCR BoE Column Shows Same-Batch Three-Engine Best-of-Engine Reference (Exact / Char, \%). For compactness, 0.5\,m reports only the temporal-mean video aggregate; the remaining 0.5\,m aggregate views are archived, while 1.5\,m reports all four aggregate views.}}{11}{}\protected@file@percent }
 \newlabel{tab:real_vlm}{{4}{11}{}{table.4}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 0.5\,m Capture-Hardened Short-Exposure VLM Character Recovery by Content Type. Baseline Column Shows Same-Session Unprotected Original Short Results for Qwen (Kimi/GLM Similar); GLM Had Occasional Call Failures, Parenthesized $N$ Shows Effective Count. At 1.5\,m, CET6 Dense Pages Yield 0\% Char Across All Three Models.}}{11}{}\protected@file@percent }
 \newlabel{tab:vlm_content}{{5}{11}{}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}User Experience Study}{11}{}\protected@file@percent }
+\newlabel{sec:user_study}{{\mbox  {V-D}}{11}{}{subsection.5.4}{}}
+\citation{b_soukoreff2003}
 \citation{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}
 \citation{b_bytetrack2022}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Real-Capture COCO Detection (150 Images; real\_clean = Unprotected Capture Baseline)}}{12}{}\protected@file@percent }
-\newlabel{tab:real_coco}{{6}{12}{}{table.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Real-Capture Object Detection and Tracking}{12}{}\protected@file@percent }
-\newlabel{sec:detection}{{\mbox  {V-E}}{12}{}{subsection.5.5}{}}
-\citation{b_smith2007}
-\citation{b_easyocr2020}
-\citation{b_surya2024}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Real-Capture COCO Detection (150 Images; real\_clean = Unprotected Capture Baseline)}}{13}{}\protected@file@percent }
+\newlabel{tab:real_coco}{{6}{13}{}{table.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Real-Capture Object Detection and Tracking}{13}{}\protected@file@percent }
+\newlabel{sec:detection}{{\mbox  {V-E}}{13}{}{subsection.5.5}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames)}}{13}{}\protected@file@percent }
 \newlabel{tab:real_mot}{{7}{13}{}{table.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Real-capture detection: mAP50 drop for four detectors under protected conditions.}}{13}{}\protected@file@percent }
 \newlabel{fig:real_det_drop}{{7}{13}{}{figure.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}Software Simulation Supplementary Experiments}{13}{}\protected@file@percent }
 \newlabel{sec:simulation}{{\mbox  {V-F}}{13}{}{subsection.5.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}1}Synthetic Single-Subframe OCR}{13}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Synthetic Single-Subframe OCR: Three-Engine Character Recovery (120 Samples, $n=4$, $\varepsilon =8/255$)}}{13}{}\protected@file@percent }
-\newlabel{tab:ocr_corpus}{{8}{13}{}{table.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Character recovery for three OCR engines on original frames and single protected subframes; error bars are 95\% bootstrap intervals resampled by corpus sample.}}{13}{}\protected@file@percent }
-\newlabel{fig:multiengine_ocr}{{8}{13}{}{figure.8}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}2}Theoretical Security Boundary}{13}{}\protected@file@percent }
-\newlabel{sec:security_frontier}{{\mbox  {V-F}2}{13}{}{subsubsection.5.6.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}3}Comparison with Software-Proxy Baselines}{13}{}\protected@file@percent }
+\citation{b_smith2007}
+\citation{b_easyocr2020}
+\citation{b_surya2024}
 \citation{b_coco2014}
 \citation{b_mot16}
 \citation{b_yolo26}
@@ -134,33 +128,42 @@
 \citation{b_fasterrcnn2015}
 \citation{b_retinanet2017}
 \citation{b_bytetrack2022}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Software-proxy baselines on 9~samples: horizontal axis is OCR character recovery, vertical axis is digital reconstruction $\Delta E_{00}$. Method parameters and physical conditions are not equivalently matched; the figure serves only as an exploratory comparison.}}{14}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Synthetic Single-Subframe OCR: Three-Engine Character Recovery (120 Samples, $n=4$, $\varepsilon =8/255$)}}{14}{}\protected@file@percent }
+\newlabel{tab:ocr_corpus}{{8}{14}{}{table.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Character recovery for three OCR engines on original frames and single protected subframes; error bars are 95\% bootstrap intervals resampled by corpus sample.}}{14}{}\protected@file@percent }
+\newlabel{fig:multiengine_ocr}{{8}{14}{}{figure.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}1}Synthetic Single-Subframe OCR}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}2}Theoretical Security Boundary}{14}{}\protected@file@percent }
+\newlabel{sec:security_frontier}{{\mbox  {V-F}2}{14}{}{subsubsection.5.6.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Software-proxy baselines on 102~corpus samples: horizontal axis is OCR character recovery, vertical axis is digital reconstruction $\Delta E_{00}$. Method parameters and physical conditions are not equivalently matched; the figure serves only as an exploratory comparison.}}{14}{}\protected@file@percent }
 \newlabel{fig:baselines_scatter}{{9}{14}{}{figure.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images; Not a Dataset-Level Performance Estimate)}}{14}{}\protected@file@percent }
-\newlabel{tab:coco_sim}{{9}{14}{}{table.9}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}3}Comparison with Software-Proxy Baselines}{14}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}4}Detection and Tracking Simulation}{14}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; In-Project Approximate Metrics; 5,316 Frames)}}{14}{}\protected@file@percent }
-\newlabel{tab:mot_sim}{{10}{14}{}{table.10}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}5}Security--Usability Trade-off}{14}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{14}{}\protected@file@percent }
-\newlabel{sec:discussion}{{VI}{14}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Evidence Hierarchy and Claim Scope}{14}{}\protected@file@percent }
-\citation{b_li2025}
+\citation{b_ieee1789}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Anti-OCR profile stripe $\times $ glyph amplitude grid (temporal-average attack): left panel shows character recovery, right panel shows digital reconstruction drift. High stripe and glyph amplitude regions descriptively reduce character recovery to $\sim $11\% across the current 12 parameter grid points (16 samples per point) while increasing reconstruction cost. No significance testing was performed.}}{15}{}\protected@file@percent }
 \newlabel{fig:antiocr_heatmap}{{10}{15}{}{figure.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images; Not a Dataset-Level Performance Estimate)}}{15}{}\protected@file@percent }
+\newlabel{tab:coco_sim}{{9}{15}{}{table.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; In-Project Approximate Metrics; 5,316 Frames)}}{15}{}\protected@file@percent }
+\newlabel{tab:mot_sim}{{10}{15}{}{table.10}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Residual capability of a single protected subframe relative to the clean baseline (clean = 100\%) across the current evaluation: OCR, detection, and tracking are approximately 0--9.7\%. This figure summarizes only the tested models and metrics.}}{15}{}\protected@file@percent }
 \newlabel{fig:all_attackers}{{11}{15}{}{figure.11}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Security--usability proxy Pareto front in the digital model: $n \times $ refresh rate. Neither FPI nor normalized mutual information is a direct measure of user experience or real attack success rate.}}{15}{}\protected@file@percent }
-\newlabel{fig:pareto}{{12}{15}{}{figure.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}The Mathematical Tension of Linear Integration}{15}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}5}Security--Usability Trade-off}{15}{}\protected@file@percent }
+\citation{b_li2025}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Security--usability proxy Pareto front in the digital model: $n \times $ refresh rate. Neither FPI nor normalized mutual information is a direct measure of user experience or real attack success rate.}}{16}{}\protected@file@percent }
+\newlabel{fig:pareto}{{12}{16}{}{figure.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{16}{}\protected@file@percent }
+\newlabel{sec:discussion}{{VI}{16}{}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Evidence Hierarchy and Claim Scope}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}The Mathematical Tension of Linear Integration}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Role and Cost of the Capture-Hardened Profile}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM Attackers and Countermeasure Directions}{16}{}\protected@file@percent }
 \newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{16}{}{subsection.6.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}Deployment Path}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-F}}Ethics Statement}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-G}}Limitations}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{16}{}\protected@file@percent }
-\newlabel{sec:conclusion}{{VII}{16}{}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}Deployment Path}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-F}}Ethics Statement}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-G}}Limitations}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{17}{}\protected@file@percent }
+\newlabel{sec:conclusion}{{VII}{17}{}{section.7}{}}
 \bibstyle{IEEEtran}
 \bibdata{refs}
 \bibcite{b_wang2026}{1}
@@ -202,17 +205,18 @@
 \bibcite{b_davis2015}{37}
 \bibcite{b_coco2014}{38}
 \bibcite{b_mot16}{39}
-\bibcite{b_surya2024}{40}
-\bibcite{b_easyocr2020}{41}
-\bibcite{b_smith2007}{42}
-\bibcite{b_shi2023}{43}
-\bibcite{b_wang2004}{44}
-\bibcite{b_soukoreff2003}{45}
-\bibcite{b_yolo26}{46}
-\bibcite{b_rtdetr2024}{47}
-\bibcite{b_fasterrcnn2015}{48}
-\@writefile{toc}{\contentsline {section}{REFERENCES}{18}{}\protected@file@percent }
-\bibcite{b_retinanet2017}{49}
-\bibcite{b_bytetrack2022}{50}
-\bibcite{b_li2025}{51}
-\gdef \@abspage@last{19}
+\bibcite{b_ieee1789}{40}
+\bibcite{b_surya2024}{41}
+\bibcite{b_easyocr2020}{42}
+\bibcite{b_smith2007}{43}
+\bibcite{b_shi2023}{44}
+\bibcite{b_wang2004}{45}
+\bibcite{b_li2025}{46}
+\bibcite{b_soukoreff2003}{47}
+\bibcite{b_yolo26}{48}
+\@writefile{toc}{\contentsline {section}{REFERENCES}{19}{}\protected@file@percent }
+\bibcite{b_rtdetr2024}{49}
+\bibcite{b_fasterrcnn2015}{50}
+\bibcite{b_retinanet2017}{51}
+\bibcite{b_bytetrack2022}{52}
+\gdef \@abspage@last{20}
