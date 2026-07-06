@@ -173,7 +173,7 @@
             <tr>
               <th>数据库编号</th><th>登记序号 k</th><th>学号</th><th>姓名</th><th>刷新率</th><th>原文词速</th>
               <th>遮罩词速</th><th>差值</th><th>差值%</th><th>可读性</th>
-              <th>稳定感</th><th>即时视觉舒适感</th><th>防偷窥效果</th>
+              <th>稳定感</th><th>即时视觉舒适感</th>
             </tr>
           </thead>
           <tbody>
@@ -191,7 +191,6 @@
                 <td>${fmt(row.mean_readability, 2)}</td>
                 <td>${fmt(row.mean_flicker, 2)}</td>
                 <td>${fmt(row.mean_fatigue, 2)}</td>
-                <td>${fmt(row.mean_privacy, 2)}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -210,7 +209,7 @@
           <thead>
             <tr>
               <th>条件</th><th>样本数</th><th>组件</th><th>行数</th>
-              <th>可读性</th><th>稳定感</th><th>即时视觉舒适感</th><th>防偷窥效果</th>
+              <th>可读性</th><th>稳定感</th><th>即时视觉舒适感</th>
             </tr>
           </thead>
           <tbody>
@@ -223,7 +222,6 @@
                 <td>${fmt(row.readability, 2)}</td>
                 <td>${fmt(row.flicker, 2)}</td>
                 <td>${fmt(row.fatigue, 2)}</td>
-                <td>${fmt(row.privacy, 2)}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -279,7 +277,7 @@
           <thead>
             <tr>
               <th>被试</th><th>条件</th><th>样本数</th><th>模式</th><th>周期</th>
-              <th>可读性</th><th>稳定感</th><th>即时视觉舒适感</th><th>防偷窥效果</th><th>观看</th><th>顺序</th>
+              <th>可读性</th><th>稳定感</th><th>即时视觉舒适感</th><th>观看</th><th>顺序</th>
             </tr>
           </thead>
           <tbody>
@@ -293,7 +291,6 @@
                 <td>${row.readability}</td>
                 <td>${row.flicker}</td>
                 <td>${row.fatigue}</td>
-                <td>${row.privacy}</td>
                 <td>${fmt(row.view_duration_ms / 1000, 1, "s")}</td>
                 <td>${row.order_index + 1}</td>
               </tr>

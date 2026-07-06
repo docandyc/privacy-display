@@ -1109,7 +1109,6 @@
         ${ratingGroup("readability", "可读性", "1 = 难以阅读，5 = 非常清晰")}
         ${ratingGroup("flicker", "稳定感", "1 = 闪烁很强，5 = 完全察觉不到闪烁")}
         ${ratingGroup("fatigue", "即时视觉舒适感", "1 = 很不舒适，5 = 很舒适")}
-        ${ratingGroup("privacy", "防偷窥效果", "1 = 旁人很容易看清，5 = 旁人完全看不清")}
       </form>
       <div class="actions">
         <span class="status-line" id="viewGateStatus">请继续观看…</span>
@@ -1148,7 +1147,7 @@
     const gateStatus = document.getElementById("viewGateStatus");
     const viewStartedAt = new Date().toISOString();
     const viewStartedPerformance = performance.now();
-    const allRated = () => ["readability", "flicker", "fatigue", "privacy"].every((name) => {
+    const allRated = () => ["readability", "flicker", "fatigue"].every((name) => {
         return form.querySelector(`input[name="${name}"]:checked`);
     });
     const updateRatingGate = () => {
@@ -1156,7 +1155,7 @@
       const remaining = Math.max(0, RATING_MIN_VIEW_MS - elapsed);
       gateStatus.textContent = remaining > 0
         ? `至少再观看 ${(remaining / 1000).toFixed(1)} 秒`
-        : (allRated() ? "观看时长与评分均已完成" : "观看时长已满足，请完成四项评分");
+        : (allRated() ? "观看时长与评分均已完成" : "观看时长已满足，请完成三项评分");
       button.disabled = remaining > 0 || !allRated();
     };
     form.addEventListener("change", updateRatingGate);
@@ -1176,7 +1175,6 @@
         readability: Number(data.get("readability")),
         flicker: Number(data.get("flicker")),
         fatigue: Number(data.get("fatigue")),
-        privacy: Number(data.get("privacy")),
         order_index: state.ratingCursor,
         view_duration_ms: viewDurationMs,
         view_started_at: viewStartedAt,
@@ -1340,7 +1338,7 @@
       <div class="complete-mark">✓</div>
       <div class="status-line">${escapeHtml(state.submitStatus.message)}</div>
       <div class="warning">
-        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感、即时视觉舒适感和主观防偷窥效果上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
+        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感和即时视觉舒适感上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
       </div>
       <div class="actions">
         <button class="button" id="newSession">开始下一位被试</button>

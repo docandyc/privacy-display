@@ -45,6 +45,28 @@ RATING_SPECS = {
     "deployed_full": (4, "mask+noise+anti-ocr+inversion"),
 }
 
+RATINGS_TABLE_SCHEMA = """
+CREATE TABLE IF NOT EXISTS ratings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    participant_id INTEGER NOT NULL REFERENCES participants(id) ON DELETE CASCADE,
+    condition_label TEXT NOT NULL,
+    display_label TEXT DEFAULT '',
+    n INTEGER NOT NULL,
+    requested_n INTEGER NOT NULL,
+    components TEXT NOT NULL,
+    stimulus_text TEXT NOT NULL DEFAULT '',
+    readability INTEGER NOT NULL,
+    flicker INTEGER NOT NULL,
+    fatigue INTEGER NOT NULL,
+    privacy INTEGER,
+    order_index INTEGER NOT NULL,
+    view_duration_ms INTEGER NOT NULL DEFAULT 0,
+    view_started_at TEXT DEFAULT '',
+    view_submitted_at TEXT DEFAULT '',
+    mask_meta_json TEXT DEFAULT '{}'
+);
+"""
+
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -107,28 +129,7 @@ CREATE TABLE IF NOT EXISTS typing (
     first_key_latency_ms REAL,
     mask_meta_json TEXT DEFAULT '{}'
 );
-
-CREATE TABLE IF NOT EXISTS ratings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    participant_id INTEGER NOT NULL REFERENCES participants(id) ON DELETE CASCADE,
-    condition_label TEXT NOT NULL,
-    display_label TEXT DEFAULT '',
-    n INTEGER NOT NULL,
-    requested_n INTEGER NOT NULL,
-    components TEXT NOT NULL,
-    stimulus_text TEXT NOT NULL DEFAULT '',
-    readability INTEGER NOT NULL,
-    flicker INTEGER NOT NULL,
-    fatigue INTEGER NOT NULL,
-    privacy INTEGER NOT NULL,
-    order_index INTEGER NOT NULL,
-    view_duration_ms INTEGER NOT NULL DEFAULT 0,
-    view_started_at TEXT DEFAULT '',
-    view_submitted_at TEXT DEFAULT '',
-    mask_meta_json TEXT DEFAULT '{}'
-);
-
-"""
+""" + RATINGS_TABLE_SCHEMA
 
 
 class ValidationError(ValueError):
@@ -265,6 +266,7 @@ def init_db(db_path: str | Path) -> None:
             "view_started_at": "TEXT DEFAULT ''",
             "view_submitted_at": "TEXT DEFAULT ''",
         })
+        migrate_legacy_rating_privacy(conn)
         conn.execute(
             "UPDATE participants SET session_uuid = 'legacy-' || id "
             "WHERE session_uuid IS NULL OR session_uuid = ''"
@@ -285,6 +287,27 @@ def ensure_columns(conn: sqlite3.Connection, table: str, definitions: dict[str, 
     for name, definition in definitions.items():
         if name not in existing:
             conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {definition}")
+
+
+def migrate_legacy_rating_privacy(conn: sqlite3.Connection) -> None:
+    privacy_column = next(
+        (row for row in conn.execute("PRAGMA table_info(ratings)") if row[1] == "privacy"),
+        None,
+    )
+    if privacy_column is None or int(privacy_column[3]) == 0:
+        return
+
+    columns = (
+        "id, participant_id, condition_label, display_label, n, requested_n, "
+        "components, stimulus_text, readability, flicker, fatigue, privacy, "
+        "order_index, view_duration_ms, view_started_at, view_submitted_at, mask_meta_json"
+    )
+    conn.execute("ALTER TABLE ratings RENAME TO ratings_legacy_privacy_required")
+    conn.execute(RATINGS_TABLE_SCHEMA)
+    conn.execute(
+        f"INSERT INTO ratings ({columns}) SELECT {columns} FROM ratings_legacy_privacy_required"
+    )
+    conn.execute("DROP TABLE ratings_legacy_privacy_required")
 
 
 def get_conn(db_path: str | Path) -> sqlite3.Connection:
@@ -549,7 +572,6 @@ def clean_rating_rows(raw: Any, *, minimum_view_ms: int = 10_000) -> list[dict]:
             "readability": clean_rating(row.get("readability"), idx, "readability"),
             "flicker": clean_rating(row.get("flicker"), idx, "flicker"),
             "fatigue": clean_rating(row.get("fatigue"), idx, "fatigue"),
-            "privacy": clean_rating(row.get("privacy"), idx, "privacy"),
             "order_index": order_index,
             "view_duration_ms": view_duration_ms,
             "view_started_at": clean_text(row.get("view_started_at"), 80),
@@ -729,10 +751,10 @@ def save_submission(
             """
             INSERT INTO ratings (
                 participant_id, condition_label, display_label, n, requested_n,
-                components, stimulus_text, readability, flicker, fatigue, privacy,
+                components, stimulus_text, readability, flicker, fatigue,
                 order_index, view_duration_ms, view_started_at, view_submitted_at,
                 mask_meta_json
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 (
@@ -746,7 +768,6 @@ def save_submission(
                     row["readability"],
                     row["flicker"],
                     row["fatigue"],
-                    row["privacy"],
                     row["order_index"],
                     row["view_duration_ms"],
                     row["view_started_at"],
@@ -787,7 +808,7 @@ def build_export_csv(db_path: str | Path, *, include_debug: bool = False) -> str
         "total_chars", "accuracy", "cpm", "wpm", "duration_s", "edit_distance",
         "aligned_target_chars", "msd_error_rate", "scoring_method", "first_key_latency_ms",
         "condition_label", "display_label", "stimulus_text", "readability",
-        "flicker", "fatigue", "privacy", "order_index", "view_duration_ms",
+        "flicker", "fatigue", "order_index", "view_duration_ms",
         "view_started_at", "view_submitted_at", "user_agent", "screen_json",
         "mask_meta_json",
     ]
@@ -848,7 +869,6 @@ def build_export_csv(db_path: str | Path, *, include_debug: bool = False) -> str
                     "readability": row["readability"],
                     "flicker": row["flicker"],
                     "fatigue": row["fatigue"],
-                    "privacy": row["privacy"],
                     "order_index": row["order_index"],
                     "view_duration_ms": row["view_duration_ms"],
                     "view_started_at": row["view_started_at"],
@@ -965,7 +985,6 @@ def build_admin_data(db_path: str | Path, *, include_debug: bool = False) -> dic
             "mean_readability": mean([row["readability"] for row in p_ratings]),
             "mean_flicker": mean([row["flicker"] for row in p_ratings]),
             "mean_fatigue": mean([row["fatigue"] for row in p_ratings]),
-            "mean_privacy": mean([row["privacy"] for row in p_ratings]),
         })
 
     stats = build_stats(db_path, include_debug=include_debug)
@@ -981,6 +1000,8 @@ def build_admin_data(db_path: str | Path, *, include_debug: bool = False) -> dic
 
 def enrich_event_row(row: sqlite3.Row, row_type: str) -> dict:
     data = dict(row)
+    if row_type == "rating":
+        data.pop("privacy", None)
     data["row_type"] = row_type
     data["mask_meta"] = parse_json_object(data.pop("mask_meta_json", "{}"))
     return data
@@ -1039,8 +1060,7 @@ def build_stats(db_path: str | Path, *, include_debug: bool = False) -> dict:
                 SELECT condition_label, r.n, r.components, COUNT(*) AS n_rows,
                        AVG(readability) AS readability,
                        AVG(flicker) AS flicker,
-                       AVG(fatigue) AS fatigue,
-                       AVG(privacy) AS privacy
+                       AVG(fatigue) AS fatigue
                 FROM ratings r
                 JOIN participants p ON p.id = r.participant_id
                 {event_where}

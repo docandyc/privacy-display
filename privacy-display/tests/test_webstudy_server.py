@@ -2,7 +2,7 @@ import csv
 import io
 import sqlite3
 
-from webstudy.server import DEFAULT_DB_PATH, build_export_csv, create_app, init_db
+from webstudy.server import DEFAULT_DB_PATH, SCHEMA, build_export_csv, create_app, init_db
 
 
 RATING_CONDITIONS = [
@@ -98,8 +98,7 @@ def make_payload(
             "stimulus_text": "rating text",
             "readability": 4,
             "flicker": 4,
-            "fatigue": 4,
-            "privacy": 3,
+            "fatigue": 3,
             "order_index": order_index,
             "view_duration_ms": 10_500,
             "view_started_at": "2026-07-03T01:00:00Z",
@@ -140,7 +139,7 @@ def make_payload(
     }
 
 
-def test_submit_is_idempotent_and_stores_four_typing_six_ratings(tmp_path):
+def test_submit_is_idempotent_and_stores_four_typing_six_three_item_ratings(tmp_path):
     db = tmp_path / "study.db"
     client = create_app(db).test_client()
     payload = make_payload()
@@ -157,6 +156,7 @@ def test_submit_is_idempotent_and_stores_four_typing_six_ratings(tmp_path):
         assert conn.execute("SELECT registration_index FROM participants").fetchone()[0] == 0
         assert conn.execute("SELECT COUNT(*) FROM typing").fetchone()[0] == 4
         assert conn.execute("SELECT COUNT(*) FROM ratings").fetchone()[0] == 6
+        assert conn.execute("SELECT COUNT(*) FROM ratings WHERE privacy IS NULL").fetchone()[0] == 6
 
 
 def test_validation_rejects_incomplete_design_and_short_rating_view(tmp_path):
@@ -333,6 +333,37 @@ def test_stats_and_exports_exclude_debug_and_demo_by_default(tmp_path):
     assert len(all_rows) == 30
     assert {row["debug"] for row in production_rows} == {"0"}
     assert {row["demo"] for row in production_rows} == {"0"}
+    assert "privacy" not in production_rows[0]
+
+    admin_data = client.get("/admin/data.json").get_json()
+    assert all("privacy" not in row for row in admin_data["ratings"])
+    assert all("mean_privacy" not in row for row in admin_data["participants"])
+    assert all("privacy" not in row for row in admin_data["summary"]["ratings"])
+
+
+def test_init_db_makes_legacy_privacy_column_nullable_without_losing_values(tmp_path):
+    db = tmp_path / "legacy-privacy.db"
+    legacy_schema = SCHEMA.replace("privacy INTEGER,", "privacy INTEGER NOT NULL,")
+    with sqlite3.connect(db) as conn:
+        conn.executescript(legacy_schema)
+        conn.execute(
+            "INSERT INTO participants (session_uuid, student_id, name) VALUES ('legacy-privacy', 'old', 'legacy')"
+        )
+        conn.execute(
+            """
+            INSERT INTO ratings (
+                participant_id, condition_label, n, requested_n, components,
+                readability, flicker, fatigue, privacy, order_index
+            ) VALUES (1, 'control_anchor', 1, 1, 'none', 4, 4, 4, 5, 0)
+            """
+        )
+
+    init_db(db)
+
+    with sqlite3.connect(db) as conn:
+        privacy_column = next(row for row in conn.execute("PRAGMA table_info(ratings)") if row[1] == "privacy")
+        assert privacy_column[3] == 0
+        assert conn.execute("SELECT privacy FROM ratings").fetchone()[0] == 5
 
 
 def test_init_db_migrates_legacy_schema_without_losing_rows(tmp_path):
@@ -391,6 +422,8 @@ def test_analysis_generates_auditable_json_csv_and_latex_outputs(tmp_path):
     assert (output / "typing_participant_means.csv").exists()
     assert (output / "typing_table.tex").exists()
     assert (output / "ratings_table.tex").exists()
+    assert set(report["rating_summary"]["control_anchor"]) == {"readability", "flicker", "fatigue"}
+    assert "防偷窥" not in (output / "ratings_table.tex").read_text(encoding="utf-8")
 
 
 def test_analysis_excludes_any_session_with_under_five_attempted_chars(tmp_path):
@@ -420,7 +453,6 @@ def test_analysis_excludes_minimum_view_straightline_ratings(tmp_path):
         row["readability"] = 3
         row["flicker"] = 3
         row["fatigue"] = 3
-        row["privacy"] = 3
     assert client.post("/api/submit", json=payload).status_code == 200
 
     report = analyze_study(db, tmp_path / "analysis", bootstrap_samples=50)

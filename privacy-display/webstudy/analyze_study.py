@@ -26,7 +26,7 @@ MIN_CONTROL_ACCURACY = 0.50
 MIN_ATTEMPTED_CHARS_PER_TRIAL = 5
 MIN_RATING_QUALITY_VIEW_MS = 11_000
 CONDITIONS = RATING_CONDITION_ORDER
-RATING_DIMENSIONS = ("readability", "flicker", "fatigue", "privacy")
+RATING_DIMENSIONS = ("readability", "flicker", "fatigue")
 TYPING_METRICS = ("wpm", "cpm", "accuracy", "attempted_chars", "first_key_latency_ms")
 DEFAULT_DB_PATH = Path(__file__).with_name("study_formal.db")
 
@@ -247,9 +247,9 @@ def write_latex_tables(output_dir: Path, typing_report: dict[str, Any], rating_s
     (output_dir / "typing_table.tex").write_text("\n".join(typing_lines), encoding="utf-8")
 
     rating_lines = [
-        r"\begin{tabular}{lrrrr}",
+        r"\begin{tabular}{lrrr}",
         r"\toprule",
-        r"条件 & 可读性 & 稳定感 & 即时视觉舒适感 & 防偷窥效果 \\",
+        r"条件 & 可读性 & 稳定感 & 即时视觉舒适感 \\",
         r"\midrule",
     ]
     for condition in CONDITIONS:

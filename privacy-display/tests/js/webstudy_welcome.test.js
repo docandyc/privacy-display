@@ -68,10 +68,14 @@ test("masked preview is followed by an unscored masked typing practice", () => {
   assert.match(appJs, /遮罩练习/);
 });
 
-test("rating labels and submit backtracking avoid silent data loss", () => {
+test("rating form collects exactly three supported dimensions", () => {
   assert.match(appJs, /ratingGroup\("flicker", "稳定感", "1 = 闪烁很强，5 = 完全察觉不到闪烁"\)/);
   assert.match(appJs, /ratingGroup\("fatigue", "即时视觉舒适感", "1 = 很不舒适，5 = 很舒适"\)/);
-  assert.match(appJs, /ratingGroup\("privacy", "防偷窥效果", "1 = 旁人很容易看清，5 = 旁人完全看不清"\)/);
+  assert.doesNotMatch(appJs, /ratingGroup\("privacy"/);
+  assert.doesNotMatch(appJs, /name="privacy"/);
+  assert.match(appJs, /\["readability", "flicker", "fatigue"\]\.every/);
+  assert.doesNotMatch(appJs, /privacy: Number\(data\.get\("privacy"\)\)/);
+  assert.match(appJs, /观看时长已满足，请完成三项评分/);
   assert.match(appJs, /class="rating-option rating-option-\$\{value\}"/);
   for (let value = 1; value <= 5; value += 1) {
     assert.match(styleCss, new RegExp(`\\.rating-option-${value}\\s*\\{[^}]*--rating-bg:[^;]+;[^}]*--rating-selected:[^;]+;`, "s"));
