@@ -19,7 +19,10 @@ Added PaddleOCR detection and parsing, reran three-engine corpus evaluation, upd
 
 ### Main Changes
 
-(Add details)
+- Added `POST /api/next-assignment` and moved formal counterbalancing to server-side least-filled buckets.
+- Required vision correction, added masked typing practice, repeated refresh measurement metadata, fullscreen/screen audit metadata, stability labeling, and debriefing.
+- Added analysis audits for assignment balance and minimum-view straight-line rating exclusions.
+- Updated WebStudy README, backend code-spec, and regression tests.
 
 ### Git Commits
 
@@ -29,7 +32,9 @@ Added PaddleOCR detection and parsing, reran three-engine corpus evaluation, upd
 
 ### Testing
 
-- [OK] (Add test results)
+- [OK] `.venv/bin/pytest tests/test_webstudy_*.py -q` (22 passed)
+- [OK] `node --test tests/js/webstudy_design.test.js tests/js/webstudy_welcome.test.js tests/js/webstudy_mask_timing.test.js tests/js/webstudy_typing.test.js` (17 passed)
+- [OK] `python3 -m py_compile webstudy/server.py webstudy/analyze_study.py webstudy/backup_db.py webstudy/assignment.py`
 
 ### Status
 
@@ -60,6 +65,39 @@ Completed G3-G13 PoC gaps with off-axis and learned reconstruction experiments, 
 |------|---------|
 | `167b83a` | (see git log) |
 | `13b3917` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
+
+
+## Session 3: Strengthen WebStudy experiment controls
+
+**Date**: 2026-07-06
+**Task**: Strengthen WebStudy experiment controls
+**Branch**: `master`
+
+### Summary
+
+Added server-side least-filled WebStudy assignment, required vision correction, masked practice, refresh distribution metadata, rating satisficing exclusions, stability labeling, README/spec updates, and regression tests.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c14811e` | (see git log) |
 
 ### Testing
 
