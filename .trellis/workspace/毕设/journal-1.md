@@ -110,3 +110,36 @@ Added server-side least-filled WebStudy assignment, required vision correction, 
 ### Next Steps
 
 - None - task complete
+
+
+## Session 4: 调整 WebStudy 单选与评分色阶
+
+**Date**: 2026-07-06
+**Task**: 调整 WebStudy 单选与评分色阶
+**Branch**: `master`
+
+### Summary
+
+将视力矫正改为必填单选，增加评分红到绿色阶，并同步量表文案、分析标签、文档和中英文论文。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `276ea88` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete

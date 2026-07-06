@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 3
+- **Total Sessions**: 4
 - **Last Active**: 2026-07-06
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~107 | Active |
+| `journal-1.md` | ~145 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 4 | 2026-07-06 | 调整 WebStudy 单选与评分色阶 | `276ea88` | `master` |
 | 3 | 2026-07-06 | Strengthen WebStudy experiment controls | `c14811e` | `master` |
 | 2 | 2026-06-11 | Close disclosure gaps | `167b83a`, `13b3917` | `master` |
 | 1 | 2026-06-11 | PaddleOCR verification | `7fd5d07` | `master` |
