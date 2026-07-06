@@ -66,6 +66,7 @@ test("masked preview is followed by an unscored masked typing practice", () => {
 
 test("rating labels and submit backtracking avoid silent data loss", () => {
   assert.match(appJs, /ratingGroup\("flicker", "稳定感", "1 = 闪烁很强，5 = 几乎察觉不到"\)/);
+  assert.match(appJs, /ratingGroup\("privacy", "防偷拍效果", "1 = 旁人拍照很清晰，5 = 旁人拍照几乎拍不清楚"\)/);
   assert.match(appJs, /confirm\("返回评分会删除最后一条评分并重新填写，是否继续？"\)/);
 });
 

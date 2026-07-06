@@ -73,7 +73,7 @@ Questions to answer:
 - CSV export is a long table with `row_type` set to `typing` or `rating`, repeating participant/session columns on each row.
 - `/admin/data.json` returns parsed `mask_meta`. Participant paired deltas use the mean of two repetitions per condition, not the first row.
 - `analyze_study.py` treats participants as the unit of analysis, audits preregistered exclusions, and emits de-identified CSV, JSON, and LaTeX tables.
-- Analysis reports assignment-bucket balance and excludes minimum-view straight-line rating sessions as satisficing. The `flicker` DB field is presented as stability/no-flicker: higher is better.
+- Analysis reports assignment-bucket balance and excludes minimum-view straight-line rating sessions as satisficing. The `flicker` DB field is presented as stability/no-flicker: higher is better. The `privacy` DB field is presented as subjective anti-camera protection (`防偷拍效果`): higher means bystander photos are harder to read.
 - `init_db` migrates pre-contract databases in place; legacy participants receive `legacy-<id>` UUIDs before the unique index is created.
 
 ### 4. Validation & Error Matrix

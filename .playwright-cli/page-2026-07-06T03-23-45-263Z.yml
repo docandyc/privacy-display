@@ -1,0 +1,78 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: 隐
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - text: 隐私显示
+          - text: 用户研究
+        - generic [ref=e8]: 240 赫兹 受控实验
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: "1"
+        - generic [ref=e12]: 知情同意
+      - generic [ref=e13]:
+        - generic [ref=e14]: "2"
+        - generic [ref=e15]: 被试信息
+      - generic [ref=e16]:
+        - generic [ref=e17]: "3"
+        - generic [ref=e18]: 刷新率检查
+      - generic [ref=e19]:
+        - generic [ref=e20]: "4"
+        - generic [ref=e21]: 打字试次
+      - generic [ref=e22]:
+        - generic [ref=e23]: "5"
+        - generic [ref=e24]: 消融评分
+      - generic [ref=e25]:
+        - generic [ref=e26]: "6"
+        - generic [ref=e27]: 完成测试
+    - generic [ref=e28]: 会话数据保存在本地研究服务器中。刷新率会作为分析协变量记录。
+  - main [ref=e29]:
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - heading "隐私显示用户研究" [level=1] [ref=e33]
+          - paragraph [ref=e34]: 本次会话会记录原文与遮罩文本的打字表现，以及 1 到 5 分的主观评分。
+        - generic [ref=e35]: 第 1 步
+      - generic [ref=e36]: 光敏安全提示：遮罩显示会使用快速时间闪烁。若出现不适、眼睛疲劳、头晕、恶心或头痛，请立即停止。
+      - generic [ref=e37]:
+        - checkbox "我已阅读研究说明，自愿参加，并知道可在任意时刻无条件退出。研究会采集身份、人口学、显示时序、打字与评分数据；学号和姓名仅用于参与管理，分析与发布只使用去标识化数据。" [checked] [ref=e38]
+        - generic [ref=e39]: 我已阅读研究说明，自愿参加，并知道可在任意时刻无条件退出。研究会采集身份、人口学、显示时序、打字与评分数据；学号和姓名仅用于参与管理，分析与发布只使用去标识化数据。
+      - generic [ref=e40]:
+        - checkbox "我确认没有光敏性癫痫病史，也不属于对闪烁刺激敏感的人群。" [checked] [ref=e41]
+        - generic [ref=e42]: 我确认没有光敏性癫痫病史，也不属于对闪烁刺激敏感的人群。
+      - button "继续" [ref=e44] [cursor=pointer]
+  - complementary [ref=e45]:
+    - generic [ref=e46]:
+      - heading "会话" [level=2] [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e49]: 会话编号
+        - strong [ref=e50]: aae260cc
+      - generic [ref=e51]:
+        - generic [ref=e52]: 视力矫正
+        - strong [ref=e53]: "-"
+      - generic [ref=e54]:
+        - generic [ref=e55]: 刷新率
+        - strong [ref=e56]: 未检查
+      - generic [ref=e57]:
+        - generic [ref=e58]: 假定屏幕
+        - strong [ref=e59]: 240 赫兹
+    - generic [ref=e60]:
+      - heading "打字" [level=2] [ref=e61]
+      - generic [ref=e62]:
+        - generic [ref=e63]: 原文平均词速
+        - strong [ref=e64]: "-"
+      - generic [ref=e65]:
+        - generic [ref=e66]: 遮罩平均词速
+        - strong [ref=e67]: "-"
+      - generic [ref=e68]:
+        - generic [ref=e69]: 计分试次
+        - strong [ref=e70]: 0/4
+    - generic [ref=e71]:
+      - heading "评分" [level=2] [ref=e72]
+      - generic [ref=e73]:
+        - generic [ref=e74]: 已完成
+        - strong [ref=e75]: 0/6
+      - generic [ref=e76]:
+        - generic [ref=e77]: 时长
+        - strong [ref=e78]: 20 秒/次

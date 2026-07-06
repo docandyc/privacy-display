@@ -1099,7 +1099,7 @@
         ${ratingGroup("readability", "可读性", "1 = 难以阅读，5 = 非常清晰")}
         ${ratingGroup("flicker", "稳定感", "1 = 闪烁很强，5 = 几乎察觉不到")}
         ${ratingGroup("fatigue", "即时视觉不适感", "1 = 很不适，5 = 很舒适")}
-        ${ratingGroup("privacy", "防偷看效果", "1 = 旁人很容易看清，5 = 旁人几乎看不清")}
+        ${ratingGroup("privacy", "防偷拍效果", "1 = 旁人拍照很清晰，5 = 旁人拍照几乎拍不清楚")}
       </form>
       <div class="actions">
         <span class="status-line" id="viewGateStatus">请继续观看…</span>
@@ -1330,7 +1330,7 @@
       <div class="complete-mark">✓</div>
       <div class="status-line">${escapeHtml(state.submitStatus.message)}</div>
       <div class="warning">
-        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感、即时不适和主观防偷看效果上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
+        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感、即时不适和主观防偷拍效果上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
       </div>
       <div class="actions">
         <button class="button" id="newSession">开始下一位被试</button>

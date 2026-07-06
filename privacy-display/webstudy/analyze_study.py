@@ -249,7 +249,7 @@ def write_latex_tables(output_dir: Path, typing_report: dict[str, Any], rating_s
     rating_lines = [
         r"\begin{tabular}{lrrrr}",
         r"\toprule",
-        r"条件 & 可读性 & 稳定感 & 即时视觉不适 & 感知隐私 \\",
+        r"条件 & 可读性 & 稳定感 & 即时视觉不适 & 防偷拍效果 \\",
         r"\midrule",
     ]
     for condition in CONDITIONS:
