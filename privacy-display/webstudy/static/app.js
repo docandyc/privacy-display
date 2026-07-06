@@ -307,6 +307,10 @@
     const check = document.getElementById("consentCheck");
     const photosensitivity = document.getElementById("photosensitivityCheck");
     const button = document.getElementById("continueWelcome");
+    check.defaultChecked = true;
+    check.checked = true;
+    photosensitivity.defaultChecked = true;
+    photosensitivity.checked = true;
     const updateConsent = () => {
       button.disabled = !(check.checked && photosensitivity.checked);
     };

@@ -17,6 +17,8 @@ function elementMarkup(tag, id) {
 test("welcome page starts with both safety confirmations checked", () => {
   assert.match(elementMarkup("input", "consentCheck"), /\bchecked\b/);
   assert.match(elementMarkup("input", "photosensitivityCheck"), /\bchecked\b/);
+  assert.match(appJs, /check\.defaultChecked = true;\s*check\.checked = true;/);
+  assert.match(appJs, /photosensitivity\.defaultChecked = true;\s*photosensitivity\.checked = true;/);
 });
 
 test("welcome continue button is synchronized from checkbox state", () => {
