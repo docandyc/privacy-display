@@ -48,3 +48,29 @@ test("refresh check can continue immediately after a passing measurement", () =>
   assert.match(appJs, /<input type="checkbox" id="environmentCheck"[^>]*>\s*<span class="check-box" aria-hidden="true"><\/span>/);
   assert.match(appJs, /id="continueRefresh" \$\{state\.refresh\.ok && state\.environmentConfirmed \? "" : "disabled"\}/);
 });
+
+test("formal identity requires vision correction and fetches server assignment", () => {
+  assert.match(elementMarkup("select", "glasses"), /\brequired\b/);
+  assert.match(appJs, /if \(!state\.participant\.glasses\)/);
+  assert.match(appJs, /fetch\("\/api\/next-assignment"/);
+  assert.match(appJs, /state\.assignment = data\.assignment;/);
+  assert.doesNotMatch(appJs, /assignmentForSessionUuid\(state\.sessionUuid/);
+});
+
+test("masked preview is followed by an unscored masked typing practice", () => {
+  assert.match(appJs, /const MASKED_PRACTICE_DURATION_S = DEBUG \? 3 : 8;/);
+  assert.match(appJs, /maskedPracticeTrial: null,/);
+  assert.match(appJs, /state\.maskedPracticeDone = true;/);
+  assert.match(appJs, /遮罩练习/);
+});
+
+test("rating labels and submit backtracking avoid silent data loss", () => {
+  assert.match(appJs, /ratingGroup\("flicker", "稳定感", "1 = 闪烁很强，5 = 几乎察觉不到"\)/);
+  assert.match(appJs, /confirm\("返回评分会删除最后一条评分并重新填写，是否继续？"\)/);
+});
+
+test("completion screen includes debriefing and session state is recoverable", () => {
+  assert.match(appJs, /sessionStorage/);
+  assert.match(appJs, /研究目的/);
+  assert.match(appJs, /撤回/);
+});

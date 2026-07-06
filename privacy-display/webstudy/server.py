@@ -15,19 +15,26 @@ from typing import Any
 
 from flask import Flask, Response, jsonify, request, send_from_directory
 
+try:  # pragma: no cover - import style differs between package and script execution.
+    from .assignment import (
+        RATING_CONDITION_ORDER,
+        assignment_bucket_key,
+        assignment_bucket_keys,
+        assignment_for_registration_index,
+    )
+except ImportError:  # pragma: no cover
+    from assignment import (  # type: ignore
+        RATING_CONDITION_ORDER,
+        assignment_bucket_key,
+        assignment_bucket_keys,
+        assignment_for_registration_index,
+    )
+
 
 ROOT = Path(__file__).resolve().parent
 STATIC_DIR = ROOT / "static"
 DEFAULT_DB_PATH = ROOT / "study_formal.db"
 FORMAL_MIN_REFRESH_HZ = 200.0
-RATING_CONDITION_ORDER = (
-    "control_anchor",
-    "n2_mask_noise",
-    "n3_mask_noise",
-    "n4_mask_noise",
-    "n4_mask_only",
-    "deployed_full",
-)
 RATING_CONDITIONS = set(RATING_CONDITION_ORDER)
 RATING_SPECS = {
     "control_anchor": (1, "none"),
@@ -161,6 +168,17 @@ def create_app(db_path: str | Path | None = None) -> Flask:
             "available": not occupied,
         })
 
+    @app.post("/api/next-assignment")
+    def next_assignment() -> Response:
+        with get_conn(app.config["DB_PATH"]) as conn:
+            assignment = next_formal_assignment(conn)
+            counts = formal_assignment_bucket_counts(conn)
+        return jsonify({
+            "assignment": assignment,
+            "typing_order": "ABBA" if assignment["typing_order_index"] == 0 else "BAAB",
+            "bucket_counts": counts,
+        })
+
     @app.post("/api/submit")
     def submit() -> Response:
         try:
@@ -285,20 +303,34 @@ def formal_registration_occupied(conn: sqlite3.Connection, registration_index: i
     return row is not None
 
 
-def derived_index_from_session_uuid(session_uuid: str) -> int:
-    """Derive a stable non-negative int from the first 8 hex chars of the UUID.
+def formal_assignment_bucket_counts(conn: sqlite3.Connection) -> dict[str, int]:
+    counts = {key: 0 for key in assignment_bucket_keys()}
+    rows = conn.execute(
+        "SELECT registration_index FROM participants "
+        "WHERE debug = 0 AND demo = 0 AND registration_index >= 0"
+    ).fetchall()
+    for row in rows:
+        assignment = assignment_for_registration_index(int(row["registration_index"]))
+        counts[assignment_bucket_key(assignment)] += 1
+    return counts
 
-    Matches the client-side ``derivedIndexFromSessionUuid`` in ``static/design.js``
-    so counterbalance and rating-order indices agree end-to-end without the
-    experimenter typing a registration index.
-    """
-    hex_prefix = str(session_uuid or "").replace("-", "")[:8]
-    if len(hex_prefix) != 8:
-        raise ValidationError("session_uuid must contain at least 8 hex chars")
-    try:
-        return int(hex_prefix, 16)
-    except ValueError as exc:
-        raise ValidationError("session_uuid must be a valid UUID") from exc
+
+def next_formal_assignment(conn: sqlite3.Connection) -> dict[str, int]:
+    counts = formal_assignment_bucket_counts(conn)
+    occupied = {
+        int(row["registration_index"])
+        for row in conn.execute(
+            "SELECT registration_index FROM participants "
+            "WHERE debug = 0 AND demo = 0 AND registration_index >= 0"
+        )
+    }
+    best_bucket = min(counts, key=lambda key: (counts[key], int(key.split(":")[1]), int(key.split(":")[0])))
+    registration_index = 0
+    while True:
+        assignment = assignment_for_registration_index(registration_index)
+        if registration_index not in occupied and assignment_bucket_key(assignment) == best_bucket:
+            return assignment
+        registration_index += 1
 
 
 def validate_payload(payload: Any) -> tuple[dict, dict, list[dict], list[dict]]:
@@ -357,10 +389,13 @@ def clean_participant(raw: Any) -> dict:
         raise ValidationError("consent_confirmed must be true")
     if raw.get("photosensitivity_screen_passed") is not True:
         raise ValidationError("photosensitivity_screen_passed must be true")
+    glasses = clean_text(raw.get("glasses"), 40)
+    if not glasses:
+        raise ValidationError("glasses is required")
     return {
         "student_id": "",
         "name": "",
-        "glasses": clean_text(raw.get("glasses"), 40),
+        "glasses": glasses,
         "major": "",
         "age": None,
         "gender": "",
@@ -387,16 +422,18 @@ def clean_session(raw: Any) -> dict:
     counterbalance_index = clean_int(raw.get("counterbalance_index"), default=-1)
     rating_order_index = clean_int(raw.get("rating_order_index"), default=-1)
     if not (demo or debug):
-        derived = derived_index_from_session_uuid(session_uuid)
-        expected_typing_index = derived % 2
-        expected_rating_index = (derived // 2) % len(RATING_CONDITIONS)
+        if registration_index < 0:
+            raise ValidationError("registration_index is required for formal sessions")
+        expected = assignment_for_registration_index(registration_index)
+        expected_typing_index = expected["typing_order_index"]
+        expected_rating_index = expected["rating_order_index"]
         expected_typing_order = "ABBA" if expected_typing_index == 0 else "BAAB"
         if counterbalance_index != expected_typing_index:
-            raise ValidationError("counterbalance_index does not match session_uuid")
+            raise ValidationError("counterbalance_index does not match registration_index")
         if rating_order_index != expected_rating_index:
-            raise ValidationError("rating_order_index does not match session_uuid")
+            raise ValidationError("rating_order_index does not match registration_index")
         if typing_order != expected_typing_order:
-            raise ValidationError("typing_order does not match session_uuid")
+            raise ValidationError("typing_order does not match registration_index")
     return {
         "session_uuid": session_uuid,
         "registration_index": registration_index,

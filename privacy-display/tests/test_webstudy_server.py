@@ -203,6 +203,73 @@ def test_formal_registration_index_is_unique(tmp_path):
     assert "registration_index" in response.get_json()["error"]
 
 
+def test_next_assignment_returns_least_filled_formal_bucket(tmp_path):
+    client = create_app(tmp_path / "study.db").test_client()
+
+    first = client.post("/api/next-assignment")
+    assert first.status_code == 200
+    assert first.get_json()["assignment"] == {
+        "registration_index": 0,
+        "typing_order_index": 0,
+        "rating_order_index": 0,
+    }
+
+    debug_payload = make_payload(
+        session_uuid="00000000-0000-4000-8000-000000000090",
+        registration_index=1,
+        debug=True,
+    )
+    assert client.post("/api/submit", json=debug_payload).status_code == 200
+    still_ignores_debug = client.post("/api/next-assignment").get_json()["assignment"]
+    assert still_ignores_debug["registration_index"] == 0
+
+    for registration_index in range(11):
+        payload = make_payload(
+            session_uuid=f"00000000-0000-4000-8000-{registration_index + 100:012d}",
+            registration_index=registration_index,
+        )
+        assert client.post("/api/submit", json=payload).status_code == 200
+
+    next_assignment = client.post("/api/next-assignment").get_json()
+    assert next_assignment["assignment"] == {
+        "registration_index": 11,
+        "typing_order_index": 1,
+        "rating_order_index": 5,
+    }
+    assert next_assignment["bucket_counts"]["1:5"] == 0
+
+
+def test_formal_submission_requires_vision_correction_field(tmp_path):
+    client = create_app(tmp_path / "study.db").test_client()
+    payload = make_payload()
+    payload["participant"]["glasses"] = ""
+
+    response = client.post("/api/submit", json=payload)
+
+    assert response.status_code == 400
+    assert "glasses" in response.get_json()["error"]
+
+
+def test_formal_assignment_is_validated_from_registration_index_not_uuid(tmp_path):
+    client = create_app(tmp_path / "study.db").test_client()
+    payload = make_payload(
+        session_uuid="ffffffff-ffff-4fff-8fff-ffffffffffff",
+        registration_index=7,
+    )
+
+    accepted = client.post("/api/submit", json=payload)
+    assert accepted.status_code == 200
+
+    mismatch = make_payload(
+        session_uuid="eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+        registration_index=8,
+    )
+    mismatch["session"]["counterbalance_index"] = 1
+    rejected = client.post("/api/submit", json=mismatch)
+    assert rejected.status_code == 400
+    assert "registration_index" in rejected.get_json()["error"]
+
+
 def test_registration_status_rejects_invalid_and_only_counts_formal_rows(tmp_path):
     client = create_app(tmp_path / "study.db").test_client()
 
@@ -318,6 +385,8 @@ def test_analysis_generates_auditable_json_csv_and_latex_outputs(tmp_path):
 
     assert report["sample"]["included"] == 6
     assert report["sample"]["target_n"] == 24
+    assert report["assignment_balance"]["joint_buckets"]["0:0"] == 1
+    assert report["assignment_balance"]["joint_buckets"]["1:2"] == 1
     assert (output / "analysis_report.json").exists()
     assert (output / "typing_participant_means.csv").exists()
     assert (output / "typing_table.tex").exists()
@@ -338,6 +407,26 @@ def test_analysis_excludes_any_session_with_under_five_attempted_chars(tmp_path)
 
     assert report["sample"]["included"] == 0
     assert report["exclusions"]["typing_trial_below_5_attempted_chars"] == 1
+
+
+def test_analysis_excludes_minimum_view_straightline_ratings(tmp_path):
+    from webstudy.analyze_study import analyze_study
+
+    db = tmp_path / "study.db"
+    client = create_app(db).test_client()
+    payload = make_payload()
+    for row in payload["ratings"]:
+        row["view_duration_ms"] = 10_000
+        row["readability"] = 3
+        row["flicker"] = 3
+        row["fatigue"] = 3
+        row["privacy"] = 3
+    assert client.post("/api/submit", json=payload).status_code == 200
+
+    report = analyze_study(db, tmp_path / "analysis", bootstrap_samples=50)
+
+    assert report["sample"]["included"] == 0
+    assert report["exclusions"]["rating_straightline_minimum_view"] == 1
 
 
 def test_backup_uses_consistent_sqlite_snapshot(tmp_path):

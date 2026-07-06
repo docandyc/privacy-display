@@ -173,7 +173,7 @@
             <tr>
               <th>数据库编号</th><th>登记序号 k</th><th>学号</th><th>姓名</th><th>刷新率</th><th>原文词速</th>
               <th>遮罩词速</th><th>差值</th><th>差值%</th><th>可读性</th>
-              <th>闪烁感</th><th>即时视觉不适</th><th>感知隐私</th>
+              <th>稳定感</th><th>即时视觉不适</th><th>感知隐私</th>
             </tr>
           </thead>
           <tbody>
@@ -210,7 +210,7 @@
           <thead>
             <tr>
               <th>条件</th><th>样本数</th><th>组件</th><th>行数</th>
-              <th>可读性</th><th>闪烁感</th><th>即时视觉不适</th><th>感知隐私</th>
+              <th>可读性</th><th>稳定感</th><th>即时视觉不适</th><th>感知隐私</th>
             </tr>
           </thead>
           <tbody>
@@ -279,7 +279,7 @@
           <thead>
             <tr>
               <th>被试</th><th>条件</th><th>样本数</th><th>模式</th><th>周期</th>
-              <th>可读性</th><th>闪烁感</th><th>即时视觉不适</th><th>感知隐私</th><th>观看</th><th>顺序</th>
+              <th>可读性</th><th>稳定感</th><th>即时视觉不适</th><th>感知隐私</th><th>观看</th><th>顺序</th>
             </tr>
           </thead>
           <tbody>

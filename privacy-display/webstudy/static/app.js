@@ -10,8 +10,10 @@
   const TRIAL_COUNTDOWN_S = 5;
   const WARMUP_DURATION_S = DEBUG ? 3 : 12;
   const MASKED_PREVIEW_DURATION_S = DEBUG ? 3 : 10;
+  const MASKED_PRACTICE_DURATION_S = DEBUG ? 3 : 8;
   const RATING_MIN_VIEW_MS = DEBUG ? 1500 : 10000;
   const TARGET_CHARS = DEBUG ? 100 : 220;
+  const STORAGE_KEY = `privacy-display-webstudy:${DEMO ? "demo" : "formal"}:${DEBUG ? "debug" : "normal"}`;
   const ASSUMED_MONITOR_HZ = 240;
   const MIN_REFRESH_HZ = DEMO ? 144 : 200;
   // Subframe cycle (refresh / n) below this falls back to a static subframe.
@@ -137,6 +139,8 @@
     warmupDone: false,
     maskedPreviewTrial: null,
     maskedPreviewDone: false,
+    maskedPracticeTrial: null,
+    maskedPracticeDone: false,
     trials: [],
     trialCursor: 0,
     typing: [],
@@ -146,6 +150,7 @@
     counterbalanceIndex: 0,
     ratingOrderIndex: 0,
     typingOrder: "",
+    assignment: null,
     environmentConfirmed: true,
     submitStatus: null
   };
@@ -182,8 +187,54 @@
     return Number(value).toFixed(digits);
   }
 
+  function saveState() {
+    try {
+      const snapshot = {
+        sessionUuid: state.sessionUuid,
+        startedAt: state.startedAt,
+        participant: state.participant,
+        refresh: state.refresh,
+        environmentConfirmed: state.environmentConfirmed,
+        assignment: state.assignment,
+        step: state.step
+      };
+      global.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    } catch (error) {
+      // Session recovery is best-effort; collection must continue if storage is blocked.
+    }
+  }
+
+  function restoreState() {
+    try {
+      const raw = global.sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        return;
+      }
+      const snapshot = JSON.parse(raw);
+      if (!snapshot || typeof snapshot !== "object") {
+        return;
+      }
+      if (snapshot.sessionUuid) {
+        state.sessionUuid = snapshot.sessionUuid;
+      }
+      if (snapshot.startedAt) {
+        state.startedAt = snapshot.startedAt;
+      }
+      state.participant = snapshot.participant || state.participant;
+      state.refresh = snapshot.refresh || state.refresh;
+      state.environmentConfirmed = snapshot.environmentConfirmed !== false;
+      state.assignment = snapshot.assignment || state.assignment;
+      if (["identity", "refresh"].includes(snapshot.step)) {
+        state.step = snapshot.step;
+      }
+    } catch (error) {
+      global.sessionStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
   function setStep(step) {
     state.step = step;
+    saveState();
     cleanupTransientWork();
     render();
   }
@@ -331,14 +382,14 @@
     shell(`
       ${renderHeader(
         "被试信息",
-        "只需要一项视力矫正信息，用于分析与视觉条件相关的差异。",
+        "请选择视力矫正状态；服务器会在本页分配一个均衡的实验顺序。",
         "第 2 步"
       )}
       <form id="identityForm" class="form-grid">
         <div class="field">
           <label for="glasses">视力矫正</label>
-          <select id="glasses" name="glasses">
-            <option value="">未填写</option>
+          <select id="glasses" name="glasses" required>
+            <option value="">请选择</option>
             <option value="none">不戴眼镜 / 隐形眼镜</option>
             <option value="glasses">戴眼镜</option>
             <option value="contacts">戴隐形眼镜</option>
@@ -355,14 +406,41 @@
       document.getElementById("glasses").value = state.participant.glasses;
     }
     document.getElementById("backIdentity").addEventListener("click", () => setStep("welcome"));
-    document.getElementById("identityForm").addEventListener("submit", (event) => {
+    document.getElementById("identityForm").addEventListener("submit", async (event) => {
       event.preventDefault();
+      const status = document.getElementById("identityStatus");
+      const button = document.getElementById("continueIdentity");
       const data = new FormData(event.currentTarget);
       state.participant = {
         ...state.participant,
         glasses: String(data.get("glasses") || "").trim()
       };
-      setStep("refresh");
+      if (!state.participant.glasses) {
+        status.classList.add("error");
+        status.textContent = "请选择视力矫正状态。";
+        return;
+      }
+      button.disabled = true;
+      status.classList.remove("error");
+      status.textContent = "正在获取均衡分配……";
+      try {
+        if (!DEMO && !DEBUG) {
+          const response = await fetch("/api/next-assignment", { method: "POST" });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || `分配失败 ${response.status}`);
+          }
+          state.assignment = data.assignment;
+        } else if (!state.assignment) {
+          state.assignment = { registration_index: -1, typing_order_index: 0, rating_order_index: 0 };
+        }
+        saveState();
+        setStep("refresh");
+      } catch (error) {
+        status.classList.add("error");
+        status.textContent = error.message;
+        button.disabled = false;
+      }
     });
   }
 
@@ -432,6 +510,10 @@
         renderRefresh();
         return;
       }
+      if (!DEMO && !DEBUG && !state.assignment) {
+        setStep("identity");
+        return;
+      }
       resetExperimentPlan();
       prepareExperiment();
       setStep("typing");
@@ -440,12 +522,20 @@
       const button = document.getElementById("runRefresh");
       const statusLine = document.getElementById("refreshStatus");
       button.disabled = true;
-      statusLine.textContent = "正在测量显示节奏……";
-      const result = await global.PrivacyMask.estimateRefreshRate(DEBUG ? 500 : 900);
+      statusLine.textContent = "正在测量显示节奏，正式模式会连续采样三段……";
+      const result = await global.PrivacyMask.estimateRefreshRate({
+        durationMs: DEBUG ? 500 : 2000,
+        repeats: DEBUG ? 1 : 3
+      });
       state.refresh = {
         hz: result.hz,
         samples: result.samples,
         mean_frame_ms: result.mean_frame_ms,
+        median_frame_ms: result.median_frame_ms,
+        frame_ms_p05: result.frame_ms_p05,
+        frame_ms_p95: result.frame_ms_p95,
+        runs: result.runs,
+        repeats: result.repeats,
         ok: result.hz >= MIN_REFRESH_HZ
       };
       resetExperimentPlan();
@@ -459,6 +549,8 @@
     state.warmupDone = false;
     state.maskedPreviewTrial = null;
     state.maskedPreviewDone = false;
+    state.maskedPracticeTrial = null;
+    state.maskedPracticeDone = false;
     state.trials = [];
     state.trialCursor = 0;
     state.typing = [];
@@ -474,7 +566,9 @@
     ].join(":");
 
     const maskedN = maskedSubframeCount(state.refresh.hz);
-    const assignment = global.StudyDesign.assignmentForSessionUuid(state.sessionUuid, CONDITIONS.length);
+    const assignment = state.assignment && state.assignment.registration_index >= 0
+      ? global.StudyDesign.assignmentForRegistrationIndex(state.assignment.registration_index, CONDITIONS.length)
+      : (state.assignment || { typing_order_index: 0, rating_order_index: 0 });
     state.counterbalanceIndex = assignment.typing_order_index;
     state.ratingOrderIndex = assignment.rating_order_index;
     const sequence = global.StudyDesign.buildTypingSequence(state.counterbalanceIndex);
@@ -502,6 +596,19 @@
       insertInversion: INSERT_INVERSION,
       inversionAlpha: INVERSION_ALPHA,
       duration_s: MASKED_PREVIEW_DURATION_S
+    };
+    state.maskedPracticeTrial = {
+      condition: "masked_practice",
+      label: "遮罩练习（不计分）",
+      n: maskedN,
+      requested_n: MASKED_TARGET_N,
+      components: "mask+noise+anti-ocr+inversion",
+      target_text: global.Pseudoword.generateText(`${state.seed}:masked-practice`, TARGET_CHARS),
+      useNoise: true,
+      antiOcr: ANTI_OCR_STRONG,
+      insertInversion: INSERT_INVERSION,
+      inversionAlpha: INVERSION_ALPHA,
+      duration_s: MASKED_PRACTICE_DURATION_S
     };
     state.trials = sequence.map((condition, trialIndex) => {
       repetitions[condition] += 1;
@@ -531,6 +638,10 @@
     cleanupTransientWork();
     if (state.warmupDone && !state.maskedPreviewDone) {
       renderMaskedPreview();
+      return;
+    }
+    if (state.maskedPreviewDone && !state.maskedPracticeDone) {
+      renderMaskedPractice();
       return;
     }
     const isWarmup = !state.warmupDone;
@@ -634,7 +745,17 @@
     });
   }
 
-  function startTrial(trial, isWarmup) {
+  async function requestTrialFullscreen() {
+    try {
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch (error) {
+      // Fullscreen is recorded but not treated as a hard browser-compatibility gate.
+    }
+  }
+
+  function startTrial(trial, isWarmup, isPractice = false) {
     const input = document.getElementById("typingInput");
     input.addEventListener("paste", (event) => {
       event.preventDefault();
@@ -645,6 +766,7 @@
     const countdown = document.getElementById("trialCountdown");
     const countdownValue = document.getElementById("countdownValue");
     startButton.disabled = true;
+    requestTrialFullscreen();
     input.disabled = true;
     input.value = "";
     let firstKeyAt = null;
@@ -682,6 +804,11 @@
         if (isWarmup) {
           state.warmupDone = true;
           renderWarmupResult();
+          return;
+        }
+        if (isPractice) {
+          state.maskedPracticeDone = true;
+          renderMaskedPracticeResult();
           return;
         }
         const score = global.Typing.scoreTyping(trial.target_text, input.value, elapsed);
@@ -736,6 +863,78 @@
     container.innerHTML = `
       <div class="status-line">无遮罩热身完成。本段输入不计分；下面先观看一次 ${MASKED_PREVIEW_DURATION_S} 秒遮罩预览，再开始正式试次。</div>
       <div class="actions"><button class="button" id="nextTrial">进入遮罩预览</button></div>
+    `;
+    document.getElementById("nextTrial").addEventListener("click", renderTyping);
+  }
+
+  function renderMaskedPractice() {
+    const trial = state.maskedPracticeTrial;
+    shell(`
+      ${renderHeader(
+        trial.label,
+        "请在遮罩下尝试输入一小段文本。本段用于适应，不进入正式统计。",
+        `${MASKED_PRACTICE_DURATION_S} 秒练习`
+      )}
+      <div class="trial-layout">
+        <div class="stimulus">
+          <div class="stimulus-head">
+            <span>遮罩练习源文本</span>
+            <span>层数 ${trial.n}，${trial.components}</span>
+          </div>
+          <div class="masked-canvas-wrap">
+            <canvas id="stimulusCanvas" class="masked-canvas"></canvas>
+          </div>
+        </div>
+        <div class="timer-row">
+          <div class="timer" id="timerValue">${trial.duration_s.toFixed(0)}秒</div>
+          <div class="meter"><div class="meter-fill" id="timerFill"></div></div>
+          <button class="button" id="startTrial">开始练习</button>
+        </div>
+        <div class="countdown" id="trialCountdown" hidden>
+          <span>准备输入</span>
+          <strong id="countdownValue">${TRIAL_COUNTDOWN_S}</strong>
+        </div>
+        <textarea id="typingInput" class="typing-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled></textarea>
+        <div id="trialResult"></div>
+      </div>
+      <div class="actions">
+        <button class="button secondary" id="debugFinish" style="${DEBUG ? "" : "display:none"}">结束练习</button>
+      </div>
+    `);
+
+    const canvas = document.getElementById("stimulusCanvas");
+    currentPlayer = new global.PrivacyMask.MaskedPlayer(canvas);
+    trial.mask_meta = currentPlayer.load(trial.target_text, {
+      width: 900,
+      height: 260,
+      fontSize: 23,
+      refreshHz: state.refresh.hz,
+      safeFlickerHz: SAFE_FLICKER_HZ,
+      n: trial.n,
+      seed: `${state.seed}:masked-practice`,
+      useNoise: trial.useNoise,
+      epsilonPixels: 8,
+      gammaFactor: 1.1,
+      cycles: ANTI_CAPTURE_CYCLES,
+      antiOcr: trial.antiOcr,
+      insertInversion: trial.insertInversion,
+      inversionAlpha: trial.inversionAlpha
+    });
+    currentPlayer.start();
+    logSelftest(trial.condition, trial.mask_meta);
+    document.getElementById("startTrial").addEventListener("click", () => startTrial(trial, false, true));
+    document.getElementById("debugFinish").addEventListener("click", () => {
+      if (activeFinish) {
+        activeFinish();
+      }
+    });
+  }
+
+  function renderMaskedPracticeResult() {
+    const container = document.getElementById("trialResult");
+    container.innerHTML = `
+      <div class="status-line">遮罩练习完成。本段不计分；下面开始四个正式计分试次。</div>
+      <div class="actions"><button class="button" id="nextTrial">开始正式试次</button></div>
     `;
     document.getElementById("nextTrial").addEventListener("click", renderTyping);
   }
@@ -813,8 +1012,8 @@
         }
         state.maskedPreviewDone = true;
         document.getElementById("trialResult").innerHTML = `
-          <div class="status-line">遮罩预览完成。下面开始四个正式计分试次。</div>
-          <div class="actions"><button class="button" id="nextTrial">开始正式试次</button></div>
+          <div class="status-line">遮罩预览完成。下面先做一次遮罩输入练习，再开始正式计分试次。</div>
+          <div class="actions"><button class="button" id="nextTrial">进入遮罩练习</button></div>
         `;
         document.getElementById("nextTrial").addEventListener("click", renderTyping);
       };
@@ -898,7 +1097,7 @@
       </div>
       <form id="ratingForm" class="ratings">
         ${ratingGroup("readability", "可读性", "1 = 难以阅读，5 = 非常清晰")}
-        ${ratingGroup("flicker", "闪烁感", "1 = 很强，5 = 几乎察觉不到")}
+        ${ratingGroup("flicker", "稳定感", "1 = 闪烁很强，5 = 几乎察觉不到")}
         ${ratingGroup("fatigue", "即时视觉不适感", "1 = 很不适，5 = 很舒适")}
         ${ratingGroup("privacy", "防偷看效果", "1 = 旁人很容易看清，5 = 旁人几乎看不清")}
       </form>
@@ -1037,6 +1236,9 @@
       </div>
     `);
     document.getElementById("backSubmit").addEventListener("click", () => {
+      if (!global.confirm("返回评分会删除最后一条评分并重新填写，是否继续？")) {
+        return;
+      }
       state.step = "ratings";
       state.ratingCursor = Math.max(0, state.ratingOrder.length - 1);
       state.ratings.pop();
@@ -1050,7 +1252,7 @@
       participant: state.participant,
       session: {
         session_uuid: state.sessionUuid,
-        registration_index: -1,
+        registration_index: state.assignment ? state.assignment.registration_index : -1,
         started_at: state.startedAt,
         submitted_at: new Date().toISOString(),
         assumed_monitor_hz: ASSUMED_MONITOR_HZ,
@@ -1069,7 +1271,16 @@
           avail_width: global.screen.availWidth,
           avail_height: global.screen.availHeight,
           color_depth: global.screen.colorDepth,
-          device_pixel_ratio: global.devicePixelRatio || 1
+          device_pixel_ratio: global.devicePixelRatio || 1,
+          outer_width: global.outerWidth,
+          outer_height: global.outerHeight,
+          inner_width: global.innerWidth,
+          inner_height: global.innerHeight,
+          fullscreen: Boolean(document.fullscreenElement),
+          refresh_median_frame_ms: state.refresh.median_frame_ms,
+          refresh_frame_ms_p05: state.refresh.frame_ms_p05,
+          refresh_frame_ms_p95: state.refresh.frame_ms_p95,
+          refresh_runs: state.refresh.runs
         },
         demo: DEMO,
         debug: DEBUG
@@ -1099,6 +1310,7 @@
         error: false,
         message: `已保存被试 #${data.participant_id}：${data.typing_rows} 条打字记录，${data.rating_rows} 条评分记录。`
       };
+      global.sessionStorage.removeItem(STORAGE_KEY);
       renderComplete();
     } catch (error) {
       state.submitStatus = { error: true, message: error.message };
@@ -1117,6 +1329,9 @@
       )}
       <div class="complete-mark">✓</div>
       <div class="status-line">${escapeHtml(state.submitStatus.message)}</div>
+      <div class="warning">
+        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感、即时不适和主观防偷看效果上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
+      </div>
       <div class="actions">
         <button class="button" id="newSession">开始下一位被试</button>
       </div>
@@ -1160,5 +1375,6 @@
     }
   }
 
+  restoreState();
   render();
 })(window);

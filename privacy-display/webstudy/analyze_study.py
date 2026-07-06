@@ -14,19 +14,18 @@ from typing import Any
 import numpy as np
 from scipy import stats
 
+try:  # pragma: no cover - supports both package imports and script execution.
+    from .assignment import RATING_CONDITION_ORDER, assignment_bucket_key, assignment_for_registration_index
+except ImportError:  # pragma: no cover
+    from assignment import RATING_CONDITION_ORDER, assignment_bucket_key, assignment_for_registration_index  # type: ignore
+
 
 TARGET_N = 24
 MIN_REFRESH_HZ = 200.0
 MIN_CONTROL_ACCURACY = 0.50
 MIN_ATTEMPTED_CHARS_PER_TRIAL = 5
-CONDITIONS = (
-    "control_anchor",
-    "n2_mask_noise",
-    "n3_mask_noise",
-    "n4_mask_noise",
-    "n4_mask_only",
-    "deployed_full",
-)
+MIN_RATING_QUALITY_VIEW_MS = 11_000
+CONDITIONS = RATING_CONDITION_ORDER
 RATING_DIMENSIONS = ("readability", "flicker", "fatigue", "privacy")
 TYPING_METRICS = ("wpm", "cpm", "accuracy", "attempted_chars", "first_key_latency_ms")
 DEFAULT_DB_PATH = Path(__file__).with_name("study_formal.db")
@@ -45,6 +44,21 @@ def mean(values: list[float | int | None]) -> float | None:
     return float(np.mean(clean)) if clean else None
 
 
+def is_straightline_rating_row(row: sqlite3.Row) -> bool:
+    values = [int(row[dimension]) for dimension in RATING_DIMENSIONS]
+    return len(set(values)) == 1
+
+
+def has_minimum_view_straightline_ratings(ratings: list[sqlite3.Row]) -> bool:
+    if len(ratings) != len(CONDITIONS):
+        return False
+    return all(
+        int(row["view_duration_ms"] or 0) <= MIN_RATING_QUALITY_VIEW_MS
+        and is_straightline_rating_row(row)
+        for row in ratings
+    )
+
+
 def participant_exclusions(participant: sqlite3.Row, typing: list[sqlite3.Row], ratings: list[sqlite3.Row]) -> list[str]:
     reasons: list[str] = []
     if participant["debug"]:
@@ -59,6 +73,8 @@ def participant_exclusions(participant: sqlite3.Row, typing: list[sqlite3.Row], 
     rating_labels = {row["condition_label"] for row in ratings}
     if len(ratings) != 6 or rating_labels != set(CONDITIONS):
         reasons.append("incomplete_ratings")
+    elif has_minimum_view_straightline_ratings(ratings):
+        reasons.append("rating_straightline_minimum_view")
     control_accuracy = mean([row["accuracy"] for row in typing if row["condition"] == "control"])
     if control_accuracy is not None and control_accuracy < MIN_CONTROL_ACCURACY:
         reasons.append("control_accuracy_below_50pct")
@@ -233,7 +249,7 @@ def write_latex_tables(output_dir: Path, typing_report: dict[str, Any], rating_s
     rating_lines = [
         r"\begin{tabular}{lrrrr}",
         r"\toprule",
-        r"条件 & 可读性 & 闪烁感 & 即时视觉不适 & 感知隐私 \\",
+        r"条件 & 可读性 & 稳定感 & 即时视觉不适 & 感知隐私 \\",
         r"\midrule",
     ]
     for condition in CONDITIONS:
@@ -246,6 +262,27 @@ def write_latex_tables(output_dir: Path, typing_report: dict[str, Any], rating_s
         )
     rating_lines.extend([r"\bottomrule", r"\end{tabular}", ""])
     (output_dir / "ratings_table.tex").write_text("\n".join(rating_lines), encoding="utf-8")
+
+
+def assignment_balance(participants: list[sqlite3.Row]) -> dict[str, Any]:
+    formal = [
+        participant for participant in participants
+        if not participant["debug"] and not participant["demo"] and int(participant["registration_index"]) >= 0
+    ]
+    typing_counts = Counter()
+    rating_counts = Counter()
+    joint_counts = Counter()
+    for participant in formal:
+        assignment = assignment_for_registration_index(int(participant["registration_index"]))
+        typing_counts[str(assignment["typing_order_index"])] += 1
+        rating_counts[str(assignment["rating_order_index"])] += 1
+        joint_counts[assignment_bucket_key(assignment)] += 1
+    return {
+        "formal_n": len(formal),
+        "typing_order": dict(sorted(typing_counts.items())),
+        "rating_order": dict(sorted(rating_counts.items(), key=lambda item: int(item[0]))),
+        "joint_buckets": dict(sorted(joint_counts.items())),
+    }
 
 
 def analyze_study(db_path: str | Path, output_dir: str | Path, *, bootstrap_samples: int = 10_000) -> dict[str, Any]:
@@ -323,7 +360,7 @@ def analyze_study(db_path: str | Path, output_dir: str | Path, *, bootstrap_samp
             "exclusions": [
                 "debug/demo", "incomplete rows", "refresh <200Hz", "control accuracy <50%",
                 "any typing trial with attempted_chars <5", "non-temporal masked trial",
-                "observed effective base cycle <50Hz",
+                "observed effective base cycle <50Hz", "minimum-view straight-line ratings",
             ],
         },
         "sample": {
@@ -336,6 +373,7 @@ def analyze_study(db_path: str | Path, output_dir: str | Path, *, bootstrap_samp
         "typing": typing_report,
         "rating_summary": rating_summary,
         "rating_inference": rating_inference(rating_matrix) if rating_matrix else {},
+        "assignment_balance": assignment_balance(participants),
         "exclusions": dict(Counter(reason for item in exclusions for reason in item["reasons"])),
     }
     fields = ["participant_code", "participant_id", "registration_index"] + [

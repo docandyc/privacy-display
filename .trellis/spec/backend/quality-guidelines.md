@@ -42,8 +42,9 @@ Questions to answer:
 
 ### 2. Signatures
 - Command: `python webstudy/server.py --host 127.0.0.1 --port 5000 --db webstudy/study_formal.db`
+- API: `POST /api/next-assignment` returns `{assignment, typing_order, bucket_counts}` for the least-filled formal `(typing_order_index, rating_order_index)` bucket.
 - API: `POST /api/submit` with JSON `{participant, session, typing, ratings}`
-- API: `GET /api/registration-status?registration_index=<k>` returns `{registration_index, available}` for formal-row occupancy.
+- API: `GET /api/registration-status?registration_index=<k>` returns `{registration_index, available}` for compatibility/formal-row occupancy checks.
 - Page: `GET /admin`
 - API: `GET /admin/data.json?token=...`
 - API: `GET /admin/export.csv?token=...`
@@ -54,10 +55,10 @@ Questions to answer:
 - Env: `WEBSTUDY_DB`, `WEBSTUDY_HOST`, `WEBSTUDY_PORT`, optional `WEBSTUDY_EXPORT_TOKEN`
 
 ### 3. Contracts
-- `participant.student_id` and `participant.name` are required; `consent_confirmed` and `photosensitivity_screen_passed` must be true. `age` and `gender` are optional demographic fields.
+- `participant.glasses` is required in formal submissions; `consent_confirmed` and `photosensitivity_screen_passed` must be true. Student ID/name are legacy columns and are not collected by the current participant-facing form.
 - `session.session_uuid` is a valid UUID and the database uniqueness key. Retrying the same UUID returns the existing participant with `created=false` and must not duplicate event rows.
-- Every formal session requires an operator-assigned zero-based `session.registration_index = k`. Formal `participants.registration_index` values are unique; migrated legacy rows use `-1`, and debug/demo sessions are outside the partial uniqueness constraint.
-- Formal identity submission must preflight `k` through `/api/registration-status` before any refresh check or trial begins. An occupied index or failed request keeps the form populated and blocks navigation; the final unique index remains authoritative against races.
+- Every formal session requires a server-assigned zero-based `session.registration_index = k`. Formal `participants.registration_index` values are unique; migrated legacy rows use `-1`, and debug/demo sessions are outside the partial uniqueness constraint.
+- Formal identity submission must obtain assignment through `/api/next-assignment` before any refresh check or trial begins. A failed request keeps the form populated and blocks navigation; the final unique index remains authoritative against races.
 - The no-argument server, analysis, and backup commands target `study_formal.db`. The old `study.db` contains legacy trial rows and must remain untouched unless an operator explicitly supplies it with `--db`/`WEBSTUDY_DB`.
 - Counterbalancing is derived only from `k`: `typing_order_index = k % 2`, `rating_order_index = floor(k / 2) % 6`. This crosses both typing orders with all six Latin rows once per 12 consecutive registrations; `N=24` is two complete joint cycles. Do not use a participant/session hash for allocation.
 - Formal sessions require `refresh_hz >= 200`, `refresh_ok=true`, `environment_confirmed=true`, fixed masked `n=4`, and `demo=false`. A `demo=1` or `debug=1` session is accepted for operator checks but excluded from default administration, statistics, and exports.
@@ -65,24 +66,25 @@ Questions to answer:
 - `typing` contains exactly four scored rows: two `control` source-Canvas rows (`n=1`) and two deployed `masked` rows. Unique `trial_index` is 0-3 and each condition has repetitions 1 and 2. Rows preserve target/transcribed text, MSD target-prefix metrics, WPM/CPM, first-key latency, and `mask_meta` timing.
 - `ratings` contains exactly six unique rows: `control_anchor`, `n2_mask_noise`, `n3_mask_noise`, `n4_mask_noise`, `n4_mask_only`, and `deployed_full`. Each has a unique order 0-5, a view duration of at least 10 seconds in non-debug sessions, timestamps, four 1-5 ratings, and `mask_meta`.
 - Control and masked text must use the same `renderSourceCanvas` dimensions, font, polarity, and weight. Only the temporal treatment may differ.
-- Before scored trials, the formal flow includes an unscored source-Canvas typing warm-up and a 10-second unscored deployed-mask preview. Typing textareas prevent paste.
+- Before scored trials, the formal flow includes an unscored source-Canvas typing warm-up, a 10-second unscored deployed-mask preview, and a short unscored deployed-mask typing practice. Typing textareas prevent paste.
 - The masked preview canvas is hidden after frame precomputation and becomes visible only when the participant clicks Start; do not expose the static first subframe drawn by `MaskedPlayer.load()`.
 - Empty typed input has `accuracy=0` and `msd_error_rate=1`. Analysis excludes a participant when any scored typing trial has fewer than five `attempted_chars`; speed and accuracy are interpreted jointly.
-- `mask_meta` records mode plus rAF observed refresh, effective/full cycle rates, rendered intervals, estimated dropped frames/rate, and mean/max frame interval. An interval over 1.5 expected frames is a long interval.
+- `mask_meta` records mode plus rAF observed refresh, effective/full cycle rates, rendered intervals, estimated dropped frames/rate, and mean/max frame interval. An interval over 1.5 expected frames is a long interval. Refresh preflight stores repeated-run timing distribution metadata in `screen_json`.
 - CSV export is a long table with `row_type` set to `typing` or `rating`, repeating participant/session columns on each row.
 - `/admin/data.json` returns parsed `mask_meta`. Participant paired deltas use the mean of two repetitions per condition, not the first row.
 - `analyze_study.py` treats participants as the unit of analysis, audits preregistered exclusions, and emits de-identified CSV, JSON, and LaTeX tables.
+- Analysis reports assignment-bucket balance and excludes minimum-view straight-line rating sessions as satisficing. The `flicker` DB field is presented as stability/no-flicker: higher is better.
 - `init_db` migrates pre-contract databases in place; legacy participants receive `legacy-<id>` UUIDs before the unique index is created.
 
 ### 4. Validation & Error Matrix
 - Missing participant object -> HTTP 400.
-- Empty `student_id` or `name` -> HTTP 400.
+- Empty formal `glasses` -> HTTP 400.
 - Consent or photosensitivity screening not true -> HTTP 400.
 - Invalid session UUID or typing order -> HTTP 400.
 - Missing/negative formal `registration_index`, or a typing/rating index/order that does not match `k` -> HTTP 400.
 - Missing, fractional, non-numeric, or negative `registration_index` on `/api/registration-status` -> HTTP 400.
 - Occupied formal registration preflight -> HTTP 200 with `available=false`; debug/demo rows do not make an index unavailable.
-- Registration preflight network/server failure -> frontend remains on identity and displays a blocking error.
+- Assignment network/server failure -> frontend remains on identity and displays a blocking error.
 - Reusing a formal `registration_index` under a different session UUID -> HTTP 400; retrying the identical UUID remains idempotent.
 - Formal refresh below 200Hz or missing environment confirmation -> HTTP 400.
 - `typing` length not equal to 4, condition counts not 2+2, or duplicate trial/repetition -> HTTP 400.
@@ -95,8 +97,9 @@ Questions to answer:
 
 ### 5. Good/Base/Bad Cases
 - Good: complete the formal 240Hz flow, submit four typing/six rating rows, retry the identical UUID, and observe one participant with `created=false` on retry.
+- Good: fill consecutive formal assignments and observe `/api/next-assignment` selects the least-filled bucket while ignoring debug/demo rows.
 - Good: assign consecutive `k=0..23` and observe each of the 12 `(typing_order_index, rating_order_index)` pairs exactly twice.
-- Good: preflight an unused `k`, proceed, then retain the SQLite unique constraint at submission as race protection.
+- Good: obtain a server assignment, proceed, then retain the SQLite unique constraint at submission as race protection.
 - Good: run `?debug=1` and `?demo=1` checks, then confirm default stats/export exclude both while `include_debug=1` includes them.
 - Good: migrate a legacy database, run the analysis, and verify inclusion/exclusion audit plus both LaTeX tables.
 - Base: 144-199Hz is allowed only in explicitly tagged demo mode; formal sessions are blocked instead of silently lowering `n`.
@@ -104,7 +107,7 @@ Questions to answer:
 - Bad: position-by-position character comparison; one insertion/deletion invalidates all following characters. Use MSD target-prefix alignment.
 - Bad: derive both counterbalances from a hash modulo six. Small samples can leave cells empty, and reusing one modulo result couples typing order to the parity of the Latin row.
 - Bad: return perfect accuracy for empty input or include near-empty trials in participant means.
-- Bad: discover a duplicate `k` only after all trials, or silently change the roster index to `k+12`; both hide an operator input error.
+- Bad: derive formal assignment from `session_uuid` or any participant hash. Small samples can leave buckets empty and make Latin-order claims indefensible.
 - Bad: start formal collection against the legacy `study.db`, because an old `debug=0` incomplete row appears in default admin/export summaries.
 - Bad: showing control as DOM text or opposite polarity; that confounds mask effect with rendering and enables copy/select.
 - Bad: including debug/demo rows in paper statistics by default.
@@ -114,20 +117,21 @@ Questions to answer:
 ### 6. Tests Required
 - Assert valid payload submission inserts one participant, four typing rows, and six rating rows; identical UUID retry does not add rows.
 - Assert malformed payloads return 400 for consent/screening, formal refresh, counts, repeats/orders, condition specs, short views, ratings, and MSD ranges.
+- Assert formal payloads with missing `glasses` return 400.
 - Assert 199.9Hz formal sessions are blocked, 200Hz formal sessions pass, and demo sessions are tagged/excluded.
 - Assert MSD alignment handles a one-character insertion and deletion without shifting all following matches.
 - Assert ABBA/BAAB and all six balanced Latin rows contain the expected conditions.
 - Assert the six Latin rows contain all 30 directed immediate-predecessor pairs exactly once.
 - Assert `k=0..23` covers all 12 joint assignment pairs twice; reject negative, duplicate, or payload-mismatched formal registration indexes.
-- Assert registration preflight reports unused/used formal indexes, rejects invalid values, and ignores debug/demo rows.
+- Assert `/api/next-assignment` returns the least-filled formal bucket, rejects no valid state, and ignores debug/demo rows; keep `/api/registration-status` compatibility checks for invalid/occupied indexes.
 - Assert all no-argument formal workflows use `study_formal.db`; separately verify the repository legacy `study.db` hash/schema/row count is unchanged.
 - Assert empty input scores zero accuracy and analysis excludes any participant with a trial below five attempted characters.
 - Assert `MaskedPlayer` marks intervals over 1.5 expected frames and exposes observed cycle rates.
 - Assert legacy schema migration preserves rows and creates a unique populated `session_uuid` index.
 - Assert CSV/JSON/stats exclude debug/demo by default and expose all new fields/parsed metadata when requested.
-- Assert analysis outputs JSON, de-identified participant means CSV, and two LaTeX tables; assert SQLite backup passes integrity check.
-- Browser smoke: formal-mode branding, dual consent gate, registration index, refresh+environment gate, paste prevention, source Canvas warm-up, deployed masked preview, and four-trial plan render without page errors. `?selftest=1` must not assume `mask_meta.counts` exists for source-control canvases.
-- Browser smoke must also prove occupied and failed registration preflights cannot leave the identity page, and the preview canvas is hidden before Start and visible afterward.
+- Assert analysis outputs JSON, de-identified participant means CSV, two LaTeX tables, assignment-balance audit, and straight-line rating exclusions; assert SQLite backup passes integrity check.
+- Browser smoke: formal-mode branding, dual consent gate, server assignment, required vision correction, refresh+environment gate, paste prevention, source Canvas warm-up, deployed masked preview, deployed masked practice, and four-trial plan render without page errors. `?selftest=1` must not assume `mask_meta.counts` exists for source-control canvases.
+- Browser smoke must also prove failed assignment requests cannot leave the identity page, and the preview canvas is hidden before Start and visible afterward.
 - Browser-side Node tests use `*.test.js` names so `node --test` discovers them without an explicit glob.
 - Assert token-protected admin endpoints reject missing or incorrect tokens when `WEBSTUDY_EXPORT_TOKEN` is set.
 
@@ -150,7 +154,7 @@ if (!demo && refreshHz < minimumHz) {
 
 #### Wrong
 ```javascript
-const index = stableHash(studentId + sessionUuid) % 6;
+const index = stableHash(sessionUuid) % 6;
 const typingOrder = index % 2;
 const ratingRow = index;
 ```
@@ -159,19 +163,20 @@ const ratingRow = index;
 ```javascript
 const typingOrder = registrationIndex % 2;
 const ratingRow = Math.floor(registrationIndex / 2) % 6;
-// The backend recomputes both values and formal registrationIndex is unique.
+// The server assigns registrationIndex from the least-filled formal bucket;
+// the backend recomputes both values and formal registrationIndex is unique.
 ```
 
 #### Wrong
 ```javascript
-setStep("refresh"); // duplicate k is discovered only at final submission
+setStep("refresh"); // assignment is still missing; final submit will fail
 ```
 
 #### Correct
 ```javascript
-if (await checkRegistrationAvailability(registrationIndex)) {
-  setStep("refresh");
-}
+const response = await fetch("/api/next-assignment", { method: "POST" });
+state.assignment = (await response.json()).assignment;
+setStep("refresh");
 // Submission still relies on the database unique index for race safety.
 ```
 

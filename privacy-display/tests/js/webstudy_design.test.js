@@ -53,4 +53,6 @@ test("registration index independently crosses typing order and Latin row", () =
     rating_order_index: 5
   });
   assert.throws(() => design.assignmentForRegistrationIndex(-1, 6));
+  assert.equal(design.assignmentForSessionUuid, undefined);
+  assert.equal(design.derivedIndexFromSessionUuid, undefined);
 });

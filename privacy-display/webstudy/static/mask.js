@@ -687,7 +687,20 @@
     }
   }
 
-  function estimateRefreshRate(durationMs) {
+  function quantile(sorted, q) {
+    if (!sorted.length) {
+      return null;
+    }
+    const pos = (sorted.length - 1) * q;
+    const base = Math.floor(pos);
+    const rest = pos - base;
+    if (sorted[base + 1] === undefined) {
+      return sorted[base];
+    }
+    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+  }
+
+  function measureRefreshRun(durationMs) {
     const duration = Math.max(450, Number(durationMs) || 850);
     return new Promise((resolve) => {
       const deltas = [];
@@ -707,10 +720,14 @@
           const trim = Math.floor(sorted.length * 0.1);
           const kept = sorted.slice(trim, sorted.length - trim);
           const mean = kept.reduce((sum, value) => sum + value, 0) / kept.length;
+          const median = quantile(sorted, 0.5);
           resolve({
             hz: 1000 / mean,
             samples: deltas.length,
-            mean_frame_ms: mean
+            mean_frame_ms: mean,
+            median_frame_ms: median,
+            frame_ms_p05: quantile(sorted, 0.05),
+            frame_ms_p95: quantile(sorted, 0.95)
           });
         } else {
           global.requestAnimationFrame(step);
@@ -718,6 +735,35 @@
       }
       global.requestAnimationFrame(step);
     });
+  }
+
+  async function estimateRefreshRate(options) {
+    const config = typeof options === "object" && options !== null
+      ? options
+      : { durationMs: options };
+    const durationMs = Math.max(450, Number(config.durationMs) || 850);
+    const repeats = Math.max(1, Math.floor(Number(config.repeats) || 1));
+    const runs = [];
+    for (let index = 0; index < repeats; index += 1) {
+      runs.push(await measureRefreshRun(durationMs));
+    }
+    const medians = runs
+      .map((run) => run.median_frame_ms)
+      .filter((value) => Number.isFinite(value))
+      .sort((a, b) => a - b);
+    const medianFrameMs = quantile(medians, 0.5);
+    const hz = medianFrameMs ? 1000 / medianFrameMs : runs[0].hz;
+    const samples = runs.reduce((sum, run) => sum + run.samples, 0);
+    return {
+      hz,
+      samples,
+      mean_frame_ms: medianFrameMs,
+      median_frame_ms: medianFrameMs,
+      frame_ms_p05: runs.map((run) => run.frame_ms_p05),
+      frame_ms_p95: runs.map((run) => run.frame_ms_p95),
+      repeats,
+      runs
+    };
   }
 
   global.PrivacyMask = {
