@@ -23,6 +23,7 @@ These guides help you **ask the right questions before coding**.
 |-------|---------|-------------|
 | [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | Identify patterns and reduce duplication | When you notice repeated patterns |
 | [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | Think through data flow across layers | Features spanning multiple layers |
+| [LaTeX Paper Build Thinking Guide](./latex-paper-build-thinking-guide.md) | Prevent incomplete bibliography and cross-reference builds | When paper sources, references, or PDFs change |
 
 ---
 

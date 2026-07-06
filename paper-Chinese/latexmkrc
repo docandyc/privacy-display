@@ -1,0 +1,5 @@
+# Chinese manuscript build configuration.
+# latexmk automatically repeats XeLaTeX and runs BibTeX until references settle.
+$pdf_mode = 5;
+$xelatex = 'xelatex -synctex=1 -interaction=nonstopmode -file-line-error -halt-on-error %O %S';
+$warnings_as_errors = 1;

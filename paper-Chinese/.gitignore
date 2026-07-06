@@ -1,0 +1,3 @@
+# Local LaTeX diagnostics and editor synchronization data.
+missfont.log
+*.synctex.gz

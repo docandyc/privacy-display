@@ -1,6 +1,7 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  6 JUL 2026 09:05
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  6 JUL 2026 09:34
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
 **main.tex
 (./main.tex
@@ -451,89 +452,89 @@ LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
 
 -- Lines per column: 56 (exact).
 \symNewLetters=\mathgroup9
 \symxsymbols=\mathgroup10
-LaTeX Font Info:    Redeclaring math symbol \ddagger on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \dagger on input line 39.
+LaTeX Font Info:    Redeclaring math symbol \ddagger on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \dagger on input line 42.
 \c@mv@regular=\count323
 LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
-(Font)              `operators' in the math version `regular' on input line 39.
+(Font)              `operators' in the math version `regular' on input line 42.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `regular'
-(Font)                  OT1/cmr/m/n --> T1/formata/n/n on input line 39.
+(Font)                  OT1/cmr/m/n --> T1/formata/n/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `regular'
-(Font)                  T1/times/n/it --> T1/formata/n/it on input line 39.
+(Font)                  T1/times/n/it --> T1/formata/n/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `regular'
-(Font)                  T1/formata/n/n --> T1/formata/n/n on input line 39.
+(Font)                  T1/formata/n/n --> T1/formata/n/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `regular'
-(Font)                  OT1/cmr/m/it --> T1/formata/n/it on input line 39.
+(Font)                  OT1/cmr/m/it --> T1/formata/n/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `regular'
-(Font)                  OT1/cmr/bx/n --> T1/formata/m/n on input line 39.
+(Font)                  OT1/cmr/bx/n --> T1/formata/m/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `regular'
-(Font)                  OT1/cmtt/m/n --> OT1/pcr/m/n on input line 39.
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/m/n on input line 42.
 \c@mv@medium=\count324
 LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
-(Font)              `operators' in the math version `medium' on input line 39.
+(Font)              `operators' in the math version `medium' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `medium'
-(Font)                  OT1/cmr/m/n --> T1/formata/m/n on input line 39.
+(Font)                  OT1/cmr/m/n --> T1/formata/m/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `medium'
-(Font)                  T1/times/n/it --> T1/formata/m/it on input line 39.
+(Font)                  T1/times/n/it --> T1/formata/m/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `medium'
-(Font)                  > T1/formata/m/n on input line 39.
+(Font)                  > T1/formata/m/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `medium'
-(Font)                  OT1/cmr/m/it --> T1/formata/m/it on input line 39.
+(Font)                  OT1/cmr/m/it --> T1/formata/m/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `medium'
-(Font)                  > T1/formata/b/n on input line 39.
+(Font)                  > T1/formata/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `medium'
-(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 39.
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 42.
 \c@mv@black=\count325
 LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
-(Font)              `operators' in the math version `black' on input line 39.
+(Font)              `operators' in the math version `black' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `black'
-(Font)                  OT1/cmr/m/n --> T1/formata/b/n on input line 39.
+(Font)                  OT1/cmr/m/n --> T1/formata/b/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `black'
-(Font)                  T1/times/n/it --> T1/formata/b/it on input line 39.
+(Font)                  T1/times/n/it --> T1/formata/b/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `black'
-(Font)                  > T1/formata/b/n on input line 39.
+(Font)                  > T1/formata/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `black'
-(Font)                  OT1/cmr/m/it --> T1/formata/b/it on input line 39.
+(Font)                  OT1/cmr/m/it --> T1/formata/b/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `black'
-(Font)                  > T1/formata/b/n on input line 39.
+(Font)                  > T1/formata/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `black'
-(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 39.
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 39
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 42.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 42
 .
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for TU+times on input line 
-39.
-LaTeX Font Info:    No file TUtimes.fd. on input line 39.
+42.
+LaTeX Font Info:    No file TUtimes.fd. on input line 42.
 
 
 LaTeX Font Warning: Font shape `TU/times/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 39.
+(Font)              using `TU/lmr/m/n' instead on input line 42.
 
 LaTeX Font Info:    Trying to load font information for T1+times on input line 
-39.
+42.
 (./t1times.fd)
 
 Package fontspec Info: 
@@ -542,92 +543,92 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup11
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 39.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 39.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 39.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 39.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 39.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 39.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 39.
-LaTeX Font Info:    Redeclaring math accent \check on input line 39.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 39.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 39.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 39.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 39.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 39.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 42.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 42.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 42.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 42.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 42.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 42.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 42.
+LaTeX Font Info:    Redeclaring math accent \check on input line 42.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 42.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 42.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 42.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 42.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 42.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 39.
+(Font)              `operators' in the math version `normal' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/times/m/n on input line 39.
+(Font)                  OT1/cmr/m/n --> TU/times/m/n on input line 42.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 39.
+(Font)              `operators' in the math version `bold' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> TU/times/m/n on input line 39.
+(Font)                  OT1/cmr/bx/n --> TU/times/m/n on input line 42.
 LaTeX Font Info:    Encoding `T1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `regular' on input line 39.
+(Font)              `operators' in the math version `regular' on input line 42.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `regular'
-(Font)                  T1/formata/n/n --> TU/times/m/n on input line 39.
+(Font)                  T1/formata/n/n --> TU/times/m/n on input line 42.
 LaTeX Font Info:    Encoding `T1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `medium' on input line 39.
+(Font)              `operators' in the math version `medium' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `medium'
-(Font)                  T1/formata/m/n --> TU/times/m/n on input line 39.
+(Font)                  T1/formata/m/n --> TU/times/m/n on input line 42.
 LaTeX Font Info:    Encoding `T1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `black' on input line 39.
+(Font)              `operators' in the math version `black' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `black'
-(Font)                  T1/formata/b/n --> TU/times/m/n on input line 39.
+(Font)                  T1/formata/b/n --> TU/times/m/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  TU/times/m/n --> TU/times/m/n on input line 39.
-LaTeX Font Info:    Redeclaring math alphabet \mathrm on input line 39.
+(Font)                  TU/times/m/n --> TU/times/m/n on input line 42.
+LaTeX Font Info:    Redeclaring math alphabet \mathrm on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/times/m/it on input line 39.
+(Font)                  OT1/cmr/m/it --> TU/times/m/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/times/b/n on input line 39.
+(Font)                  OT1/cmr/bx/n --> TU/times/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/formata/m/n on input line 39.
+(Font)                  OT1/cmss/m/n --> TU/formata/m/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/pcr/m/n on input line 39.
+(Font)                  OT1/cmtt/m/n --> TU/pcr/m/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  TU/times/m/n --> TU/times/b/n on input line 39.
+(Font)                  TU/times/m/n --> TU/times/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> TU/times/b/it on input line 39.
+(Font)                  OT1/cmr/bx/it --> TU/times/b/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/formata/b/n on input line 39.
+(Font)                  OT1/cmss/bx/n --> TU/formata/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/pcr/b/n on input line 39.
-LaTeX Font Info:    Redeclaring math version `bold' on input line 39.
+(Font)                  OT1/cmtt/m/n --> TU/pcr/b/n on input line 42.
+LaTeX Font Info:    Redeclaring math version `bold' on input line 42.
 LaTeX Font Info:    Encoding `TU' has changed to `T1' for symbol font
-(Font)              `operators' in the math version `bold' on input line 39.
+(Font)              `operators' in the math version `bold' on input line 42.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  TU/times/m/n --> T1/times/b/n on input line 39.
+(Font)                  TU/times/m/n --> T1/times/b/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `bold'
-(Font)                  T1/times/n/it --> T1/times/b/it on input line 39.
+(Font)                  T1/times/n/it --> T1/times/b/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  T1/times/b/n --> T1/times/b/n on input line 39.
+(Font)                  T1/times/b/n --> T1/times/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/m/it --> T1/times/b/it on input line 39.
+(Font)                  OT1/cmr/m/it --> T1/times/b/it on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  > T1/times/b/n on input line 39.
+(Font)                  > T1/times/b/n on input line 42.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 39.
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 42.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/cmsy/m/n --> OMS/cmsy/b/n on input line 39.
+(Font)                  OMS/cmsy/m/n --> OMS/cmsy/b/n on input line 42.
 File: bullet.png Graphic file (type bmp)
 <bullet.png>
 
 
-Package xcolor Warning: Incompatible color definition on input line 68.
+Package xcolor Warning: Incompatible color definition on input line 71.
 
 
 Package fontspec Info: 
@@ -664,14 +665,14 @@ Package fontspec Info:
 
 
 LaTeX Font Warning: Font shape `TU/STSong(0)/n/n' undefined
-(Font)              using `TU/STSong(0)/m/n' instead on input line 69.
+(Font)              using `TU/STSong(0)/m/n' instead on input line 72.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 69.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 72.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 69.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 72.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -681,65 +682,65 @@ File: bullet.png Graphic file (type bmp)
 <bullet.png>
 
 
-Package xcolor Warning: Incompatible color definition on input line 72.
+Package xcolor Warning: Incompatible color definition on input line 75.
 
 
-Package xcolor Warning: Incompatible color definition on input line 77.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
 LaTeX Font Warning: Font shape `TU/STHeiti(0)/cm/n' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 77.
+(Font)              using `TU/STHeiti(0)/m/n' instead on input line 80.
 
-LaTeX Font Info:    Calculating math sizes for size <9.9> on input line 77.
+LaTeX Font Info:    Calculating math sizes for size <9.9> on input line 80.
 
 LaTeX Font Warning: Font shape `TU/STHeiti(0)/b/n' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 77.
+(Font)              using `TU/STHeiti(0)/m/n' instead on input line 80.
 
-LaTeX Font Info:    Calculating math sizes for size <6.6> on input line 77.
+LaTeX Font Info:    Calculating math sizes for size <6.6> on input line 80.
 
 LaTeX Font Warning: Font shape `TU/STSong(0)/b/n' undefined
-(Font)              using `TU/STSong(0)/m/n' instead on input line 77.
+(Font)              using `TU/STSong(0)/m/n' instead on input line 80.
 
 
-Overfull \hbox (9.2679pt too wide) in paragraph at lines 77--77
+Overfull \hbox (9.2679pt too wide) in paragraph at lines 80--80
 []  
  []
 
 
-Overfull \hbox (9.2679pt too wide) in paragraph at lines 77--77
+Overfull \hbox (9.2679pt too wide) in paragraph at lines 80--80
 []  
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 82.
+Package xcolor Warning: Incompatible color definition on input line 85.
 
 
-Package xcolor Warning: Incompatible color definition on input line 87.
+Package xcolor Warning: Incompatible color definition on input line 90.
 
 
 LaTeX Font Warning: Font shape `TU/STHeiti(0)/m/it' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 87.
+(Font)              using `TU/STHeiti(0)/m/n' instead on input line 90.
 
 
-Package xcolor Warning: Incompatible color definition on input line 93.
+Package xcolor Warning: Incompatible color definition on input line 96.
 
 
 
 
 LaTeX Font Warning: Font shape `TU/STSong(0)/n/it' undefined
-(Font)              using `TU/STSong(0)/n/n' instead on input line 97.
+(Font)              using `TU/STSong(0)/n/n' instead on input line 100.
 
 File: figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf Gra
 phic file (type pdf)
 <use figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 102.
+Package xcolor Warning: Incompatible color definition on input line 105.
 
 
-Package xcolor Warning: Incompatible color definition on input line 102.
+Package xcolor Warning: Incompatible color definition on input line 105.
 
 
-Package xcolor Warning: Incompatible color definition on input line 106.
+Package xcolor Warning: Incompatible color definition on input line 109.
 
 
 Underfull \vbox (badness 7576) has occurred while \output is active []
@@ -747,7 +748,7 @@ Underfull \vbox (badness 7576) has occurred while \output is active []
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 110.
+Package xcolor Warning: Incompatible color definition on input line 113.
 
 File: logo.png Graphic file (type bmp)
 <logo.png>
@@ -775,12 +776,12 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 
 ]
-Underfull \hbox (badness 1552) in paragraph at lines 110--111
+Underfull \hbox (badness 1552) in paragraph at lines 113--114
 []\TU/STSong(0)/n/n/10 在 既 有 时 间 掩 模 思 想 基 础 上，|  实 现 面 向 传
  []
 
 
-Underfull \hbox (badness 2512) in paragraph at lines 114--115
+Underfull \hbox (badness 2512) in paragraph at lines 117--118
 []\TU/STSong(0)/n/n/10 在 \T1/times/m/n/10 OCR \TU/STSong(0)/n/n/10 主 实 验 之 外，| 
  以 \T1/times/m/n/10 4 \TU/STSong(0)/n/n/10 个 目 标 检 测 器
  []
@@ -788,16 +789,16 @@ Underfull \hbox (badness 2512) in paragraph at lines 114--115
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 127.
-
-
 Package xcolor Warning: Incompatible color definition on input line 130.
 
 
-Package xcolor Warning: Incompatible color definition on input line 134.
+Package xcolor Warning: Incompatible color definition on input line 133.
 
 
-Package xcolor Warning: Incompatible color definition on input line 143.
+Package xcolor Warning: Incompatible color definition on input line 137.
+
+
+Package xcolor Warning: Incompatible color definition on input line 146.
 
 
 
@@ -805,11 +806,11 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `TU/STHeiti(0)/n/n' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 162.
+(Font)              using `TU/STHeiti(0)/m/n' instead on input line 165.
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 162.
+(Font)              using `T1/formata/m/it' instead on input line 165.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -828,52 +829,52 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [2]
 
-Package xcolor Warning: Incompatible color definition on input line 166.
-
-
-Package xcolor Warning: Incompatible color definition on input line 174.
+Package xcolor Warning: Incompatible color definition on input line 169.
 
 
 Package xcolor Warning: Incompatible color definition on input line 177.
 
 
-Package xcolor Warning: Incompatible color definition on input line 181.
+Package xcolor Warning: Incompatible color definition on input line 180.
+
+
+Package xcolor Warning: Incompatible color definition on input line 184.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 190.
+Package xcolor Warning: Incompatible color definition on input line 193.
 
 
-Package xcolor Warning: Incompatible color definition on input line 194.
-
-
-Package xcolor Warning: Incompatible color definition on input line 202.
+Package xcolor Warning: Incompatible color definition on input line 197.
 
 
 Package xcolor Warning: Incompatible color definition on input line 205.
 
 
+Package xcolor Warning: Incompatible color definition on input line 208.
+
+
 LaTeX Font Warning: Font shape `TU/times/b/n' undefined
-(Font)              using `TU/times/m/n' instead on input line 207.
+(Font)              using `TU/times/m/n' instead on input line 210.
 
 File: figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf G
 raphic file (type pdf)
 <use figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 219.
+Package xcolor Warning: Incompatible color definition on input line 222.
 
 
-Package xcolor Warning: Incompatible color definition on input line 219.
+Package xcolor Warning: Incompatible color definition on input line 222.
 
 
-Package xcolor Warning: Incompatible color definition on input line 223.
+Package xcolor Warning: Incompatible color definition on input line 226.
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 231.
+(Font)              using `T1/formata/m/it' instead on input line 234.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -894,18 +895,18 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [3]
 
-Package xcolor Warning: Incompatible color definition on input line 234.
+Package xcolor Warning: Incompatible color definition on input line 237.
 
 
-Package xcolor Warning: Incompatible color definition on input line 238.
+Package xcolor Warning: Incompatible color definition on input line 241.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 242.
+Package xcolor Warning: Incompatible color definition on input line 245.
 
 
-Package xcolor Warning: Incompatible color definition on input line 248.
+Package xcolor Warning: Incompatible color definition on input line 251.
 
 
 Underfull \vbox (badness 1077) has occurred while \output is active []
@@ -916,7 +917,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 271.
+(Font)              using `T1/formata/m/it' instead on input line 274.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -935,24 +936,24 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [4]
 
-Package xcolor Warning: Incompatible color definition on input line 275.
+Package xcolor Warning: Incompatible color definition on input line 278.
 
 
-Package xcolor Warning: Incompatible color definition on input line 282.
+Package xcolor Warning: Incompatible color definition on input line 285.
 
 
-Package xcolor Warning: Incompatible color definition on input line 301.
+Package xcolor Warning: Incompatible color definition on input line 304.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 309.
+Package xcolor Warning: Incompatible color definition on input line 312.
 
 
-Package xcolor Warning: Incompatible color definition on input line 314.
+Package xcolor Warning: Incompatible color definition on input line 317.
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 317--318
+Underfull \hbox (badness 2503) in paragraph at lines 320--321
 \TU/STSong(0)/b/n/10 硬 件 平 台：|  实 验 在 一 台 配 备 \T1/times/m/n/10 In-tel Core i7-8
 700K
  []
@@ -961,7 +962,7 @@ Underfull \hbox (badness 2503) in paragraph at lines 317--318
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 324.
+(Font)              using `T1/formata/m/it' instead on input line 327.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -982,37 +983,37 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [5]
 
-Package xcolor Warning: Incompatible color definition on input line 330.
+Package xcolor Warning: Incompatible color definition on input line 333.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 336.
+Package xcolor Warning: Incompatible color definition on input line 339.
 
 
-Underfull \hbox (badness 1552) in paragraph at lines 381--382
+Underfull \hbox (badness 1552) in paragraph at lines 384--385
 []\TU/STSong(0)/b/n/10 积 分 攻 击 仍 是 残 余 前 沿，|  长 曝 光 反 转 为 负
  []
 
 
-Underfull \hbox (badness 3780) in paragraph at lines 381--382
+Underfull \hbox (badness 3780) in paragraph at lines 384--385
 \TU/STSong(0)/b/n/10 面 结 果：|  长 曝 光 与 视 频 时 域 平 均 都 利 用
  []
 
 
-Underfull \hbox (badness 3088) in paragraph at lines 381--382
+Underfull \hbox (badness 3088) in paragraph at lines 384--385
 \TU/STSong(0)/b/n/10 完 整 周 期 的 互 补 性。| \T1/times/m/n/10 De-ployed \TU/STSong(0)
 /b/n/10 档 在 长 曝 光
  []
 
 
-Underfull \hbox (badness 1783) in paragraph at lines 381--382
+Underfull \hbox (badness 1783) in paragraph at lines 384--385
 \TU/STSong(0)/b/n/10 下 仍 恢 复 \T1/times/m/n/10 60.9% char / 36.4% ex-act |\TU/ST
 Song(0)/b/n/10 （敏 感 \T1/times/m/n/10 to-
  []
 
 
-Underfull \hbox (badness 4673) in paragraph at lines 381--382
+Underfull \hbox (badness 4673) in paragraph at lines 384--385
 \T1/times/m/n/10 ken \TU/STSong(0)/b/n/10 恢 复 率 \T1/times/m/n/10 96.5%\TU/STSon
 g(0)/b/n/10 ） ，|  视 频 时 域 平 均 下
  []
@@ -1026,7 +1027,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 382.
+(Font)              using `T1/formata/m/it' instead on input line 385.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1048,26 +1049,26 @@ File: figures/real_capture_montage.pdf Graphic file (type pdf)
 <use figures/real_capture_montage.pdf>
 
 
-Package xcolor Warning: Incompatible color definition on input line 391.
+Package xcolor Warning: Incompatible color definition on input line 394.
 
 
-Package xcolor Warning: Incompatible color definition on input line 391.
+Package xcolor Warning: Incompatible color definition on input line 394.
 
 File: figures/real_capture_bar.pdf Graphic file (type pdf)
 <use figures/real_capture_bar.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 398.
+Package xcolor Warning: Incompatible color definition on input line 401.
 
 
-Package xcolor Warning: Incompatible color definition on input line 398.
+Package xcolor Warning: Incompatible color definition on input line 401.
 
 File: figures/readability_robustness_tradeoff.pdf Graphic file (type pdf)
 <use figures/readability_robustness_tradeoff.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 405.
+Package xcolor Warning: Incompatible color definition on input line 408.
 
 
-Package xcolor Warning: Incompatible color definition on input line 405.
+Package xcolor Warning: Incompatible color definition on input line 408.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1075,24 +1076,24 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 412.
+Package xcolor Warning: Incompatible color definition on input line 415.
 
 File: figures/real_engine_ocr.pdf Graphic file (type pdf)
 <use figures/real_engine_ocr.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 456.
+Package xcolor Warning: Incompatible color definition on input line 459.
 
 
-Package xcolor Warning: Incompatible color definition on input line 456.
+Package xcolor Warning: Incompatible color definition on input line 459.
 
 
-Package xcolor Warning: Incompatible color definition on input line 460.
+Package xcolor Warning: Incompatible color definition on input line 463.
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 466.
+(Font)              using `T1/formata/m/it' instead on input line 469.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1122,7 +1123,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 466.
+(Font)              using `T1/formata/m/it' instead on input line 469.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1162,14 +1163,14 @@ Package fontspec Info:
 (fontspec)             Could not resolve font "STFangsong/I" (it probably
 (fontspec)             doesn't exist).
 
-LaTeX Font Info:    Trying to load font information for T1+pcr on input line 46
-7.
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 47
+0.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 
 LaTeX Font Warning: Font shape `T1/pcr/n/n' undefined
-(Font)              using `T1/pcr/m/n' instead on input line 467.
+(Font)              using `T1/pcr/m/n' instead on input line 470.
 
 
 Package fontspec Info: 
@@ -1183,25 +1184,25 @@ Package fontspec Info:
 (fontspec)             <->"STFangsong/OT:script=hani;language=dflt;"
 
 
-Package xcolor Warning: Incompatible color definition on input line 470.
+Package xcolor Warning: Incompatible color definition on input line 473.
 
 
 LaTeX Font Warning: Font shape `TU/STSong(0)/m/it' undefined
-(Font)              using `TU/STSong(0)/m/n' instead on input line 479.
+(Font)              using `TU/STSong(0)/m/n' instead on input line 482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 500.
+Package xcolor Warning: Incompatible color definition on input line 503.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 537.
+Package xcolor Warning: Incompatible color definition on input line 540.
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 549.
+(Font)              using `T1/formata/m/it' instead on input line 552.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1223,7 +1224,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [9]
 
 
-Package xcolor Warning: Incompatible color definition on input line 565.
+Package xcolor Warning: Incompatible color definition on input line 568.
 
 
 
@@ -1231,7 +1232,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 569.
+(Font)              using `T1/formata/m/it' instead on input line 572.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1250,46 +1251,46 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [10]
 
-Package xcolor Warning: Incompatible color definition on input line 571.
+Package xcolor Warning: Incompatible color definition on input line 574.
 
 
-Package xcolor Warning: Incompatible color definition on input line 603.
+Package xcolor Warning: Incompatible color definition on input line 606.
 
 File: figures/real_detection_drop.pdf Graphic file (type pdf)
 <use figures/real_detection_drop.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 638.
+Package xcolor Warning: Incompatible color definition on input line 641.
 
 
-Package xcolor Warning: Incompatible color definition on input line 638.
+Package xcolor Warning: Incompatible color definition on input line 641.
 
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 646.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 648.
+Package xcolor Warning: Incompatible color definition on input line 651.
 
 
-Package xcolor Warning: Incompatible color definition on input line 652.
+Package xcolor Warning: Incompatible color definition on input line 655.
 
 File: figures/multiengine_ocr.pdf Graphic file (type pdf)
 <use figures/multiengine_ocr.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 669.
+Package xcolor Warning: Incompatible color definition on input line 672.
 
 
-Package xcolor Warning: Incompatible color definition on input line 669.
+Package xcolor Warning: Incompatible color definition on input line 672.
 
 
-Package xcolor Warning: Incompatible color definition on input line 675.
+Package xcolor Warning: Incompatible color definition on input line 678.
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 680.
+(Font)              using `T1/formata/m/it' instead on input line 683.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1310,46 +1311,46 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [11]
 
-Package xcolor Warning: Incompatible color definition on input line 681.
+Package xcolor Warning: Incompatible color definition on input line 684.
 
 File: figures/baselines_scatter.pdf Graphic file (type pdf)
 <use figures/baselines_scatter.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 687.
+Package xcolor Warning: Incompatible color definition on input line 690.
 
 
-Package xcolor Warning: Incompatible color definition on input line 687.
+Package xcolor Warning: Incompatible color definition on input line 690.
 
 File: figures/antiocr_heatmap.pdf Graphic file (type pdf)
 <use figures/antiocr_heatmap.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 694.
+Package xcolor Warning: Incompatible color definition on input line 697.
 
 
-Package xcolor Warning: Incompatible color definition on input line 694.
+Package xcolor Warning: Incompatible color definition on input line 697.
 
 
-Package xcolor Warning: Incompatible color definition on input line 700.
+Package xcolor Warning: Incompatible color definition on input line 703.
 
 
-Package xcolor Warning: Incompatible color definition on input line 704.
+Package xcolor Warning: Incompatible color definition on input line 707.
 
 
-Package xcolor Warning: Incompatible color definition on input line 736.
+Package xcolor Warning: Incompatible color definition on input line 739.
 
 File: figures/all_attackers.pdf Graphic file (type pdf)
 <use figures/all_attackers.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 771.
+Package xcolor Warning: Incompatible color definition on input line 774.
 
 
-Package xcolor Warning: Incompatible color definition on input line 771.
+Package xcolor Warning: Incompatible color definition on input line 774.
 
 
-Package xcolor Warning: Incompatible color definition on input line 775.
+Package xcolor Warning: Incompatible color definition on input line 778.
 
 
-Underfull \hbox (badness 6396) in paragraph at lines 776--777
+Underfull \hbox (badness 6396) in paragraph at lines 779--780
 \TU/STSong(0)/b/n/10 模 型 扫 描 覆 盖 $\T1/times/n/it/10 n \OMS/cmsy/m/n/10 2 f\OT1/
 cmr/m/n/10 2\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 4\OML/cmm/m/it/10 ; \OT1/cmr/m/n
 /10 6\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 8\OMS/cmsy/m/n/10 g$ \TU/STSong(0)/b/n/
@@ -1364,7 +1365,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 777.
+(Font)              using `T1/formata/m/it' instead on input line 780.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1386,16 +1387,16 @@ File: figures/pareto_sweep.pdf Graphic file (type pdf)
 <use figures/pareto_sweep.pdf>
 
 
-Package xcolor Warning: Incompatible color definition on input line 781.
+Package xcolor Warning: Incompatible color definition on input line 784.
 
 
-Package xcolor Warning: Incompatible color definition on input line 781.
-
-
-Package xcolor Warning: Incompatible color definition on input line 789.
+Package xcolor Warning: Incompatible color definition on input line 784.
 
 
 Package xcolor Warning: Incompatible color definition on input line 792.
+
+
+Package xcolor Warning: Incompatible color definition on input line 795.
 
 
 Underfull \vbox (badness 6691) has occurred while \output is active []
@@ -1403,7 +1404,7 @@ Underfull \vbox (badness 6691) has occurred while \output is active []
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 796.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1412,7 +1413,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 799.
+(Font)              using `T1/formata/m/it' instead on input line 802.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1433,27 +1434,27 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [13]
 
-Package xcolor Warning: Incompatible color definition on input line 800.
+Package xcolor Warning: Incompatible color definition on input line 803.
 
 
-Package xcolor Warning: Incompatible color definition on input line 810.
+Package xcolor Warning: Incompatible color definition on input line 813.
 
 
-Package xcolor Warning: Incompatible color definition on input line 814.
+Package xcolor Warning: Incompatible color definition on input line 817.
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 819.
+Package xcolor Warning: Incompatible color definition on input line 822.
 
 
-Package xcolor Warning: Incompatible color definition on input line 823.
+Package xcolor Warning: Incompatible color definition on input line 826.
 
 
-Package xcolor Warning: Incompatible color definition on input line 827.
+Package xcolor Warning: Incompatible color definition on input line 830.
 
 
-Package xcolor Warning: Incompatible color definition on input line 831.
+Package xcolor Warning: Incompatible color definition on input line 834.
 
 
 
@@ -1461,7 +1462,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 837.
+(Font)              using `T1/formata/m/it' instead on input line 840.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1480,13 +1481,13 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [14]
 
-Package xcolor Warning: Incompatible color definition on input line 847.
+Package xcolor Warning: Incompatible color definition on input line 850.
 
 
-Package xcolor Warning: Incompatible color definition on input line 859.
+Package xcolor Warning: Incompatible color definition on input line 862.
 
 
-Package xcolor Warning: Incompatible color definition on input line 866.
+Package xcolor Warning: Incompatible color definition on input line 869.
 
 File: bullet.png Graphic file (type bmp)
 <bullet.png>
@@ -1496,7 +1497,7 @@ File: bullet.png Graphic file (type bmp)
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 875.
+(Font)              using `T1/formata/m/it' instead on input line 878.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1565,7 +1566,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 881.
+(Font)              using `T1/formata/m/it' instead on input line 884.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1605,4 +1606,4 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  74i,10n,93p,1346b,548s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (17 pages).
+Output written on main.xdv (17 pages, 440344 bytes).
