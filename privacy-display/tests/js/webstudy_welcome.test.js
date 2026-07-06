@@ -41,3 +41,10 @@ test("typing trials count down before accepting input", () => {
   assert.match(appJs, /input\.disabled = true;/);
   assert.match(appJs, /beginTimedTyping\(\);/);
 });
+
+test("refresh check can continue immediately after a passing measurement", () => {
+  assert.match(appJs, /environmentConfirmed: true,/);
+  assert.match(appJs, /id="environmentCheck"[^>]*checked/);
+  assert.match(appJs, /<input type="checkbox" id="environmentCheck"[^>]*>\s*<span class="check-box" aria-hidden="true"><\/span>/);
+  assert.match(appJs, /id="continueRefresh" \$\{state\.refresh\.ok && state\.environmentConfirmed \? "" : "disabled"\}/);
+});

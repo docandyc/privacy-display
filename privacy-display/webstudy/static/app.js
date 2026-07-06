@@ -146,7 +146,7 @@
     counterbalanceIndex: 0,
     ratingOrderIndex: 0,
     typingOrder: "",
-    environmentConfirmed: false,
+    environmentConfirmed: true,
     submitStatus: null
   };
 
@@ -412,6 +412,7 @@
       ${DEMO ? `<div class="warning">当前为演示模式（demo=1）；允许 144–199Hz 自适应播放，但提交会被标记为 demo，默认统计与导出会排除。</div>` : ""}
       <label class="check-row">
         <input type="checkbox" id="environmentCheck" ${state.environmentConfirmed ? "checked" : ""}>
+        <span class="check-box" aria-hidden="true"></span>
         <span>实验员已确认：显示器亮度固定、自动亮度与省电模式关闭、浏览器全屏、观看距离约 60cm。</span>
       </label>
       <div class="actions">
