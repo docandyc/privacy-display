@@ -294,10 +294,12 @@
       </div>
       <label class="check-row">
         <input type="checkbox" id="consentCheck" checked>
+        <span class="check-box" aria-hidden="true"></span>
         <span>我已阅读研究说明，自愿参加，并知道可在任意时刻无条件退出。研究会采集身份、人口学、显示时序、打字与评分数据；学号和姓名仅用于参与管理，分析与发布只使用去标识化数据。</span>
       </label>
       <label class="check-row">
         <input type="checkbox" id="photosensitivityCheck" checked>
+        <span class="check-box" aria-hidden="true"></span>
         <span>我确认没有光敏性癫痫病史，也不属于对闪烁刺激敏感的人群。</span>
       </label>
       <div class="actions">
