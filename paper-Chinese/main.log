@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  5 JUL 2026 22:37
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  6 JUL 2026 09:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -296,7 +296,7 @@ Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 (/usr/local/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.sty
 (/usr/local/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2025-01-18 L3 programming layer (loader)
+Package: expl3 2025-01-18 L3 programming layer (loader) 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
@@ -406,35 +406,35 @@ Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 File: xeCJK.cfg 2022/08/05 v3.9.1 Configuration file for xeCJK package
 ))
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
 (fontspec)             'STSong'. Check the typeset output, and if it is okay
 (fontspec)             then ignore this warning. Otherwise a different font
 (fontspec)             should be chosen.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STSong/BI" (it probably doesn't
 (fontspec)             exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STSong/B" (it probably doesn't
 (fontspec)             exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STSong/I" (it probably doesn't
 (fontspec)             exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'STSong(0)' created for font 'STSong' with
 (fontspec)             options [Script={CJK}].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->"STSong/OT:script=hani;language=dflt;"
 
@@ -524,7 +524,7 @@ LaTeX Font Info:    Trying to load font information for T1+lmr on input line 39
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for TU+times on input line
+LaTeX Font Info:    Trying to load font information for TU+times on input line 
 39.
 LaTeX Font Info:    No file TUtimes.fd. on input line 39.
 
@@ -532,11 +532,11 @@ LaTeX Font Info:    No file TUtimes.fd. on input line 39.
 LaTeX Font Warning: Font shape `TU/times/m/n' undefined
 (Font)              using `TU/lmr/m/n' instead on input line 39.
 
-LaTeX Font Info:    Trying to load font information for T1+times on input line
+LaTeX Font Info:    Trying to load font information for T1+times on input line 
 39.
 (./t1times.fd)
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Adjusting the maths setup (use [no-math] to avoid
 (fontspec)             this).
 
@@ -630,35 +630,35 @@ File: bullet.png Graphic file (type bmp)
 Package xcolor Warning: Incompatible color definition on input line 68.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
 (fontspec)             'STHeiti'. Check the typeset output, and if it is okay
 (fontspec)             then ignore this warning. Otherwise a different font
 (fontspec)             should be chosen.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STHeiti/BI" (it probably
 (fontspec)             doesn't exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STHeiti/B" (it probably doesn't
 (fontspec)             exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STHeiti/I" (it probably doesn't
 (fontspec)             exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'STHeiti(0)' created for font 'STHeiti'
 (fontspec)             with options [Script={CJK}].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->"STHeiti/OT:script=hani;language=dflt;"
 
@@ -702,12 +702,12 @@ LaTeX Font Warning: Font shape `TU/STSong(0)/b/n' undefined
 
 
 Overfull \hbox (9.2679pt too wide) in paragraph at lines 77--77
-[]
+[]  
  []
 
 
 Overfull \hbox (9.2679pt too wide) in paragraph at lines 77--77
-[]
+[]  
  []
 
 
@@ -781,7 +781,7 @@ Underfull \hbox (badness 1552) in paragraph at lines 110--111
 
 
 Underfull \hbox (badness 2512) in paragraph at lines 114--115
-[]\TU/STSong(0)/n/n/10 在 \T1/times/m/n/10 OCR \TU/STSong(0)/n/n/10 主 实 验 之 外，|
+[]\TU/STSong(0)/n/n/10 在 \T1/times/m/n/10 OCR \TU/STSong(0)/n/n/10 主 实 验 之 外，| 
  以 \T1/times/m/n/10 4 \TU/STSong(0)/n/n/10 个 目 标 检 测 器
  []
 
@@ -991,12 +991,30 @@ Package xcolor Warning: Incompatible color definition on input line 336.
 
 
 Underfull \hbox (badness 1552) in paragraph at lines 381--382
-[]\TU/STSong(0)/b/n/10 积 分 攻 击 仍 是 残 余 前 沿，|  长 曝 光 反 转 是 值
+[]\TU/STSong(0)/b/n/10 积 分 攻 击 仍 是 残 余 前 沿，|  长 曝 光 反 转 为 负
  []
 
 
-Underfull \hbox (badness 1552) in paragraph at lines 381--382
-\TU/STSong(0)/b/n/10 得 注 意 的 负 面 结 果：|  长 曝 光 与 视 频 时 域 平
+Underfull \hbox (badness 3780) in paragraph at lines 381--382
+\TU/STSong(0)/b/n/10 面 结 果：|  长 曝 光 与 视 频 时 域 平 均 都 利 用
+ []
+
+
+Underfull \hbox (badness 3088) in paragraph at lines 381--382
+\TU/STSong(0)/b/n/10 完 整 周 期 的 互 补 性。| \T1/times/m/n/10 De-ployed \TU/STSong(0)
+/b/n/10 档 在 长 曝 光
+ []
+
+
+Underfull \hbox (badness 1783) in paragraph at lines 381--382
+\TU/STSong(0)/b/n/10 下 仍 恢 复 \T1/times/m/n/10 60.9% char / 36.4% ex-act |\TU/ST
+Song(0)/b/n/10 （敏 感 \T1/times/m/n/10 to-
+ []
+
+
+Underfull \hbox (badness 4673) in paragraph at lines 381--382
+\T1/times/m/n/10 ken \TU/STSong(0)/b/n/10 恢 复 率 \T1/times/m/n/10 96.5%\TU/STSon
+g(0)/b/n/10 ） ，|  视 频 时 域 平 均 下
  []
 
 
@@ -1123,24 +1141,24 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [8]
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
 (fontspec)             'STFangsong'. Check the typeset output, and if it is
 (fontspec)             okay then ignore this warning. Otherwise a different
 (fontspec)             font should be chosen.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STFangsong/BI" (it probably
 (fontspec)             doesn't exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STFangsong/B" (it probably
 (fontspec)             doesn't exist).
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Could not resolve font "STFangsong/I" (it probably
 (fontspec)             doesn't exist).
 
@@ -1154,13 +1172,13 @@ LaTeX Font Warning: Font shape `T1/pcr/n/n' undefined
 (Font)              using `T1/pcr/m/n' instead on input line 467.
 
 
-Package fontspec Info:
+Package fontspec Info: 
 (fontspec)             Font family 'STFangsong(0)' created for font
 (fontspec)             'STFangsong' with options [Script={CJK}].
-(fontspec)
+(fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
-(fontspec)
+(fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->"STFangsong/OT:script=hani;language=dflt;"
 
@@ -1577,14 +1595,14 @@ L3 programming layer <2022/08/05>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
- )
+ ) 
 Here is how much of TeX's memory you used:
- 9815 strings out of 473832
- 255840 string characters out of 5729481
- 719976 words of memory out of 5000000
- 32636 multiletter control sequences out of 15000+600000
+ 9764 strings out of 473832
+ 252695 string characters out of 5729481
+ 719560 words of memory out of 5000000
+ 32585 multiletter control sequences out of 15000+600000
  636175 words of font info for 227 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  74i,10n,93p,1346b,548s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.xdv (17 pages, 440728 bytes).
+Output written on main.pdf (17 pages).
