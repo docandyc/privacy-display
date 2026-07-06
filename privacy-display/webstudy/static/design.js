@@ -49,9 +49,32 @@
     };
   }
 
+  function derivedIndexFromSessionUuid(sessionUuid) {
+    const hex = String(sessionUuid || "").replace(/-/g, "").slice(0, 8);
+    if (!/^[0-9a-fA-F]{8}$/.test(hex)) {
+      throw new Error("sessionUuid must contain at least 8 hex chars");
+    }
+    return parseInt(hex, 16) >>> 0;
+  }
+
+  function assignmentForSessionUuid(sessionUuid, ratingRowCount) {
+    const rows = Number(ratingRowCount);
+    if (!Number.isInteger(rows) || rows < 1) {
+      throw new Error("ratingRowCount must be a positive integer");
+    }
+    const derived = derivedIndexFromSessionUuid(sessionUuid);
+    return {
+      derived_index: derived,
+      typing_order_index: derived % 2,
+      rating_order_index: Math.floor(derived / 2) % rows
+    };
+  }
+
   return {
     buildTypingSequence,
     balancedLatinOrder,
-    assignmentForRegistrationIndex
+    assignmentForRegistrationIndex,
+    assignmentForSessionUuid,
+    derivedIndexFromSessionUuid
   };
 });

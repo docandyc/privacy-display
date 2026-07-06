@@ -285,6 +285,22 @@ def formal_registration_occupied(conn: sqlite3.Connection, registration_index: i
     return row is not None
 
 
+def derived_index_from_session_uuid(session_uuid: str) -> int:
+    """Derive a stable non-negative int from the first 8 hex chars of the UUID.
+
+    Matches the client-side ``derivedIndexFromSessionUuid`` in ``static/design.js``
+    so counterbalance and rating-order indices agree end-to-end without the
+    experimenter typing a registration index.
+    """
+    hex_prefix = str(session_uuid or "").replace("-", "")[:8]
+    if len(hex_prefix) != 8:
+        raise ValidationError("session_uuid must contain at least 8 hex chars")
+    try:
+        return int(hex_prefix, 16)
+    except ValueError as exc:
+        raise ValidationError("session_uuid must be a valid UUID") from exc
+
+
 def validate_payload(payload: Any) -> tuple[dict, dict, list[dict], list[dict]]:
     if not isinstance(payload, dict):
         raise ValidationError("payload must be a JSON object")
@@ -337,29 +353,17 @@ def balanced_latin_order(items: tuple[str, ...], row_index: int) -> list[str]:
 def clean_participant(raw: Any) -> dict:
     if not isinstance(raw, dict):
         raise ValidationError("participant must be an object")
-    student_id = clean_text(raw.get("student_id"), 80)
-    name = clean_text(raw.get("name"), 80)
-    if not student_id:
-        raise ValidationError("student_id is required")
-    if not name:
-        raise ValidationError("name is required")
     if raw.get("consent_confirmed") is not True:
         raise ValidationError("consent_confirmed must be true")
     if raw.get("photosensitivity_screen_passed") is not True:
         raise ValidationError("photosensitivity_screen_passed must be true")
-    gender = clean_text(raw.get("gender"), 40)
-    if gender not in {"", "female", "male", "nonbinary", "prefer_not_to_say", "self_described"}:
-        raise ValidationError("gender has an invalid value")
-    age = clean_optional_int(raw.get("age"))
-    if age is not None and not 1 <= age <= 120:
-        raise ValidationError("age must be in [1, 120]")
     return {
-        "student_id": student_id,
-        "name": name,
+        "student_id": "",
+        "name": "",
         "glasses": clean_text(raw.get("glasses"), 40),
-        "major": clean_text(raw.get("major"), 120),
-        "age": age,
-        "gender": gender,
+        "major": "",
+        "age": None,
+        "gender": "",
         "consent_confirmed": 1,
         "photosensitivity_screen_passed": 1,
         "consented_at": clean_text(raw.get("consented_at"), 80),
@@ -383,17 +387,16 @@ def clean_session(raw: Any) -> dict:
     counterbalance_index = clean_int(raw.get("counterbalance_index"), default=-1)
     rating_order_index = clean_int(raw.get("rating_order_index"), default=-1)
     if not (demo or debug):
-        if registration_index < 0:
-            raise ValidationError("formal sessions require a non-negative registration_index")
-        expected_typing_index = registration_index % 2
-        expected_rating_index = (registration_index // 2) % len(RATING_CONDITIONS)
+        derived = derived_index_from_session_uuid(session_uuid)
+        expected_typing_index = derived % 2
+        expected_rating_index = (derived // 2) % len(RATING_CONDITIONS)
         expected_typing_order = "ABBA" if expected_typing_index == 0 else "BAAB"
         if counterbalance_index != expected_typing_index:
-            raise ValidationError("counterbalance_index does not match registration_index")
+            raise ValidationError("counterbalance_index does not match session_uuid")
         if rating_order_index != expected_rating_index:
-            raise ValidationError("rating_order_index does not match registration_index")
+            raise ValidationError("rating_order_index does not match session_uuid")
         if typing_order != expected_typing_order:
-            raise ValidationError("typing_order does not match registration_index")
+            raise ValidationError("typing_order does not match session_uuid")
     return {
         "session_uuid": session_uuid,
         "registration_index": registration_index,
@@ -585,7 +588,7 @@ def save_submission(
         ).fetchone()
         if existing:
             return int(existing["id"]), False
-        if not (session["debug"] or session["demo"]):
+        if not (session["debug"] or session["demo"]) and session["registration_index"] >= 0:
             if formal_registration_occupied(conn, session["registration_index"]):
                 raise ValidationError("registration_index is already used by a formal session")
         try:

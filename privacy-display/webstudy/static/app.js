@@ -7,6 +7,7 @@
   const DEMO = params.get("demo") === "1";
   const SELFTEST = params.get("selftest") === "1";
   const TRIAL_DURATION_S = DEBUG ? 5 : 20;
+  const TRIAL_COUNTDOWN_S = 5;
   const WARMUP_DURATION_S = DEBUG ? 3 : 12;
   const MASKED_PREVIEW_DURATION_S = DEBUG ? 3 : 10;
   const RATING_MIN_VIEW_MS = DEBUG ? 1500 : 10000;
@@ -56,7 +57,7 @@
     ["refresh", "刷新率检查"],
     ["typing", "打字试次"],
     ["ratings", "消融评分"],
-    ["submit", "提交"]
+    ["submit", "完成测试"]
   ];
 
   const CONDITIONS = [
@@ -125,7 +126,6 @@
     sessionUuid: createSessionUuid(),
     startedAt: new Date().toISOString(),
     participant: {},
-    registrationIndex: null,
     refresh: {
       hz: null,
       samples: 0,
@@ -240,8 +240,8 @@
       <aside class="side-panel">
         <section class="side-section">
           <h2 class="side-title">会话</h2>
-          <div class="metric"><span>学号</span><strong>${escapeHtml(state.participant.student_id || "-")}</strong></div>
-          <div class="metric"><span>姓名</span><strong>${escapeHtml(state.participant.name || "-")}</strong></div>
+          <div class="metric"><span>会话编号</span><strong>${escapeHtml((state.sessionUuid || "-").slice(0, 8))}</strong></div>
+          <div class="metric"><span>视力矫正</span><strong>${escapeHtml(state.participant.glasses || "-")}</strong></div>
           <div class="metric"><span>刷新率</span><strong class="${refreshClass}">${refreshLabel}</strong></div>
           <div class="metric"><span>假定屏幕</span><strong>${ASSUMED_MONITOR_HZ} 赫兹</strong></div>
         </section>
@@ -293,15 +293,15 @@
         光敏安全提示：遮罩显示会使用快速时间闪烁。若出现不适、眼睛疲劳、头晕、恶心或头痛，请立即停止。
       </div>
       <label class="check-row">
-        <input type="checkbox" id="consentCheck">
+        <input type="checkbox" id="consentCheck" checked>
         <span>我已阅读研究说明，自愿参加，并知道可在任意时刻无条件退出。研究会采集身份、人口学、显示时序、打字与评分数据；学号和姓名仅用于参与管理，分析与发布只使用去标识化数据。</span>
       </label>
       <label class="check-row">
-        <input type="checkbox" id="photosensitivityCheck">
+        <input type="checkbox" id="photosensitivityCheck" checked>
         <span>我确认没有光敏性癫痫病史，也不属于对闪烁刺激敏感的人群。</span>
       </label>
       <div class="actions">
-        <button class="button" id="continueWelcome" disabled>继续</button>
+        <button class="button" id="continueWelcome">继续</button>
       </div>
     `);
     const check = document.getElementById("consentCheck");
@@ -312,6 +312,7 @@
     };
     check.addEventListener("change", updateConsent);
     photosensitivity.addEventListener("change", updateConsent);
+    updateConsent();
     button.addEventListener("click", () => {
       state.participant.consent_confirmed = true;
       state.participant.photosensitivity_screen_passed = true;
@@ -324,23 +325,10 @@
     shell(`
       ${renderHeader(
         "被试信息",
-        "填写用于将研究记录与实验名单对应起来的信息。",
+        "只需要一项视力矫正信息，用于分析与视觉条件相关的差异。",
         "第 2 步"
       )}
       <form id="identityForm" class="form-grid">
-        <div class="field">
-          <label for="registrationIndex">正式登记序号 k（从 0 开始）</label>
-          <input id="registrationIndex" name="registration_index" type="number" min="0" step="1" required value="${escapeHtml(state.registrationIndex ?? "")}">
-          <span class="field-hint">由实验员按到场登记顺序填写；正式会话不可重复。</span>
-        </div>
-        <div class="field">
-          <label for="studentId">学号</label>
-          <input id="studentId" name="student_id" autocomplete="off" required value="${escapeHtml(state.participant.student_id || "")}">
-        </div>
-        <div class="field">
-          <label for="studentName">姓名</label>
-          <input id="studentName" name="name" autocomplete="name" required value="${escapeHtml(state.participant.name || "")}">
-        </div>
         <div class="field">
           <label for="glasses">视力矫正</label>
           <select id="glasses" name="glasses">
@@ -348,25 +336,6 @@
             <option value="none">不戴眼镜 / 隐形眼镜</option>
             <option value="glasses">戴眼镜</option>
             <option value="contacts">戴隐形眼镜</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="major">专业或班级</label>
-          <input id="major" name="major" autocomplete="off" value="${escapeHtml(state.participant.major || "")}">
-        </div>
-        <div class="field">
-          <label for="age">年龄（可选）</label>
-          <input id="age" name="age" type="number" min="1" max="120" value="${escapeHtml(state.participant.age || "")}">
-        </div>
-        <div class="field">
-          <label for="gender">性别（可选）</label>
-          <select id="gender" name="gender">
-            <option value="">未填写</option>
-            <option value="female">女</option>
-            <option value="male">男</option>
-            <option value="nonbinary">非二元</option>
-            <option value="self_described">自我描述</option>
-            <option value="prefer_not_to_say">不愿透露</option>
           </select>
         </div>
       </form>
@@ -379,65 +348,16 @@
     if (state.participant.glasses) {
       document.getElementById("glasses").value = state.participant.glasses;
     }
-    if (state.participant.gender) {
-      document.getElementById("gender").value = state.participant.gender;
-    }
     document.getElementById("backIdentity").addEventListener("click", () => setStep("welcome"));
-    document.getElementById("identityForm").addEventListener("submit", async (event) => {
+    document.getElementById("identityForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      const registrationIndex = Number(data.get("registration_index"));
-      const status = document.getElementById("identityStatus");
-      const continueButton = document.getElementById("continueIdentity");
       state.participant = {
         ...state.participant,
-        student_id: String(data.get("student_id") || "").trim(),
-        name: String(data.get("name") || "").trim(),
-        glasses: String(data.get("glasses") || "").trim(),
-        major: String(data.get("major") || "").trim(),
-        age: data.get("age") ? Number(data.get("age")) : null,
-        gender: String(data.get("gender") || "").trim()
+        glasses: String(data.get("glasses") || "").trim()
       };
-      if (!state.participant.student_id || !state.participant.name
-          || !Number.isInteger(registrationIndex) || registrationIndex < 0) {
-        return;
-      }
-      continueButton.disabled = true;
-      status.classList.remove("error");
-      status.textContent = DEBUG || DEMO ? "正在进入检查……" : "正在预检正式登记序号……";
-      try {
-        if (!(DEBUG || DEMO)) {
-          const available = await checkRegistrationAvailability(registrationIndex);
-          if (!available) {
-            status.classList.add("error");
-            status.textContent = `登记序号 ${registrationIndex} 已被正式会话使用，请在开始实验前核对并更正。`;
-            continueButton.disabled = false;
-            document.getElementById("registrationIndex").focus();
-            return;
-          }
-        }
-        state.registrationIndex = registrationIndex;
-        setStep("refresh");
-      } catch (error) {
-        status.classList.add("error");
-        status.textContent = `无法预检登记序号：${error.message}。为避免整场数据作废，暂不允许开始。`;
-        continueButton.disabled = false;
-      }
+      setStep("refresh");
     });
-  }
-
-  async function checkRegistrationAvailability(registrationIndex) {
-    const query = new URLSearchParams({
-      registration_index: String(registrationIndex)
-    });
-    const response = await fetch(`/api/registration-status?${query}`, {
-      headers: { "Accept": "application/json" }
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || `请求失败 ${response.status}`);
-    }
-    return data.available === true;
   }
 
   function renderRefresh() {
@@ -542,14 +462,12 @@
 
   function prepareExperiment() {
     state.seed = [
-      state.participant.student_id,
-      state.participant.name,
       state.sessionUuid,
       Math.round(state.refresh.hz || ASSUMED_MONITOR_HZ)
     ].join(":");
 
     const maskedN = maskedSubframeCount(state.refresh.hz);
-    const assignment = global.StudyDesign.assignmentForRegistrationIndex(state.registrationIndex, CONDITIONS.length);
+    const assignment = global.StudyDesign.assignmentForSessionUuid(state.sessionUuid, CONDITIONS.length);
     state.counterbalanceIndex = assignment.typing_order_index;
     state.ratingOrderIndex = assignment.rating_order_index;
     const sequence = global.StudyDesign.buildTypingSequence(state.counterbalanceIndex);
@@ -656,6 +574,10 @@
           <div class="meter"><div class="meter-fill" id="timerFill"></div></div>
           <button class="button" id="startTrial">开始</button>
         </div>
+        <div class="countdown" id="trialCountdown" hidden>
+          <span>准备输入</span>
+          <strong id="countdownValue">${TRIAL_COUNTDOWN_S}</strong>
+        </div>
         <textarea id="typingInput" class="typing-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled></textarea>
         <div id="trialResult"></div>
       </div>
@@ -713,15 +635,11 @@
     const startButton = document.getElementById("startTrial");
     const timerValue = document.getElementById("timerValue");
     const fill = document.getElementById("timerFill");
+    const countdown = document.getElementById("trialCountdown");
+    const countdownValue = document.getElementById("countdownValue");
     startButton.disabled = true;
-    input.disabled = false;
+    input.disabled = true;
     input.value = "";
-    input.focus();
-    if (currentPlayer) {
-      currentPlayer.resetTimingStats();
-    }
-
-    const started = performance.now();
     let firstKeyAt = null;
     let finished = false;
     input.addEventListener("input", () => {
@@ -730,51 +648,80 @@
       }
     });
 
-    activeFinish = () => {
+    const beginTimedTyping = () => {
       if (finished) {
         return;
       }
-      finished = true;
-      if (activeTimer) {
-        global.clearInterval(activeTimer);
-        activeTimer = null;
+      countdown.hidden = true;
+      input.disabled = false;
+      input.focus();
+      if (currentPlayer) {
+        currentPlayer.resetTimingStats();
       }
-      const elapsed = Math.min(trial.duration_s, Math.max(1, (performance.now() - started) / 1000));
-      input.disabled = true;
-      const timingMeta = currentPlayer ? { ...currentPlayer.getTimingStats() } : (trial.mask_meta || null);
-      if (isWarmup) {
-        state.warmupDone = true;
-        renderWarmupResult();
-        return;
-      }
-      const score = global.Typing.scoreTyping(trial.target_text, input.value, elapsed);
-      const result = {
-        condition: trial.condition,
-        trial_index: trial.trial_index,
-        condition_repetition: trial.condition_repetition,
-        n: trial.n,
-        requested_n: trial.requested_n || trial.n,
-        components: trial.components,
-        target_text: trial.target_text,
-        typed_text: input.value,
-        first_key_latency_ms: firstKeyAt === null ? null : firstKeyAt - started,
-        mask_meta: timingMeta,
-        ...score
+
+      const started = performance.now();
+      activeFinish = () => {
+        if (finished) {
+          return;
+        }
+        finished = true;
+        if (activeTimer) {
+          global.clearInterval(activeTimer);
+          activeTimer = null;
+        }
+        const elapsed = Math.min(trial.duration_s, Math.max(1, (performance.now() - started) / 1000));
+        input.disabled = true;
+        const timingMeta = currentPlayer ? { ...currentPlayer.getTimingStats() } : (trial.mask_meta || null);
+        if (isWarmup) {
+          state.warmupDone = true;
+          renderWarmupResult();
+          return;
+        }
+        const score = global.Typing.scoreTyping(trial.target_text, input.value, elapsed);
+        const result = {
+          condition: trial.condition,
+          trial_index: trial.trial_index,
+          condition_repetition: trial.condition_repetition,
+          n: trial.n,
+          requested_n: trial.requested_n || trial.n,
+          components: trial.components,
+          target_text: trial.target_text,
+          typed_text: input.value,
+          first_key_latency_ms: firstKeyAt === null ? null : firstKeyAt - started,
+          mask_meta: timingMeta,
+          ...score
+        };
+        state.typing.push(result);
+        renderTrialResult(result);
       };
-      state.typing.push(result);
-      renderTrialResult(result);
+
+      activeTimer = global.setInterval(() => {
+        const elapsed = (performance.now() - started) / 1000;
+        const remaining = Math.max(0, trial.duration_s - elapsed);
+        const percent = Math.min(100, (elapsed / trial.duration_s) * 100);
+        timerValue.textContent = `${Math.ceil(remaining)}s`;
+        fill.style.width = `${percent}%`;
+        if (remaining <= 0) {
+          activeFinish();
+        }
+      }, 100);
     };
 
+    countdown.hidden = false;
+    let remaining = TRIAL_COUNTDOWN_S;
+    countdownValue.textContent = String(remaining);
+    timerValue.textContent = "准备";
+    fill.style.width = "0%";
     activeTimer = global.setInterval(() => {
-      const elapsed = (performance.now() - started) / 1000;
-      const remaining = Math.max(0, trial.duration_s - elapsed);
-      const percent = Math.min(100, (elapsed / trial.duration_s) * 100);
-      timerValue.textContent = `${Math.ceil(remaining)}s`;
-      fill.style.width = `${percent}%`;
+      remaining -= 1;
       if (remaining <= 0) {
-        activeFinish();
+        global.clearInterval(activeTimer);
+        activeTimer = null;
+        beginTimedTyping();
+        return;
       }
-    }, 100);
+      countdownValue.textContent = String(remaining);
+    }, 1000);
   }
 
   function renderWarmupResult() {
@@ -946,7 +893,7 @@
         ${ratingGroup("readability", "可读性", "1 = 难以阅读，5 = 非常清晰")}
         ${ratingGroup("flicker", "闪烁感", "1 = 很强，5 = 几乎察觉不到")}
         ${ratingGroup("fatigue", "即时视觉不适感", "1 = 很不适，5 = 很舒适")}
-        ${ratingGroup("privacy", "感知隐私", "1 = 看起来很弱，5 = 看起来很强")}
+        ${ratingGroup("privacy", "防偷看效果", "1 = 旁人很容易看清，5 = 旁人几乎看不清")}
       </form>
       <div class="actions">
         <span class="status-line" id="viewGateStatus">请继续观看…</span>
@@ -1052,7 +999,7 @@
     const status = state.submitStatus;
     shell(`
       ${renderHeader(
-        "提交",
+        "完成测试",
         "确认已收集的记录后，将本次会话写入本地数据库。",
         "最后一步"
       )}
@@ -1096,7 +1043,7 @@
       participant: state.participant,
       session: {
         session_uuid: state.sessionUuid,
-        registration_index: state.registrationIndex,
+        registration_index: -1,
         started_at: state.startedAt,
         submitted_at: new Date().toISOString(),
         assumed_monitor_hz: ASSUMED_MONITOR_HZ,
