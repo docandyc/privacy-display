@@ -386,15 +386,23 @@
         "第 2 步"
       )}
       <form id="identityForm" class="form-grid">
-        <div class="field">
-          <label for="glasses">视力矫正</label>
-          <select id="glasses" name="glasses" required>
-            <option value="">请选择</option>
-            <option value="none">不戴眼镜 / 隐形眼镜</option>
-            <option value="glasses">戴眼镜</option>
-            <option value="contacts">戴隐形眼镜</option>
-          </select>
-        </div>
+        <fieldset class="field vision-field">
+          <legend class="group-label">视力矫正</legend>
+          <div class="vision-options">
+            <label class="vision-option">
+              <input type="radio" name="glasses" value="none" required>
+              <span>未进行视力矫正</span>
+            </label>
+            <label class="vision-option">
+              <input type="radio" name="glasses" value="glasses" required>
+              <span>戴眼镜</span>
+            </label>
+            <label class="vision-option">
+              <input type="radio" name="glasses" value="contacts" required>
+              <span>戴隐形眼镜</span>
+            </label>
+          </div>
+        </fieldset>
       </form>
       <div id="identityStatus" class="status-line"></div>
       <div class="actions">
@@ -403,7 +411,9 @@
       </div>
     `);
     if (state.participant.glasses) {
-      document.getElementById("glasses").value = state.participant.glasses;
+      document.querySelectorAll('input[name="glasses"]').forEach((input) => {
+        input.checked = input.value === state.participant.glasses;
+      });
     }
     document.getElementById("backIdentity").addEventListener("click", () => setStep("welcome"));
     document.getElementById("identityForm").addEventListener("submit", async (event) => {
@@ -1097,9 +1107,9 @@
       </div>
       <form id="ratingForm" class="ratings">
         ${ratingGroup("readability", "可读性", "1 = 难以阅读，5 = 非常清晰")}
-        ${ratingGroup("flicker", "稳定感", "1 = 闪烁很强，5 = 几乎察觉不到")}
-        ${ratingGroup("fatigue", "即时视觉不适感", "1 = 很不适，5 = 很舒适")}
-        ${ratingGroup("privacy", "防偷拍效果", "1 = 旁人拍照很清晰，5 = 旁人拍照几乎拍不清楚")}
+        ${ratingGroup("flicker", "稳定感", "1 = 闪烁很强，5 = 完全察觉不到闪烁")}
+        ${ratingGroup("fatigue", "即时视觉舒适感", "1 = 很不舒适，5 = 很舒适")}
+        ${ratingGroup("privacy", "防偷窥效果", "1 = 旁人很容易看清，5 = 旁人完全看不清")}
       </form>
       <div class="actions">
         <span class="status-line" id="viewGateStatus">请继续观看…</span>
@@ -1180,7 +1190,7 @@
 
   function ratingGroup(name, title, hint) {
     const options = [1, 2, 3, 4, 5].map((value) => `
-      <label>
+      <label class="rating-option rating-option-${value}">
         <input type="radio" name="${name}" value="${value}">
         ${value}
       </label>
@@ -1330,7 +1340,7 @@
       <div class="complete-mark">✓</div>
       <div class="status-line">${escapeHtml(state.submitStatus.message)}</div>
       <div class="warning">
-        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感、即时不适和主观防偷拍效果上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
+        研究目的：本研究比较普通显示与时间遮罩显示在打字效率、可读性、稳定感、即时视觉舒适感和主观防偷窥效果上的差异。你的记录会以去标识化方式进入统计分析；如需撤回数据，请在研究者规定期限内联系实验负责人并提供本次会话编号 ${escapeHtml((state.sessionUuid || "").slice(0, 8))}。
       </div>
       <div class="actions">
         <button class="button" id="newSession">开始下一位被试</button>

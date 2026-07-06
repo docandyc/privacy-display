@@ -50,7 +50,11 @@ test("refresh check can continue immediately after a passing measurement", () =>
 });
 
 test("formal identity requires vision correction and fetches server assignment", () => {
-  assert.match(elementMarkup("select", "glasses"), /\brequired\b/);
+  assert.doesNotMatch(appJs, /<select id="glasses"/);
+  assert.match(appJs, /<input type="radio" name="glasses" value="none" required>/);
+  assert.match(appJs, /<input type="radio" name="glasses" value="glasses" required>/);
+  assert.match(appJs, /<input type="radio" name="glasses" value="contacts" required>/);
+  assert.match(appJs, /input\.checked = input\.value === state\.participant\.glasses;/);
   assert.match(appJs, /if \(!state\.participant\.glasses\)/);
   assert.match(appJs, /fetch\("\/api\/next-assignment"/);
   assert.match(appJs, /state\.assignment = data\.assignment;/);
@@ -65,8 +69,15 @@ test("masked preview is followed by an unscored masked typing practice", () => {
 });
 
 test("rating labels and submit backtracking avoid silent data loss", () => {
-  assert.match(appJs, /ratingGroup\("flicker", "稳定感", "1 = 闪烁很强，5 = 几乎察觉不到"\)/);
-  assert.match(appJs, /ratingGroup\("privacy", "防偷拍效果", "1 = 旁人拍照很清晰，5 = 旁人拍照几乎拍不清楚"\)/);
+  assert.match(appJs, /ratingGroup\("flicker", "稳定感", "1 = 闪烁很强，5 = 完全察觉不到闪烁"\)/);
+  assert.match(appJs, /ratingGroup\("fatigue", "即时视觉舒适感", "1 = 很不舒适，5 = 很舒适"\)/);
+  assert.match(appJs, /ratingGroup\("privacy", "防偷窥效果", "1 = 旁人很容易看清，5 = 旁人完全看不清"\)/);
+  assert.match(appJs, /class="rating-option rating-option-\$\{value\}"/);
+  for (let value = 1; value <= 5; value += 1) {
+    assert.match(styleCss, new RegExp(`\\.rating-option-${value}\\s*\\{[^}]*--rating-bg:[^;]+;[^}]*--rating-selected:[^;]+;`, "s"));
+  }
+  assert.match(styleCss, /\.rating-options label:has\(input:focus-visible\)/);
+  assert.match(styleCss, /\.rating-options label:has\(input:checked\)\s*\{[^}]*background: var\(--rating-selected\);/s);
   assert.match(appJs, /confirm\("返回评分会删除最后一条评分并重新填写，是否继续？"\)/);
 });
 
