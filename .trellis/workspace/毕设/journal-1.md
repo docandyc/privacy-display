@@ -143,3 +143,36 @@ Added server-side least-filled WebStudy assignment, required vision correction, 
 ### Next Steps
 
 - None - task complete
+
+
+## Session 5: 删除 WebStudy 防偷窥评分项
+
+**Date**: 2026-07-06
+**Task**: 删除 WebStudy 防偷窥评分项
+**Branch**: `master`
+
+### Summary
+
+删除防偷窥主观评分，改为三项量表；同步旧库兼容迁移、管理导出、分析脚本、README 和中英文论文。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0f13654` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
