@@ -19,6 +19,8 @@ MODULES = [
     "fig_f5_tradeoff",           # F5 readability vs integration robustness
     "fig_f6_detection_drop",     # F6 real-capture detection mAP50 drop
     "fig_f7_pareto",             # F7 security/usability Pareto sweep
+    "fig_f8_study_typing",       # F8 user-study typing paired slopes
+    "fig_f9_study_ratings",      # F9 user-study Likert rating bars
     "fig_s1_antiocr_heatmap",    # S1 stripe x glyph heatmaps
     "fig_s2_multiengine_ocr",    # S2 OCR-engine generalization
     "fig_s3_baselines_scatter",  # S3 privacy vs usability baselines

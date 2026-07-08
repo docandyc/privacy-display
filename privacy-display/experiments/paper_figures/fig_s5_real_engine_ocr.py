@@ -22,7 +22,7 @@ PROFILES = [
     ("mask_noise", "Mask + noise"),
     ("strong", "Strong"),
     ("deployed", "Deployed"),
-    ("capture_hardened", "Capture-\nhardened"),
+    ("capture_hardened", "High-\nsuppression"),
 ]
 
 

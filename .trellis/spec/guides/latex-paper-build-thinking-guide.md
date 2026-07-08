@@ -20,6 +20,14 @@ Use this checklist whenever a paper source, bibliography, label, figure, or gene
 - [ ] The final log contains no `Label(s) may have changed`.
 - [ ] Extracted PDF text contains no citation placeholders such as `[?]`, `(?)`, or repeated `??`.
 
+## Citation and hardware integrity
+
+- [ ] Verify every new DOI and arXiv identifier against a primary metadata source (publisher/Crossref, arXiv API, conference proceedings, or official project documentation).
+- [ ] If an arXiv preprint has a matching formal proceedings or journal version, cite the formal version and record the DOI.
+- [ ] Keep local citation keys aligned with the actual first author and publication year; after renaming a key, search both manuscript sources and generated `.aux` files for the retired key.
+- [ ] Treat product model, sensor, and timing claims as evidence-bearing facts. Cite manufacturer documentation for published specifications and label unmeasured quantities or mechanisms as hypotheses rather than facts.
+- [ ] Inspect the final `.blg` and generated bibliography after a complete build. An early BibTeX pass may report stale keys from the previous `.aux`; only the final build state proves resolution.
+
 ## Common failure mode
 
 **Symptom**: Most citations and cross-references become question marks at once.

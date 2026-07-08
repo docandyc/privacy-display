@@ -22,10 +22,13 @@
 \BIBdecl
 
 \bibitem{b_wang2026}
+\BIBentryALTinterwordspacing
 X.~Wang, K.~Peng, X.~Yi, and H.~Li, ``{Mind the gap: Mapping wearer-bystander
   privacy tensions and context-adaptive pathways for camera glasses},'' in
   \emph{Proc. CHI Conf. Human Factors in Computing Systems}, 2026, pp. 1--28,
-  doi: 10.1145/3772318.3791848.
+  doi: 10.1145/3772318.3791848. [Online]. Available:
+  \url{https://doi.org/10.1145/3772318.3791848}
+\BIBentrySTDinterwordspacing
 
 \bibitem{b_ponemon2016}
 \BIBentryALTinterwordspacing
@@ -38,33 +41,25 @@ X.~Wang, K.~Peng, X.~Yi, and H.~Li, ``{Mind the gap: Mapping wearer-bystander
 M.~Eiband, M.~Khamis, E.~von Zezschwitz, H.~Hussmann, and F.~Alt,
   ``{Understanding shoulder surfing in the wild: Stories from users and
   observers},'' in \emph{Proc. CHI Conf. Human Factors in Computing Systems},
-  2017, pp. 4254--4265.
-
-\bibitem{b_fang2019}
-H.~Fang, W.~Zhang, H.~Zhou, H.~Cui, and N.~Yu, ``{Screen-shooting resilient
-  watermarking},'' \emph{IEEE Trans. Information Forensics and Security},
-  vol.~14, no.~6, pp. 1403--1418, 2019.
-
-\bibitem{b_kaleido2015}
-L.~Zhang, C.~Bo, J.~Hou, X.-Y. Li, Y.~Wang, K.~Liu, and Y.~Liu, ``{Kaleido: You
-  can watch it but cannot record it},'' in \emph{Proc. 21st Annu. Int. Conf.
-  Mobile Computing and Networking (MobiCom)}, 2015, pp. 372--385.
+  2017, pp. 4254--4265, doi: 10.1145/3025453.3025636.
 
 \bibitem{b_backes2009}
 M.~Backes, T.~Chen, M.~D{\"u}rmuth, H.~P.~A. Lensch, and M.~Welk, ``{Tempest in
   a teapot: Compromising reflections revisited},'' in \emph{Proc. IEEE Symp.
-  Security and Privacy (S\&P)}, 2009, pp. 315--327.
+  Security and Privacy (S\&P)}, 2009, pp. 315--327, doi: 10.1109/SP.2009.20.
 
 \bibitem{b_fernandez2024}
 S.~Fern{\'a}ndez, E.~Mart{\'i}nez, G.~Varela, P.~Mus{\'e}, and F.~Larroca,
   ``{Deep-TEMPEST: Using deep learning to eavesdrop on HDMI from its unintended
-  electromagnetic emanations},'' \emph{arXiv preprint arXiv:2407.09717}, 2024.
+  electromagnetic emanations},'' in \emph{Proc. 13th Latin-American Symp.
+  Dependable and Secure Computing (LADC)}, 2024, pp. 91--100, doi:
+  10.1145/3697090.3697094.
 
 \bibitem{b_raguram2011}
 R.~Raguram, A.~M. White, D.~Goswami, F.~Monrose, and J.-M. Frahm, ``{iSpy:
   Automatic reconstruction of typed input from compromising reflections},'' in
   \emph{Proc. 18th ACM Conf. Computer and Communications Security (CCS)}, 2011,
-  pp. 527--536.
+  pp. 527--536, doi: 10.1145/2046707.2046769.
 
 \bibitem{b_tang2023}
 B.~Tang and K.~G. Shin, ``{Eye-Shield: Real-time protection of mobile device
@@ -80,32 +75,39 @@ C.-Y. Chen, B.-Y. Lin, J.~Wang, and K.~G. Shin, ``{Keep Others from Peeking at
 \bibitem{b_zhu2017}
 S.~Zhu, C.~Zhang, and X.~Zhang, ``{Automating visual privacy protection using a
   smart LED},'' in \emph{Proc. 23rd ACM Int. Conf. Mobile Computing and
-  Networking (MobiCom)}, 2017, pp. 329--342.
+  Networking (MobiCom)}, 2017, pp. 329--342, doi: 10.1145/3117811.3117820.
 
 \bibitem{b_naor1994}
 M.~Naor and A.~Shamir, ``{Visual cryptography},'' in \emph{Proc. EUROCRYPT},
   1994, pp. 1--12.
 
 \bibitem{b_zhong2023}
-X.~Zhong, A.~Das, F.~Alrasheedi, and A.~Tanvir, ``{A brief yet in-depth survey
-  of deep learning-based image watermarking},'' \emph{arXiv preprint
-  arXiv:2308.04603}, 2023.
+X.~Zhong, A.~Das, F.~Alrasheedi, and A.~Tanvir, ``{A brief, in-depth survey of
+  deep learning-based image watermarking},'' \emph{Applied Sciences}, vol.~13,
+  no.~21, p. 11852, 2023, doi: 10.3390/app132111852.
+
+\bibitem{b_fang2019}
+H.~Fang, W.~Zhang, H.~Zhou, H.~Cui, and N.~Yu, ``{Screen-shooting resilient
+  watermarking},'' \emph{IEEE Trans. Information Forensics and Security},
+  vol.~14, no.~6, pp. 1403--1418, 2019.
 
 \bibitem{b_nguyen2016}
 V.~Nguyen, Y.~Tang, A.~Ashok, M.~Gruteser, K.~Dana, W.~Hu, E.~Wengrowski, and
   N.~Mandayam, ``{High-rate flicker-free screen-camera communication with
   spatially adaptive embedding},'' in \emph{Proc. IEEE INFOCOM}, 2016, pp.
-  1--9.
+  1--9, doi: 10.1109/INFOCOM.2016.7524512.
 
 \bibitem{b_tran2021}
 V.~Tran, G.~Jayatilaka, A.~Ashok, and A.~Misra, ``{DeepLight: Robust \&
   unobtrusive real-time screen-camera communication for real-world displays},''
   in \emph{Proc. 20th ACM/IEEE Int. Conf. Information Processing in Sensor
-  Networks (IPSN)}, 2021, pp. 97--110.
+  Networks (IPSN)}, 2021, pp. 238--253, doi: 10.1145/3412382.3458269.
 
 \bibitem{b_ghiasi2024}
-K.~Ghiasi, M.~Kouhestani, and O.~Abari, ``{Passive screen-to-camera
-  communication},'' \emph{arXiv preprint arXiv:2403.16185}, 2024.
+S.~K. Ghiasi, M.~Kaldenbach, and M.~Zuniga, ``{Passive screen-to-camera
+  communication},'' in \emph{Proc. 20th Int. Conf. Distributed Computing in
+  Smart Systems and the Internet of Things (DCOSS-IoT)}, 2024, pp. 35--43, doi:
+  10.1109/DCOSS-IoT61029.2024.00016.
 
 \bibitem{b_yerazunis2001}
 \BIBentryALTinterwordspacing
@@ -125,15 +127,21 @@ Z.~Gao, G.~Zhai, and X.~Min, ``{Information security display system based on
   temporal psychovisual modulation},'' in \emph{Proc. IEEE Int. Symp. Circuits
   and Systems (ISCAS)}, 2014, pp. 449--452, doi: 10.1109/ISCAS.2014.6865167.
 
+\bibitem{b_kaleido2015}
+L.~Zhang, C.~Bo, J.~Hou, X.-Y. Li, Y.~Wang, K.~Liu, and Y.~Liu, ``{Kaleido: You
+  can watch it but cannot record it},'' in \emph{Proc. 21st Annu. Int. Conf.
+  Mobile Computing and Networking (MobiCom)}, 2015, pp. 372--385, doi:
+  10.1145/2789168.2790106.
+
 \bibitem{b_rainbow2018}
 L.~Yang, W.~Wang, Z.~Wang, and Q.~Zhang, ``{Rainbow: Preventing
   mobile-camera-based piracy in the physical world},'' in \emph{Proc. IEEE
-  INFOCOM}, 2018, pp. 1061--1069.
+  INFOCOM}, 2018, pp. 1061--1069, doi: 10.1109/INFOCOM.2018.8485881.
 
 \bibitem{b_lim2007}
-Y.~S. Lim, ``{Defeat spyware with anti-screen capture technology using visual
+J.~Lim, ``{Defeat spyware with anti-screen capture technology using visual
   persistence},'' in \emph{Proc. 3rd Symp. Usable Privacy and Security
-  (SOUPS)}, 2007, pp. 147--148.
+  (SOUPS)}, 2007, pp. 147--148, doi: 10.1145/1280680.1280701.
 
 \bibitem{b_goodfellow2015}
 I.~J. Goodfellow, J.~Shlens, and C.~Szegedy, ``{Explaining and harnessing
@@ -179,10 +187,12 @@ A.~Athalye, L.~Engstrom, A.~Ilyas, and K.~Kwok, ``{Synthesizing robust
   adversarial examples},'' in \emph{Proc. Int. Conf. Machine Learning (ICML)},
   2018, pp. 284--293.
 
-\bibitem{b_zhao2023}
-Q.~Zhao, Y.~Zhu, Z.~Zhang, T.~Zhang, and B.~Li, ``{A survey on transferability
-  of adversarial examples across deep neural networks},'' \emph{arXiv preprint
-  arXiv:2310.17626}, 2023.
+\bibitem{b_gu2024}
+J.~Gu, X.~Jia, P.~de~Jorge, W.~Yu, X.~Liu, A.~Ma, Y.~Xun, A.~Hu, A.~Khakzar,
+  Z.~Li, X.~Cao, and P.~Torr, ``{A survey on transferability of adversarial
+  examples across deep neural networks},'' \emph{Transactions on Machine
+  Learning Research}, 2024, [Online]. Available:
+  https://openreview.net/forum?id=AYJ3m7BocI.
 
 \bibitem{b_niu2021}
 D.~Niu, R.~Guo, and Y.~Wang, ``{Moir{\'e} attack (MA): A new potential risk of
@@ -199,8 +209,12 @@ D.~E. Knuth, \emph{{The Art of Computer Programming, Volume~2: Seminumerical
   1997.
 
 \bibitem{b_song2018}
+\BIBentryALTinterwordspacing
 C.~Song and V.~Shmatikov, ``{Fooling OCR systems with adversarial text
-  images},'' \emph{arXiv preprint arXiv:1802.05385}, 2018.
+  images},'' \emph{arXiv preprint arXiv:1802.05385}, 2018, doi:
+  10.48550/arXiv.1802.05385. [Online]. Available:
+  \url{https://arxiv.org/abs/1802.05385}
+\BIBentrySTDinterwordspacing
 
 \bibitem{b_ciede2000}
 G.~Sharma, W.~Wu, and E.~N. Dalal, ``{The CIEDE2000 color-difference formula:
@@ -215,7 +229,15 @@ Y.~Cai, A.~Bozorgian, M.~Ashraf, R.~Wanat, and R.~K. Mantiuk, ``{elaTCSF: A
 
 \bibitem{b_davis2015}
 J.~Davis, Y.-H. Hsieh, and H.-C. Lee, ``{Humans perceive flicker artifacts at
-  500~Hz},'' \emph{Scientific Reports}, vol.~5, 2015, {Art.~no.~7861}.
+  500~Hz},'' \emph{Scientific Reports}, vol.~5, 2015, {Art.~no.~7861}, doi:
+  10.1038/srep07861.
+
+\bibitem{b_emeet_s600}
+\BIBentryALTinterwordspacing
+{EMEET}, ``{SmartCam S600: 4K Ultra HD webcam},'' 2026, {Accessed: Jul.~7,
+  2026}. [Online]. Available:
+  \url{https://emeet.com/en-eu/products/webcam-s600}
+\BIBentrySTDinterwordspacing
 
 \bibitem{b_coco2014}
 T.-Y. Lin, M.~Maire, S.~Belongie, J.~Hays, P.~Perona, D.~Ramanan,
@@ -249,30 +271,28 @@ R.~Smith, ``{An overview of the Tesseract OCR engine},'' in \emph{Proc. Int.
   Conf. Document Analysis and Recognition (ICDAR)}, 2007, pp. 629--633.
 
 \bibitem{b_shi2023}
+\BIBentryALTinterwordspacing
 Y.~Shi, D.~Peng, W.~Liao, Z.~Lin, X.~Chen, C.~Liu, Y.~Zhang, and L.~Jin,
   ``{Exploring OCR capabilities of GPT-4V(ision): A quantitative and in-depth
-  evaluation},'' \emph{arXiv preprint arXiv:2310.16809}, 2023.
+  evaluation},'' \emph{arXiv preprint arXiv:2310.16809}, 2023, doi:
+  10.48550/arXiv.2310.16809. [Online]. Available:
+  \url{https://arxiv.org/abs/2310.16809}
+\BIBentrySTDinterwordspacing
 
-\bibitem{b_wang2004}
-Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``{Image quality
-  assessment: From error visibility to structural similarity},'' \emph{IEEE
-  Trans. Image Process.}, vol.~13, no.~4, pp. 600--612, 2004.
-
-\bibitem{b_li2025}
-Y.~Li, Y.~Gao, T.~Guo, H.~Wei, and Y.~Sun, ``{Survey of adversarial robustness
-  in multimodal large language models},'' \emph{arXiv preprint
-  arXiv:2503.13962}, 2025.
-
-\bibitem{b_soukoreff2003}
-R.~W. Soukoreff and I.~S. MacKenzie, ``{Metrics for text entry research: An
-  evaluation of MSD and KSPC, and a new unified error metric},'' in \emph{Proc.
-  SIGCHI Conf. Human Factors in Computing Systems (CHI)}, 2003, pp. 113--120,
-  doi: 10.1145/642611.642632.
+\bibitem{b_jiang2025}
+\BIBentryALTinterwordspacing
+C.~Jiang, Z.~Wang, M.~Dong, and J.~Gui, ``{Survey of adversarial robustness in
+  multimodal large language models},'' \emph{arXiv preprint arXiv:2503.13962},
+  2025, doi: 10.48550/arXiv.2503.13962. [Online]. Available:
+  \url{https://arxiv.org/abs/2503.13962}
+\BIBentrySTDinterwordspacing
 
 \bibitem{b_yolo26}
 \BIBentryALTinterwordspacing
-G.~Jocher and J.~Qiu, ``{Ultralytics YOLO26},'' 2025. [Online]. Available:
-  \url{https://github.com/ultralytics/ultralytics}
+G.~Jocher, J.~Qiu, M.~Liu, S.~Lyu, F.~C. Akyon, and M.~E. Kalfaoglu,
+  ``{Ultralytics YOLO26: Unified real-time end-to-end vision models},'' 2026,
+  arXiv:2606.03748, doi: 10.48550/arXiv.2606.03748. [Online]. Available:
+  \url{https://arxiv.org/abs/2606.03748}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_rtdetr2024}
@@ -295,5 +315,16 @@ Y.~Zhang, P.~Sun, Y.~Jiang, D.~Yu, F.~Weng, Z.~Yuan, P.~Luo, W.~Liu, and
   X.~Wang, ``{ByteTrack: Multi-object tracking by associating every detection
   box},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2022, pp.
   1--21.
+
+\bibitem{b_wang2004}
+Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``{Image quality
+  assessment: From error visibility to structural similarity},'' \emph{IEEE
+  Trans. Image Process.}, vol.~13, no.~4, pp. 600--612, 2004.
+
+\bibitem{b_soukoreff2003}
+R.~W. Soukoreff and I.~S. MacKenzie, ``{Metrics for text entry research: An
+  evaluation of MSD and KSPC, and a new unified error metric},'' in \emph{Proc.
+  SIGCHI Conf. Human Factors in Computing Systems (CHI)}, 2003, pp. 113--120,
+  doi: 10.1145/642611.642632.
 
 \end{thebibliography}

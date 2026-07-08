@@ -48,7 +48,7 @@ GRADE_COLORS = {
     "mask_noise": "teal",
     "deployed": "blue",             # blue  — readable / deployed grade
     "anti_ocr": "purple",           # purple
-    "vlm": "red",                   # red   — capture-hardened grade
+    "vlm": "red",                   # red   — high-suppression profile
     "capture_hardened": "red",
     "protected": "blue",
 }

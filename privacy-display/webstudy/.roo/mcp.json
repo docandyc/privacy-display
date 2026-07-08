@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "claude-mem": {
+      "command": "/Users/andyhuang/.nvm/versions/node/v24.16.0/bin/node",
+      "args": [
+        "/Users/andyhuang/.claude/plugins/marketplaces/thedotmack/plugin/scripts/mcp-server.cjs"
+      ]
+    }
+  }
+}

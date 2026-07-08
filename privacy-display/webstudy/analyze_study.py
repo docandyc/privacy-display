@@ -222,40 +222,65 @@ def fmt(value: float | None, digits: int = 2) -> str:
 
 
 def write_latex_tables(output_dir: Path, typing_report: dict[str, Any], rating_summary: dict[str, Any]) -> None:
+    # Column layout and row labels mirror the paper's Tables tab:study_typing /
+    # tab:study_ratings (paper/main.tex) so rows can be pasted one-to-one.
     typing_lines = [
-        r"\begin{tabular}{lrrrr}",
+        r"\begin{tabular}{lccc}",
         r"\toprule",
-        r"指标 & Control & Masked & 配对差（95\% CI） & 检验 \\",
+        r"Metric & Control & Masked & $\Delta$ [95\% CI] \\",
         r"\midrule",
     ]
     labels = {
-        "wpm": "WPM",
-        "cpm": "CPM",
-        "accuracy": "Accuracy",
-        "attempted_chars": "尝试字符数",
-        "first_key_latency_ms": "首击延迟(ms)",
+        "wpm": ("WPM", 1.0),
+        "cpm": ("CPM", 1.0),
+        "accuracy": (r"Accuracy (\%)", 100.0),
+        "attempted_chars": ("Attempted chars", 1.0),
+        "first_key_latency_ms": ("First-key latency (ms)", 1.0),
     }
+    effect_symbols = {"cohen_dz": "d_z", "rank_biserial": "r_rb"}
+
+    def scaled(value: float | None, scale: float) -> float | None:
+        return None if value is None else value * scale
+
+    stat_comments = []
     for metric in TYPING_METRICS:
         row = typing_report[metric]
+        label, scale = labels[metric]
         ci = row["difference_95ci"]
         typing_lines.append(
-            f"{labels[metric]} & {fmt(row['control_mean'])} & {fmt(row['masked_mean'])} & "
-            f"{fmt(row['paired_difference_masked_minus_control'])} [{fmt(ci[0])}, {fmt(ci[1])}] & "
-            f"{row['test']} ($p={fmt(row['p_value'], 3)}$) \\\\"
+            f"{label} & {fmt(scaled(row['control_mean'], scale))} & {fmt(scaled(row['masked_mean'], scale))} & "
+            f"{fmt(scaled(row['paired_difference_masked_minus_control'], scale))} "
+            f"[{fmt(scaled(ci[0], scale))}, {fmt(scaled(ci[1], scale))}] \\\\"
         )
-    typing_lines.extend([r"\bottomrule", r"\end{tabular}", ""])
+        effect_symbol = effect_symbols.get(row["effect_name"] or "", row["effect_name"] or "--")
+        stat_comments.append(
+            f"% {metric}: {row['test']} p={fmt(row['p_value'], 3)} "
+            f"{effect_symbol}={fmt(row['effect'])} statistic={fmt(row['statistic'])}"
+        )
+    typing_lines.extend([r"\bottomrule", r"\end{tabular}"])
+    # Test statistics go into the paper's Results text, not the table; keep
+    # them here as comments so the .tex file remains the single fill source.
+    typing_lines.extend(stat_comments + [""])
     (output_dir / "typing_table.tex").write_text("\n".join(typing_lines), encoding="utf-8")
 
+    condition_labels = {
+        "control_anchor": "Unmasked anchor",
+        "n2_mask_noise": "$n{=}2$ mask+noise",
+        "n3_mask_noise": "$n{=}3$ mask+noise",
+        "n4_mask_noise": "$n{=}4$ mask+noise",
+        "n4_mask_only": "$n{=}4$ mask-only",
+        "deployed_full": "Deployed full ($n{=}4$)",
+    }
     rating_lines = [
-        r"\begin{tabular}{lrrr}",
+        r"\begin{tabular}{lccc}",
         r"\toprule",
-        r"条件 & 可读性 & 稳定感 & 即时视觉舒适感 \\",
+        r"Condition & Readability & Stability & Comfort \\",
         r"\midrule",
     ]
     for condition in CONDITIONS:
         values = rating_summary[condition]
         rating_lines.append(
-            condition.replace("_", r"\_") + " & " + " & ".join(
+            condition_labels.get(condition, condition.replace("_", r"\_")) + " & " + " & ".join(
                 f"{fmt(values[dimension]['mean'])} $\\pm$ {fmt(values[dimension]['sd'])}"
                 for dimension in RATING_DIMENSIONS
             ) + r" \\"

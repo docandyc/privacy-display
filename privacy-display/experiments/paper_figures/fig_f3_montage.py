@@ -25,7 +25,7 @@ FILES = {
     ("vlm", "short"):      "emeet_smartcam_s600_vlm_short_15deg_0.5m_en_sentence_00_n4_164533_s00.jpg",
     ("vlm", "long"):       "emeet_smartcam_s600_vlm_long_15deg_0.5m_en_sentence_00_n4_164538_s00.jpg",
 }
-GRADES = [("Unprotected", "original"), ("Deployed", "deployed"), ("Capture-hardened", "vlm")]
+GRADES = [("Unprotected", "original"), ("Deployed", "deployed"), ("High-suppression", "vlm")]
 COLS = [("eye", "Human eye\n(integrated)"), ("short", "Short exposure\n(single frame)"), ("long", "Long exposure")]
 
 GAIN = {"short": 1.9, "long": 1.05, "eye": 1.0}

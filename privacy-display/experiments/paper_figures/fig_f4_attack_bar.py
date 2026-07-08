@@ -3,7 +3,7 @@
 Reads the same ``by_ablation_attack`` (best-of-engine, attacker-favourable)
 aggregation the paper's Table `tab:real_ocr_main` reports, so the figure matches
 the table cell-for-cell (e.g. original|short = 92.5%, deployed|short = 14.1%,
-capture-hardened|short = 4.2%).
+high-suppression|short = 4.2%).
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ import figstyle as fs
 GRADES = [
     ("original", "Unprotected"),
     ("deployed", "Deployed"),
-    ("vlm", "Capture-hardened"),
+    ("vlm", "High-suppression"),
 ]
 # attack-mode key in JSON -> display label
 MODES = [

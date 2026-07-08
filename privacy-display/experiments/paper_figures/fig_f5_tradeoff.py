@@ -4,7 +4,7 @@ Uses the anti-OCR profile ablation (``anti_ocr_profile_ablation.json`` block1),
 which measures, for the SAME synthetic corpus, both:
   * temporal-average (integration attack) char recovery  -> security  (lower better)
   * complete-cycle digital-reconstruction SSIM             -> image fidelity
-as the profile strengthens off -> overlay -> deployed -> capture-hardened.
+as the profile strengthens off -> overlay -> deployed -> high-suppression.
 
 SSIM is an image-level proxy and is not labelled as human readability.
 """
@@ -19,7 +19,7 @@ PROFILES = [
     ("block1/off", "None"),
     ("block1/strong@overlay", "Overlay"),
     ("block1/strong@deployed", "Deployed\n(alpha=0.2)"),
-    ("block1/vlm", "Capture-\nhardened"),
+    ("block1/vlm", "High-\nsuppression"),
 ]
 
 
