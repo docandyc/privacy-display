@@ -34,7 +34,7 @@
 \history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
 \doi{10.1109/ACCESS.2026.DOI}
 
-\title{Temporal Pixel Masking for Controlled Short-Exposure USB Video Class Screen Captures: A Conventional-OCR Feasibility Study}
+\title{Temporal Pixel Masking Under Calibrated UVC Screen Capture: A Conventional-OCR Feasibility Study}
 
 \author{\uppercase{First A. Author}\authorrefmark{1}
 \TODO{Author information to be filled}}
@@ -58,7 +58,7 @@ in Section~\ref{sec:user_study}.}
 %% ABSTRACT
 %% ============================================================
 \begin{abstract}
-Screen content can be silently captured and processed by optical character recognition (OCR) or vision-language models (VLMs). Temporal pixel masking offers a possible display-side intervention, but its defensible protection window under physical capture remains unclear. This paper does not claim general screen-photography protection. Instead, it asks whether temporal display coding can create a measurable single-frame window for fixed-exposure USB Video Class (UVC) capture pipelines that store isolated photographs for conventional OCR. The method partitions each frame into rapidly alternating complementary subframes, so that a calibrated short exposure records only a sparse pixel subset while a viewer may integrate multiple slots. We evaluated one UVC camera across 9 distance/angle configurations and 10,575 captures. Under calibrated short exposure, best-of-engine conventional-OCR character recovery fell from 94.1\% unprotected to 15.1\% for the readability-priority deployed profile and 5.0\% for the high-suppression profile, with exact match falling to 0.4\% and 0\%. Because one underexposed geometry favored protected conditions, excluding it raised protected recovery to 16.7\% and 5.6\%; high-suppression therefore did not meet its strict $<5\%$ target. A temporal mean over 150 camera frames, nominally 2.5\,s at 60\,fps, recovered 71.1\% and 47.9\%, respectively. Qwen3-VL recovered 77.8\% pooled exact match at 0.5\,m under high-suppression short exposure. These results provide controlled physical evidence that temporal pixel masking can materially degrade unattended conventional-OCR batch collection from isolated fixed-exposure UVC frames. They also show that sustained video aggregation and modern VLMs collapse this narrow protection window, while cross-device behavior and a profile combining validated usability with stronger suppression remain unresolved.
+Screen content can be silently captured and processed by optical character recognition (OCR) or vision-language models (VLMs). Temporal pixel masking offers a possible display-side intervention, but its defensible protection window under physical capture remains unclear. This paper does not claim general screen-photography protection. Instead, it asks whether temporal display profiles can create a measurable single-frame window for fixed-exposure USB Video Class (UVC) pipelines that store isolated photographs for conventional OCR. The method partitions each frame into rapidly alternating complementary subframes, so that a calibrated short exposure records only a sparse pixel subset while a viewer may integrate multiple slots. The physical experiment does not include a luminance-matched static control, so it cannot isolate temporal sparsity from duty-cycle dimming, static overlays, panel response, or exposure. We evaluated one UVC camera across 9 distance/angle configurations and 10,575 captures. Under calibrated short exposure, best-of-engine conventional-OCR character recovery fell from 94.1\% unprotected to 15.1\% for the readability-priority deployed profile and 5.0\% for the high-suppression profile, with exact match falling to 0.4\% and 0\%. A temporal mean over 150 camera frames, nominally 2.5\,s at 60\,fps, recovered 71.1\% and 47.9\%, respectively. At 0.5\,m under high-suppression short exposure, Qwen3-VL exactly recovered 28/36 captures from 12 items. These results provide controlled physical evidence that temporal pixel masking can materially degrade unattended conventional-OCR batch collection from isolated fixed-exposure UVC frames. They also show that sustained video aggregation and modern VLMs collapse this narrow protection window, while cross-device behavior and a profile combining validated usability with stronger suppression remain unresolved.
 \end{abstract}
 
 \begin{keywords}
@@ -86,9 +86,9 @@ The difficulty is that degrading information for the camera also tends to degrad
 
 Our approach exploits the gap between human temporal integration and camera exposure windows. Each frame is decomposed into $n$ randomly complementary subframes that alternate at high speed. When the exposure is shorter than or close to one subframe duration, the camera records only an incomplete pixel subset, whereas the human observer integrates content across subframes (Fig.~\ref{fig:concept}). Because camera exposure is not instantaneous sampling, long exposure or video reconstruction covering a full cycle can re-sum the complementary subframes; we therefore make no irrecoverability guarantee for arbitrary exposure conditions.
 
-We therefore frame this paper as a controlled measurement study rather than a deployment claim. It asks how much temporal pixel masking reduces conventional OCR recovery from isolated calibrated short-exposure UVC captures, and where that reduction fails. The eMeet SmartCam S600 experiments use fixed, calibrated exposures rather than smartphone auto-exposure. Across the 9 tested geometries, temporal masking reduced conventional OCR character recovery from 94.1\% to 15.1\% for deployed and 5.0\% for high-suppression. Excluding one underexposed geometry raises the protected estimates to 16.7\% and 5.6\%, so high-suppression remains near but does not meet its strict $<5\%$ target. The defensible niche is therefore instrumented or surveillance-like UVC collection in which each target is represented by one fixed-exposure image and processed by conventional OCR. A targeted operator willing to keep aiming for video, adjust exposure, switch to auto-exposure smartphone capture, or invoke a VLM is outside this useful niche rather than a stronger version of the same claim.
+We therefore frame this paper as a controlled measurement study rather than a deployment claim. It asks how much temporal pixel masking reduces conventional OCR recovery from isolated calibrated short-exposure UVC captures, and where that reduction fails. The concrete operational case is an instrumented or surveillance-like UVC collection pipeline in which each target is represented by one fixed-exposure image and processed later by conventional OCR. It is not ordinary smartphone photography, smart-glasses capture, or a targeted operator who can keep recording, adjust exposure, or invoke a VLM. Across the 9 tested geometries, temporal masking reduced conventional OCR character recovery from 94.1\% to 15.1\% for deployed and 5.0\% for high-suppression. Excluding one underexposed geometry raises the protected estimates to 16.7\% and 5.6\%, so high-suppression remains near but does not meet its strict $<5\%$ target. The defensible claim is a measured operating window for this narrow UVC condition, not a general anti-camera setting.
 
-The boundary evidence is equally central to the contribution. Ambient illuminance was not recorded, and the calibrated UVC settings cannot be ranked against typical smartphone auto-exposure. The evaluated temporal-mean attack averaged 150 short-exposure frames, nominally 2.5\,s at 60\,fps; shorter video durations were not evaluated. Among three tested VLM endpoints, Qwen3-VL recovered 77.8\% pooled exact match across all 12 content items at 0.5\,m under high-suppression short exposure. The separate content-type analysis shows that character recovery concentrates in large-font short snippets (\S\ref{sec:vlm}).
+The boundary evidence is equally central to the contribution. Ambient illuminance was not recorded, and the calibrated UVC settings cannot be ranked against typical smartphone auto-exposure. The evaluated temporal-mean attack averaged 150 short-exposure frames, nominally 2.5\,s at 60\,fps; shorter video durations were not evaluated. Among three tested VLM endpoints, Qwen3-VL exactly recovered 28/36 captures from the 12-item pool at 0.5\,m under high-suppression short exposure. The separate content-type analysis shows that character recovery concentrates in large-font short snippets (\S\ref{sec:vlm}).
 
 \begin{figure}[!t]
 \centering
@@ -101,14 +101,14 @@ The boundary evidence is equally central to the contribution. Ambient illuminanc
 
 The main contributions of this paper are:
 \begin{enumerate}
-\item \textbf{Controlled real-capture evidence for a single-frame conventional-OCR window}: Building on prior temporal masking ideas, we implement pixel-level complementary subframes with profile-dependent stripe/glyph overlays and a GPU rendering prototype. Using one eMeet SmartCam S600 USB webcam, we aggregate 10,575 captures across 3 distances and 3 angles. The core calibrated short-exposure subset yields 15.1\% character recovery (0.4\% exact) for the deployed profile and 5.0\% (0\% exact) for high-suppression, with sensitivity values of 16.7\% and 5.6\% after excluding the underexposed geometry. This establishes a narrow but reproducible measurement window: unattended conventional-OCR collection from one isolated fixed-exposure UVC frame per target, not default smartphone photography or a general anti-camera setting.
+\item \textbf{Controlled profile-level physical measurement}: Building on prior temporal masking ideas, we implement pixel-level complementary subframes with profile-dependent stripe/glyph overlays and a GPU rendering prototype. Using one eMeet SmartCam S600 USB webcam, we aggregate 10,575 captures across 3 distances and 3 angles. The core calibrated short-exposure subset yields 15.1\% character recovery (0.4\% exact) for the deployed profile and 5.0\% (0\% exact) for high-suppression, compared with 94.1\% (65.7\% exact) unprotected. This establishes a narrow measurement window for unattended conventional-OCR collection from one isolated fixed-exposure UVC frame per target, not default smartphone photography or a general anti-camera setting.
 
-\item \textbf{Empirical characterization of failure boundaries}: We quantify where the single-frame window collapses. Per-sample strongest digital attack recovery reaches 95.2\%. A temporal mean over 150 short-exposure camera frames recovers 71.1\% for deployed and 47.9\% for high-suppression; excluding the underexposed geometry raises these values to 79.7\% and 53.9\%. In the on-axis VLM probe, Qwen3-VL reaches 77.8\% pooled exact match over the full 12-item content pool at 0.5\,m under high-suppression short exposure. A separate character-recovery breakdown localizes failure to large-font short snippets. Object detection/tracking and digital usability proxies provide supplementary diagnostics rather than independent protection claims.
+\item \textbf{Cluster-aware evidence and exposure sensitivity}: We report capture-level descriptive intervals and a content-cluster paired contrast analysis. Matching by profile, attack mode, content item, position, and repeat index, unprotected short exposure exceeds deployed by 78.0 percentage points (95\% content-cluster CI [75.5, 80.3]) and exceeds high-suppression by 89.1 percentage points ([85.0, 92.4]) across 324 matched units and 12 content clusters. Excluding the underexposed d0.5/$15^{\circ}$ position leaves the profile-level conclusions unchanged while moving high-suppression above its strict $<5\%$ condition-mean target.
 
-\item \textbf{A profile-level evidence hierarchy for deployment decisions}: The deployed profile is the readability-priority candidate and meets the short-exposure relative-reduction goal, but it leaves 24.0\% sensitive-token recovery under short exposure and 96.5\% under long exposure. The high-suppression profile lowers recovery further but misses the strict $<5\%$ character-recovery target after exposure sensitivity analysis, and its visible stripes and grain are not covered by the planned user study. Thus, the paper separates a more usable candidate from a stronger but unvalidated suppression profile.
+\item \textbf{Measured integration and VLM boundaries}: We quantify where the single-frame window collapses. Per-sample strongest digital attack recovery reaches 95.2\%. A temporal mean over 150 short-exposure camera frames recovers 71.1\% for deployed and 47.9\% for high-suppression; excluding the underexposed geometry raises these values to 79.7\% and 53.9\%. In the on-axis VLM probe, Qwen3-VL exactly recovers 28/36 captures from 12 items at 0.5\,m under high-suppression short exposure. These results motivate a profile-level evidence hierarchy: deployed is the readability-priority candidate but weaker under integration and sensitive-token attacks, while high-suppression reduces recovery further but lacks user-acceptability evidence.
 \end{enumerate}
 
-The remainder of this paper is organized as follows. Section~\ref{sec:related} reviews prior work, Section~\ref{sec:threat} defines the threat model, and Section~\ref{sec:method} presents the design. Section~\ref{sec:evaluation} reports the primary OCR evidence, VLM and integration boundaries, supplementary diagnostics, and the deferred usability protocol. Sections~\ref{sec:discussion} and~\ref{sec:conclusion} synthesize the evidence hierarchy and conclude the paper.
+The remainder of this paper is organized as follows. Section~\ref{sec:related} reviews prior work, Section~\ref{sec:threat} defines the threat model, and Section~\ref{sec:method} presents the design. Section~\ref{sec:evaluation} reports the primary OCR evidence, VLM and integration boundaries, and the deferred usability protocol. Sections~\ref{sec:discussion} and~\ref{sec:conclusion} synthesize the evidence hierarchy and conclude the paper. Detection/tracking diagnostics are separated into supplementary material because they do not extend the primary OCR claim.
 
 
 %% ============================================================
@@ -199,6 +199,8 @@ Given a normalized original frame $\mathbf{I}\in[0,1]^{H\times W\times C}$, we g
 \end{itemize}
 A distinction between ``summation'' and ``temporal averaging'' is necessary. On an ideal linear display with equal slot durations and equal peak luminance, the average radiance over one cycle is $\mathbf{I}/n$, not $\mathbf{I}$. Digital-domain completeness means subframes can be re-summed; it does not imply that real display luminance has been losslessly preserved.
 
+This distinction is also an experimental limitation. The physical capture study did not include a luminance-matched static dimming control, a matched noise-off version of the enhanced profiles, or photometric panel timing measurements. The observed profile-level reductions therefore cannot be attributed to temporal sparsity alone; duty-cycle luminance, static stripe/glyph overlays, panel response, camera exposure, and ISP processing remain entangled.
+
 Masks are generated using a ChaCha20~\cite{b_chacha2008} CSPRNG and the Fisher--Yates shuffle~\cite{b_knuth1997}, randomly assigning each pixel to one subframe. The implementation uses a chi-square slot-count check ($\alpha=0.01$, $\mathrm{df}=n{-}1=3$) as a software sanity check and re-samples the seed upon failure (up to 5 retries). It is not evidence of cryptographic strength: for $n=4$, each assignment already comes from an unbiased 2-bit distribution, and a correctly implemented generator is expected to trigger the nominal false-rejection rate. Random seeds reduce fixed patterns and cross-cycle correlation but do not change the fact that a full cycle can be linearly summed. Fig.~\ref{fig:pipeline} illustrates the complete pipeline from original frame to protected display.
 
 \begin{figure*}[!t]
@@ -256,7 +258,7 @@ High-suppression & \checkmark & \checkmark & 2 & 6 & 0.42 & 0.55 & 0.2 \\
 \begin{itemize}
 \item \textbf{Strong (anti-OCR) profile}: base mask+noise with mask cell size of 1~pixel, stripe width of 10~pixels, stripe amplitude $\alpha_s=0.10$, and glyph amplitude $\alpha_g=0.12$, without an inversion frame.
 
-\item \textbf{Deployed profile}: the Strong profile plus an $\alpha=0.2$ inversion frame, selected as the readability-priority configuration.
+\item \textbf{Deployed profile}: the Strong profile plus an $\alpha=0.2$ inversion frame, preselected as the readability-priority composite configuration before the physical ablation. It is not an empirically optimized component combination.
 
 \item \textbf{High-suppression profile}: base mask+noise with mask cell size increased to 2~pixels, stripe width of 6~pixels, stripe and glyph amplitudes of 0.42 and 0.55 respectively, plus an $\alpha=0.2$ inversion frame.
 \end{itemize}
@@ -311,15 +313,15 @@ The current PoC operates at the application/algorithm layer, using Python and GP
 
 The camera was placed at 0.5\,m, 1\,m, and 1.5\,m from the display, rotated to $0^{\circ}$, $15^{\circ}$, and $30^{\circ}$ at each distance, yielding 9~geometric configurations. Ambient illuminance was not recorded. The manufacturer specifies an 8-megapixel 4K image sensor and 1080p/60\,fps output~\cite{b_emeet_s600}, but does not identify a Sony sensor; we therefore make no sensor-model claim. The 60-fps frame period is 16.67\,ms, but rolling-shutter readout time and phase relative to the 4.17\,ms display slots were not measured. Actual panel output and application-level slot timing were not verified photometrically. Row-level mixing and panel transitions may help explain why real-capture short-exposure recovery (15.1\%) exceeds simulated single-subframe recovery (0--2.6\%), but the current data do not isolate either mechanism. Results apply to this UVC link and should not be extrapolated to smartphones, smart glasses, or other camera ISPs.
 
-\textbf{Test content}: At each of the 9 geometric positions, the real-capture OCR experiment used a fixed set of 12 content items: 11 selected synthetic items and one CET6 (College English Test Band~6) document (portrait $900 \times 1280$). Three captures per item give 36 captures per profile--attack condition at each position and $12\times3\times9=324$ across all positions before the disclosed deployed-profile repeats. By contrast, the software-simulated OCR experiment used the complete 120-sample synthetic corpus (12 content templates $\times$ 10~variants, mapped to 9 category labels covering passwords, credentials, code, tables, paragraphs, URLs, etc.). Real-capture detection used a 150-image COCO val2017~\cite{b_coco2014} subset; tracking used 450~frames from the MOT17-09-FRCNN~\cite{b_mot16} sequence. Simulated detection used only 8~images for pipeline diagnostics; simulated tracking covered 5,316~frames. Real-capture short-exposure OCR is therefore the primary feasibility evidence; detection, tracking, and simulated detection results explore task-transfer risk, and the 8-image simulated detection is a pipeline diagnostic, not a full-scale evaluation.
+\textbf{Test content}: At each of the 9 geometric positions, the real-capture OCR experiment used a fixed set of 12 content items: 11 selected synthetic items and one CET6 (College English Test Band~6) document (portrait $900 \times 1280$). Three captures per item give 36 captures per profile--attack condition at each position and $12\times3\times9=324$ across all positions before the disclosed deployed-profile repeats. By contrast, the software-simulated OCR experiment used the complete 120-sample synthetic corpus (12 content templates $\times$ 10~variants, mapped to 9 category labels covering passwords, credentials, code, tables, paragraphs, URLs, etc.). Real-capture short-exposure OCR is the primary feasibility evidence. Detection/tracking diagnostics use separate COCO and MOT subsets and are reported only in the supplementary material because their metrics and experimental design do not carry the central OCR claim.
 
-\textbf{Evaluation metrics}: OCR character recovery is defined as $\max(0,1-\mathrm{CER})$, where CER denotes Character Error Rate. Exact match is determined after whitespace removal and case-insensitive comparison of the full text. Sensitive-token recovery counts the proportion of reference-text digits, account numbers, URL/path strings, and key-like fields that are recovered in full. Leak rate is the proportion of samples with character recovery $\geq$20\%, an arbitrary working threshold chosen as a round-number proxy for ``non-trivial partial recovery''; no claim is made that 19\% recovery is safe. To supplement this binary indicator, the per-capture recovery distribution is characterized by percentiles: for deployed short exposure, P50\,=\,8.3\%, P75\,=\,16.7\%, P90\,=\,43.0\%, P95\,=\,60.9\%, and P99\,=\,94.5\% ($N{=}459$); for high-suppression, the corresponding values are 1.6\%, 8.3\%, 14.1\%, 18.7\%, and 22.2\% ($N{=}324$). The deployed short-exposure P95 happens to equal the deployed long-exposure mean in Table~\ref{tab:real_ocr_main} (both 60.9\%); they are different statistics over different attack conditions. The heavy right tail indicates that a small fraction of close-range, large-font captures yield near-complete recovery. Detection uses mean average precision (mAP), mAP50, and average recall (AR). Tracking uses Higher Order Tracking Accuracy (HOTA) and Identification F1 (IDF1); simulation also reports Multiple Object Tracking Accuracy (MOTA) and Multiple Object Tracking Precision (MOTP). Section~\ref{sec:user_study} defines the separate usability protocol and metrics.
+\textbf{Evaluation metrics}: OCR character recovery is defined as $\max(0,1-\mathrm{CER})$, where CER denotes Character Error Rate. Exact match is determined after whitespace removal and case-insensitive comparison of the full text. Sensitive-token recovery counts the proportion of reference-text digits, account numbers, URL/path strings, and key-like fields that are recovered in full. Leak rate is the proportion of samples with character recovery $\geq$20\%, an arbitrary working threshold chosen as a round-number proxy for ``non-trivial partial recovery''; no claim is made that 19\% recovery is safe. To supplement this binary indicator, the per-capture recovery distribution is characterized by percentiles: for deployed short exposure, P50\,=\,8.3\%, P75\,=\,16.7\%, P90\,=\,43.0\%, P95\,=\,60.9\%, and P99\,=\,94.5\% ($N{=}459$); for high-suppression, the corresponding values are 1.6\%, 8.3\%, 14.1\%, 18.7\%, and 22.2\% ($N{=}324$). The deployed short-exposure P95 happens to equal the deployed long-exposure mean in Table~\ref{tab:real_ocr_main} (both 60.9\%); they are different statistics over different attack conditions. The heavy right tail indicates that a small fraction of close-range, large-font captures yield near-complete recovery. Section~\ref{sec:user_study} defines the separate usability protocol and metrics.
 
-\textbf{OCR aggregation and uncertainty}: For each capture, we take the maximum recovery across three engines to model an attacker choosing the best available recognizer. We then estimate descriptive 95\% bootstrap intervals with 2,000 percentile resamples, using captures as the resampling unit and a fixed seed of 20260612. Table~\ref{tab:real_ocr_main} reports these capture-level intervals for every core condition; Table~\ref{tab:inversion_ablation} reports the ablation intervals. Repeated measurements of the same content and geometry mean that they describe variation within this corpus and setup, not independent population uncertainty. A 12-cluster content bootstrap yields [11.5, 18.6]\% for deployed short exposure, wider than the capture-level [13.3, 17.1]\% interval. Clustered intervals were not computed for the other core profiles, so their capture-level intervals should not be used for cross-content population inference.
+\textbf{OCR aggregation and uncertainty}: For each capture, we take the maximum recovery across three engines to model an attacker choosing the best available recognizer. Table~\ref{tab:real_ocr_main} reports descriptive 95\% bootstrap intervals with 2,000 percentile resamples, using captures as the resampling unit and a fixed seed of 20260612. These intervals summarize variation within the archived corpus and setup; repeated measurements of the same content and geometry mean they are not independent population intervals. For inference-oriented profile comparisons, we additionally construct paired contrasts by matching profile, attack mode, content item, position, and available repeat index, then resampling the 12 content items as clusters. Duplicate deployed captures with the same content/position/repeat key are averaged before pairing rather than counted as independent matches. Under this matching contract, unprotected short exposure exceeds deployed by 78.0 percentage points (95\% content-cluster CI [75.5, 80.3]) and exceeds high-suppression by 89.1 percentage points ([85.0, 92.4]) across 324 matched units. Mask-only exceeds deployed by only 3.0 percentage points ([-0.5, 6.5]), so the current archive does not establish that every deployed-profile component independently improves protection.
 
-\textbf{Exposure sensitivity}: The d0.5/$15^{\circ}$ position used 0.49\,ms and produced visibly underexposed protected frames. Excluding it raises deployed short recovery from 15.1\% to 16.7\% [14.7, 18.8]\%, high-suppression short from 5.0\% to 5.6\% [4.8, 6.4]\%, deployed 150-frame video-mean recovery from 71.1\% to 79.7\% [75.4, 83.8]\%, and high-suppression video-mean recovery from 47.9\% to 53.9\% [48.0, 59.9]\%. The 5.6\% sensitivity value is short-exposure character recovery; it is unrelated to the 5.6\% video exact-match value in Table~\ref{tab:real_ocr_main}. The pooled 9-position values remain in the main table to avoid post-hoc deletion.
+\textbf{Exposure sensitivity}: The d0.5/$15^{\circ}$ position used 0.49\,ms and produced visibly underexposed protected frames. Excluding it raises deployed short recovery from 15.1\% to 16.7\% [14.7, 18.8]\%, high-suppression short from 5.0\% to 5.6\% [4.8, 6.4]\%, deployed 150-frame video-mean recovery from 71.1\% to 79.7\% [75.4, 83.8]\%, and high-suppression video-mean recovery from 47.9\% to 53.9\% [48.0, 59.9]\%. The paired content-cluster short-exposure contrasts remain large after the exclusion: 76.7 percentage points ([74.3, 79.2]) for unprotected minus deployed and 88.9 percentage points ([85.5, 91.9]) for unprotected minus high-suppression. The 5.6\% sensitivity value is short-exposure character recovery; it is unrelated to the 5.6\% video exact-match value in Table~\ref{tab:real_ocr_main}. The pooled 9-position values remain in the main table to avoid post-hoc deletion.
 
-\textbf{Additional robustness checks}: A leave-one-round-out analysis on the five repeated content items gives deployed short-exposure recovery of 16.6\% for round~1 and 15.8\% for round~2, both within the cluster interval. Detection and tracking differences have not undergone significance testing and are reported descriptively.
+\textbf{Additional robustness checks}: A leave-one-round-out analysis on the five repeated content items gives deployed short-exposure recovery of 16.6\% for round~1 and 15.8\% for round~2, leaving the profile-level interpretation unchanged. Detection and tracking differences have not undergone significance testing and are reported descriptively in the supplementary material.
 
 Digital reconstruction proxies: $\Delta E_{00}$ is the mean CIEDE2000 color difference between the original image and the full-cycle digitally reconstructed image; SSIM is their mean structural similarity. Both are computed in the digital pipeline and are used only for within-paper profile comparison. Neither metric measures real-panel optical output, temporal comfort, or human readability.
 
@@ -327,7 +329,7 @@ Digital reconstruction proxies: $\Delta E_{00}$ is the mean CIEDE2000 color diff
 \subsection{Real-Capture OCR Experiment}
 \label{sec:real_capture}
 
-The real-capture OCR corpus comprises 10,575 images (1,175 per geometric position), all from the S600 webcam. The corpus mixes component ablations, parameter sweeps, and main attack conditions; it is not a balanced ``9~geometries $\times$ 6~main profiles $\times$ 3~attacks'' full-factorial design. One asymmetry requires disclosure: the deployed profile performed two capture rounds for 5 of the 12 content items at each position (2 account credentials, 2 code snippets, 1 CET6 document), giving 459/153 short-exposure/video samples rather than 324/108; both rounds enter analysis. The repeat batch contained only short-exposure and video captures, so no second long-exposure batch was acquired and the deployed long-exposure row remains $N=324$. Three OCR engines, Surya~\cite{b_surya2024}, EasyOCR~\cite{b_easyocr2020}, and Tesseract~\cite{b_smith2007}, were applied, producing 31,725 engine-level records. Recent VLMs show strong OCR capabilities~\cite{b_shi2023}; the probes in \S\ref{sec:vlm} confirm that protection against conventional OCR does not transfer to VLM attackers. Table~\ref{tab:real_ocr_main} reports core conditions with per-capture best-of-engine; Table~\ref{tab:real_ocr_engine} gives per-engine short-exposure results. Fig.~\ref{fig:montage} shows qualitative comparisons; Fig.~\ref{fig:bar_attack} summarizes recovery rates by profile and attack mode.
+The real-capture OCR corpus comprises 10,575 images (1,175 per geometric position), all from the S600 webcam. The corpus mixes component ablations, parameter sweeps, and main attack conditions; it is not a balanced ``9~geometries $\times$ 6~main profiles $\times$ 3~attacks'' full-factorial design. One asymmetry requires disclosure: the deployed profile performed two capture rounds for 5 of the 12 content items at each position (2 account credentials, 2 code snippets, 1 CET6 document), giving 459/153 short-exposure/video samples rather than 324/108. Both rounds enter the descriptive condition means. For paired contrasts, repeated deployed captures with the same content/position/repeat key are first averaged so that they do not become extra independent matches. The repeat batch contained only short-exposure and video captures, so no second long-exposure batch was acquired and the deployed long-exposure row remains $N=324$. Three OCR engines, Surya~\cite{b_surya2024}, EasyOCR~\cite{b_easyocr2020}, and Tesseract~\cite{b_smith2007}, were applied, producing 31,725 engine-level records. Recent VLMs show strong OCR capabilities~\cite{b_shi2023}; the probes in \S\ref{sec:vlm} confirm that protection against conventional OCR does not transfer to VLM attackers. Table~\ref{tab:real_ocr_main} reports core conditions with per-capture best-of-engine; the paired content-cluster contrasts in the text provide the main profile-level comparison. Table~\ref{tab:real_ocr_engine} gives per-engine short-exposure results. Fig.~\ref{fig:montage} shows qualitative comparisons; Fig.~\ref{fig:bar_attack} summarizes recovery rates by profile and attack mode.
 
 \begin{table*}[!t]
 \caption{Single-UVC Real-Capture OCR Core Conditions (Best-of-Engine; $N$ = Captures per Row; Pooled Across 9 Geometric Conditions). Video Rows Average 150 Short-Exposure Frames per Capture Burst. Repeated Content and Geometry Mean That Captures Are Not Independent Population Samples. The Pool Includes the Underexposed d0.5/$15^{\circ}$ Position; Exclusion Sensitivities Are Reported in the Text.}
@@ -374,11 +376,11 @@ Profile & Attack mode & $N$ & Char recovery [95\% CI] & Exact match & Sensitive 
 \textbf{Key findings}:
 
 \begin{enumerate}
-\item \textbf{Short-exposure recovery drops substantially, but the high-suppression target is not met}: Unprotected screen photographs yield 94.1\% OCR character recovery (95\% CI [93.1, 95.0]; exact 65.7\%). The mask-only condition reaches 19.2\%, while mask+noise is worse at 25.6\% and Strong is 20.7\%; the archive therefore does not establish a monotonic benefit from noise or weak overlays in physical short-exposure capture. The deployed profile (Strong + $\alpha=0.2$ inversion) reaches 15.1\% (CI [13.3, 17.1]; exact 0.4\%), an 83.9\% relative reduction meeting the deployed-profile goal in \S\ref{sec:threat}. Its sensitive-token recovery is nevertheless 24.0\%, showing that high-value short fields are less protected than average text. The 5.6-pp gap between Strong and deployed is descriptive only: the deployed profile has $N=459$ (with repeated captures) versus 324, so we do not interpret it as a strict causal effect. The high-suppression profile yields 5.0\% (CI [4.3, 5.8]; exact 0\%) in the full pool. This does not meet the strict $<5\%$ character-recovery target, and excluding the underexposed position raises it further to 5.6\% (CI [4.8, 6.4]). These results support short-exposure mitigation feasibility within the tested camera, exposure, and geometry range, not attainment of the high-suppression design target.
+\item \textbf{Short-exposure recovery drops substantially, but the high-suppression target is not met}: Unprotected screen photographs yield 94.1\% OCR character recovery (95\% CI [93.1, 95.0]; exact 65.7\%). The mask-only condition reaches 19.2\%, while mask+noise is worse at 25.6\% and Strong is 20.7\%; the archive therefore does not establish a monotonic benefit from noise or weak overlays in physical short-exposure capture. The deployed profile (Strong + $\alpha=0.2$ inversion) reaches 15.1\% (CI [13.3, 17.1]; exact 0.4\%), an end-to-end observation for the preselected readability-priority composite rather than proof that each component helped. In the paired content-cluster analysis, unprotected short exposure exceeds deployed by 78.0 percentage points (95\% CI [75.5, 80.3]) across 324 matched units and 12 content clusters. Sensitive-token recovery is nevertheless 24.0\%, showing that high-value short fields are less protected than average text. The high-suppression profile yields 5.0\% (CI [4.3, 5.8]; exact 0\%) in the full pool, and unprotected exceeds it by 89.1 percentage points ([85.0, 92.4]) in the same matched analysis. This does not meet the strict $<5\%$ character-recovery target, because excluding the underexposed position raises the condition mean to 5.6\% (CI [4.8, 6.4]). These results support short-exposure mitigation feasibility within the tested camera, exposure, and geometry range, not attainment of the high-suppression design target.
 
-\item \textbf{Integration attacks remain the residual frontier; long-exposure reversal is a notable negative result}: Both long exposure and sustained video temporal averaging exploit full-cycle complementarity. The deployed profile still recovers 60.9\% char / 36.4\% exact under long exposure (sensitive-token recall 96.5\%) and 71.1\% char / 42.5\% exact under the 150-frame video mean. Excluding the underexposed d0.5/$15^{\circ}$ position raises deployed video recovery to 79.7\% (CI [75.4, 83.8]), so the full-pool value understates the practical integration leakage. The divergence between character and sensitive-token recovery reflects the structural properties of high-value fields: digits, account numbers, and URLs are typically short, rendered in large font with a restricted character set, and thus recoverable from degraded images even when surrounding dense text is not. \textbf{Long-exposure reversal}: the unprotected long-exposure baseline is only 47.3\% char, lower than the deployed profile's 60.9\%. At the sole 125\,ms position (0.5\,m/$15^{\circ}$), unprotected recovery is 1.1\% versus 46.3\% deployed; the observed clipping of the full-brightness image supports saturation reduction and a shift into the sensor's approximately linear response region as the explanation for this position. Excluding it, the 31.25\,ms anomaly remains position-dependent: at 0.5\,m the expected direction holds (unprotected 78--82\% $>$ deployed 25--55\%), whereas several 1.0--1.5\,m positions show deployed recovery 12--59\,pp higher. Without matched local image diagnostics, we only \emph{hypothesize} that residual stripe/glyph edges interact with geometry-specific overexposure or contrast compression; the data do not establish this mechanism. The anomaly does not weaken short-exposure conclusions, where deployed is always lower, but it demonstrates that fixed long-exposure parameters produce nonmonotonic effects. Weak inversion ($\alpha=0.2$) alone is insufficient to resist temporal integration. The weak Strong overlay likewise provides no measurable integration defense: mask-only and Strong are nearly identical under the 150-frame video mean (79.0\% versus 78.6\%) and differ only modestly under long exposure (67.2\% versus 61.6\%), with overlapping bootstrap intervals. The monotone synthetic trend in Fig.~\ref{fig:tradeoff} therefore does not imply a real-capture integration gain at weak overlay amplitude; measurable reduction appears only at high-suppression amplitudes, and even there leakage remains substantial. The primary validity conclusions are confined to single-frame short exposure; integration attacks are reported as a security boundary.
+\item \textbf{Integration attacks remain the residual frontier; long-exposure reversal is a notable negative result}: Both long exposure and sustained video temporal averaging exploit full-cycle complementarity. The deployed profile still recovers 60.9\% char / 36.4\% exact under long exposure (sensitive-token recall 96.5\%) and 71.1\% char / 42.5\% exact under the 150-frame video mean. Excluding the underexposed d0.5/$15^{\circ}$ position raises deployed video recovery to 79.7\% (CI [75.4, 83.8]), so the full-pool value understates the practical integration leakage. The divergence between character and sensitive-token recovery reflects the structural properties of high-value fields: digits, account numbers, and URLs are typically short, rendered in large font with a restricted character set, and thus recoverable from degraded images even when surrounding dense text is not. \textbf{Long-exposure reversal}: the unprotected long-exposure baseline is only 47.3\% char, lower than the deployed profile's 60.9\%. At the sole 125\,ms position (0.5\,m/$15^{\circ}$), unprotected recovery is 1.1\% versus 46.3\% deployed; the observed clipping of the full-brightness image supports saturation reduction and a shift into the sensor's approximately linear response region as the explanation for this position. Excluding it, the 31.25\,ms anomaly remains position-dependent: at 0.5\,m the expected direction holds (unprotected 78--82\% $>$ deployed 25--55\%), whereas several 1.0--1.5\,m positions show deployed recovery 12--59\,pp higher. Without matched local image diagnostics, we only \emph{hypothesize} that residual stripe/glyph edges interact with geometry-specific overexposure or contrast compression; the data do not establish this mechanism. The anomaly does not weaken short-exposure conclusions, where deployed is always lower, but it demonstrates that fixed long-exposure parameters produce nonmonotonic effects. Weak inversion ($\alpha=0.2$) alone is insufficient to resist temporal integration. The weak Strong overlay likewise provides no measurable integration defense: mask-only and Strong are nearly identical under the 150-frame video mean (79.0\% versus 78.6\%) and differ only modestly under long exposure (67.2\% versus 61.6\%), with overlapping bootstrap intervals. Measurable real-capture integration reduction appears only at high-suppression amplitudes, and even there leakage remains substantial. The primary validity conclusions are confined to single-frame short exposure; integration attacks are reported as a security boundary.
 
-\item \textbf{High-suppression profile: reduced integration leakage with unresolved perception cost}: This profile yields 9.3\% char (CI [7.9, 10.9]) / 0\% exact for long exposure and 47.9\% char (CI [41.8, 54.0]) / 5.6\% exact (CI [1.9, 10.2]) under the 150-frame video mean. The video leakage is substantial and does not constitute attack closure. The pooled 47.9\% masks large inter-position variation: 0.5\,m at three angles yields 50.7\%/0\%/33.8\%; 1.0\,m yields 61.1--69.4\%; 1.5\,m yields 48.4--55.5\%. The 0\% point is the underexposed 0.5\,m/$15^{\circ}$ session discussed in \S\ref{sec:setup}; excluding it raises video char recovery to 53.9\% (CI [48.0, 59.9]) and exact match to 6.3\%, confirming that the full-pool result is defense-favorable. Deployment assessment should therefore use worst-case geometry and exposure. SSIM from the digital pipeline reveals a proxy trade-off (Fig.~\ref{fig:tradeoff}) but is not real-capture or human-subject evidence. The user study protocol (\S\ref{sec:user_study}) excludes this profile, leaving its perceptual cost unquantified.
+\item \textbf{High-suppression profile: reduced integration leakage with unresolved perception cost}: This profile yields 9.3\% char (CI [7.9, 10.9]) / 0\% exact for long exposure and 47.9\% char (CI [41.8, 54.0]) / 5.6\% exact (CI [1.9, 10.2]) under the 150-frame video mean. The video leakage is substantial and does not constitute attack closure. The pooled 47.9\% masks large inter-position variation: 0.5\,m at three angles yields 50.7\%/0\%/33.8\%; 1.0\,m yields 61.1--69.4\%; 1.5\,m yields 48.4--55.5\%. The 0\% point is the underexposed 0.5\,m/$15^{\circ}$ session discussed in \S\ref{sec:setup}; excluding it raises video char recovery to 53.9\% (CI [48.0, 59.9]) and exact match to 6.3\%, confirming that the full-pool result is defense-favorable. Deployment assessment should therefore use worst-case geometry and exposure. The digital pipeline shows lower reconstruction quality for high-suppression, but this is not real-capture or human-subject evidence. The user study protocol (\S\ref{sec:user_study}) excludes this profile, leaving its perceptual cost unquantified.
 
 \item \textbf{Geometric trends}: Across 9~conditions (0.5--1.5\,m $\times$ 0--30$^{\circ}$), protected short-exposure recovery is consistently below unprotected values. Because the design is unbalanced and no inferential model for geometric factors has been fitted, we do not claim statistically significant monotonic robustness in distance or angle.
 \end{enumerate}
@@ -397,7 +399,7 @@ Profile & Attack mode & $N$ & Char recovery [95\% CI] & Exact match & Sensitive 
 \label{fig:bar_attack}
 \end{figure}
 
-\textbf{Per-engine results}: Table~\ref{tab:real_ocr_engine} breaks down short-exposure results by engine; Fig.~\ref{fig:real_engine_ocr} visualizes all six profiles. The three engines differ widely in unprotected recovery (Surya 37.1\%, EasyOCR 79.5\%, Tesseract 84.3\%). Under Strong, recovery ranges from 2.1--16.3\%; under deployed, 3.2--11.7\%; under high-suppression, 1.8--2.0\%. All three engines show reduction, but with only three engine families the finding is not recognizer-agnostic. Best-of-engine takes the maximum across engines per capture, modeling an attacker who picks the best recognizer; it is the more conservative caliber from the defender's perspective. Because the maximum biases upward with each additional engine, the three-engine ceiling likely underestimates a real attacker with access to more engines or optimized pipelines; the per-engine average in Table~\ref{tab:real_ocr_engine} provides a less biased but less conservative reference.
+\textbf{Per-engine results}: Table~\ref{tab:real_ocr_engine} breaks down short-exposure results by engine; Fig.~\ref{fig:real_engine_ocr} visualizes all six profiles. The three engines differ widely in unprotected recovery (Surya 37.1\%, EasyOCR 79.5\%, Tesseract 84.3\%). Under Strong, recovery ranges from 2.1--16.3\%; under deployed, 3.2--11.7\%; under high-suppression, 1.8--2.0\%. All three engines show reduction, but with only three engine families the finding is not recognizer-agnostic. Best-of-engine takes the maximum across engines per capture, modeling an attacker who picks the best recognizer available in this evaluation. It is a conservative aggregation from the defender's perspective within the tested engine set, not an upper bound over all available OCR services; optimized or commercial OCR pipelines may recover more text.
 
 The evaluated engines are open-source conventional OCR systems; commercial OCR APIs such as Google Cloud Vision, Azure AI Vision, or Baidu OCR were not tested and may achieve higher recovery. The three-engine best-of-engine result should therefore be read as an attacker-favorable aggregation within a limited engine set, not as an upper bound over available OCR services.
 
@@ -462,12 +464,12 @@ Of 1,188 model requests, 1,133 returned parseable results: 34 failures at 0.5\,m
 
 We use the failure-free 1.5\,m run as primary cross-model evidence; the 1.0\,m run enters the short-exposure distance sweep as supplementary data. At 1.0\,m, Qwen and Kimi long-exposure exact match are 84.4\% and 74.3\%, and the successful calls from the three models yield 70.0--83.3\% exact match under the 150-frame video mean. GLM long-exposure exact match is only 3.3\% at 1.0\,m versus 58.3\% at 1.5\,m, but content-dependent failures preclude a cross-distance consistency claim. For compactness, Table~\ref{tab:real_vlm} reports only the 150-frame video mean at 0.5\,m; the 1.5\,m run reports all four aggregate views to show view-selection sensitivity.
 
-All calls used SiliconFlow's OpenAI-compatible API. The recorded provider identifiers are \texttt{Qwen/\allowbreak Qwen3-\allowbreak VL-\allowbreak 32B-\allowbreak Instruct}, \texttt{Pro/\allowbreak moonshotai/\allowbreak Kimi-\allowbreak K2.6}, and \texttt{zai-\allowbreak org/\allowbreak GLM-\allowbreak 4.5V}. Qwen3-VL and GLM-4.5V have public technical reports~\cite{b_qwen3vl2025,b_glm45v2025}. For Kimi-K2.6, we use the provider endpoint identifier and the archived request metadata as the reproducibility record, rather than making claims about a separately documented upstream public release. The \texttt{Pro/} prefix in the second identifier is SiliconFlow-specific, and the endpoint accepted image inputs in our archived calls. Decoding temperature is 0 and maximum output is 4,096 tokens. The shared prompt requests only visible text and prohibits guessing; ground truth is not provided. Full prompts, parameters, and per-call outputs are archived. Metrics follow \S\ref{sec:setup} and are pooled at the capture level. Public CET6 documents may inflate recovery through training-data memorization, so synthetic snippets and exact match are the cleaner discriminative caliber.
+All calls used SiliconFlow's OpenAI-compatible API. The recorded provider identifiers are \texttt{Qwen/\allowbreak Qwen3-\allowbreak VL-\allowbreak 32B-\allowbreak Instruct}, \texttt{Pro/\allowbreak moonshotai/\allowbreak Kimi-\allowbreak K2.6}, and \texttt{zai-\allowbreak org/\allowbreak GLM-\allowbreak 4.5V}. Qwen3-VL and GLM-4.5V have public technical reports~\cite{b_qwen3vl2025,b_glm45v2025}. For Kimi-K2.6, we use the provider endpoint identifier and the archived request metadata as the reproducibility record, rather than making claims about a separately documented upstream public release. The \texttt{Pro/} prefix in the second identifier is SiliconFlow-specific, and the endpoint accepted image inputs in our archived calls. Decoding temperature is 0 and maximum output is 4,096 tokens. The shared prompt requests only visible text and prohibits guessing; ground truth is not provided. Full prompts, parameters, and per-call outputs are archived. Metrics follow \S\ref{sec:setup} and are pooled at the capture level. Public CET6 documents may inflate recovery through training-data memorization, so synthetic snippets and exact match provide cleaner discriminative evidence.
 
-\textbf{0.5\,m session selection transparency}: The archive preserves an alternative session (\path{real_capture_vlm_d0.5_a0_rerun.json}, timestamp 012715) at the same position whose high-suppression short-exposure inputs are nearly all-black, yielding empty transcriptions and 0\% char/exact across all three models. Table~\ref{tab:real_vlm} uses the 141107 (3.91\,ms) session because it shares the OCR reference batch and its inputs are not black. These are the only two 0.5\,m on-axis VLM sessions, so the observed short-exposure exact-match range across sessions is 0--77.8\%, not a stable single-session estimate. The adequate-exposure criterion was applied after inspecting two sessions and is therefore a post-hoc selection rule; preserving both sessions and reporting the range makes the exposure sensitivity explicit. The tabled session is the conservative attacker-favorable case, while the alternative is retained as an underexposure diagnostic.
+\textbf{0.5\,m session selection transparency}: The archive preserves an alternative session (\path{real_capture_vlm_d0.5_a0_rerun.json}, timestamp 012715) at the same position whose high-suppression short-exposure inputs are nearly all-black, yielding empty transcriptions and 0\% char/exact across all three models. Table~\ref{tab:real_vlm} uses the 141107 (3.91\,ms) session because it shares the OCR reference batch and its inputs are not black. These are the only two 0.5\,m on-axis VLM sessions, so Qwen's observed short-exposure exact-match outcome ranges from 0/36 captures in the underexposed session to 28/36 captures in the tabled session, not a stable single-session estimate. The adequate-exposure criterion was applied after inspecting two sessions and is therefore a post-hoc selection rule; preserving both sessions and reporting the range makes the exposure sensitivity explicit. The tabled session is the conservative attacker-favorable case, while the alternative is retained as an underexposure diagnostic.
 
 \begin{table*}[!t]
-\caption{Real-Capture VLM Probes (0$^{\circ}$ On-Axis; All Rows Except the Original Short Baseline Are High-Suppression). Each VLM Cell Reports Exact / Char / $N$ (\% / \% / Effective Calls); Cells with Failures Are Conditional on Parseable Responses. OCR BoE Shows the Same-Batch Three-Engine Best-of-Engine Reference (Exact / Char, \%). The Temporal-Mean Rows Average 150 Short-Exposure Frames; Other Aggregate Views Are Defined in the Text.}
+\caption{Real-Capture VLM Probes (0$^{\circ}$ On-Axis; All Rows Except the Original Short Baseline Are High-Suppression). Each VLM Cell Reports Exact Count / Char / $N$ (Recoveries / \% / Effective Calls); Cells with Failures Are Conditional on Parseable Responses. OCR BoE Shows the Same-Batch Three-Engine Best-of-Engine Reference (Exact / Char, \%). The Temporal-Mean Rows Average 150 Short-Exposure Frames; Other Aggregate Views Are Defined in the Text.}
 \label{tab:real_vlm}
 \centering
 \footnotesize
@@ -478,20 +480,20 @@ Distance & Condition & OCR BoE & Qwen3-VL-32B & Kimi-K2.6 & GLM-4.5V \\
 \midrule
 \multicolumn{6}{l}{\textit{Short-exposure distance sweep}}\\
 \midrule
-0.5\,m & original short & 58.3~/~92.4 & 83.3~/~94.5~/~36 & 83.3~/~95.6~/~36 & 73.1~/~92.0~/~26 \\
-0.5\,m & short & 0.0~/~8.4 & 77.8~/~91.5~/~36 & 47.2~/~84.7~/~36 & 51.6~/~70.8~/~31 \\
-1.0\,m & short & 0.0~/~3.6 & 55.6~/~79.1~/~36 & 38.9~/~68.6~/~36 & 27.3~/~47.0~/~33 \\
-1.5\,m & short & 0.0~/~6.5 & 47.2~/~68.9~/~36 & 33.3~/~61.5~/~36 & 36.1~/~70.0~/~36 \\
+0.5\,m & original short & 58.3~/~92.4 & 30~/~94.5~/~36 & 30~/~95.6~/~36 & 19~/~92.0~/~26 \\
+0.5\,m & short & 0.0~/~8.4 & 28~/~91.5~/~36 & 17~/~84.7~/~36 & 16~/~70.8~/~31 \\
+1.0\,m & short & 0.0~/~3.6 & 20~/~79.1~/~36 & 14~/~68.6~/~36 & 9~/~47.0~/~33 \\
+1.5\,m & short & 0.0~/~6.5 & 17~/~68.9~/~36 & 12~/~61.5~/~36 & 13~/~70.0~/~36 \\
 \midrule
 \multicolumn{6}{l}{\textit{Key attack views}}\\
 \midrule
-0.5\,m & long & 0.0~/~2.1 & 82.4~/~85.7~/~34 & 2.8~/~7.9~/~36 & 0.0~/~4.9~/~30 \\
-0.5\,m & Video (150-frame mean) & 8.3~/~50.7 & 83.3~/~94.0~/~12 & 83.3~/~95.5~/~12 & 87.5~/~91.8~/~8 \\
-1.5\,m & long & 0.0~/~13.2 & 91.7~/~89.3~/~36 & 88.9~/~89.9~/~36 & 58.3~/~62.4~/~36 \\
-1.5\,m & Video (single best) & 0.0~/~4.3 & 8.3~/~24.8~/~12 & 0.0~/~12.7~/~12 & 0.0~/~29.8~/~12 \\
-1.5\,m & Video (150-frame mean) & 0.0~/~48.4 & 66.7~/~90.3~/~12 & 66.7~/~90.3~/~12 & 58.3~/~88.5~/~12 \\
-1.5\,m & Video (window-mean best) & 0.0~/~8.6 & 58.3~/~89.0~/~12 & 41.7~/~84.2~/~12 & 66.7~/~87.2~/~12 \\
-1.5\,m & Video (max projection) & 0.0~/~19.0 & 66.7~/~90.1~/~12 & 58.3~/~89.2~/~12 & 58.3~/~88.7~/~12 \\
+0.5\,m & long & 0.0~/~2.1 & 28~/~85.7~/~34 & 1~/~7.9~/~36 & 0~/~4.9~/~30 \\
+0.5\,m & Video (150-frame mean) & 8.3~/~50.7 & 10~/~94.0~/~12 & 10~/~95.5~/~12 & 7~/~91.8~/~8 \\
+1.5\,m & long & 0.0~/~13.2 & 33~/~89.3~/~36 & 32~/~89.9~/~36 & 21~/~62.4~/~36 \\
+1.5\,m & Video (single best) & 0.0~/~4.3 & 1~/~24.8~/~12 & 0~/~12.7~/~12 & 0~/~29.8~/~12 \\
+1.5\,m & Video (150-frame mean) & 0.0~/~48.4 & 8~/~90.3~/~12 & 8~/~90.3~/~12 & 7~/~88.5~/~12 \\
+1.5\,m & Video (window-mean best) & 0.0~/~8.6 & 7~/~89.0~/~12 & 5~/~84.2~/~12 & 8~/~87.2~/~12 \\
+1.5\,m & Video (max projection) & 0.0~/~19.0 & 8~/~90.1~/~12 & 7~/~89.2~/~12 & 7~/~88.7~/~12 \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -522,7 +524,7 @@ Table~\ref{tab:real_vlm} presents the pooled VLM probe results: short-exposure r
 \textbf{Key findings}:
 
 \begin{enumerate}
-\item \textbf{VLMs bound rather than extend the claim}: On the same 0.5\,m photographs, best-of-engine OCR yields only 8.4\% char / 0\% exact on the high-suppression short-exposure condition, while Qwen3-VL achieves 91.5\% char / 77.8\% exact. At 1.5\,m, the three models retain 33.3--47.2\% exact / 61.5--70.0\% char. Even with a prompt prohibiting guessing, VLMs recover substantial text from visible fragments. Within this on-axis, high-suppression, three-distance probe, conventional OCR claims therefore do not transfer to VLM attackers; off-axis VLM capture and other protection profiles were not evaluated.
+\item \textbf{VLMs bound rather than extend the claim}: On the same 0.5\,m photographs, best-of-engine OCR yields only 8.4\% char / 0\% exact on the high-suppression short-exposure condition, while Qwen3-VL achieves 91.5\% char and exactly recovers 28/36 captures from 12 items. At 1.5\,m, the three models retain 33.3--47.2\% exact / 61.5--70.0\% char. Even with a prompt prohibiting guessing, VLMs recover substantial text from visible fragments. Within this on-axis, high-suppression, three-distance probe, conventional OCR claims therefore do not transfer to VLM attackers; off-axis VLM capture and other protection profiles were not evaluated.
 
 \item \textbf{Failure concentrates on large-font short snippets}: At 0.5\,m, CET6 full-page dense documents yield 0.4--18.5\% VLM character recovery (unprotected baseline 64.4\%), whereas credentials, code, and digit strings yield 50--100\% (Table~\ref{tab:vlm_content}). At 1.5\,m, CET6 dense pages drop to 0\% char across all three models, while digit strings and short sentences remain highly recoverable. The pattern matches mask granularity: small-font strokes ($\sim$1--2~pixels wide) lose glyph topology when $1{-}1/n$ of pixels are removed. Large-font glyphs retain global contours even through sparse fragments, and VLMs can complete them via visual encoding and language priors~\cite{b_shi2023,b_jiang2025}, bypassing the binarization bottleneck that disrupts conventional OCR.
 
@@ -625,83 +627,10 @@ Deployed full ($n{=}4$) & -- & -- & -- \\
 }
 
 % ----------------------------------------------------------
-\subsection{Real-Capture Object Detection and Tracking}
+\subsection{Supplementary Detection and Tracking Diagnostics}
 \label{sec:detection}
 
-To probe whether the temporal degradation transfers beyond text, we report an exploratory detection/tracking stress test within the same camera link; evidence strength is not equivalent to the OCR main experiment. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. Detection uses real\_clean (unprotected capture through the same link) as reference (Table~\ref{tab:real_coco}). Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture rather than continuous video synchronization (Table~\ref{tab:real_mot}); the associator is a greedy-fallback implementation inspired by ByteTrack~\cite{b_bytetrack2022}, not official ByteTrack. The real\_clean reference partially controls for link degradation, but exposure interactions with the protected display may persist.
-
-\begin{table}[!t]
-\caption{Real-Capture COCO Detection (150 Images; real\_clean = Unprotected Capture Baseline)}
-\label{tab:real_coco}
-\centering
-\footnotesize
-\begin{tabular}{llccc}
-\toprule
-Detector & Condition & mAP & mAP50 & AR \\
-\midrule
-\multirow{3}{*}{YOLO26x}
- & real\_clean & 28.6\% & 43.9\% & 31.0\% \\
- & real\_short & 1.3\% & 2.4\% & 1.4\% \\
- & real\_video & 3.5\% & 5.3\% & 3.6\% \\
-\midrule
-\multirow{3}{*}{RT-DETR-x}
- & real\_clean & 30.1\% & 50.2\% & 34.8\% \\
- & real\_short & 3.5\% & 5.8\% & 4.1\% \\
- & real\_video & 4.6\% & 7.3\% & 5.5\% \\
-\midrule
-\multirow{3}{*}{Faster R-CNN}
- & real\_clean & 21.3\% & 39.2\% & 28.7\% \\
- & real\_short & 0.8\% & 1.6\% & 0.9\% \\
- & real\_video & 1.5\% & 3.0\% & 1.8\% \\
-\midrule
-\multirow{3}{*}{RetinaNet}
- & real\_clean & 22.6\% & 39.4\% & 27.0\% \\
- & real\_short & 0.9\% & 1.8\% & 1.0\% \\
- & real\_video & 1.9\% & 3.1\% & 2.0\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!t]
-\caption{Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames)}
-\label{tab:real_mot}
-\centering
-\footnotesize
-\begin{tabular}{llcc}
-\toprule
-Detector & Condition & HOTA & IDF1 \\
-\midrule
-\multirow{3}{*}{YOLO26x}
- & real\_clean & 15.8\% & 12.1\% \\
- & real\_short & 8.7\% & 6.5\% \\
- & real\_video & 10.0\% & 8.7\% \\
-\midrule
-\multirow{3}{*}{RT-DETR-x}
- & real\_clean & 14.2\% & 10.4\% \\
- & real\_short & 8.1\% & 5.2\% \\
- & real\_video & 9.6\% & 6.8\% \\
-\midrule
-\multirow{3}{*}{Faster R-CNN}
- & real\_clean & 14.4\% & 9.6\% \\
- & real\_short & 6.8\% & 6.0\% \\
- & real\_video & 10.5\% & 7.1\% \\
-\midrule
-\multirow{3}{*}{RetinaNet}
- & real\_clean & 14.2\% & 9.8\% \\
- & real\_short & 5.1\% & 4.4\% \\
- & real\_video & 6.8\% & 5.9\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Fig.~\ref{fig:real_det_drop}), relative decreases exceeding 85\%. The real\_video condition yields 3.0--7.3\%, also below the real\_clean baselines, consistent with visual feature degradation beyond character-segmentation-based OCR. With only one camera, one position, and 150~images, these results provide directional evidence rather than a cross-device detection-protection conclusion. In still-frame tracking, HOTA drops from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.6--12.1\% to 4.4--6.5\%. The real\_clean baseline HOTA (14.2--15.8\%) is itself depressed by the still-frame link, far below native-image levels, compressing the room for further decrease. The still-frame procedure cannot substitute for continuous-video tracking.
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\columnwidth]{figures/real_detection_drop.pdf}
-\caption{Real-capture detection: mAP50 drop for four detectors under protected conditions.}
-\label{fig:real_det_drop}
-\end{figure}
+Object-detection and tracking diagnostics are reported in the supplementary material rather than the main evidence chain. They use one real-capture position, a limited COCO subset, still-frame MOT captures, and approximate simulation metrics, so they are diagnostic stress tests but do not extend the primary conventional-OCR claim. The normalized cross-task summary figure is omitted from the main paper because OCR character recovery, mAP, HOTA, and IDF1 are not commensurate measurements.
 
 % ----------------------------------------------------------
 \subsection{Software Simulation Supplementary Experiments}
@@ -741,108 +670,7 @@ Fig.~\ref{fig:multiengine_ocr} visualizes these results. Single-subframe recover
 \label{sec:security_frontier}
 When an attacker under ideal conditions accumulates frames covering a full cycle, the complementarity can be exploited and complementary noise can cancel in the ideal linear model of~(\ref{eq:noise_complement}). The archived digital evaluation recovers 95.2\% under the \emph{per-sample strongest attack across the evaluated attack set}; this value is not the pure temporal-mean result. The corresponding pure full-cycle temporal-mean attack recovers 94.3\%, with other channel/projection attacks reaching similar values. This is the \emph{fundamental boundary} of an ideal linear temporal decomposition. The high-suppression profile reduces recovery under the current real-capture integration conditions, but the 150-frame video mean still yields 47.9\% pooled character recovery and 53.9\% after excluding the underexposed position. It can therefore only be called mitigation, not closure of this boundary. Character recovery need not scale with the illuminated-pixel fraction $1/n$, because recognizer performance also depends on glyph topology, image content, display response, optics, and ISP processing. The current experiments do not provide a formal information-theoretic bound.
 
-\subsubsection{Comparison with Software-Proxy Baselines}
-In a software simulation on 102~corpus samples (expanded from an earlier 9-sample stratified pilot), character recovery for dimming, Gaussian blur, pixelation, off-axis privacy-filter proxy, and a single temporal-mask subframe is 94.5\%, 71.7\%, 0.8\%, 94.2\%, and 0\%, respectively. Dimming by 50\% matches the unprotected condition at 94.5\%, providing no OCR reduction; Gaussian blur and the off-axis proxy both retain $>$70\% recovery. Parameters, physical conditions, and user-experience costs are not equivalently matched; the ``privacy filter'' is a software off-axis proxy, not a physical product test. Fig.~\ref{fig:baselines_scatter} shows the trade-off under these proxy settings and does not establish superiority over all passive approaches.
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\columnwidth]{figures/baselines_scatter.pdf}
-\caption{Software-proxy baselines on 102~corpus samples: horizontal axis is OCR character recovery, vertical axis is digital reconstruction $\Delta E_{00}$. Method parameters and physical conditions are not equivalently matched; the figure serves only as an exploratory comparison.}
-\label{fig:baselines_scatter}
-\end{figure}
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\columnwidth]{figures/readability_robustness_tradeoff.pdf}
-\caption{Synthetic-corpus digital proxy trade-off: as anti-OCR enhancement increases (no overlay $\to$ Strong overlay $\to$ deployed $\to$ high-suppression), temporal-mean character recovery decreases while full-cycle reconstruction SSIM~\cite{b_wang2004} also decreases. Neither axis is a real-capture or user-readability measurement.}
-\label{fig:tradeoff}
-\end{figure}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.82\textwidth]{figures/antiocr_heatmap.pdf}
-\caption{Anti-OCR profile stripe $\times$ glyph amplitude grid under the digital temporal-mean attack: left panel shows character recovery, right panel shows reconstruction drift. High stripe and glyph amplitude regions descriptively reduce character recovery to $\sim$11\% across the current 12 parameter grid points (16 samples per point) while increasing reconstruction cost. No significance testing was performed.}
-\label{fig:antiocr_heatmap}
-\end{figure*}
-
-The stripe/glyph parameter trade-off for the anti-OCR profile is shown in Fig.~\ref{fig:antiocr_heatmap}.
-
-\subsubsection{Detection and Tracking Simulation}
-Supplementary simulations were run on COCO val2017~\cite{b_coco2014} and MOT17~\cite{b_mot16}. The four detectors are YOLO26x~\cite{b_yolo26}, RT-DETR-x~\cite{b_rtdetr2024}, Faster R-CNN~\cite{b_fasterrcnn2015}, and RetinaNet~\cite{b_retinanet2017}. The COCO simulation used only 8~images, positioned as implementation pipeline diagnostics (Table~\ref{tab:coco_sim}). The MOT simulation covers 7~sequences totaling 5,316~frames, using a ByteTrack-inspired~\cite{b_bytetrack2022} greedy association fallback implementation (Table~\ref{tab:mot_sim}). Because TrackEval failed to run, MOTA/MOTP/IDF1 in the table come from an in-project approximate evaluation backend and are not equivalent to official ByteTrack/TrackEval results.
-
-\begin{table}[!t]
-\caption{COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images; Not a Dataset-Level Performance Estimate)}
-\label{tab:coco_sim}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{5.8pt}
-\begin{tabular}{llccc}
-\toprule
-Detector & Condition & mAP & mAP50 & AR \\
-\midrule
-\multirow{3}{*}{YOLO26x}
- & clean & 48.1\% & 58.3\% & 51.0\% \\
- & single subframe & 0.0\% & 0.0\% & 0.0\% \\
- & temporal avg. & 14.3\% & 18.3\% & 14.3\% \\
-\midrule
-\multirow{3}{*}{RT-DETR-x}
- & clean & 47.1\% & 58.7\% & 53.4\% \\
- & single subframe & 5.2\% & 6.0\% & 5.2\% \\
- & temporal avg. & 16.8\% & 23.7\% & 17.9\% \\
-\midrule
-\multirow{3}{*}{Faster R-CNN}
- & clean & 38.2\% & 52.7\% & 43.6\% \\
- & single subframe & 3.0\% & 4.4\% & 3.0\% \\
- & temporal avg. & 11.1\% & 16.5\% & 11.1\% \\
-\midrule
-\multirow{3}{*}{RetinaNet}
- & clean & 33.2\% & 47.1\% & 35.3\% \\
- & single subframe & 3.3\% & 4.2\% & 3.3\% \\
- & temporal avg. & 9.6\% & 13.2\% & 9.6\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!t]
-\caption{MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; In-Project Approximate Metrics; 5,316 Frames)}
-\label{tab:mot_sim}
-\centering
-\footnotesize
-\begin{tabular}{llccc}
-\toprule
-Detector & Condition & MOTA & MOTP & IDF1 \\
-\midrule
-\multirow{3}{*}{YOLO26x}
- & clean & 31.1\% & 81.7\% & 27.1\% \\
- & single subframe & 0.1\% & 74.8\% & 0.1\% \\
- & temporal avg. & 9.1\% & 78.1\% & 12.0\% \\
-\midrule
-\multirow{3}{*}{RT-DETR-x}
- & clean & 24.1\% & 79.8\% & 38.2\% \\
- & single subframe & $-$2.3\% & 73.2\% & 5.4\% \\
- & temporal avg. & $-$11.4\% & 75.0\% & 14.7\% \\
-\midrule
-\multirow{3}{*}{Faster R-CNN}
- & clean & 3.8\% & 77.9\% & 35.6\% \\
- & single subframe & $-$2.5\% & 71.2\% & 4.5\% \\
- & temporal avg. & $-$2.7\% & 73.2\% & 14.0\% \\
-\midrule
-\multirow{3}{*}{RetinaNet}
- & clean & $-$5.4\% & 77.1\% & 30.5\% \\
- & single subframe & 0.4\% & 70.6\% & 2.7\% \\
- & temporal avg. & $-$2.9\% & 73.8\% & 11.9\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-On these 8~images, single-subframe mAP50 across four detectors is 0--6.0\%. This sample size is sufficient only to check trends, not to estimate COCO population performance. In the 5,316-frame approximate tracking results, single-subframe IDF1 is 0.1--5.4\%, though MOTA exhibits negative values and nonmonotonic behavior. Negative MOTA means the approximate backend's false-positive, false-negative, and identity-error penalties exceed the number of ground-truth objects; it is not a negative detection probability. Differences among YOLO26x, RT-DETR-x, Faster R-CNN, and RetinaNet may reflect architecture, confidence thresholds, proposal density, and interaction with the greedy associator, but this experiment does not isolate those factors. We therefore do not assign a causal mechanism to the cross-detector spread. Fig.~\ref{fig:all_attackers} summarizes residual capability of a single protected subframe relative to the clean baseline across the current evaluation; it does not represent untested models.
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\columnwidth]{figures/all_attackers.pdf}
-\caption{Residual capability of a single protected subframe relative to the clean baseline (clean = 100\%) across the current evaluation: OCR, detection, and tracking are approximately 0--9.7\%. This figure summarizes only the tested models and metrics.}
-\label{fig:all_attackers}
-\end{figure}
+Additional software-proxy baseline, parameter-sweep, detection, and tracking diagnostics are preserved outside the main evidence chain. They are not used as main-text evidence because their physical conditions, user-experience costs, and metrics are not matched to the real-capture OCR estimand.
 
 \deferreduserstudy
 
@@ -854,7 +682,7 @@ On these 8~images, single-subframe mAP50 across four detectors is 0--6.0\%. This
 
 \subsection{Evidence Hierarchy and Claim Scope}
 
-The most directly supported conclusion is: within a single-UVC-camera feasibility study, temporal pixel masking substantially reduces conventional OCR character recovery and exact-match rates from calibrated short-exposure screen photographs under the tested S600 camera, display, corpus, and 9~geometric conditions. This is not a general anti-photography claim. It is a controlled UVC, single-frame claim about bulk or unattended conventional-OCR collection, where each target is represented by one isolated fixed-exposure image. The value of this narrow claim is that it converts a previously plausible display-side idea into a measured operating window with named failure modes. The 10,575 real-capture images reflect component, parameter, and attack-condition coverage within this UVC link. Because the corpus is unbalanced and covers one webcam, the total sample count is not cross-device or cross-scenario inference evidence. Detection/tracking results, VLM probes, and simulations respectively answer whether the degradation transfers to other visual tasks, whether stronger recognizers break through, and where the full-cycle integration boundary lies; together they define boundaries rather than extend the primary claim. The passive baselines are software proxies with specified pixel-domain outputs, not physically or perceptually matched products. The present data therefore do not support comparative superiority over physical privacy filters, prior temporal-display systems, or differently tuned static obfuscation.
+The most directly supported conclusion is: within a single-UVC-camera feasibility study, temporal pixel masking substantially reduces conventional OCR character recovery and exact-match rates from calibrated short-exposure screen photographs under the tested S600 camera, display, corpus, and 9~geometric conditions. This is not a general anti-photography claim. It is a controlled UVC, single-frame claim about bulk or unattended conventional-OCR collection, where each target is represented by one isolated fixed-exposure image. The value of this narrow claim is that it converts a previously plausible display-side idea into a measured operating window with named failure modes. The 10,575 real-capture images reflect component, parameter, and attack-condition coverage within this UVC link. Because the corpus is unbalanced and covers one webcam, the total sample count is not cross-device or cross-scenario inference evidence. Supplementary detection/tracking diagnostics, VLM probes, and simulations respectively answer whether the degradation may transfer to other visual tasks, whether stronger recognizers break through, and where the full-cycle integration boundary lies; together they define boundaries rather than extend the primary claim. The passive baselines are software proxies with specified pixel-domain outputs, not physically or perceptually matched products. The present data therefore do not support comparative superiority over physical privacy filters, prior temporal-display systems, or differently tuned static obfuscation.
 
 \subsection{The Mathematical Tension of Linear Integration}
 
@@ -898,7 +726,7 @@ This research is defensive in nature, aiming to protect screen content from unau
 \begin{enumerate}
 \item The user study (\S\ref{sec:user_study}) is a protocol, not completed evidence: no participant data exist yet, so the deployed profile's usability remains unvalidated. Even when conducted in a controlled 240\,Hz laboratory, external validity will require broader participant samples and display conditions.
 \item Immediate visual comfort is a single-item scale measured after short exposure and does not extend to long-term fatigue or clinical visual discomfort.
-\item The PoC is application-layer only, without OS drivers or hardware backlight. Luminance, HDR, and color-difference conclusions come from digital models, lacking photometric or panel-response measurements. Actual playback slot timing was not verified with a photodiode, high-speed camera, or oscilloscope. OS compositor jitter, VSync mismatch, and dropped frames can shift subframe boundaries unpredictably; if a short-exposure window straddles the intended slot edge, the camera captures cross-slot content and real recovery may exceed the values reported here.
+\item The PoC is application-layer only, without OS drivers or hardware backlight. Luminance, HDR, and color-difference conclusions come from digital models, lacking photometric or panel-response measurements. Actual playback slot timing was not verified with a photodiode, high-speed camera, or oscilloscope. OS compositor jitter, VSync mismatch, and dropped frames can shift subframe boundaries unpredictably; if a short-exposure window straddles the intended slot edge, the camera captures cross-slot content and real recovery may exceed the values reported here. Because the experiment lacks a luminance-matched static control and matched noise-off enhanced profiles, it cannot separate temporal sparsity, duty-cycle luminance, static overlays, panel response, camera exposure, and ISP processing as mechanisms.
 \item Real-capture OCR used one S600 UVC webcam; ambient illuminance was not recorded; exposure values have two calibration sets. The unbalanced design with repeated content means bootstrap intervals do not substitute for cross-device replication. Uncontrolled ambient light variation may affect results through two paths: (a)~the camera's auto-exposure, auto-white-balance, and auto-gain algorithms respond to ambient conditions, altering effective exposure on the screen content; (b)~ambient light reflected off the screen surface changes the captured signal-to-noise ratio. If geometric configurations were captured at different times of day, systematic ambient variation could confound geometric-factor analysis. Increased reflection or sensor noise would most likely suppress the already weak protected signal more than the unprotected baseline, biasing protected recovery downward and favoring the defense; automatic gain or exposure compensation could act in the opposite direction. Because illuminance was not logged, the net direction and magnitude cannot be estimated. This uncertainty primarily weakens cross-geometry comparisons; the large within-link short-exposure reduction remains directly observed but is not immune to the confound.
 \item Real-capture detection used 150 COCO images at a single position; tracking used 450 still-frame captures from one MOT17 sequence, not continuous video. Simulated detection used 8~images with approximate metrics.
 \item VLM evaluation covers one camera, 0$^{\circ}$ on-axis, one profile, and three commercial API models (12 video segments per cell). Models may update over time. Public document content may inflate recovery via training-data memorization. We did not evaluate multi-cycle adaptive reconstruction, rolling-shutter phase search, or pre-masking malware interception. Full-cycle integration remains the fundamental boundary.
@@ -915,9 +743,9 @@ This research is defensive in nature, aiming to protect screen content from unau
 \section{Conclusion}
 \label{sec:conclusion}
 
-We implemented and evaluated temporal pixel masking as a controlled UVC feasibility study for single-frame conventional-OCR mitigation. In 10,575 real-capture images from one UVC webcam, best-of-engine OCR character recovery falls from 94.1\% to 15.1\% for the deployed profile and 5.0\% for high-suppression under calibrated short exposure, with exact match falling to 0.4\% and 0\%. Excluding one underexposed geometry raises the protected estimates to 16.7\% and 5.6\%, so high-suppression remains near but does not meet its strict $<5\%$ target. This result is the paper's central contribution: it defines, measures, and bounds a useful operating niche for disrupting unattended conventional-OCR collection from one isolated fixed-exposure UVC frame per target. Such a collector must accept substantially poorer output, sustain multi-frame capture, or use a stronger recognizer. Sensitive-token recovery remains 24.0\% under deployed short exposure, so the niche does not extend to all sensitive fields.
+We implemented and evaluated temporal pixel masking as a controlled UVC feasibility study for single-frame conventional-OCR mitigation. In 10,575 real-capture images from one UVC webcam, best-of-engine OCR character recovery falls from 94.1\% to 15.1\% for the deployed profile and 5.0\% for high-suppression under calibrated short exposure, with exact match falling to 0.4\% and 0\%. Excluding one underexposed geometry raises the protected estimates to 16.7\% and 5.6\%, so high-suppression remains near but does not meet its strict $<5\%$ target. In matched content-cluster contrasts, unprotected short exposure exceeds deployed by 78.0 percentage points (95\% CI [75.5, 80.3]) and high-suppression by 89.1 percentage points ([85.0, 92.4]). This result is the paper's central contribution: it defines, measures, and bounds a measured operating window for disrupting unattended conventional-OCR collection from one isolated fixed-exposure UVC frame per target. Such a collector must accept substantially poorer output, sustain multi-frame capture, or use a stronger recognizer. Sensitive-token recovery remains 24.0\% under deployed short exposure, so the window does not extend to all sensitive fields.
 
-The measured bypass boundary is equally important. A temporal mean over 150 short-exposure frames, nominally 2.5\,s at 60\,fps, recovers 71.1\% character for deployed and 47.9\% for high-suppression; excluding the underexposed geometry raises these values to 79.7\% and 53.9\%. Under long exposure, deployed recovery is 60.9\% versus 47.3\% unprotected, so temporal masking does not provide a general integration defense. In the tested on-axis scan, Qwen3-VL recovers 77.8\% pooled exact match over all 12 content items at 0.5\,m under high-suppression short exposure. The content-type character analysis separately shows that failures concentrate in large-font short snippets. Sustained video aggregation and modern VLMs therefore sit outside the useful niche as practical bypasses. The minimum video duration required for comparable recovery remains unmeasured.
+The measured bypass boundary is equally important. A temporal mean over 150 short-exposure frames, nominally 2.5\,s at 60\,fps, recovers 71.1\% character for deployed and 47.9\% for high-suppression; excluding the underexposed geometry raises these values to 79.7\% and 53.9\%. Under long exposure, deployed recovery is 60.9\% versus 47.3\% unprotected, so temporal masking does not provide a general integration defense. In the tested on-axis scan, Qwen3-VL exactly recovers 28/36 captures from 12 content items at 0.5\,m under high-suppression short exposure. The content-type character analysis separately shows that failures concentrate in large-font short snippets. Sustained video aggregation and modern VLMs therefore sit outside the measured operating window as practical bypasses. The minimum video duration required for comparable recovery remains unmeasured.
 
 These results show that temporal pixel masking is not a general anti-camera defense, but it can materially degrade unattended conventional-OCR batch collection from isolated calibrated short-exposure UVC captures. The main value of the study is therefore an evidence-bounded protection window, plus a set of measured failure boundaries that future display-side privacy systems should treat as design constraints. Concrete next steps are to close the profile split by testing usability for stronger suppression settings, evaluate font-size-adaptive mask granularity and field-level policies against VLMs, capture matched noise-off enhanced profiles, and validate cross-device behavior on physical systems.
 
@@ -926,7 +754,7 @@ These results show that temporal pixel masking is not a general anti-camera defe
 %% ============================================================
 \section*{Data and Code Availability}
 
-A versioned development snapshot of the software, experimental configurations, de-identified per-sample OCR results, and VLM probe records is publicly available at \url{https://github.com/docandyc/privacy-display/tree/13977c25d21f2b520112bab6274dcac1f67adacf}. This SHA identifies the development snapshot used during manuscript preparation. The final submission package should replace this snapshot with an immutable release that aligns the manuscript, figures, analysis scripts, and de-identified records, including any completed user-study outputs. Until that release is minted, the SHA above is the reproducibility anchor for the OCR, VLM, and figure-generation materials already reported here. The canonical archived identifier \texttt{capture\_hardened} and the legacy \texttt{vlm} tag both denote the paper's high-suppression configuration (\S\ref{sec:hardened}). If the user study is conducted, its database \texttt{study\_formal.db} (containing student IDs and names) will not be released; public materials will include only de-identified results, exclusion audits, and analysis scripts.
+The software, experimental configurations, de-identified per-sample OCR results, VLM probe records, and figure-generation scripts are maintained in the project repository at \url{https://github.com/docandyc/privacy-display}. An immutable release aligned with the final submitted manuscript, figures, analysis scripts, and de-identified records will be minted before or with the submission package; no release identifier is claimed here. The canonical archived identifier \texttt{capture\_hardened} and the legacy \texttt{vlm} tag both denote the paper's high-suppression configuration (\S\ref{sec:hardened}). If the user study is conducted, its database \texttt{study\_formal.db} (containing student IDs and names) will not be released; public materials will include only de-identified results, exclusion audits, and analysis scripts.
 
 %% ============================================================
 %% ACKNOWLEDGMENT

@@ -1,0 +1,174 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+
+\begin{document}
+\history{Supplementary material for review.}
+\doi{10.1109/ACCESS.XXXX.DOI}
+
+\title{Supplementary Material: Detection and Tracking Diagnostics for Temporal Pixel Masking}
+\author{Supplementary material for the submitted manuscript}
+\maketitle
+
+\section{Scope}
+
+This supplement preserves the object-detection and tracking diagnostics that were removed from the main manuscript. These experiments probe whether temporal degradation affects non-text visual tasks, but they do not carry the paper's primary conventional-OCR claim. The real-capture detection/tracking runs use one camera position and limited datasets; the simulated tracking metrics are approximate and not official TrackEval/ByteTrack results.
+
+\section{Real-Capture Object Detection and Tracking}
+\label{sec:supp_real_detection}
+
+To probe whether the temporal degradation transfers beyond text, we ran an exploratory detection/tracking stress test within the same camera link. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. Detection uses real\_clean (unprotected capture through the same link) as reference (Table~\ref{tab:supp_real_coco}). Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture rather than continuous video synchronization (Table~\ref{tab:supp_real_mot}); the associator is a greedy-fallback implementation inspired by ByteTrack~\cite{b_bytetrack2022}, not official ByteTrack. The real\_clean reference partially controls for link degradation, but exposure interactions with the protected display may persist.
+
+\begin{table}[!t]
+\caption{Real-Capture COCO Detection (150 Images; real\_clean = Unprotected Capture Baseline)}
+\label{tab:supp_real_coco}
+\centering
+\footnotesize
+\begin{tabular}{llccc}
+\toprule
+Detector & Condition & mAP & mAP50 & AR \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & real\_clean & 28.6\% & 43.9\% & 31.0\% \\
+ & real\_short & 1.3\% & 2.4\% & 1.4\% \\
+ & real\_video & 3.5\% & 5.3\% & 3.6\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & real\_clean & 30.1\% & 50.2\% & 34.8\% \\
+ & real\_short & 3.5\% & 5.8\% & 4.1\% \\
+ & real\_video & 4.6\% & 7.3\% & 5.5\% \\
+\midrule
+\multirow{3}{*}{Faster R-CNN}
+ & real\_clean & 21.3\% & 39.2\% & 28.7\% \\
+ & real\_short & 0.8\% & 1.6\% & 0.9\% \\
+ & real\_video & 1.5\% & 3.0\% & 1.8\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & real\_clean & 22.6\% & 39.4\% & 27.0\% \\
+ & real\_short & 0.9\% & 1.8\% & 1.0\% \\
+ & real\_video & 1.9\% & 3.1\% & 2.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!t]
+\caption{Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames)}
+\label{tab:supp_real_mot}
+\centering
+\footnotesize
+\begin{tabular}{llcc}
+\toprule
+Detector & Condition & HOTA & IDF1 \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & real\_clean & 15.8\% & 12.1\% \\
+ & real\_short & 8.7\% & 6.5\% \\
+ & real\_video & 10.0\% & 8.7\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & real\_clean & 14.2\% & 10.4\% \\
+ & real\_short & 8.1\% & 5.2\% \\
+ & real\_video & 9.6\% & 6.8\% \\
+\midrule
+\multirow{3}{*}{Faster R-CNN}
+ & real\_clean & 14.4\% & 9.6\% \\
+ & real\_short & 6.8\% & 6.0\% \\
+ & real\_video & 10.5\% & 7.1\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & real\_clean & 14.2\% & 9.8\% \\
+ & real\_short & 5.1\% & 4.4\% \\
+ & real\_video & 6.8\% & 5.9\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Fig.~\ref{fig:supp_real_det_drop}), relative decreases exceeding 85\%. The real\_video condition yields 3.0--7.3\%, also below the real\_clean baselines, consistent with visual feature degradation beyond character-segmentation-based OCR. With only one camera, one position, and 150~images, these results provide directional evidence rather than a cross-device detection-protection conclusion. In still-frame tracking, HOTA drops from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.6--12.1\% to 4.4--6.5\%. The real\_clean baseline HOTA (14.2--15.8\%) is itself depressed by the still-frame link, far below native-image levels, compressing the room for further decrease. The still-frame procedure cannot substitute for continuous-video tracking.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/real_detection_drop.pdf}
+\caption{Real-capture detection: mAP50 drop for four detectors under protected conditions.}
+\label{fig:supp_real_det_drop}
+\end{figure}
+
+\section{Software Detection and Tracking Simulation}
+\label{sec:supp_sim_detection}
+
+Supplementary simulations were run on COCO val2017~\cite{b_coco2014} and MOT17~\cite{b_mot16}. The four detectors are YOLO26x~\cite{b_yolo26}, RT-DETR-x~\cite{b_rtdetr2024}, Faster R-CNN~\cite{b_fasterrcnn2015}, and RetinaNet~\cite{b_retinanet2017}. The COCO simulation used only 8~images, positioned as implementation pipeline diagnostics (Table~\ref{tab:supp_coco_sim}). The MOT simulation covers 7~sequences totaling 5,316~frames, using a ByteTrack-inspired~\cite{b_bytetrack2022} greedy association fallback implementation (Table~\ref{tab:supp_mot_sim}). Because TrackEval failed to run, MOTA/MOTP/IDF1 in the table come from an in-project approximate evaluation backend and are not equivalent to official ByteTrack/TrackEval results.
+
+\begin{table}[!t]
+\caption{COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images; Not a Dataset-Level Performance Estimate)}
+\label{tab:supp_coco_sim}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5.8pt}
+\begin{tabular}{llccc}
+\toprule
+Detector & Condition & mAP & mAP50 & AR \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & clean & 48.1\% & 58.3\% & 51.0\% \\
+ & single subframe & 0.0\% & 0.0\% & 0.0\% \\
+ & temporal avg. & 14.3\% & 18.3\% & 14.3\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & clean & 47.1\% & 58.7\% & 53.4\% \\
+ & single subframe & 5.2\% & 6.0\% & 5.2\% \\
+ & temporal avg. & 16.8\% & 23.7\% & 17.9\% \\
+\midrule
+\multirow{3}{*}{Faster R-CNN}
+ & clean & 38.2\% & 52.7\% & 43.6\% \\
+ & single subframe & 3.0\% & 4.4\% & 3.0\% \\
+ & temporal avg. & 11.1\% & 16.5\% & 11.1\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & clean & 33.2\% & 47.1\% & 35.3\% \\
+ & single subframe & 3.3\% & 4.2\% & 3.3\% \\
+ & temporal avg. & 9.6\% & 13.2\% & 9.6\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!t]
+\caption{MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; In-Project Approximate Metrics; 5,316 Frames)}
+\label{tab:supp_mot_sim}
+\centering
+\footnotesize
+\begin{tabular}{llccc}
+\toprule
+Detector & Condition & MOTA & MOTP & IDF1 \\
+\midrule
+\multirow{3}{*}{YOLO26x}
+ & clean & 31.1\% & 81.7\% & 27.1\% \\
+ & single subframe & 0.1\% & 74.8\% & 0.1\% \\
+ & temporal avg. & 9.1\% & 78.1\% & 12.0\% \\
+\midrule
+\multirow{3}{*}{RT-DETR-x}
+ & clean & 24.1\% & 79.8\% & 38.2\% \\
+ & single subframe & $-$2.3\% & 73.2\% & 5.4\% \\
+ & temporal avg. & $-$11.4\% & 75.0\% & 14.7\% \\
+\midrule
+\multirow{3}{*}{Faster R-CNN}
+ & clean & 3.8\% & 77.9\% & 35.6\% \\
+ & single subframe & $-$2.5\% & 71.2\% & 4.5\% \\
+ & temporal avg. & $-$2.7\% & 73.2\% & 14.0\% \\
+\midrule
+\multirow{3}{*}{RetinaNet}
+ & clean & $-$5.4\% & 77.1\% & 30.5\% \\
+ & single subframe & 0.4\% & 70.6\% & 2.7\% \\
+ & temporal avg. & $-$2.9\% & 73.8\% & 11.9\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On these 8~images, single-subframe mAP50 across four detectors is 0--6.0\%. This sample size is sufficient only to check trends, not to estimate COCO population performance. In the 5,316-frame approximate tracking results, single-subframe IDF1 is 0.1--5.4\%, though MOTA exhibits negative values and nonmonotonic behavior. Negative MOTA means the approximate backend's false-positive, false-negative, and identity-error penalties exceed the number of ground-truth objects; it is not a negative detection probability. Differences among YOLO26x, RT-DETR-x, Faster R-CNN, and RetinaNet may reflect architecture, confidence thresholds, proposal density, and interaction with the greedy associator, but this experiment does not isolate those factors. We therefore do not assign a causal mechanism to the cross-detector spread.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+\EOD
+
+\end{document}

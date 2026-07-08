@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex main"] 1783473038.84199 "main.aux" "main.bbl" "main" 1783473040.13901 0
+["bibtex main"] 1783483444.3186 "main.aux" "main.bbl" "main" 1783483445.66117 0
   "./IEEEtran.bst" 1783213627.24571 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "./refs.bib" 1783438135.0611 18302 44bc9d4b4116ed72c2d21c5ebcb34183 ""
-  "main.aux" 1783473039.49877 21635 df0d0aba15dc984b016a0c7401367ef5 "xelatex"
+  "./refs.bib" 1783482751.59708 18027 0b6ae5fb31a64264adb0f2edce9e15bd ""
+  "main.aux" 1783483444.91981 17666 07571c9f08c23d525c32542cd542006d "xelatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["xdvipdfmx"] 1783473039.75807 "main.xdv" "main.pdf" "main" 1783473040.14004 0
-  "main.xdv" 1783473039.49965 180800 24a93618ca214c38974c7fd5ab0d4b9e "xelatex"
+["xdvipdfmx"] 1783483445.2071 "main.xdv" "main.pdf" "main" 1783483445.66238 0
+  "main.xdv" 1783483444.92082 166420 ef0df9b9f291b78a8a5bcdb58b312368 "xelatex"
   (generated)
   "main.pdf"
   (rewritten before read)
-["xelatex"] 1783473038.96211 "main.tex" "main.xdv" "main" 1783473040.13908 0
+["xelatex"] 1783483444.43162 "main.tex" "main.xdv" "main" 1783483445.66144 0
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm" 1136768653 6672 e3ab9e37e925f3045c9005e6d1473d56 ""
@@ -88,24 +88,19 @@
   "/usr/local/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1757692162 5639813 410559aea4a1943278cf5e2fa819aadb ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "bullet.png" 1783213627.24663 430 e52d8fe748259de33fa611fdd6a099c1 ""
-  "figures/all_attackers.pdf" 1783213638.09975 30544 8e38338e61dc4e1632d7d8b1ec647d44 ""
-  "figures/antiocr_heatmap.pdf" 1783213638.10007 40218 466a5024535a0d4f8b17b02248bd352c ""
-  "figures/baselines_scatter.pdf" 1783307845.87925 46402 683acee8fb4c00ae0edbbffac3bbbde1 ""
   "figures/multiengine_ocr.pdf" 1783213638.12116 27750 5903be581018e78e30128d78f728f86a ""
-  "figures/readability_robustness_tradeoff.pdf" 1783394696.08687 30929 874e113a9806bba549e6e99d57f384d0 ""
   "figures/real_capture_bar.pdf" 1783394695.53059 30479 c0f0ba45a872425609af9ae9f4df31a1 ""
   "figures/real_capture_montage.pdf" 1783394694.59072 1056141 51ae4ca9e71c5143cdbfc1ed8dd8c318 ""
-  "figures/real_detection_drop.pdf" 1783213638.12364 32337 353d306a54031606a09cb4737dbf2bcf ""
   "figures/real_engine_ocr.pdf" 1783394696.60652 30180 df539e8a1fe9b26d9315b5c7db22f050 ""
   "figures/study_ratings_likert.pdf" 1783338289.35682 45134 fcf73c9dcffe045352c0ffcbce58f159 ""
   "figures/study_typing_paired.pdf" 1783338372.05998 35188 9bea892ecb3ac49d5c0456e15d158c6a ""
   "figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf" 1783307845.90733 44964 883ff5547a7871c74b05ae424b513f45 ""
   "figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf" 1783307845.91 128110 7ce06e1b7e53a39b861635599b07e435 ""
-  "ieeeaccess.cls" 1783213627.24535 51025 8bc97a5dab5f214746055d473aea1f85 ""
+  "ieeeaccess.cls" 1783482759.43809 51025 d9615b56cc593121d2775defdbf62c1c ""
   "logo.png" 1783213627.24679 9705 6ba9f1039498f006286d6457f067dc20 ""
-  "main.aux" 1783473039.49877 21635 df0d0aba15dc984b016a0c7401367ef5 "xelatex"
-  "main.bbl" 1783473038.96097 14915 2c5176ca909ff71b029da5b6874d6e06 "bibtex main"
-  "main.tex" 1783472810.32639 118728 a31a6b88c2bc4dafbf487fbd724f9303 ""
+  "main.aux" 1783483444.91981 17666 07571c9f08c23d525c32542cd542006d "xelatex"
+  "main.bbl" 1783483444.42919 12912 5f92c206c25a2a2ef4c2bf28fcb35b13 "bibtex main"
+  "main.tex" 1783483434.60566 110315 1e336d86d6cc5d95edce03935a695a6d ""
   "notaglinelogo.png" 1783213627.24693 3150 e273b7aed356b5f76c6d0b072166d68c ""
   "t1-formata-bold.tfm" 1783213630.51158 1420 e49288584c4b6aedcaf3809078fdde27 ""
   "t1-formata-condmedium.tfm" 1783213630.51186 1412 69835d9272a4cf9349297208bcc60045 ""
