@@ -7,7 +7,7 @@
 
 \begin{document}
 \history{Supplementary material for review.}
-\doi{10.1109/ACCESS.XXXX.DOI}
+\doi{}
 
 \title{Supplementary Material: Detection and Tracking Diagnostics for Temporal Pixel Masking}
 \author{Supplementary material for the submitted manuscript}
@@ -20,10 +20,10 @@ This supplement preserves the object-detection and tracking diagnostics that wer
 \section{Real-Capture Object Detection and Tracking}
 \label{sec:supp_real_detection}
 
-To probe whether the temporal degradation transfers beyond text, we ran an exploratory detection/tracking stress test within the same camera link. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. Detection uses real\_clean (unprotected capture through the same link) as reference (Table~\ref{tab:supp_real_coco}). Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture rather than continuous video synchronization (Table~\ref{tab:supp_real_mot}); the associator is a greedy-fallback implementation inspired by ByteTrack~\cite{b_bytetrack2022}, not official ByteTrack. The real\_clean reference partially controls for link degradation, but exposure interactions with the protected display may persist.
+To probe whether image degradation extends beyond text, we ran an exploratory detection/tracking stress test within the same camera link. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. The protected condition uses the $n=4$ mask+noise profile without stripe/glyph overlays or inversion. The \texttt{real\_clean} reference is an unprotected 31.25-ms capture, \texttt{real\_short} is one protected 3.91-ms capture selected from a three-frame burst, and \texttt{real\_video} is the mean of 150 protected 3.91-ms frames acquired at nominally 60\,fps. Consequently, protection and exposure are not isolated in the clean-versus-short comparison. Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture rather than continuous video synchronization (Table~\ref{tab:supp_real_mot}); the associator is a greedy-fallback implementation inspired by ByteTrack~\cite{b_bytetrack2022}, not official ByteTrack.
 
 \begin{table}[!t]
-\caption{Real-Capture COCO Detection (150 Images; real\_clean = Unprotected Capture Baseline)}
+\caption{Real-Capture COCO Detection (150 Images; \texttt{real\_clean}: Unprotected 31.25-ms Capture; \texttt{real\_short}: Protected 3.91-ms Capture; \texttt{real\_video}: Mean of 150 Protected 3.91-ms Frames)}
 \label{tab:supp_real_coco}
 \centering
 \footnotesize
@@ -86,7 +86,7 @@ Detector & Condition & HOTA & IDF1 \\
 \end{tabular}
 \end{table}
 
-Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Fig.~\ref{fig:supp_real_det_drop}), relative decreases exceeding 85\%. The real\_video condition yields 3.0--7.3\%, also below the real\_clean baselines, consistent with visual feature degradation beyond character-segmentation-based OCR. With only one camera, one position, and 150~images, these results provide directional evidence rather than a cross-device detection-protection conclusion. In still-frame tracking, HOTA drops from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.6--12.1\% to 4.4--6.5\%. The real\_clean baseline HOTA (14.2--15.8\%) is itself depressed by the still-frame link, far below native-image levels, compressing the room for further decrease. The still-frame procedure cannot substitute for continuous-video tracking.
+Across the four detectors, mAP50 is 39.2--50.2\% for \texttt{real\_clean}, 1.6--5.8\% for \texttt{real\_short}, and 3.0--7.3\% for \texttt{real\_video} (Fig.~\ref{fig:supp_real_det_drop}). These differences are descriptive diagnostics, not protection effects, because the unprotected and protected conditions use different exposures and no luminance-matched static control was captured. In still-frame tracking, HOTA is 14.2--15.8\% for \texttt{real\_clean} and 5.1--8.7\% for \texttt{real\_short}; IDF1 is 9.6--12.1\% and 4.4--6.5\%, respectively. The clean baseline is itself depressed by the still-frame camera link, and the procedure cannot substitute for continuous-video tracking.
 
 \begin{figure}[!t]
 \centering

@@ -3,7 +3,9 @@
 OCR/VLM 全量评估为人工跑；此处只验证实验赖以成立的帧装配与趋势自洽。
 """
 
+import json
 from collections import defaultdict
+from pathlib import Path
 
 import numpy as np
 
@@ -11,6 +13,9 @@ import experiments.anti_ocr_profile_ablation as ab
 from src.attack.camera_simulator import CameraSimulator
 from src.core.subframe_composer import SubframeComposer
 from src.demo.playback_demo import extract_text_saliency_mask, make_demo_document
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _setup(n=4, cycles=4):
@@ -53,6 +58,58 @@ def test_build_frame_sequence_deployed_includes_weak_inversion():
     assert meta["insert_inversion"] is True
     assert meta["per_cycle_slots"] == 5
     assert meta["inversion_alpha"] == ab.DEPLOYED_INVERSION_ALPHA
+
+
+def test_profile_conditions_include_inversion_for_both_composite_profiles():
+    conditions = {label: inversion for label, _, _, _, inversion in ab.PROFILE_CONDITIONS}
+
+    assert conditions["strong@deployed"] == ab.DEPLOYED_INVERSION_ALPHA
+    assert conditions["capture_hardened"] == ab.DEPLOYED_INVERSION_ALPHA
+
+
+def test_manuscript_reconstruction_metrics_match_canonical_profile_result():
+    report = json.loads(
+        (ROOT / "experiments" / "results" / "anti_ocr_profile_ablation.json").read_text()
+    )
+    detail = report["detail"]
+    deployed = detail["block1/strong@deployed"]
+    hardened = detail["block1/capture_hardened"]
+    manuscript = (ROOT.parent / "paper" / "main.tex").read_text(encoding="utf-8")
+
+    assert (
+        f"full-cycle SSIM is {hardened['ssim']['mean']:.3f} "
+        f"versus {deployed['ssim']['mean']:.3f}"
+    ) in manuscript
+    assert (
+        f"$\\Delta E_{{00}}$ is {hardened['delta_e']['mean']:.2f} "
+        f"versus {deployed['delta_e']['mean']:.2f}"
+    ) in manuscript
+
+
+def test_inversion_slot_failure_is_disclosed_from_canonical_profile_result():
+    report = json.loads(
+        (ROOT / "experiments" / "results" / "anti_ocr_profile_ablation.json").read_text()
+    )
+    hardened = report["detail"]["block1/capture_hardened"]
+    manuscript = (ROOT.parent / "paper" / "main.tex").read_text(encoding="utf-8")
+    experiment_report = (
+        ROOT / "experiments" / "results" / "experiment_results_report.md"
+    ).read_text(encoding="utf-8")
+
+    attack_char = hardened["inversion_frame_attack_char"]["mean"] * 100
+    attack_exact = hardened["inversion_frame_attack_exact"]["mean"] * 100
+    best_char = hardened["best_observed_char"]["mean"] * 100
+
+    assert (
+        f"inversion frame recovers {attack_char:.1f}\\% character accuracy on average "
+        f"and yields {attack_exact:.1f}\\% exact match"
+    ) in manuscript
+    assert f"{best_char:.1f}\\% best-observed digital recovery" in manuscript
+    assert "not a worst-case security bound" in manuscript
+    assert (
+        f"反色单槽攻击可恢复至 {attack_char:.1f}% 字符准确率"
+        f"（exact match 为 {attack_exact:.1f}%）"
+    ) in experiment_report
 
 
 def test_strong_overlay_disrupts_reconstruction_more_than_off():

@@ -87,7 +87,13 @@ PROFILE_CONDITIONS = [
         DEPLOYED_GLYPH_ALPHA,
         DEPLOYED_INVERSION_ALPHA,
     ),
-    ("capture_hardened", "capture_hardened", None, None, None),
+    (
+        "capture_hardened",
+        "capture_hardened",
+        None,
+        None,
+        DEPLOYED_INVERSION_ALPHA,
+    ),
 ]
 
 # Block 2 grid (profile=strong). Includes the deployed (0.10, 0.12) cell and the
