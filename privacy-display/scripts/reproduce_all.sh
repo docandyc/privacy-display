@@ -123,6 +123,7 @@ if [[ "$RUN_FULL_OFFLINE" -eq 1 ]]; then
   run_python experiments/screen_privacy_baselines.py --samples-per-category 20 --max-samples 120
   run_python experiments/brightness_compensation_ablation.py --samples-per-category 20 --max-samples 120
   run_python experiments/mask_granularity_ablation.py --samples-per-category 20 --max-samples 120
+  run_python experiments/anti_ocr_profile_ablation.py --max-samples 16
   # epsilon sweep (8 budgets) and seed sweep (10 seeds) carry an extra inner
   # multiplier, so use a stratified subset to keep runtime bounded.
   run_python experiments/noise_epsilon_sweep.py --samples-per-category 5 --max-samples 60
@@ -164,6 +165,10 @@ if [[ "$RUN_VLM_LIVE" -eq 1 ]]; then
   run_python experiments/vlm_model_ablation.py --samples-per-category 3
 fi
 
+run_python experiments/analyze_paper_ocr_clusters.py
+run_python experiments/analyze_sensitive_field_recovery.py
+run_python experiments/audit_real_capture_design.py
+run_python experiments/analyze_vlm_missing_response_bounds.py
 run_python experiments/publication_summary.py
 run_python experiments/reproducibility_manifest.py
 

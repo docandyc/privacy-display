@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-07-04T10:18:03.227503+00:00",
+  "generated_at_utc": "2026-07-10T08:38:49.006657+00:00",
   "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
   "git": {
-    "commit": "742fb92aa6e3a6daf914aec04f16eb2fc46671af",
+    "commit": "15acb3fbcdfcb054c68f17c26a5ace52f4399b4c",
     "branch": "master",
     "dirty": true
   },
@@ -236,6 +236,12 @@
       "expected": "experiments/results/mask_granularity_ablation.json"
     },
     {
+      "name": "anti_ocr_profile_ablation",
+      "command": "python experiments/anti_ocr_profile_ablation.py --max-samples 16",
+      "purpose": "Measure profile-level integration recovery and digital reconstruction quality.",
+      "expected": "experiments/results/anti_ocr_profile_ablation.json"
+    },
+    {
       "name": "seed_sensitivity",
       "command": "python experiments/seed_sensitivity.py --seeds 10 --samples-per-category 5 --max-samples 60",
       "purpose": "Confirm metrics are PRNG-seed-invariant across independent keys.",
@@ -317,6 +323,54 @@
         "experiments/results_d*_final/real_capture_ocr.json",
         "experiments/results_d1.5_a0_detection/results",
         "experiments/results_d1.5_a0_detection/captures/mot_MOT17-09-FRCNN"
+      ]
+    },
+    {
+      "name": "paper_ocr_cluster_analysis",
+      "command": "python experiments/analyze_paper_ocr_clusters.py",
+      "purpose": "Regenerate the matched common-setting and capture-cluster OCR summaries used by the manuscript.",
+      "expected": "experiments/results/paper_ocr_clustered_stats.json and paper_ocr_clustered_stats.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json"
+      ]
+    },
+    {
+      "name": "sensitive_field_recovery",
+      "command": "python experiments/analyze_sensitive_field_recovery.py",
+      "purpose": "Score explicit high-value-field recovery from the versioned annotation manifest.",
+      "expected": "experiments/results/sensitive_field_recovery.json and sensitive_field_recovery.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json",
+        "experiments/config/real_capture_sensitive_fields.json"
+      ]
+    },
+    {
+      "name": "real_capture_design_audit",
+      "command": "python experiments/audit_real_capture_design.py",
+      "purpose": "Audit acquisition order, matched geometries, corpus composition, and known/unknown capture controls.",
+      "expected": "experiments/results/real_capture_design_audit.json and real_capture_design_audit.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json"
+      ]
+    },
+    {
+      "name": "vlm_missing_response_bounds",
+      "command": "python experiments/analyze_vlm_missing_response_bounds.py",
+      "purpose": "Regenerate lower/upper outcome bounds for VLM cells with failed calls.",
+      "expected": "experiments/results/vlm_missing_response_bounds.json and vlm_missing_response_bounds.md",
+      "requires_data": [
+        "experiments/results/real_capture_vlm.json"
+      ]
+    },
+    {
+      "name": "real_capture_preprocessing_tesseract",
+      "command": "python experiments/real_capture_preprocessing_attack.py --engines tesseract --json-out experiments/results/real_capture_preprocessing_attack_tesseract.json --md-out experiments/results/real_capture_preprocessing_attack_tesseract.md",
+      "purpose": "Regenerate the fixed-grid Tesseract preprocessing-oracle report from its resumable cell matrix.",
+      "expected": "experiments/results/real_capture_preprocessing_attack_tesseract.json and real_capture_preprocessing_attack_tesseract.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json",
+        "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
+        "referenced capture image files when matrix cells are missing"
       ]
     },
     {
@@ -652,8 +706,8 @@
     {
       "path": "experiments/results/screen_privacy_baselines.json",
       "exists": true,
-      "sha256": "4fe9cb1d91d6d393c4120eca0699c57f1c3d1caf5c5317535c32539fe9ea8119",
-      "bytes": 56280
+      "sha256": "22419a16e21cae0ab4ed54175e4ae72babaec50c5d1726dd93bd8e7b0489d75f",
+      "bytes": 480792
     },
     {
       "path": "experiments/results/vlm_prompt_ablation.json",
@@ -686,6 +740,78 @@
       "bytes": 7503
     },
     {
+      "path": "experiments/results/anti_ocr_profile_ablation.json",
+      "exists": true,
+      "sha256": "fdd91060eaf047de83f215086e89e697aa4db4c7966edc266131cbe9c17795cf",
+      "bytes": 70400
+    },
+    {
+      "path": "experiments/results/paper_ocr_clustered_stats.json",
+      "exists": true,
+      "sha256": "9ca8a693c9b870f64cdcc915465b20248f2bdeb6e43825b73e345441424b1d0f",
+      "bytes": 39367
+    },
+    {
+      "path": "experiments/results/paper_ocr_clustered_stats.md",
+      "exists": true,
+      "sha256": "0db18189229a511a531f8b5e51cb0e774a2b9f6b92228e4b1003f44715526fa5",
+      "bytes": 7080
+    },
+    {
+      "path": "experiments/results/sensitive_field_recovery.json",
+      "exists": true,
+      "sha256": "2f162b692e3249a985398e2b1da7147e54c35a103a4e0ae91efacebeb521138f",
+      "bytes": 6949
+    },
+    {
+      "path": "experiments/results/sensitive_field_recovery.md",
+      "exists": true,
+      "sha256": "7a56e3ac9adf08ea61b7b7d497e6c65f4917e867071a9bc1c3d2a937c036adfa",
+      "bytes": 1034
+    },
+    {
+      "path": "experiments/results/real_capture_design_audit.json",
+      "exists": true,
+      "sha256": "6898730431685cafd7981b2759aff04f2185b043cbb09b0863910b149b792cbc",
+      "bytes": 3635
+    },
+    {
+      "path": "experiments/results/real_capture_design_audit.md",
+      "exists": true,
+      "sha256": "af4fad121f9963bf9153db5d5a2365e5d76035ee2dbad8b3bd69282caab4dc84",
+      "bytes": 955
+    },
+    {
+      "path": "experiments/results/vlm_missing_response_bounds.json",
+      "exists": true,
+      "sha256": "32ff34c835afe3ec676d9156d82f39ddcc9eda493285139668b529fe8444b656",
+      "bytes": 33768
+    },
+    {
+      "path": "experiments/results/vlm_missing_response_bounds.md",
+      "exists": true,
+      "sha256": "85c288bd6c8c896c2b5914310026166f3355ac2dc1555fc41dbf7b74e1ad1fa9",
+      "bytes": 7217
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_tesseract.json",
+      "exists": true,
+      "sha256": "c745388b1969a9d9287b78358bbbbb6b5711ecc95b95dd951a8874aac42314c7",
+      "bytes": 3691507
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_tesseract.md",
+      "exists": true,
+      "sha256": "c7d241c53577948f3d1cdc7e5c754a671398bffa7d991a0bee7ed59f19ab2c25",
+      "bytes": 1342
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
+      "exists": true,
+      "sha256": "44dc7d88cde8734720511144ef01f91e39c9f9d30b0bf06025933b14245059e3",
+      "bytes": 7536169
+    },
+    {
       "path": "experiments/results/seed_sensitivity.json",
       "exists": true,
       "sha256": "389c291091dc810fb6727a123881f1d7555a365ca5297e7fe5b093672afae7aa",
@@ -706,14 +832,14 @@
     {
       "path": "experiments/results/publication_summary.json",
       "exists": true,
-      "sha256": "89df3dccec42af61bf1bc9b8f9106b0608120bfae6fbf807ec099295f82e4104",
-      "bytes": 12824899
+      "sha256": "84227db029bce5ac06a0f040c109be8d1fe3f283635931b0ad2afee1b77a44b6",
+      "bytes": 12824988
     },
     {
       "path": "experiments/results/publication_summary.md",
       "exists": true,
-      "sha256": "c69d927249a57adcc692a168ecb47cd51f104260ff8797a6c988a4248f9522d8",
-      "bytes": 31537
+      "sha256": "d1b9a296fde31092fe247ca34d2957bf48f2c085504b626c9d22d356e8d457ce",
+      "bytes": 31539
     },
     {
       "path": "experiments/results/vlm_qwen3_siliconflow.json",
@@ -726,8 +852,8 @@
     {
       "path": "README.md",
       "exists": true,
-      "sha256": "a7d8cc45b78ad77e2262187098eed26e4f934eb8ced6d0974430ed05a49bcc4c",
-      "bytes": 23394
+      "sha256": "e5445a11c697898d4dc0089c509e88a68e2ef0c1a67f0ad9b1b1919c94b1c005",
+      "bytes": 15132
     },
     {
       "path": "docs/detection_suite_server.md",
@@ -762,8 +888,8 @@
     {
       "path": "scripts/reproduce_all.sh",
       "exists": true,
-      "sha256": "fa0d2b479efc5b27d3c8e51f1ef860bcb328dec8e909b1e9d09cd408763d7540",
-      "bytes": 6281
+      "sha256": "396efb67e0f56901a9d44a3e00478c16fe65895bc75e1b80bd677b52c4b1d625",
+      "bytes": 6578
     },
     {
       "path": "scripts/download_coco_val2017.sh",
@@ -982,6 +1108,48 @@
       "bytes": 7934
     },
     {
+      "path": "experiments/anti_ocr_profile_ablation.py",
+      "exists": true,
+      "sha256": "aead6857da1d34b843405a436fc97e677e592284ff13ab1ee6a43ad5bda0f814",
+      "bytes": 25070
+    },
+    {
+      "path": "experiments/analyze_paper_ocr_clusters.py",
+      "exists": true,
+      "sha256": "88a3b4c87d4043e32b46a72ba3bcc235b12d788eb4aaf85fbab63b5ba623e252",
+      "bytes": 22432
+    },
+    {
+      "path": "experiments/analyze_sensitive_field_recovery.py",
+      "exists": true,
+      "sha256": "4d040e7dcc7365c5ee44c97cc0b79c892a488c5b438f02ba6167bca5303ddbbb",
+      "bytes": 14048
+    },
+    {
+      "path": "experiments/audit_real_capture_design.py",
+      "exists": true,
+      "sha256": "31867ca986b0e77ed4a156a76ef4bed6d896843b1d4642f374aff6dbf55422ec",
+      "bytes": 9574
+    },
+    {
+      "path": "experiments/analyze_vlm_missing_response_bounds.py",
+      "exists": true,
+      "sha256": "4786a6a8fed75d64356564c201dd0a36faf525d07dee9f3fb90304806c46db22",
+      "bytes": 4324
+    },
+    {
+      "path": "experiments/real_capture_preprocessing_attack.py",
+      "exists": true,
+      "sha256": "3ac51b7876dd09cb356008c492adb50877384fe7f2782de37d4a4921a180626b",
+      "bytes": 31765
+    },
+    {
+      "path": "experiments/config/real_capture_sensitive_fields.json",
+      "exists": true,
+      "sha256": "e87897c876b49b3743fa6890ed7f08d221624bb8baddc624259e543a1c441250",
+      "bytes": 2120
+    },
+    {
       "path": "experiments/seed_sensitivity.py",
       "exists": true,
       "sha256": "a02de4fc100e018f677948bb1c98591612a45d2e1433f71ca1de21aa5a042fb6",
@@ -1050,8 +1218,8 @@
     {
       "path": "src/evaluation/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "cfc9c039083f3204c7be647c329329adbae055caea176f99bf2e634502f86c6b",
-      "bytes": 25542
+      "sha256": "ecdcf61ef19451838864ae65318fbb8b7ae3e8b6d18d202d4e1c091b527262a0",
+      "bytes": 29589
     },
     {
       "path": "src/evaluation/coco_eval.py",
@@ -1086,8 +1254,8 @@
     {
       "path": "src/attack/ocr_evaluator.py",
       "exists": true,
-      "sha256": "200b6273acfb5f7b3ed745d2b24b845cb1fe5c94be7bda25fd5b525b01394440",
-      "bytes": 17451
+      "sha256": "ce82bdbb247e62969a12faad228f3647efcb3f25acad70ffe02e271a32753167",
+      "bytes": 17334
     },
     {
       "path": "src/attack/vlm_evaluator.py",

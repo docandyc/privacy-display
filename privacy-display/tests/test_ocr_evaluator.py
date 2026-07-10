@@ -88,7 +88,7 @@ def test_tesseract_detection_uses_windows_program_files_path(monkeypatch):
     monkeypatch.delenv("TESSERACT_CMD", raising=False)
     monkeypatch.delenv("TESSERACT_EXE", raising=False)
     monkeypatch.setattr("src.attack.ocr_evaluator.shutil.which", lambda name: None, raising=False)
-    monkeypatch.setattr("src.attack.ocr_evaluator.os.name", "nt")
+    monkeypatch.setattr(OCREvaluator, "_is_windows", classmethod(lambda cls: True))
     monkeypatch.setattr(
         "src.attack.ocr_evaluator.Path.exists",
         lambda self: str(self) == str(expected),
@@ -160,6 +160,14 @@ def test_sensitive_tokens_focus_on_structured_fields():
     assert "sk-test-4821" in tokens
     assert "user@mail.com" in tokens
     assert "quick" not in tokens
+
+
+def test_sensitive_tokens_exclude_ordinary_mixed_case_and_long_words():
+    tokens = _sensitive_tokens(
+        "Part Writing Directions For With increasing application technology"
+    )
+
+    assert tokens == []
 
 
 def test_sensitive_token_recall_and_protection_metrics():

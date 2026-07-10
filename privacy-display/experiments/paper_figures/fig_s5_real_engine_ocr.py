@@ -21,7 +21,7 @@ PROFILES = [
     ("mask_only", "Mask only"),
     ("mask_noise", "Mask + noise"),
     ("strong", "Strong"),
-    ("deployed", "Deployed"),
+    ("deployed", "Readability-\npriority"),
     ("capture_hardened", "High-\nsuppression"),
 ]
 

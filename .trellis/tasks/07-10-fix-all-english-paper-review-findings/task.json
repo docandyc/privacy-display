@@ -3,7 +3,7 @@
   "name": "fix-all-english-paper-review-findings",
   "title": "Fix all English paper pre-submission review findings",
   "description": "Fix all current English manuscript review findings using existing evidence; reframe hardware-dependent gaps without fabricating results.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": "paper+analysis",
   "package": null,

@@ -395,7 +395,7 @@ Recommended: n=6 @ 360.0Hz (FPI 0.0333, single-frame MI 0.249)
 | strong_attack_extra | available | single_subframe: char recovery 0.0% (0.0%-0.0%), exact 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
 | adaptive_attack_ablation | available | raw_subframe: char recovery 0.2% (0.0%-0.4%), exact 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
 | camera_pipeline_ablation | available | clean_subframe: char recovery 0.1% (0.0%-0.2%), exact 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
-| screen_privacy_baselines | available | unprotected: char recovery 92.9% (87.8%-97.2%), exact 66.7% (33.3%-88.9%), leak 100.0%, errors 0 |
+| screen_privacy_baselines | available | unprotected: char recovery 94.5% (92.8%-96.0%), exact 88.2% (81.4%-94.1%), leak 100.0%, errors 0 |
 | vlm_prompt_ablation | available | strict_transcription: char recovery 72.7% (58.1%-85.6%), exact 75.0% (61.1%-88.9%), leak 0.0%, errors 0 |
 | noise_epsilon_sweep | available | eps_0.0000: char recovery 0.0% (0.0%-0.0%), leak 0.0%, errors 0 |
 | vlm_model_ablation | available | Qwen/Qwen3-VL-32B-Instruct: char recovery 96.3% (92.5%-99.2%), leak 0.0%, errors 1 |
@@ -482,11 +482,11 @@ Recommended: n=6 @ 360.0Hz (FPI 0.0333, single-frame MI 0.249)
 
 | Condition | Metric | Char recovery | Exact match | Worst-case char | Inv-frame char | Leak rate char>=20% | Errors |
 |---|---|---:|---:|---:|---:|---:|---:|
-| unprotected |  | 92.9% (87.8%-97.2%) | 66.7% (33.3%-88.9%) |  |  | 100.0% | 0 |
-| dim_50pct |  | 92.9% (87.8%-97.2%) | 66.7% (33.3%-88.9%) |  |  | 100.0% | 0 |
-| gaussian_blur |  | 52.6% (30.2%-74.5%) | 11.1% (0.0%-33.3%) |  |  | 77.8% | 0 |
-| pixelate_12px |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
-| privacy_filter_offaxis_proxy |  | 84.7% (64.1%-96.8%) | 44.4% (11.1%-77.8%) |  |  | 88.9% | 0 |
+| unprotected |  | 94.5% (92.8%-96.0%) | 88.2% (81.4%-94.1%) |  |  | 100.0% | 0 |
+| dim_50pct |  | 94.5% (92.8%-96.0%) | 89.2% (83.3%-95.1%) |  |  | 100.0% | 0 |
+| gaussian_blur |  | 71.7% (64.1%-78.8%) | 41.2% (31.4%-51.0%) |  |  | 80.4% | 0 |
+| pixelate_12px |  | 0.8% (0.3%-1.5%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
+| privacy_filter_offaxis_proxy |  | 94.2% (91.2%-96.6%) | 90.2% (83.3%-96.1%) |  |  | 98.0% | 0 |
 | temporal_mask_single_subframe |  | 0.0% (0.0%-0.0%) | 0.0% (0.0%-0.0%) |  |  | 0.0% | 0 |
 
 #### vlm_prompt_ablation
@@ -542,7 +542,7 @@ Recommended: n=6 @ 360.0Hz (FPI 0.0333, single-frame MI 0.249)
 | block1/off | temporal_average | 93.0% (88.4%-96.9%) | 81.2% (62.5%-100.0%) | 93.0% | 0.0% | 0.0% | 0 |
 | block1/strong@overlay | temporal_average | 90.1% (84.5%-94.8%) | 43.8% (18.8%-62.7%) | 92.5% | 0.0% | 0.0% | 0 |
 | block1/strong@deployed | temporal_average | 87.9% (80.8%-93.8%) | 50.0% (25.0%-75.0%) | 94.0% | 93.0% | 0.0% | 0 |
-| block1/capture_hardened | temporal_average | 49.1% (30.4%-66.6%) | 6.2% (0.0%-18.8%) | 49.1% | 0.0% | 0.0% | 0 |
+| block1/capture_hardened | temporal_average | 56.6% (35.3%-75.4%) | 6.2% (0.0%-18.8%) | 93.0% | 93.0% | 0.0% | 0 |
 | block2/s0.00_g0.00 | temporal_average | 93.0% (88.4%-96.9%) | 81.2% (62.5%-100.0%) |  |  | 0.0% | 0 |
 | block2/s0.10_g0.12 | temporal_average | 90.1% (84.5%-94.8%) | 43.8% (18.8%-62.7%) |  |  | 0.0% | 0 |
 | block2/s0.18_g0.22 | temporal_average | 82.4% (74.6%-88.7%) | 6.2% (0.0%-18.8%) |  |  | 0.0% | 0 |

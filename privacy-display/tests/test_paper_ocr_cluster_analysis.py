@@ -5,11 +5,13 @@ import pytest
 from experiments.analyze_paper_ocr_clusters import (
     DEFAULT_RESAMPLES,
     DEFAULT_SEED,
+    _descriptive_group_means,
     bootstrap_cluster_mean_ci,
     build_cluster_report,
     collapse_best_of_engines,
     derive_capture_unit,
     paired_contrast,
+    render_markdown,
 )
 
 
@@ -158,3 +160,37 @@ def test_build_cluster_report_contains_required_json_contract(tmp_path):
     assert contrast["matched_unit_count"] == 2
     assert contrast["resampling_unit"] == "content_item"
     assert "original_short_minus_high_suppression_short" in report["contrasts"]
+
+    primary = report["primary_common_setting"]
+    assert primary["excluded_positions"] == ["d0.5_a15"]
+    assert primary["matched_unit_count_per_profile"] == 2
+    assert primary["profiles"]["original"]["char_accuracy_mean"] == pytest.approx(0.85)
+    assert primary["profiles"]["deployed"]["char_accuracy_mean"] == pytest.approx(0.15)
+    assert primary["profiles"]["high_suppression"]["char_accuracy_mean"] == pytest.approx(0.035)
+    assert report["all_available_capture_sensitivity"]["deployed"]["capture_count"] == 2
+
+    markdown = render_markdown(report)
+    assert "Matched baseline (%)" in markdown
+    assert "Matched treatment (%)" in markdown
+    assert "| 85.0 | 15.0 |" in markdown
+
+
+def test_descriptive_sensitive_token_mean_excludes_rows_without_tokens():
+    token_row = _row(
+        capture_id=_capture_id("deployed", "account_00"),
+        ablation="deployed",
+        char=0.3,
+    )
+    token_row["sensitive_token_recall"] = 1.0
+    no_token_row = _row(
+        capture_id=_capture_id("deployed", "paragraph_00"),
+        ablation="deployed",
+        char=0.3,
+    )
+    no_token_row["sensitive_token_count"] = 0
+    no_token_row["sensitive_token_recall"] = 0.0
+
+    summary = _descriptive_group_means([token_row, no_token_row])
+
+    assert summary["deployed|short"]["sensitive_token_recall_mean"] == pytest.approx(1.0)
+    assert summary["deployed|short"]["sensitive_token_sample_count"] == 1

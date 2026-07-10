@@ -8,6 +8,7 @@ OCR 准确率评估器
 import os
 from pathlib import Path
 import shutil
+import ntpath
 
 import numpy as np
 import re
@@ -84,9 +85,7 @@ def _sensitive_tokens(text: str) -> list[str]:
             continue
         has_digit = any(ch.isdigit() for ch in stripped)
         has_special = any(ch in stripped for ch in "@:/.$¥?&=%+_-")
-        has_mixed_case = any(ch.islower() for ch in stripped) and any(ch.isupper() for ch in stripped)
-        is_long_id = len(stripped) >= 8 and any(ch.isalpha() for ch in stripped)
-        if has_digit or has_special or has_mixed_case or is_long_id:
+        if has_digit or has_special:
             norm = _normalize_for_match(stripped)
             if norm and norm not in out:
                 out.append(norm)
@@ -142,6 +141,10 @@ class OCREvaluator:
         return os.environ.get(name, "").strip().casefold() in {"1", "true", "yes", "on"}
 
     @classmethod
+    def _is_windows(cls) -> bool:
+        return os.name == "nt"
+
+    @classmethod
     def _candidate_tesseract_commands(cls) -> list[str]:
         candidates: list[str] = []
         for env_name in cls.TESSERACT_ENV_VARS:
@@ -151,7 +154,7 @@ class OCREvaluator:
         path_cmd = shutil.which("tesseract")
         if path_cmd:
             candidates.append(path_cmd)
-        if os.name == "nt":
+        if cls._is_windows():
             for base in (
                 os.environ.get("ProgramFiles"),
                 os.environ.get("ProgramFiles(x86)"),
@@ -159,7 +162,7 @@ class OCREvaluator:
                 r"C:\Program Files (x86)",
             ):
                 if base:
-                    candidates.append(str(Path(base) / "Tesseract-OCR" / "tesseract.exe"))
+                    candidates.append(ntpath.join(base, "Tesseract-OCR", "tesseract.exe"))
 
         seen: set[str] = set()
         unique: list[str] = []

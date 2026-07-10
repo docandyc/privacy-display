@@ -41,6 +41,7 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
     assert any(command["name"] == "component_ablation" for command in manifest["commands"])
     assert any(command["name"] == "adaptive_attack_ablation" for command in manifest["commands"])
     for new_command in (
+        "anti_ocr_profile_ablation",
         "noise_epsilon_sweep",
         "brightness_compensation_ablation",
         "mask_granularity_ablation",
@@ -65,13 +66,41 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
     assert "experiments/results/mot_tracking_attack.json" in result_paths
     assert "experiments/results/real_capture_mot_capture_manifest.json" in result_paths
     assert "experiments/real_captures/coco_detection/capture_manifest.json" in result_paths
+    assert "experiments/results/anti_ocr_profile_ablation.json" in result_paths
+    for paper_review_result in (
+        "experiments/results/paper_ocr_clustered_stats.json",
+        "experiments/results/sensitive_field_recovery.json",
+        "experiments/results/real_capture_design_audit.json",
+        "experiments/results/vlm_missing_response_bounds.json",
+        "experiments/results/real_capture_preprocessing_attack_tesseract.json",
+        "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
+    ):
+        assert paper_review_result in result_paths
     source_paths = {record["path"] for record in default_manifest["source_files"]}
     assert "experiments/finalize_real_capture_artifacts.py" in source_paths
+    assert "experiments/anti_ocr_profile_ablation.py" in source_paths
+    for paper_review_source in (
+        "experiments/analyze_paper_ocr_clusters.py",
+        "experiments/analyze_sensitive_field_recovery.py",
+        "experiments/audit_real_capture_design.py",
+        "experiments/analyze_vlm_missing_response_bounds.py",
+        "experiments/real_capture_preprocessing_attack.py",
+        "experiments/config/real_capture_sensitive_fields.json",
+    ):
+        assert paper_review_source in source_paths
     assert "scripts/run_real_capture_ocr_all.ps1" in source_paths
     assert "scripts/run_real_capture_detection_windows.bat" in source_paths
     assert any(command["name"] == "real_capture_coco_detection" for command in default_manifest["commands"])
     assert any(command["name"] == "real_capture_mot" for command in default_manifest["commands"])
     assert any(command["name"] == "real_capture_finalize" for command in default_manifest["commands"])
+    for paper_review_command in (
+        "paper_ocr_cluster_analysis",
+        "sensitive_field_recovery",
+        "real_capture_design_audit",
+        "vlm_missing_response_bounds",
+        "real_capture_preprocessing_tesseract",
+    ):
+        assert any(command["name"] == paper_review_command for command in default_manifest["commands"])
     model_live = next(c for c in manifest["commands"] if c["name"] == "vlm_model_ablation_live")
     assert model_live["requires_env"] == ["SILICONFLOW_API_KEY"]
     vlm_live = next(command for command in manifest["commands"] if command["name"] == "vlm_live")

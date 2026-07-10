@@ -100,3 +100,10 @@ Resolve the P0, P1, and P2 findings from the latest English-manuscript review wi
 * Preprocessing attack: `privacy-display/experiments/real_capture_preprocessing_attack.py`
 * Capture planning/order: `privacy-display/experiments/real_capture_ablation.py`
 * Prior overlapping task: `.trellis/tasks/07-09-fix-final-english-paper-review-findings/prd.md`
+
+## Baseline Record (2026-07-10)
+
+* Canonical OCR archive: `privacy-display/experiments/results/real_capture_ocr.json`
+* SHA-256: `c3a23b6b5597195bc1c1b27a24198008d14f86a17fb396c793d02008b472007c`
+* Focused baseline tests: 34 passed (`test_ocr_evaluator.py`, `test_paper_ocr_cluster_analysis.py`, and `test_real_capture_preprocessing_attack.py`).
+* The pre-existing Windows-path changes in `ocr_evaluator.py` and all other unrelated dirty files are preserved as user-owned concurrent work.

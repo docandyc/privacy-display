@@ -25,6 +25,8 @@ DEFAULT_INPUT = Path("experiments/results/real_capture_ocr.json")
 DEFAULT_JSON_OUTPUT = Path("experiments/results/paper_ocr_clustered_stats.json")
 DEFAULT_MD_OUTPUT = Path("experiments/results/paper_ocr_clustered_stats.md")
 MATCHING_RULE = "profile + attack + content_item + position + repeat_index"
+PRIMARY_PROFILES = ("original", "deployed", "high_suppression")
+PRIMARY_EXCLUDED_POSITIONS = ("d0.5_a15",)
 
 
 @dataclass(frozen=True)
@@ -299,6 +301,22 @@ def build_cluster_report(
         )
         for name, baseline, treatment, attack, exclude in contrast_specs
     }
+    primary = _matched_profile_summary(
+        best_rows,
+        profiles=PRIMARY_PROFILES,
+        attack="short",
+        exclude_positions=set(PRIMARY_EXCLUDED_POSITIONS),
+    )
+    descriptive = _descriptive_group_means(best_rows)
+    all_available = {}
+    for profile in PRIMARY_PROFILES:
+        summary = descriptive.get(f"{profile}|short", {})
+        all_available[profile] = {
+            "capture_count": int(summary.get("count", 0)),
+            "char_accuracy_mean": float(summary.get("char_accuracy_mean", 0.0)),
+            "exact_match_mean": float(summary.get("exact_match_mean", 0.0)),
+            "unit": "captured image after per-capture best-of-engine reduction",
+        }
 
     return {
         "schema_version": 1,
@@ -321,7 +339,9 @@ def build_cluster_report(
             "engine_rows": len(raw_rows),
             "best_of_capture_rows": len(best_rows),
         },
-        "descriptive_group_means": _descriptive_group_means(best_rows),
+        "primary_common_setting": primary,
+        "all_available_capture_sensitivity": all_available,
+        "descriptive_group_means": descriptive,
         "contrasts": contrasts,
     }
 
@@ -338,8 +358,8 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         "## Paired Character-Recovery Contrasts",
         "",
-        "| Contrast | Matched units | Clusters | Estimate (pp) | 95% CI (pp) | Unmatched baseline/treatment | Duplicate extra rows |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Contrast | Matched units | Clusters | Matched baseline (%) | Matched treatment (%) | Estimate (pp) | 95% CI (pp) | Unmatched baseline/treatment | Duplicate extra rows |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for name, contrast in report["contrasts"].items():
         ci = contrast["ci95_percent"]
@@ -351,6 +371,8 @@ def render_markdown(report: dict[str, Any]) -> str:
                 name.replace("_", " "),
                 str(contrast["matched_unit_count"]),
                 str(contrast["cluster_count"]),
+                f"{contrast['matched_baseline_mean'] * 100:.1f}",
+                f"{contrast['matched_treatment_mean'] * 100:.1f}",
                 f"{contrast['estimate_percent']:.1f}",
                 f"[{ci['low']:.1f}, {ci['high']:.1f}]",
                 f"{un['baseline_only']}/{un['treatment_only']}",
@@ -361,18 +383,35 @@ def render_markdown(report: dict[str, Any]) -> str:
 
     lines.extend([
         "",
+        "## Primary Matched Common-Setting Means",
+        "",
+        "| Profile | Matched cells | Character recovery (%) | Exact match (%) | P99 character recovery (%) |",
+        "|---|---:|---:|---:|---:|",
+    ])
+    primary = report["primary_common_setting"]
+    for profile, summary in primary["profiles"].items():
+        lines.append(
+            f"| {profile.replace('_', ' ')} | {summary['matched_unit_count']} | "
+            f"{summary['char_accuracy_mean'] * 100:.1f} | "
+            f"{summary['exact_match_mean'] * 100:.1f} | "
+            f"{summary['char_accuracy_quantiles']['p99'] * 100:.1f} |"
+        )
+    lines.extend([
+        "",
+        "The primary estimand excludes d0.5/a15 because it used a different logged UVC exposure setting. "
+        "All profiles use the same duplicate-averaged matched keys.",
+        "",
         "## Descriptive Best-of-Engine Means",
         "",
-        "| Profile | Attack | N | Char (%) | Exact (%) | Sensitive token (%) |",
-        "|---|---|---:|---:|---:|---:|",
+        "| Profile | Attack | N | Char (%) | Exact (%) |",
+        "|---|---|---:|---:|---:|",
     ])
     for key, summary in sorted(report["descriptive_group_means"].items()):
         profile, attack = key.split("|", 1)
         lines.append(
             f"| {profile} | {attack} | {summary['count']} | "
             f"{summary['char_accuracy_mean'] * 100:.1f} | "
-            f"{summary['exact_match_mean'] * 100:.1f} | "
-            f"{summary['sensitive_token_recall_mean'] * 100:.1f} |"
+            f"{summary['exact_match_mean'] * 100:.1f} |"
         )
     lines.append("")
     return "\n".join(lines)
@@ -447,6 +486,57 @@ def _aggregate_cells(
     }
 
 
+def _matched_profile_summary(
+    rows: list[dict[str, Any]],
+    *,
+    profiles: tuple[str, ...],
+    attack: str,
+    exclude_positions: set[str],
+) -> dict[str, Any]:
+    """Summarize all primary profiles on one shared set of duplicate-averaged cells."""
+    metrics = ("char_accuracy", "exact_match")
+    aggregates = {
+        metric: {
+            profile: _aggregate_cells(
+                rows,
+                profile=profile,
+                attack=attack,
+                metric=metric,
+                exclude_positions=exclude_positions,
+            )["cells"]
+            for profile in profiles
+        }
+        for metric in metrics
+    }
+    matched_keys = set.intersection(
+        *(set(aggregates["char_accuracy"][profile]) for profile in profiles)
+    )
+    summaries = {}
+    for profile in profiles:
+        char_values = [aggregates["char_accuracy"][profile][key]["value"] for key in sorted(matched_keys)]
+        exact_values = [aggregates["exact_match"][profile][key]["value"] for key in sorted(matched_keys)]
+        summaries[profile] = {
+            "matched_unit_count": len(matched_keys),
+            "char_accuracy_mean": _mean(char_values),
+            "exact_match_mean": _mean(exact_values),
+            "char_accuracy_quantiles": {
+                "p50": _quantile(char_values, 0.50),
+                "p75": _quantile(char_values, 0.75),
+                "p90": _quantile(char_values, 0.90),
+                "p95": _quantile(char_values, 0.95),
+                "p99": _quantile(char_values, 0.99),
+            },
+        }
+    return {
+        "attack": attack,
+        "profiles": summaries,
+        "matched_unit_count_per_profile": len(matched_keys),
+        "excluded_positions": sorted(exclude_positions),
+        "matching_rule": MATCHING_RULE,
+        "duplicate_cell_rule": "mean within profile + attack + content_item + position + repeat_index",
+    }
+
+
 def _descriptive_group_means(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -454,12 +544,17 @@ def _descriptive_group_means(rows: list[dict[str, Any]]) -> dict[str, dict[str, 
         grouped[f"{unit.profile}|{unit.attack}"].append(row)
     out = {}
     for key, group in grouped.items():
+        sensitive_rows = [
+            row for row in group
+            if int(_as_float(row.get("sensitive_token_count"))) > 0
+        ]
         out[key] = {
             "count": len(group),
             "char_accuracy_mean": _mean([_as_float(row.get("char_accuracy")) for row in group]),
             "exact_match_mean": _mean([_as_float(row.get("exact_match")) for row in group]),
+            "sensitive_token_sample_count": len(sensitive_rows),
             "sensitive_token_recall_mean": _mean([
-                _as_float(row.get("sensitive_token_recall")) for row in group
+                _as_float(row.get("sensitive_token_recall")) for row in sensitive_rows
             ]),
         }
     return out
@@ -522,6 +617,10 @@ def _as_float(value: Any) -> float:
 
 def _mean(values: list[float]) -> float:
     return float(mean(values)) if values else 0.0
+
+
+def _quantile(values: list[float], probability: float) -> float:
+    return float(np.quantile(np.asarray(values, dtype=float), probability)) if values else 0.0
 
 
 if __name__ == "__main__":

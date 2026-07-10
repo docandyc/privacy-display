@@ -14,7 +14,7 @@ import figstyle as fs
 # grade key in JSON -> display label
 GRADES = [
     ("original", "Unprotected"),
-    ("deployed", "Deployed"),
+    ("deployed", "Readability-priority"),
     ("vlm", "High-suppression"),
 ]
 # attack-mode key in JSON -> display label

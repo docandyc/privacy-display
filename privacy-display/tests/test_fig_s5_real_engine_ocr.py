@@ -17,8 +17,8 @@ def test_real_engine_ocr_covers_every_table_profile_in_order():
         ("mask_only", "Mask only"),
         ("mask_noise", "Mask + noise"),
         ("strong", "Strong"),
-        ("deployed", "Deployed"),
-        ("capture_hardened", "Capture-\nhardened"),
+        ("deployed", "Readability-\npriority"),
+        ("capture_hardened", "High-\nsuppression"),
     ]
 
     data = fs.load("real_capture_per_engine.json")

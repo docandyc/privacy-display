@@ -269,7 +269,7 @@ def write_latex_tables(output_dir: Path, typing_report: dict[str, Any], rating_s
         "n3_mask_noise": "$n{=}3$ mask+noise",
         "n4_mask_noise": "$n{=}4$ mask+noise",
         "n4_mask_only": "$n{=}4$ mask-only",
-        "deployed_full": "Deployed full ($n{=}4$)",
+        "deployed_full": "Readability-priority full ($n{=}4$)",
     }
     rating_lines = [
         r"\begin{tabular}{lccc}",

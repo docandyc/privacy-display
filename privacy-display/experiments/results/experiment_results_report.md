@@ -212,7 +212,7 @@ VLM prompt ablation 中，strict transcription、relaxed readability、sensitive
 | `vlm_model_ablation.json` | 可用 | 三个 VLM family 对恢复帧均可读，字符恢复率约 93% 到 96% |
 | `brightness_compensation_ablation.json` | 可用 | gamma 1/2/4 下 single-frame OCR 仍接近 0% |
 | `mask_granularity_ablation.json` | 可用 | block 1/2/4 接近 0%，block 8 升到 0.8% |
-| `anti_ocr_profile_ablation.json` | 可用 | block2/s0.30_g0.22 temporal average 降到 10.7%；抗拍强化档（历史键 `block1/vlm`）降到 49.1% |
+| `anti_ocr_profile_ablation.json` | 可用 | block2/s0.30_g0.22 temporal average 降到 10.7%；含 $\alpha=0.2$ 反色槽的抗拍强化档（`block1/capture_hardened`）整周期平均降到 56.6%，但反色单槽攻击可恢复至 93.0% 字符准确率（exact match 为 81.2%） |
 | `seed_sensitivity.json` | 可用 | 10 seeds、45 samples 下 single-frame OCR 均值约 0.04%，seed 敏感性很低 |
 | `usability_pilot.json` | 缺失 | 有 `usability_pilot.py`，但没有对应结果 JSON |
 

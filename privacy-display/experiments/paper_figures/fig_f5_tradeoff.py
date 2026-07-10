@@ -4,7 +4,7 @@ Uses the anti-OCR profile ablation (``anti_ocr_profile_ablation.json`` block1),
 which measures, for the SAME synthetic corpus, both:
   * temporal-average (integration attack) char recovery  -> security  (lower better)
   * complete-cycle digital-reconstruction SSIM             -> image fidelity
-as the profile strengthens off -> overlay -> deployed -> high-suppression.
+as the profile strengthens off -> overlay -> readability-priority -> high-suppression.
 
 SSIM is an image-level proxy and is not labelled as human readability.
 """
@@ -14,23 +14,36 @@ import numpy as np
 
 import figstyle as fs
 
-# block1 profile key -> display label (x order = weak..strong protection)
+# Candidate block1 profile keys -> display label (x order = weak..strong).
+# The archived result predating the canonical rename uses ``block1/vlm``.
 PROFILES = [
-    ("block1/off", "None"),
-    ("block1/strong@overlay", "Overlay"),
-    ("block1/strong@deployed", "Deployed\n(alpha=0.2)"),
-    ("block1/vlm", "High-\nsuppression"),
+    (("block1/off",), "None"),
+    (("block1/strong@overlay",), "Overlay"),
+    (("block1/strong@deployed",), "Readability-\npriority\n(alpha=0.2)"),
+    (("block1/capture_hardened", "block1/vlm"), "High-\nsuppression"),
 ]
+
+
+def resolve_profile_keys(detail: dict) -> list[str]:
+    """Resolve canonical keys while retaining archived ``block1/vlm`` input."""
+    resolved = []
+    for candidates, _ in PROFILES:
+        key = next((candidate for candidate in candidates if candidate in detail), None)
+        if key is None:
+            raise KeyError(f"missing anti-OCR profile row: {' or '.join(candidates)}")
+        resolved.append(key)
+    return resolved
 
 
 def main() -> None:
     det = fs.load("anti_ocr_profile_ablation.json")["detail"]
+    profile_keys = resolve_profile_keys(det)
 
     x = np.arange(len(PROFILES))
-    sec = [fs.pct(det[k]["temporal_avg_char"]) for k, _ in PROFILES]
-    sec_e = [fs.pct_err(det[k]["temporal_avg_char"]) for k, _ in PROFILES]
-    ssim = [fs.mean_hw(det[k]["ssim"])[0] for k, _ in PROFILES]
-    ssim_e = [fs.mean_hw(det[k]["ssim"])[1] or 0.0 for k, _ in PROFILES]
+    sec = [fs.pct(det[key]["temporal_avg_char"]) for key in profile_keys]
+    sec_e = [fs.pct_err(det[key]["temporal_avg_char"]) for key in profile_keys]
+    ssim = [fs.mean_hw(det[key]["ssim"])[0] for key in profile_keys]
+    ssim_e = [fs.mean_hw(det[key]["ssim"])[1] or 0.0 for key in profile_keys]
 
     fig, ax_l = fs.plt.subplots(figsize=(fs.COL_W, 2.6))
     ax_r = ax_l.twinx()
@@ -51,7 +64,7 @@ def main() -> None:
     ax_l.tick_params(right=False)   # twin axis owns the right ticks
 
     ax_l.set_xticks(x)
-    ax_l.set_xticklabels([lbl for _, lbl in PROFILES])
+    ax_l.set_xticklabels([label for _, label in PROFILES])
     ax_l.grid(axis="y")
     # title in LaTeX caption
 

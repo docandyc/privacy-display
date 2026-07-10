@@ -26,7 +26,7 @@ CONDITIONS = [
     ("n3_mask_noise", "$n{=}3$\nM+N"),
     ("n4_mask_noise", "$n{=}4$\nM+N"),
     ("n4_mask_only", "$n{=}4$\nmask"),
-    ("deployed_full", "Deployed"),
+    ("deployed_full", "Readability-\npriority"),
 ]
 # (dimension key, legend label, series colour)
 DIMENSIONS = [

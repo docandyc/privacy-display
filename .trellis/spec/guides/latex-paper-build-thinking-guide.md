@@ -23,6 +23,7 @@ Use this checklist whenever a paper source, bibliography, label, figure, or gene
 ## Citation and hardware integrity
 
 - [ ] Verify every new DOI and arXiv identifier against a primary metadata source (publisher/Crossref, arXiv API, conference proceedings, or official project documentation).
+- [ ] Before normalizing BibTeX DOI fields, inspect the active `.bst`. This repository's `IEEEtran.bst` v1.14 does not read `doi`, so cited DOIs stay in `note = {doi: ...}` and must be verified in the final `.bbl`.
 - [ ] If an arXiv preprint has a matching formal proceedings or journal version, cite the formal version and record the DOI.
 - [ ] Keep local citation keys aligned with the actual first author and publication year; after renaming a key, search both manuscript sources and generated `.aux` files for the retired key.
 - [ ] Treat product model, sensor, and timing claims as evidence-bearing facts. Cite manufacturer documentation for published specifications and label unmeasured quantities or mechanisms as hypotheses rather than facts.

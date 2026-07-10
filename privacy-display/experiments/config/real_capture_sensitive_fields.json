@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "annotation_policy": "Fields are fixed before scoring and copied verbatim from archived ground truth. Ordinary prose and incidental dates or section numbers are not fields. A field is recovered only when its complete normalized form appears in at least one OCR engine output for the same capture.",
+  "normalization": "Unicode NFKC, case folding, then removal of whitespace and punctuation; letters and digits are retained.",
+  "truth_metadata_glob": "experiments/real_captures*_final/metadata.json",
+  "items": {
+    "account_00": {
+      "fields": [
+        {"text": "4532-1234-5678-9010", "type": "digit_string"},
+        {"text": "CVV 123", "type": "credential"},
+        {"text": "08/29", "type": "digit_string"}
+      ]
+    },
+    "account_01": {
+      "fields": [
+        {"text": "CN99 1234 5678 0001", "type": "digit_string"},
+        {"text": "82,410.00", "type": "digit_string"}
+      ]
+    },
+    "cet6_p1": {
+      "fields": [
+        {"text": "https://zhenti.burningvocabulary.cn", "type": "url_path"}
+      ]
+    },
+    "code_00": {
+      "fields": [
+        {"text": "login(pwd)", "type": "code_key"},
+        {"text": "hash(pwd)", "type": "code_key"}
+      ]
+    },
+    "code_01": {
+      "fields": [
+        {"text": "token.expired", "type": "code_key"},
+        {"text": "refresh(token)", "type": "code_key"}
+      ]
+    },
+    "digits_00": {
+      "fields": [
+        {"text": "1234567890", "type": "digit_string"},
+        {"text": "3.14159", "type": "digit_string"},
+        {"text": "0xFF2A", "type": "digit_string"}
+      ]
+    },
+    "digits_01": {
+      "fields": [
+        {"text": "987-654-3210", "type": "digit_string"},
+        {"text": "2026/06/12", "type": "digit_string"}
+      ]
+    },
+    "en_sentence_00": {"fields": []},
+    "mixed_00": {
+      "fields": [
+        {"text": "user@mail.com", "type": "credential"},
+        {"text": "Pa$$w0rd", "type": "credential"}
+      ]
+    },
+    "mixed_01": {
+      "fields": [
+        {"text": "Alpha-7", "type": "code_key"}
+      ]
+    },
+    "paragraph_00": {"fields": []},
+    "paragraph_01": {"fields": []}
+  }
+}

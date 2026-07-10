@@ -422,8 +422,11 @@ def test_analysis_generates_auditable_json_csv_and_latex_outputs(tmp_path):
     assert (output / "typing_participant_means.csv").exists()
     assert (output / "typing_table.tex").exists()
     assert (output / "ratings_table.tex").exists()
+    ratings_table = (output / "ratings_table.tex").read_text(encoding="utf-8")
+    assert "Readability-priority full ($n{=}4$)" in ratings_table
+    assert "Deployed full" not in ratings_table
     assert set(report["rating_summary"]["control_anchor"]) == {"readability", "flicker", "fatigue"}
-    assert "防偷窥" not in (output / "ratings_table.tex").read_text(encoding="utf-8")
+    assert "防偷窥" not in ratings_table
 
 
 def test_analysis_excludes_any_session_with_under_five_attempted_chars(tmp_path):

@@ -34,6 +34,7 @@ Questions to answer:
 
 - CSPRNG-derived bounded integers must use rejection sampling instead of direct modulo. This applies to mask index generation and Fisher-Yates permutation indices; direct `% upper` introduces modulo bias unless `upper` divides the random integer space exactly.
 - Display-timing code that is exercised by an actual window should advance timing tokens from the display/vsync boundary when available. Software `sleep` loops are acceptable only as a simulation fallback and should share the same token-advance path.
+- Cross-platform tests must not monkeypatch the process-global `os.name` module attribute. Wrap platform checks behind a module/class predicate (for example `_is_windows()`) and monkeypatch that predicate instead. Setting `os.name = "nt"` on macOS/Linux can make `pathlib.Path(...)` instantiate `WindowsPath` and crash pytest before it can report the real assertion failure.
 
 ## Scenario: Web Study Submission Backend
 
@@ -250,6 +251,7 @@ where `_target_gradient` tries the differentiable shadow model first and records
 ### 3. Contracts
 - Auto-detection must only list an engine when importing the package and any cheap local availability check succeeds.
 - Tesseract detection must configure `pytesseract.pytesseract.tesseract_cmd` from `TESSERACT_CMD`/`TESSERACT_EXE`, PATH, or the Windows default install dirs (`C:\Program Files\Tesseract-OCR\tesseract.exe`, `C:\Program Files (x86)\Tesseract-OCR\tesseract.exe`) before calling `get_tesseract_version()`.
+- Windows-only Tesseract candidate paths must be constructed as Windows strings (for example with `ntpath.join`) while keeping existence checks mockable. POSIX unit tests should simulate the Windows branch by monkeypatching `OCREvaluator._is_windows()`, not `os.name`.
 - Unit tests must not instantiate OCR engines that download model weights; inject cached/fake readers for parser and dispatch tests.
 - Images passed into OCR backends must be contiguous NumPy arrays.
 - Surya must be pinned to `surya-ocr==0.14.7` for direct in-process inference; Surya 0.20+ uses a server-based API and is not compatible with this adapter.
@@ -285,10 +287,12 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - Bad: hand-edit `corpus_multi_engine.json` without rerunning `run_corpus_multi_engine`.
 - Bad: use `merge_existing=True` for a PaddleOCR-to-Surya replacement without explicitly filtering stale engine keys.
 - Bad: test an experiment only through `import experiments.<module>`; that can hide a broken direct-script import path.
+- Bad: monkeypatch `src.attack.ocr_evaluator.os.name = "nt"` in POSIX tests; because `os` is a process-global module, this can crash pytest's own `pathlib.Path` usage while formatting a failure.
 
 ### 6. Tests Required
 - Assert `OCREvaluator().engines` includes the engine in an environment where the dependency is installed.
 - Assert Windows default Tesseract install path is used when `tesseract` is not on PATH.
+- Assert the Windows default Tesseract path branch is tested without changing global `os.name`.
 - Assert parser coverage for every supported output shape.
 - Assert `recognize(..., engine)` uses a cached/fake reader and returns joined text.
 - Assert the Surya-only merge preserves Tesseract/EasyOCR objects, removes PaddleOCR/unknown engines, writes only after success, and exposes progress without loading model weights in unit tests.
@@ -907,6 +911,7 @@ for path in sorted(paths, key=numeric_position_key):
 - Missing result/source files must be represented as `exists=False`, empty `sha256`, and zero bytes rather than failing manifest generation.
 - Absolute output paths must be respected; relative output paths are resolved against `project_root`.
 - Regenerate the manifest after rerunning experiments or changing code that it hashes, otherwise the file hashes no longer describe the current archive.
+- `experiments/anti_ocr_profile_ablation.py` and `experiments/results/anti_ocr_profile_ablation.json` are publication-facing source/result artifacts. Both must be hashed by the default manifest, and `scripts/reproduce_all.sh --full-offline` must run the 16-sample command before regenerating downstream summaries.
 - Real-capture COCO/MOT detection/tracking manifests are publication provenance artifacts; include the planned capture manifests in the reproducibility manifest alongside the metric JSON files.
 - When large real-capture image trees already live in position-specific directories, do not duplicate gigabytes of image data just to satisfy a canonical path. Instead, write a canonical manifest such as `experiments/results/real_capture_mot_capture_manifest.json`, rewrite each capture `path` to the actual existing image location, and point metric JSON `capture.manifest_path` plus embedded `capture.manifest` to that canonical manifest.
 - `scripts/reproduce_all.sh` is the publication artifact orchestrator. Its default path must stay offline and bounded: tests, VLM dry-run, publication summary, and reproducibility manifest only.
@@ -939,6 +944,7 @@ for path in sorted(paths, key=numeric_position_key):
 - Assert a fake `SILICONFLOW_API_KEY` in the process environment does not appear in `json.dumps(manifest)`.
 - Assert nested relative output paths are created by `write_reproducibility_manifest`.
 - Assert real-capture finalization records the canonical MOT capture manifest and position-matrix OCR result paths.
+- Assert the default source/result lists and command metadata include `anti_ocr_profile_ablation.py`, `anti_ocr_profile_ablation.json`, and `python experiments/anti_ocr_profile_ablation.py --max-samples 16`.
 - Run `bash -n scripts/reproduce_all.sh` after changing the orchestration script.
 - Run `scripts/reproduce_all.sh --skip-tests` to verify the default non-network artifact refresh path when script behavior changes.
 - Run `pytest tests/test_reproducibility_manifest.py -q` after changing manifest code.
@@ -1263,6 +1269,63 @@ report["g5"] = {
     "ssim": measured_ssim,
     "scope": "tiny U-Net lower bound",
 }
+```
+
+---
+
+## Scenario: Publication Real-Capture Montage Integrity
+
+### 1. Scope / Trigger
+- Trigger: changing `fig_f3_montage.py`, the profile-level anti-OCR ablation, its paper-facing figures, or manuscript claims that compare digital reconstruction with real camera panels.
+
+### 2. Signatures
+- `integrated_reconstruction(profile_key: str) -> np.ndarray`
+- Command: `python experiments/anti_ocr_profile_ablation.py --max-samples 16`
+- Commands: `python experiments/paper_figures/fig_f3_montage.py` and `python experiments/paper_figures/fig_f5_tradeoff.py`
+- Outputs: `paper/figures/real_capture_montage.pdf`, `paper/figures/readability_robustness_tradeoff.pdf`, and `experiments/results/anti_ocr_profile_ablation.json`
+
+### 3. Contracts
+- Camera panels use the archived geometrically rectified `d1_a0` JPEGs at 1.0 m/0 degrees: 3.90625 ms short exposure and 31.25 ms long exposure. Apply the common vertical crop only; do not add brightness gain, gamma, or contrast normalization.
+- Reproduce the real playback order for digital panels: fit the native corpus image to the 1920x1080 black canvas, generate masks/noise/profile artifacts on that complete canvas, brightness-align the full cycle, and only then crop rows 0.40:0.61. Pixel-defined 6/10 px artifacts make native-image generation followed by resize non-equivalent.
+- Readability-priority is `strong` with stripe/glyph alpha 0.10/0.12 plus inversion alpha 0.2. High-suppression is `capture_hardened` with its 2 px/6 px/0.42/0.55 defaults plus inversion alpha 0.2. Both composite conditions must include the inversion slot in the ablation and montage.
+- When a publication-facing profile includes an inversion slot, report `inversion_frame_attack` and `best_observed` alongside the full-cycle temporal average. A favorable temporal-average value is not a worst-case security bound when a directly recoverable slot produces a stronger attack.
+- The montage is a playback-canvas qualitative illustration. Paper SSIM/DeltaE values are 16-sample native-resolution corpus means; never claim that the montage is the exact metric realization or the exact random cycle shown by the camera.
+- New result JSON uses `block1/capture_hardened`; paper-figure consumers accept `block1/vlm` only as a legacy fallback.
+- After changing a profile condition, rerun the full ablation and regenerate the publication summary, affected figures, reproducibility manifest, and manuscript numbers from the resulting JSON.
+
+### 4. Validation & Error Matrix
+- Missing selected JPEG or metadata row -> fail the montage test; do not substitute another capture session silently.
+- Metadata not `d1_a0`, 1.0 m/0 degrees, or expected exposure -> fail before publication.
+- Reconstruction shape differs from the cropped 1920x1080 canvas -> fail; do not resize a native-resolution reconstruction to hide the mismatch.
+- Canonical and legacy high-suppression keys both missing -> raise `KeyError` naming both accepted keys.
+- Result JSON changed but publication summary/manuscript/manifest stayed stale -> archive is not publication-ready.
+- Inversion-slot attack results exist but the manuscript reports only the favorable temporal average -> fail the publication regression test.
+
+### 5. Good/Base/Bad Cases
+- Good: generate artifacts on the 1920x1080 canvas, show visibly different reconstructions for all three profiles, disclose crop/exposure/no-gain in the caption, and verify the compiled page visually.
+- Base: accept an old archived JSON containing `block1/vlm` when rendering Fig. 5, while all newly generated JSON emits `block1/capture_hardened`.
+- Bad: load the same source PNG for all digital rows, apply profile artifacts at 720x71 and enlarge afterward, or use per-column gain without caption disclosure.
+- Bad: add inversion to the profile code but retain old no-inversion JSON values in the manuscript or downstream chart.
+- Bad: describe high-suppression as closer to a general security objective while omitting a stronger direct inversion-slot attack from the same ablation.
+
+### 6. Tests Required
+- Assert exact selected filenames and metadata, raw cropped JPEG equality, zero gain, playback-canvas reconstruction shape, and pairwise-different profile reconstructions.
+- Assert both composite `PROFILE_CONDITIONS` use inversion alpha 0.2.
+- Assert manuscript SSIM/DeltaE, inversion-frame attack, and best-observed values are formatted from the canonical result JSON, and the montage caption discloses geometry, exposure, geometric rectification, crop, and no brightness gain.
+- Assert Fig. 5 resolves canonical and legacy high-suppression keys; run the montage/profile/publication-summary/manifest tests, regenerate both PDFs, compile with `latexmk`, and inspect the final paper page.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+small = build_playback_frames(native_720x71, anti_ocr_profile=profile)
+panel = resize(integrate(small), camera_crop_shape)
+```
+
+#### Correct
+```python
+canvas = fit_image_to_canvas(native, 1920, 1080, background=(0, 0, 0))
+frames = build_playback_frames(canvas, anti_ocr_profile=profile, insert_inversion=True)
+panel = integrate_brightness_aligned(frames)[int(1080 * 0.40):int(1080 * 0.61)]
 ```
 
 ---
