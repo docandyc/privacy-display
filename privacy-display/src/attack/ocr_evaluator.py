@@ -239,8 +239,12 @@ class OCREvaluator:
 
     def _run_easyocr(self, image: np.ndarray) -> str:
         import easyocr
+        import torch
         if self._easyocr_reader is None:
-            self._easyocr_reader = easyocr.Reader(["ch_sim", "en"], gpu=False)
+            self._easyocr_reader = easyocr.Reader(
+                ["ch_sim", "en"],
+                gpu=bool(torch.cuda.is_available()),
+            )
         results = self._easyocr_reader.readtext(image, detail=0)
         return " ".join(results)
 

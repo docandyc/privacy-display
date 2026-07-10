@@ -254,6 +254,7 @@ where `_target_gradient` tries the differentiable shadow model first and records
 - Windows-only Tesseract candidate paths must be constructed as Windows strings (for example with `ntpath.join`) while keeping existence checks mockable. POSIX unit tests should simulate the Windows branch by monkeypatching `OCREvaluator._is_windows()`, not `os.name`.
 - Unit tests must not instantiate OCR engines that download model weights; inject cached/fake readers for parser and dispatch tests.
 - Images passed into OCR backends must be contiguous NumPy arrays.
+- EasyOCR should initialize with `gpu=torch.cuda.is_available()`: use CUDA when the active PyTorch environment exposes it and retain a CPU fallback for non-CUDA development and tests. Long Windows preprocessing runs must perform an explicit CUDA preflight so they do not silently fall back to CPU.
 - Surya must be pinned to `surya-ocr==0.14.7` for direct in-process inference; Surya 0.20+ uses a server-based API and is not compatible with this adapter.
 - Surya should lazily construct one `RecognitionPredictor` and one `DetectionPredictor`, reuse them across images, and select the device through `SURYA_DEVICE=auto|cpu|cuda|mps`.
 - Surya model files should use the project-local `.cache/surya` directory. On Windows, default model download concurrency to one worker because the upstream parallel downloader can trigger TLS EOF failures on constrained networks.

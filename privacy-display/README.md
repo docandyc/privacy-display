@@ -95,6 +95,7 @@ python experiments/real_capture_analysis.py --init-template # 生成真实拍摄
 python experiments/real_capture_analysis.py --engines tesseract # 分析已采集的真实拍摄图片
 .\scripts\download_surya_models.ps1 # 首次下载 Surya 模型，支持失败后断点续传
 .\scripts\rerun_real_capture_surya_only.ps1 -Jobs d0.5_a0 # 保留 Tesseract/EasyOCR，仅用 Surya 替换第三引擎
+# Windows CUDA：EasyOCR + Surya 完整真实拍摄预处理网格见 docs/windows_easyocr_surya_preprocessing.md
 python experiments/publication_summary.py   # 汇总主要 JSON 结果到 publication_summary.{json,md}
 python experiments/reproducibility_manifest.py # 记录环境、复现命令和关键文件哈希
 scripts/reproduce_all.sh                    # 默认安全路径：测试 + VLM dry-run + summary + manifest

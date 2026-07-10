@@ -3,6 +3,8 @@ import sys
 import types
 from pathlib import Path
 
+import pytest
+
 from src.attack.ocr_evaluator import (
     OCREvaluator,
     _sensitive_token_recall,
@@ -56,6 +58,43 @@ def test_surya_device_env_is_respected(monkeypatch):
     monkeypatch.setenv("SURYA_DEVICE", "cpu")
 
     assert OCREvaluator._resolve_surya_device() == "cpu"
+
+
+@pytest.mark.parametrize(
+    ("cuda_available", "expected_gpu"),
+    [(True, True), (False, False)],
+)
+def test_easyocr_reader_uses_cuda_when_available(
+    monkeypatch,
+    cuda_available,
+    expected_gpu,
+):
+    reader_calls = []
+
+    class FakeReader:
+        def __init__(self, languages, gpu):
+            reader_calls.append({"languages": languages, "gpu": gpu})
+
+        def readtext(self, image, detail):
+            return ["GPU selected"]
+
+    fake_easyocr = types.SimpleNamespace(Reader=FakeReader)
+    fake_torch = types.SimpleNamespace(
+        cuda=types.SimpleNamespace(is_available=lambda: cuda_available)
+    )
+    monkeypatch.setitem(sys.modules, "easyocr", fake_easyocr)
+    monkeypatch.setitem(sys.modules, "torch", fake_torch)
+
+    evaluator = OCREvaluator(engines=["easyocr"])
+    recognized = evaluator.recognize(
+        np.zeros((8, 8, 3), dtype=np.uint8),
+        "easyocr",
+    )
+
+    assert recognized == "GPU selected"
+    assert reader_calls == [
+        {"languages": ["ch_sim", "en"], "gpu": expected_gpu}
+    ]
 
 
 def test_heavy_ocr_auto_detection_is_offline_safe(monkeypatch):
