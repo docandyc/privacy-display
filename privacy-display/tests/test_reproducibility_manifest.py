@@ -73,6 +73,9 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
         "experiments/results/real_capture_design_audit.json",
         "experiments/results/vlm_missing_response_bounds.json",
         "experiments/results/real_capture_preprocessing_attack_tesseract.json",
+        "experiments/results/real_capture_preprocessing_attack_easyocr.json",
+        "experiments/results/real_capture_preprocessing_attack_surya.json",
+        "experiments/results/real_capture_preprocessing_attack_three_engine.json",
         "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
     ):
         assert paper_review_result in result_paths
@@ -99,6 +102,9 @@ def test_manifest_records_hashes_commands_and_no_secret_values(tmp_path, monkeyp
         "real_capture_design_audit",
         "vlm_missing_response_bounds",
         "real_capture_preprocessing_tesseract",
+        "real_capture_preprocessing_easyocr",
+        "real_capture_preprocessing_surya",
+        "real_capture_preprocessing_three_engine",
     ):
         assert any(command["name"] == paper_review_command for command in default_manifest["commands"])
     model_live = next(c for c in manifest["commands"] if c["name"] == "vlm_model_ablation_live")

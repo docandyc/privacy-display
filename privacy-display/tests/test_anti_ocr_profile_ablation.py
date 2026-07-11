@@ -101,7 +101,7 @@ def test_inversion_slot_failure_is_disclosed_from_canonical_profile_result():
     best_char = hardened["best_observed_char"]["mean"] * 100
 
     assert (
-        f"inversion frame recovers {attack_char:.1f}\\% character accuracy on average "
+        f"inversion frame recovers {attack_char:.1f}\\% character recovery on average "
         f"and yields {attack_exact:.1f}\\% exact match"
     ) in manuscript
     assert f"{best_char:.1f}\\% best-observed digital recovery" in manuscript

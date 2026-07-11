@@ -58,7 +58,7 @@ $env:MODEL_CACHE_DIR = Join-Path (Get-Location) ".cache\surya"
 正式运行前只检查 CUDA 是否可用，不检查具体 GPU 型号：
 
 ```powershell
-& $Py -c "import torch; assert torch.cuda.is_available(), 'CUDA unavailable'; print('CUDA ready:', torch.cuda.get_device_name(0))"
+& $Py -c "import torch; assert torch.cuda.is_available(), 'CUDA unavailable'; print('CUDA ready')"
 if ($LASTEXITCODE -ne 0) {
     throw "CUDA preflight failed. Do not start the OCR grid on CPU."
 }

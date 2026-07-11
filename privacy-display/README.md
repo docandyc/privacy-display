@@ -146,10 +146,10 @@ COCO_DEVICE=cuda:0 MOT_DEVICE=cuda:1 bash scripts/run_detection_suite.sh  # 双�
 | 配置 | 样本数 | 平均字符恢复率 |
 |---|---:|---:|
 | 未保护 | 288 | 94.5% |
-| 可读性优先 | 408 | 16.7% |
+| 可读性优先 | 288 | 17.8% |
 | 高抑制 | 288 | 5.6% |
 
-这些数字只适用于几何校正后的相机裁剪图和固定预处理流程。主实验没有系统评估 CLAHE、gamma、阈值化、锐化、超分辨率或商业 OCR，因此不能据此宣称对所有传统 OCR 流程有效。可读性优先配置的 pooled P99 字符恢复率为 94.5%，敏感 token 恢复率为 24.0%；均值不能代表最坏情况。高抑制配置在共同曝光条件下也没有达到严格的 `<5%` 目标。
+三引擎完整固定网格包含 raw、gamma 0.5、CLAHE、锐化、自适应阈值和 2× 上采样，共 17,712 个无 OCR 错误的单元。在同一组 288 个匹配单元上，逐图选择最有利引擎和输入形式后，未保护、可读性优先和高抑制分别为 95.9%、40.2% 和 13.7%。这说明 raw 结果不是预处理攻击上界；同时，该网格仍不包含连续调参、学习型复原或商业 OCR，因此不能据此宣称对所有传统 OCR 流程有效。
 
 ### 4.2 已测失效边界
 
@@ -164,6 +164,8 @@ COCO_DEVICE=cuda:0 MOT_DEVICE=cuda:1 bash scripts/run_detection_suite.sh  # 双�
 
 - `experiments/results/real_capture_ocr.json`：真实采集 OCR 记录与汇总。
 - `experiments/results/paper_ocr_clustered_stats.json`：内容聚类配对对比。
+- `experiments/results/real_capture_preprocessing_attack_three_engine.json`：三引擎完整固定预处理网格与匹配 oracle 结果。
+- `experiments/results/real_capture_preprocessing_rows/matrix.jsonl`：17,712 个引擎—输入单元的可恢复检查点。
 - `experiments/real_capture_vlm_evaluation.py`：VLM 评估与调用记录入口。
 - `experiments/reproducibility_manifest.py`：环境、命令和文件哈希清单。
 - `scripts/reproduce_all.sh`：测试、汇总与清单编排入口。
@@ -177,7 +179,7 @@ COCO_DEVICE=cuda:0 MOT_DEVICE=cuda:1 bash scripts/run_detection_suite.sh  # 双�
 当前最重要的未完成证据是：
 
 1. 曝光—恢复率曲线，而不是仅比较 3.91 ms 与长曝光点；
-2. CLAHE、gamma、阈值化、分通道、锐化和商业 OCR 的系统攻击扫描；
+2. 超出现有固定网格的连续调参、分通道/学习型复原和商业 OCR 攻击；
 3. 亮度匹配静态对照、面板时序测量和跨摄像头复现；
 4. 高抑制配置的可读性与视觉舒适度验证；
 5. CJK 文字和更广内容分布。

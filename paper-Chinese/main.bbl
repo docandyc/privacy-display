@@ -7,8 +7,7 @@
 \providecommand{\BIBentrySTDinterwordspacing}{\spaceskip=0pt\relax}
 \providecommand{\BIBentryALTinterwordstretchfactor}{4}
 \providecommand{\BIBentryALTinterwordspacing}{\spaceskip=\fontdimen2\font plus
-\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
-  \fontdimen4\font\relax}
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus \fontdimen4\font\relax}
 \providecommand{\BIBforeignlanguage}[2]{{%
 \expandafter\ifx\csname l@#1\endcsname\relax
 \typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
@@ -23,308 +22,193 @@
 
 \bibitem{b_wang2026}
 \BIBentryALTinterwordspacing
-X.~Wang, K.~Peng, X.~Yi, and H.~Li, ``{Mind the gap: Mapping wearer-bystander
-  privacy tensions and context-adaptive pathways for camera glasses},'' in
-  \emph{Proc. CHI Conf. Human Factors in Computing Systems}, 2026, pp. 1--28,
-  doi: 10.1145/3772318.3791848. [Online]. Available:
-  \url{https://doi.org/10.1145/3772318.3791848}
+X.~Wang, K.~Peng, X.~Yi, and H.~Li, ``{Mind the gap: Mapping wearer-bystander privacy tensions and context-adaptive pathways for camera glasses},'' in \emph{Proc. CHI Conf. Human Factors in Computing Systems}, 2026, pp. 1--28, doi: 10.1145/3772318.3791848. [Online]. Available: \url{https://doi.org/10.1145/3772318.3791848}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_ponemon2016}
 \BIBentryALTinterwordspacing
-{Ponemon Institute}, ``{Global visual hacking experiment},'' 3M, Tech. Rep.,
-  2016, {Accessed: Jul.~2, 2026}. [Online]. Available:
-  \url{https://www.3m.com/3M/en_US/privacy-screen-protectors-us/expertise/visualhacking/}
+{Ponemon Institute}, ``{Global visual hacking experiment},'' 3M, Tech. Rep., 2016, {Accessed: Jul.~2, 2026}. [Online]. Available: \url{https://www.3m.com/3M/en_US/privacy-screen-protectors-us/expertise/visualhacking/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_eiband2017}
-M.~Eiband, M.~Khamis, E.~von Zezschwitz, H.~Hussmann, and F.~Alt,
-  ``{Understanding shoulder surfing in the wild: Stories from users and
-  observers},'' in \emph{Proc. CHI Conf. Human Factors in Computing Systems},
-  2017, pp. 4254--4265, doi: 10.1145/3025453.3025636.
+M.~Eiband, M.~Khamis, E.~von Zezschwitz, H.~Hussmann, and F.~Alt, ``{Understanding shoulder surfing in the wild: Stories from users and observers},'' in \emph{Proc. CHI Conf. Human Factors in Computing Systems}, 2017, pp. 4254--4265, doi: 10.1145/3025453.3025636.
 
 \bibitem{b_backes2009}
-M.~Backes, T.~Chen, M.~D{\"u}rmuth, H.~P.~A. Lensch, and M.~Welk, ``{Tempest in
-  a teapot: Compromising reflections revisited},'' in \emph{Proc. IEEE Symp.
-  Security and Privacy (S\&P)}, 2009, pp. 315--327, doi: 10.1109/SP.2009.20.
+M.~Backes, T.~Chen, M.~D{\"u}rmuth, H.~P.~A. Lensch, and M.~Welk, ``{Tempest in a teapot: Compromising reflections revisited},'' in \emph{Proc. IEEE Symp. Security and Privacy (S\&P)}, 2009, pp. 315--327, doi: 10.1109/SP.2009.20.
 
 \bibitem{b_fernandez2024}
-S.~Fern{\'a}ndez, E.~Mart{\'i}nez, G.~Varela, P.~Mus{\'e}, and F.~Larroca,
-  ``{Deep-TEMPEST: Using deep learning to eavesdrop on HDMI from its unintended
-  electromagnetic emanations},'' in \emph{Proc. 13th Latin-American Symp.
-  Dependable and Secure Computing (LADC)}, 2024, pp. 91--100, doi:
-  10.1145/3697090.3697094.
+S.~Fern{\'a}ndez, E.~Mart{\'i}nez, G.~Varela, P.~Mus{\'e}, and F.~Larroca, ``{Deep-TEMPEST: Using deep learning to eavesdrop on HDMI from its unintended electromagnetic emanations},'' in \emph{Proc. 13th Latin-American Symp. Dependable and Secure Computing (LADC)}, 2024, pp. 91--100, doi: 10.1145/3697090.3697094.
 
 \bibitem{b_raguram2011}
-R.~Raguram, A.~M. White, D.~Goswami, F.~Monrose, and J.-M. Frahm, ``{iSpy:
-  Automatic reconstruction of typed input from compromising reflections},'' in
-  \emph{Proc. 18th ACM Conf. Computer and Communications Security (CCS)}, 2011,
-  pp. 527--536, doi: 10.1145/2046707.2046769.
+R.~Raguram, A.~M. White, D.~Goswami, F.~Monrose, and J.-M. Frahm, ``{iSpy: Automatic reconstruction of typed input from compromising reflections},'' in \emph{Proc. 18th ACM Conf. Computer and Communications Security (CCS)}, 2011, pp. 527--536, doi: 10.1145/2046707.2046769.
 
 \bibitem{b_tang2023}
-B.~Tang and K.~G. Shin, ``{Eye-Shield: Real-time protection of mobile device
-  screen information from shoulder surfing},'' in \emph{Proc. 32nd USENIX
-  Security Symp.}, 2023, pp. 6695--6712.
+B.~Tang and K.~G. Shin, ``{Eye-Shield: Real-time protection of mobile device screen information from shoulder surfing},'' in \emph{Proc. 32nd USENIX Security Symp.}, 2023, pp. 6695--6712.
 
 \bibitem{b_hidescreen2019}
-C.-Y. Chen, B.-Y. Lin, J.~Wang, and K.~G. Shin, ``{Keep Others from Peeking at
-  Your Mobile Device Screen!}'' in \emph{Proc. 25th Annu. Int. Conf. Mobile
-  Computing and Networking (MobiCom)}, 2019, pp. 1--16, doi:
-  10.1145/3300061.3300119.
+C.-Y. Chen, B.-Y. Lin, J.~Wang, and K.~G. Shin, ``{Keep Others from Peeking at Your Mobile Device Screen!}'' in \emph{Proc. 25th Annu. Int. Conf. Mobile Computing and Networking (MobiCom)}, 2019, pp. 1--16, doi: 10.1145/3300061.3300119.
 
 \bibitem{b_zhu2017}
-S.~Zhu, C.~Zhang, and X.~Zhang, ``{Automating visual privacy protection using a
-  smart LED},'' in \emph{Proc. 23rd ACM Int. Conf. Mobile Computing and
-  Networking (MobiCom)}, 2017, pp. 329--342, doi: 10.1145/3117811.3117820.
+S.~Zhu, C.~Zhang, and X.~Zhang, ``{Automating visual privacy protection using a smart LED},'' in \emph{Proc. 23rd ACM Int. Conf. Mobile Computing and Networking (MobiCom)}, 2017, pp. 329--342, doi: 10.1145/3117811.3117820.
 
 \bibitem{b_naor1994}
-M.~Naor and A.~Shamir, ``{Visual cryptography},'' in \emph{Proc. EUROCRYPT},
-  1994, pp. 1--12.
+M.~Naor and A.~Shamir, ``{Visual cryptography},'' in \emph{Proc. EUROCRYPT}, 1994, pp. 1--12.
 
 \bibitem{b_zhong2023}
-X.~Zhong, A.~Das, F.~Alrasheedi, and A.~Tanvir, ``{A brief, in-depth survey of
-  deep learning-based image watermarking},'' \emph{Applied Sciences}, vol.~13,
-  no.~21, p. 11852, 2023, doi: 10.3390/app132111852.
+X.~Zhong, A.~Das, F.~Alrasheedi, and A.~Tanvir, ``{A brief, in-depth survey of deep learning-based image watermarking},'' \emph{Applied Sciences}, vol.~13, no.~21, p. 11852, 2023, doi: 10.3390/app132111852.
 
 \bibitem{b_fang2019}
-H.~Fang, W.~Zhang, H.~Zhou, H.~Cui, and N.~Yu, ``{Screen-shooting resilient
-  watermarking},'' \emph{IEEE Trans. Information Forensics and Security},
-  vol.~14, no.~6, pp. 1403--1418, 2019.
+H.~Fang, W.~Zhang, H.~Zhou, H.~Cui, and N.~Yu, ``{Screen-shooting resilient watermarking},'' \emph{IEEE Trans. Information Forensics and Security}, vol.~14, no.~6, pp. 1403--1418, 2019.
 
 \bibitem{b_nguyen2016}
-V.~Nguyen, Y.~Tang, A.~Ashok, M.~Gruteser, K.~Dana, W.~Hu, E.~Wengrowski, and
-  N.~Mandayam, ``{High-rate flicker-free screen-camera communication with
-  spatially adaptive embedding},'' in \emph{Proc. IEEE INFOCOM}, 2016, pp.
-  1--9, doi: 10.1109/INFOCOM.2016.7524512.
+V.~Nguyen, Y.~Tang, A.~Ashok, M.~Gruteser, K.~Dana, W.~Hu, E.~Wengrowski, and N.~Mandayam, ``{High-rate flicker-free screen-camera communication with spatially adaptive embedding},'' in \emph{Proc. IEEE INFOCOM}, 2016, pp. 1--9, doi: 10.1109/INFOCOM.2016.7524512.
 
 \bibitem{b_tran2021}
-V.~Tran, G.~Jayatilaka, A.~Ashok, and A.~Misra, ``{DeepLight: Robust \&
-  unobtrusive real-time screen-camera communication for real-world displays},''
-  in \emph{Proc. 20th ACM/IEEE Int. Conf. Information Processing in Sensor
-  Networks (IPSN)}, 2021, pp. 238--253, doi: 10.1145/3412382.3458269.
+V.~Tran, G.~Jayatilaka, A.~Ashok, and A.~Misra, ``{DeepLight: Robust \& unobtrusive real-time screen-camera communication for real-world displays},'' in \emph{Proc. 20th ACM/IEEE Int. Conf. Information Processing in Sensor Networks (IPSN)}, 2021, pp. 238--253, doi: 10.1145/3412382.3458269.
 
 \bibitem{b_ghiasi2024}
-S.~K. Ghiasi, M.~Kaldenbach, and M.~Zuniga, ``{Passive screen-to-camera
-  communication},'' in \emph{Proc. 20th Int. Conf. Distributed Computing in
-  Smart Systems and the Internet of Things (DCOSS-IoT)}, 2024, pp. 35--43, doi:
-  10.1109/DCOSS-IoT61029.2024.00016.
+S.~K. Ghiasi, M.~Kaldenbach, and M.~Zuniga, ``{Passive screen-to-camera communication},'' in \emph{Proc. 20th Int. Conf. Distributed Computing in Smart Systems and the Internet of Things (DCOSS-IoT)}, 2024, pp. 35--43, doi: 10.1109/DCOSS-IoT61029.2024.00016.
 
 \bibitem{b_yerazunis2001}
 \BIBentryALTinterwordspacing
-W.~S. Yerazunis and M.~Carbone, ``{Privacy-enhanced displays by time-masking
-  images},'' in \emph{Proc. Australian Conf. Computer-Human Interaction
-  (OzCHI)}, Nov. 2001. [Online]. Available:
-  \url{https://www.merl.com/publications/TR2002-11}
+W.~S. Yerazunis and M.~Carbone, ``{Privacy-enhanced displays by time-masking images},'' in \emph{Proc. Australian Conf. Computer-Human Interaction (OzCHI)}, Nov. 2001. [Online]. Available: \url{https://www.merl.com/publications/TR2002-11}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_wu2013}
-X.~Wu and G.~Zhai, ``{Temporal psychovisual modulation: A new paradigm of
-  information display},'' \emph{IEEE Signal Process. Mag.}, vol.~30, no.~1, pp.
-  136--141, 2013, doi: 10.1109/MSP.2012.2219678.
+X.~Wu and G.~Zhai, ``{Temporal psychovisual modulation: A new paradigm of information display},'' \emph{IEEE Signal Process. Mag.}, vol.~30, no.~1, pp. 136--141, 2013, doi: 10.1109/MSP.2012.2219678.
 
 \bibitem{b_gao2014}
-Z.~Gao, G.~Zhai, and X.~Min, ``{Information security display system based on
-  temporal psychovisual modulation},'' in \emph{Proc. IEEE Int. Symp. Circuits
-  and Systems (ISCAS)}, 2014, pp. 449--452, doi: 10.1109/ISCAS.2014.6865167.
+Z.~Gao, G.~Zhai, and X.~Min, ``{Information security display system based on temporal psychovisual modulation},'' in \emph{Proc. IEEE Int. Symp. Circuits and Systems (ISCAS)}, 2014, pp. 449--452, doi: 10.1109/ISCAS.2014.6865167.
 
 \bibitem{b_kaleido2015}
-L.~Zhang, C.~Bo, J.~Hou, X.-Y. Li, Y.~Wang, K.~Liu, and Y.~Liu, ``{Kaleido: You
-  can watch it but cannot record it},'' in \emph{Proc. 21st Annu. Int. Conf.
-  Mobile Computing and Networking (MobiCom)}, 2015, pp. 372--385, doi:
-  10.1145/2789168.2790106.
+L.~Zhang, C.~Bo, J.~Hou, X.-Y. Li, Y.~Wang, K.~Liu, and Y.~Liu, ``{Kaleido: You can watch it but cannot record it},'' in \emph{Proc. 21st Annu. Int. Conf. Mobile Computing and Networking (MobiCom)}, 2015, pp. 372--385, doi: 10.1145/2789168.2790106.
 
 \bibitem{b_rainbow2018}
-L.~Yang, W.~Wang, Z.~Wang, and Q.~Zhang, ``{Rainbow: Preventing
-  mobile-camera-based piracy in the physical world},'' in \emph{Proc. IEEE
-  INFOCOM}, 2018, pp. 1061--1069, doi: 10.1109/INFOCOM.2018.8485881.
+L.~Yang, W.~Wang, Z.~Wang, and Q.~Zhang, ``{Rainbow: Preventing mobile-camera-based piracy in the physical world},'' in \emph{Proc. IEEE INFOCOM}, 2018, pp. 1061--1069, doi: 10.1109/INFOCOM.2018.8485881.
 
 \bibitem{b_lim2007}
-J.~Lim, ``{Defeat spyware with anti-screen capture technology using visual
-  persistence},'' in \emph{Proc. 3rd Symp. Usable Privacy and Security
-  (SOUPS)}, 2007, pp. 147--148, doi: 10.1145/1280680.1280701.
+J.~Lim, ``{Defeat spyware with anti-screen capture technology using visual persistence},'' in \emph{Proc. 3rd Symp. Usable Privacy and Security (SOUPS)}, 2007, pp. 147--148, doi: 10.1145/1280680.1280701.
 
 \bibitem{b_goodfellow2015}
-I.~J. Goodfellow, J.~Shlens, and C.~Szegedy, ``{Explaining and harnessing
-  adversarial examples},'' in \emph{Proc. Int. Conf. Learning Representations
-  (ICLR)}, 2015.
+I.~J. Goodfellow, J.~Shlens, and C.~Szegedy, ``{Explaining and harnessing adversarial examples},'' in \emph{Proc. Int. Conf. Learning Representations (ICLR)}, 2015.
 
 \bibitem{b_madry2018}
-A.~Madry, A.~Makelov, L.~Schmidt, D.~Tsipras, and A.~Vladu, ``{Towards deep
-  learning models resistant to adversarial attacks},'' in \emph{Proc. Int.
-  Conf. Learning Representations (ICLR)}, 2018.
+A.~Madry, A.~Makelov, L.~Schmidt, D.~Tsipras, and A.~Vladu, ``{Towards deep learning models resistant to adversarial attacks},'' in \emph{Proc. Int. Conf. Learning Representations (ICLR)}, 2018.
 
 \bibitem{b_carlini2017}
-N.~Carlini and D.~Wagner, ``{Towards evaluating the robustness of neural
-  networks},'' in \emph{Proc. IEEE Symp. Security and Privacy (S\&P)}, 2017,
-  pp. 39--57.
+N.~Carlini and D.~Wagner, ``{Towards evaluating the robustness of neural networks},'' in \emph{Proc. IEEE Symp. Security and Privacy (S\&P)}, 2017, pp. 39--57.
 
 \bibitem{b_eykholt2018}
-K.~Eykholt, I.~Evtimov, E.~Fernandes, B.~Li, A.~Rahmati, C.~Xiao, A.~Prakash,
-  T.~Kohno, and D.~Song, ``{Robust physical-world attacks on deep learning
-  visual classification},'' in \emph{Proc. IEEE/CVF Conf. Computer Vision and
-  Pattern Recognition (CVPR)}, 2018, pp. 1625--1634.
+K.~Eykholt, I.~Evtimov, E.~Fernandes, B.~Li, A.~Rahmati, C.~Xiao, A.~Prakash, T.~Kohno, and D.~Song, ``{Robust physical-world attacks on deep learning visual classification},'' in \emph{Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, 2018, pp. 1625--1634.
 
 \bibitem{b_thys2019}
-S.~Thys, W.~{Van Ranst}, and T.~Goedeme, ``{Fooling automated surveillance
-  cameras: Adversarial patches to attack person detection},'' in \emph{Proc.
-  IEEE/CVF Conf. Computer Vision and Pattern Recognition Workshops (CVPRW)},
-  2019.
+S.~Thys, W.~{Van Ranst}, and T.~Goedeme, ``{Fooling automated surveillance cameras: Adversarial patches to attack person detection},'' in \emph{Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition Workshops (CVPRW)}, 2019.
 
 \bibitem{b_xu2020}
-K.~Xu, G.~Zhang, S.~Liu, Q.~Fan, M.~Sun, H.~Chen, P.-Y. Chen, Y.~Wang, and
-  X.~Lin, ``{Adversarial T-shirt! Evading person detectors in a physical
-  world},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2020, pp.
-  665--681.
+K.~Xu, G.~Zhang, S.~Liu, Q.~Fan, M.~Sun, H.~Chen, P.-Y. Chen, Y.~Wang, and X.~Lin, ``{Adversarial T-shirt! Evading person detectors in a physical world},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2020, pp. 665--681.
 
 \bibitem{b_wei2024}
-H.~Wei, H.~Tang, X.~Jia, Z.~Wang, H.~Yu, Z.~Li, S.~Satoh, L.~{Van Gool}, and
-  Z.~Wang, ``{Physical adversarial attack meets computer vision: A decade
-  survey},'' \emph{IEEE Trans. Pattern Anal. Mach. Intell.}, vol.~46, no.~12,
-  pp. 9797--9817, 2024.
+H.~Wei, H.~Tang, X.~Jia, Z.~Wang, H.~Yu, Z.~Li, S.~Satoh, L.~{Van Gool}, and Z.~Wang, ``{Physical adversarial attack meets computer vision: A decade survey},'' \emph{IEEE Trans. Pattern Anal. Mach. Intell.}, vol.~46, no.~12, pp. 9797--9817, 2024.
 
 \bibitem{b_athalye2018}
-A.~Athalye, L.~Engstrom, A.~Ilyas, and K.~Kwok, ``{Synthesizing robust
-  adversarial examples},'' in \emph{Proc. Int. Conf. Machine Learning (ICML)},
-  2018, pp. 284--293.
+A.~Athalye, L.~Engstrom, A.~Ilyas, and K.~Kwok, ``{Synthesizing robust adversarial examples},'' in \emph{Proc. Int. Conf. Machine Learning (ICML)}, 2018, pp. 284--293.
 
 \bibitem{b_gu2024}
-J.~Gu, X.~Jia, P.~de~Jorge, W.~Yu, X.~Liu, A.~Ma, Y.~Xun, A.~Hu, A.~Khakzar,
-  Z.~Li, X.~Cao, and P.~Torr, ``{A survey on transferability of adversarial
-  examples across deep neural networks},'' \emph{Transactions on Machine
-  Learning Research}, 2024, [Online]. Available:
-  https://openreview.net/forum?id=AYJ3m7BocI.
+J.~Gu, X.~Jia, P.~de~Jorge, W.~Yu, X.~Liu, A.~Ma, Y.~Xun, A.~Hu, A.~Khakzar, Z.~Li, X.~Cao, and P.~Torr, ``{A survey on transferability of adversarial examples across deep neural networks},'' \emph{Transactions on Machine Learning Research}, 2024, [Online]. Available: https://openreview.net/forum?id=AYJ3m7BocI.
 
 \bibitem{b_niu2021}
-D.~Niu, R.~Guo, and Y.~Wang, ``{Moir{\'e} attack (MA): A new potential risk of
-  screen photos},'' in \emph{Advances in Neural Information Processing Systems
-  (NeurIPS)}, vol.~34, 2021, pp. 25\,543--25\,554.
+D.~Niu, R.~Guo, and Y.~Wang, ``{Moir{\'e} attack (MA): A new potential risk of screen photos},'' in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~34, 2021, pp. 25\,543--25\,554.
 
 \bibitem{b_chacha2008}
-D.~J. Bernstein, ``{ChaCha, a variant of Salsa20},'' in \emph{Workshop Record
-  of SASC}, vol.~8, 2008, pp. 3--5.
+D.~J. Bernstein, ``{ChaCha, a variant of Salsa20},'' in \emph{Workshop Record of SASC}, vol.~8, 2008, pp. 3--5.
 
 \bibitem{b_knuth1997}
-D.~E. Knuth, \emph{{The Art of Computer Programming, Volume~2: Seminumerical
-  Algorithms}}, 3rd~ed.\hskip 1em plus 0.5em minus 0.4em\relax Addison-Wesley,
-  1997.
+D.~E. Knuth, \emph{{The Art of Computer Programming, Volume~2: Seminumerical Algorithms}}, 3rd~ed.\hskip 1em plus 0.5em minus 0.4em\relax Addison-Wesley, 1997.
 
 \bibitem{b_song2018}
 \BIBentryALTinterwordspacing
-C.~Song and V.~Shmatikov, ``{Fooling OCR systems with adversarial text
-  images},'' \emph{arXiv preprint arXiv:1802.05385}, 2018, doi:
-  10.48550/arXiv.1802.05385. [Online]. Available:
-  \url{https://arxiv.org/abs/1802.05385}
+C.~Song and V.~Shmatikov, ``{Fooling OCR systems with adversarial text images},'' \emph{arXiv preprint arXiv:1802.05385}, 2018, doi: 10.48550/arXiv.1802.05385. [Online]. Available: \url{https://arxiv.org/abs/1802.05385}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_ciede2000}
-G.~Sharma, W.~Wu, and E.~N. Dalal, ``{The CIEDE2000 color-difference formula:
-  Implementation notes, supplementary test data, and mathematical
-  observations},'' \emph{Color Research \& Application}, vol.~30, no.~1, pp.
-  21--30, 2005.
+G.~Sharma, W.~Wu, and E.~N. Dalal, ``{The CIEDE2000 color-difference formula: Implementation notes, supplementary test data, and mathematical observations},'' \emph{Color Research \& Application}, vol.~30, no.~1, pp. 21--30, 2005.
+
+\bibitem{b_wang2004}
+Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``{Image quality assessment: From error visibility to structural similarity},'' \emph{IEEE Trans. Image Process.}, vol.~13, no.~4, pp. 600--612, 2004.
 
 \bibitem{b_cai2024}
-Y.~Cai, A.~Bozorgian, M.~Ashraf, R.~Wanat, and R.~K. Mantiuk, ``{elaTCSF: A
-  temporal contrast sensitivity function for flicker detection and modeling
-  variable refresh rate flicker},'' in \emph{Proc. SIGGRAPH Asia}, 2024.
+Y.~Cai, A.~Bozorgian, M.~Ashraf, R.~Wanat, and R.~K. Mantiuk, ``{elaTCSF: A temporal contrast sensitivity function for flicker detection and modeling variable refresh rate flicker},'' in \emph{Proc. SIGGRAPH Asia}, 2024.
 
 \bibitem{b_davis2015}
-J.~Davis, Y.-H. Hsieh, and H.-C. Lee, ``{Humans perceive flicker artifacts at
-  500~Hz},'' \emph{Scientific Reports}, vol.~5, 2015, {Art.~no.~7861}, doi:
-  10.1038/srep07861.
+J.~Davis, Y.-H. Hsieh, and H.-C. Lee, ``{Humans perceive flicker artifacts at 500~Hz},'' \emph{Scientific Reports}, vol.~5, 2015, {Art.~no.~7861}, doi: 10.1038/srep07861.
 
 \bibitem{b_emeet_s600}
 \BIBentryALTinterwordspacing
-{EMEET}, ``{SmartCam S600: 4K Ultra HD webcam},'' 2026, {Accessed: Jul.~7,
-  2026}. [Online]. Available:
-  \url{https://emeet.com/en-eu/products/webcam-s600}
+{EMEET}, ``{SmartCam S600: 4K Ultra HD webcam},'' 2026, {Accessed: Jul.~7, 2026}. [Online]. Available: \url{https://emeet.com/en-eu/products/webcam-s600}
 \BIBentrySTDinterwordspacing
-
-\bibitem{b_coco2014}
-T.-Y. Lin, M.~Maire, S.~Belongie, J.~Hays, P.~Perona, D.~Ramanan,
-  P.~Doll{\'a}r, and C.~L. Zitnick, ``{Microsoft COCO: Common objects in
-  context},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2014, pp.
-  740--755.
-
-\bibitem{b_mot16}
-A.~Milan, L.~Leal-Taix{\'e}, I.~Reid, S.~Roth, and K.~Schindler, ``{MOT16: A
-  benchmark for multi-object tracking},'' \emph{arXiv preprint
-  arXiv:1603.00831}, 2016.
-
-\bibitem{b_ieee1789}
-{IEEE}, ``{IEEE Recommended Practices for Modulating Current in High-Brightness
-  LEDs for Mitigating Health Risks to Viewers},'' IEEE Std 1789-2015, 2015.
 
 \bibitem{b_surya2024}
 \BIBentryALTinterwordspacing
-V.~Paruchuri, ``{Surya: Multilingual document OCR toolkit},'' 2024. [Online].
-  Available: \url{https://github.com/VikParuchuri/surya}
+V.~Paruchuri, ``{Surya: Multilingual document OCR toolkit},'' 2024. [Online]. Available: \url{https://github.com/VikParuchuri/surya}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_easyocr2020}
 \BIBentryALTinterwordspacing
-{JaidedAI}, ``{EasyOCR: Ready-to-use OCR with 80+ supported languages},'' 2020.
-  [Online]. Available: \url{https://github.com/JaidedAI/EasyOCR}
+{JaidedAI}, ``{EasyOCR: Ready-to-use OCR with 80+ supported languages},'' 2020. [Online]. Available: \url{https://github.com/JaidedAI/EasyOCR}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_smith2007}
-R.~Smith, ``{An overview of the Tesseract OCR engine},'' in \emph{Proc. Int.
-  Conf. Document Analysis and Recognition (ICDAR)}, 2007, pp. 629--633.
+R.~Smith, ``{An overview of the Tesseract OCR engine},'' in \emph{Proc. Int. Conf. Document Analysis and Recognition (ICDAR)}, 2007, pp. 629--633.
+
+\bibitem{b_qwen3vl2025}
+\BIBentryALTinterwordspacing
+S.~Bai \emph{et~al.}, ``{Qwen3-VL Technical Report},'' \emph{arXiv preprint arXiv:2511.21631}, 2025, doi: 10.48550/arXiv.2511.21631. [Online]. Available: \url{https://arxiv.org/abs/2511.21631}
+\BIBentrySTDinterwordspacing
+
+\bibitem{b_glm45v2025}
+\BIBentryALTinterwordspacing
+{GLM-V Team}, W.~Hong, W.~Yu, X.~Gu \emph{et~al.}, ``{GLM-4.1V-Thinking and GLM-4.5V: Towards Versatile Multimodal Reasoning with Scalable Reinforcement Learning},'' \emph{arXiv preprint arXiv:2507.01006}, 2025, doi: 10.48550/arXiv.2507.01006. [Online]. Available: \url{https://arxiv.org/abs/2507.01006}
+\BIBentrySTDinterwordspacing
 
 \bibitem{b_shi2023}
 \BIBentryALTinterwordspacing
-Y.~Shi, D.~Peng, W.~Liao, Z.~Lin, X.~Chen, C.~Liu, Y.~Zhang, and L.~Jin,
-  ``{Exploring OCR capabilities of GPT-4V(ision): A quantitative and in-depth
-  evaluation},'' \emph{arXiv preprint arXiv:2310.16809}, 2023, doi:
-  10.48550/arXiv.2310.16809. [Online]. Available:
-  \url{https://arxiv.org/abs/2310.16809}
+Y.~Shi, D.~Peng, W.~Liao, Z.~Lin, X.~Chen, C.~Liu, Y.~Zhang, and L.~Jin, ``{Exploring OCR capabilities of GPT-4V(ision): A quantitative and in-depth evaluation},'' \emph{arXiv preprint arXiv:2310.16809}, 2023, doi: 10.48550/arXiv.2310.16809. [Online]. Available: \url{https://arxiv.org/abs/2310.16809}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_jiang2025}
 \BIBentryALTinterwordspacing
-C.~Jiang, Z.~Wang, M.~Dong, and J.~Gui, ``{Survey of adversarial robustness in
-  multimodal large language models},'' \emph{arXiv preprint arXiv:2503.13962},
-  2025, doi: 10.48550/arXiv.2503.13962. [Online]. Available:
-  \url{https://arxiv.org/abs/2503.13962}
+C.~Jiang, Z.~Wang, M.~Dong, and J.~Gui, ``{Survey of adversarial robustness in multimodal large language models},'' \emph{arXiv preprint arXiv:2503.13962}, 2025, doi: 10.48550/arXiv.2503.13962. [Online]. Available: \url{https://arxiv.org/abs/2503.13962}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_yolo26}
 \BIBentryALTinterwordspacing
-G.~Jocher, J.~Qiu, M.~Liu, S.~Lyu, F.~C. Akyon, and M.~E. Kalfaoglu,
-  ``{Ultralytics YOLO26: Unified real-time end-to-end vision models},'' 2026,
-  arXiv:2606.03748, doi: 10.48550/arXiv.2606.03748. [Online]. Available:
-  \url{https://arxiv.org/abs/2606.03748}
+G.~Jocher, J.~Qiu, M.~Liu, S.~Lyu, F.~C. Akyon, and M.~E. Kalfaoglu, ``{Ultralytics YOLO26: Unified real-time end-to-end vision models},'' 2026, arXiv:2606.03748, doi: 10.48550/arXiv.2606.03748. [Online]. Available: \url{https://arxiv.org/abs/2606.03748}
 \BIBentrySTDinterwordspacing
 
 \bibitem{b_rtdetr2024}
-Y.~Zhao, W.~Lv, S.~Xu, J.~Wei, G.~Wang, Q.~Dang, Y.~Liu, and J.~Chen, ``{DETRs
-  beat YOLOs on real-time object detection},'' in \emph{Proc. IEEE/CVF Conf.
-  Computer Vision and Pattern Recognition (CVPR)}, 2024, pp. 16\,965--16\,974.
+Y.~Zhao, W.~Lv, S.~Xu, J.~Wei, G.~Wang, Q.~Dang, Y.~Liu, and J.~Chen, ``{DETRs beat YOLOs on real-time object detection},'' in \emph{Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, 2024, pp. 16\,965--16\,974.
 
 \bibitem{b_fasterrcnn2015}
-S.~Ren, K.~He, R.~Girshick, and J.~Sun, ``{Faster R-CNN: Towards real-time
-  object detection with region proposal networks},'' in \emph{Advances in
-  Neural Information Processing Systems (NeurIPS)}, vol.~28, 2015, pp. 91--99.
+S.~Ren, K.~He, R.~Girshick, and J.~Sun, ``{Faster R-CNN: Towards real-time object detection with region proposal networks},'' in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~28, 2015, pp. 91--99.
 
 \bibitem{b_retinanet2017}
-T.-Y. Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll{\'a}r, ``{Focal loss for
-  dense object detection},'' in \emph{Proc. IEEE Int. Conf. Computer Vision
-  (ICCV)}, 2017, pp. 2980--2988.
+T.-Y. Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll{\'a}r, ``{Focal loss for dense object detection},'' in \emph{Proc. IEEE Int. Conf. Computer Vision (ICCV)}, 2017, pp. 2980--2988.
 
 \bibitem{b_bytetrack2022}
-Y.~Zhang, P.~Sun, Y.~Jiang, D.~Yu, F.~Weng, Z.~Yuan, P.~Luo, W.~Liu, and
-  X.~Wang, ``{ByteTrack: Multi-object tracking by associating every detection
-  box},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2022, pp.
-  1--21.
+Y.~Zhang, P.~Sun, Y.~Jiang, D.~Yu, F.~Weng, Z.~Yuan, P.~Luo, W.~Liu, and X.~Wang, ``{ByteTrack: Multi-object tracking by associating every detection box},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2022, pp. 1--21.
 
-\bibitem{b_wang2004}
-Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``{Image quality
-  assessment: From error visibility to structural similarity},'' \emph{IEEE
-  Trans. Image Process.}, vol.~13, no.~4, pp. 600--612, 2004.
+\bibitem{b_coco2014}
+T.-Y. Lin, M.~Maire, S.~Belongie, J.~Hays, P.~Perona, D.~Ramanan, P.~Doll{\'a}r, and C.~L. Zitnick, ``{Microsoft COCO: Common objects in context},'' in \emph{Proc. European Conf. Computer Vision (ECCV)}, 2014, pp. 740--755.
+
+\bibitem{b_mot16}
+A.~Milan, L.~Leal-Taix{\'e}, I.~Reid, S.~Roth, and K.~Schindler, ``{MOT16: A benchmark for multi-object tracking},'' \emph{arXiv preprint arXiv:1603.00831}, 2016.
 
 \bibitem{b_soukoreff2003}
-R.~W. Soukoreff and I.~S. MacKenzie, ``{Metrics for text entry research: An
-  evaluation of MSD and KSPC, and a new unified error metric},'' in \emph{Proc.
-  SIGCHI Conf. Human Factors in Computing Systems (CHI)}, 2003, pp. 113--120,
-  doi: 10.1145/642611.642632.
+R.~W. Soukoreff and I.~S. MacKenzie, ``{Metrics for text entry research: An evaluation of MSD and KSPC, and a new unified error metric},'' in \emph{Proc. SIGCHI Conf. Human Factors in Computing Systems (CHI)}, 2003, pp. 113--120, doi: 10.1145/642611.642632.
+
+\bibitem{b_openai_codex2026}
+\BIBentryALTinterwordspacing
+{OpenAI}, ``{Introducing the Codex App},'' OpenAI, 2026, accessed: Jul. 10, 2026. [Online]. Available: \url{https://openai.com/index/introducing-the-codex-app/}
+\BIBentrySTDinterwordspacing
 
 \end{thebibliography}

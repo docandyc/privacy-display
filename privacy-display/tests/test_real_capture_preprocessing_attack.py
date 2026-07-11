@@ -462,3 +462,22 @@ def test_error_validator_requires_explicit_clean_completion():
 
     with pytest.raises(ValueError, match="OCR errors"):
         validate_no_ocr_errors([row])
+
+
+def test_completed_three_engine_matrix_is_reflected_in_manuscript():
+    root = Path(__file__).resolve().parents[1]
+    report = json.loads(
+        (root / "experiments" / "results" /
+         "real_capture_preprocessing_attack_three_engine.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    manuscript = (root.parent / "paper" / "main.tex").read_text(encoding="utf-8")
+
+    assert report["audit"]["matrix_row_count"] == 17_712
+    assert report["audit"]["ocr_error_count"] == 0
+    assert report["config"]["engines"] == ["tesseract", "easyocr", "surya"]
+    assert "17,712" in manuscript
+    assert "40.2\\%" in manuscript
+    assert "13.7\\%" in manuscript
+    assert "EasyOCR and Surya preprocessing remain unevaluated" not in manuscript

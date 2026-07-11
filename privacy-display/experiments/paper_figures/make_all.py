@@ -25,6 +25,7 @@ MODULES = [
     "fig_s2_multiengine_ocr",    # S2 OCR-engine generalization
     "fig_s3_baselines_scatter",  # S3 privacy vs usability baselines
     "fig_s4_all_attackers",      # S4 one subframe defeats every attacker family
+    "fig_s5_real_engine_ocr",    # S5 real-capture raw vs preprocessing oracle
 ]
 
 

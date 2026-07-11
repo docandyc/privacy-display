@@ -1,69 +1,106 @@
-"""S5 - Real-capture per-engine OCR: char recovery by engine × profile (short exposure).
+"""Real-capture OCR preprocessing stress test on the matched primary pool.
 
-Grouped bars showing that all three OCR engines (Surya, EasyOCR, Tesseract) are
-suppressed under real camera capture with protection enabled. Parallels
-fig_s2_multiengine_ocr.py but for real-capture data instead of simulation.
+Each panel pairs raw-input recovery with the per-capture oracle over the fixed,
+predeclared preprocessing grid.  Exact values are reported in the manuscript
+table; this figure emphasizes the direction and engine dependence of the gain.
 """
 from __future__ import annotations
 
-import numpy as np
+from matplotlib.lines import Line2D
 
 import figstyle as fs
 
 ENGINES = [
-    ("surya", "Surya"),
-    ("easyocr", "EasyOCR"),
     ("tesseract", "Tesseract"),
+    ("easyocr", "EasyOCR"),
+    ("surya", "Surya"),
 ]
 
 PROFILES = [
     ("original", "Original"),
-    ("mask_only", "Mask only"),
-    ("mask_noise", "Mask + noise"),
-    ("strong", "Strong"),
-    ("deployed", "Readability-\npriority"),
-    ("capture_hardened", "High-\nsuppression"),
+    ("deployed", "Readability-priority"),
+    ("high_suppression", "High-suppression"),
 ]
+
+REPORT_FILES = {
+    engine: f"real_capture_preprocessing_attack_{engine}.json"
+    for engine, _ in ENGINES
+}
+
+
+def _matched_profile_means(report: dict, oracle: str) -> dict[str, float]:
+    contrasts = report["oracles"][oracle]["contrasts"]
+    deployed = contrasts["original_minus_deployed"]
+    high = contrasts["original_minus_high_suppression"]
+
+    if deployed["matched_unit_count"] != 288 or high["matched_unit_count"] != 288:
+        raise ValueError("preprocessing figure requires 288 matched units per profile")
+    if abs(deployed["matched_baseline_mean"] - high["matched_baseline_mean"]) > 1e-12:
+        raise ValueError("inconsistent matched original means across contrasts")
+
+    return {
+        "original": 100.0 * deployed["matched_baseline_mean"],
+        "deployed": 100.0 * deployed["matched_treatment_mean"],
+        "high_suppression": 100.0 * high["matched_treatment_mean"],
+    }
+
+
+def load_preprocessing_recovery() -> dict[str, dict[str, dict[str, float]]]:
+    """Load matched raw/grid-oracle recovery from the three engine reports."""
+    values: dict[str, dict[str, dict[str, float]]] = {}
+    for engine, _ in ENGINES:
+        report = fs.load(REPORT_FILES[engine])
+        raw = _matched_profile_means(report, "raw")
+        grid = _matched_profile_means(report, "best_preprocessing_engine")
+        values[engine] = {
+            profile: {"raw": raw[profile], "grid_oracle": grid[profile]}
+            for profile, _ in PROFILES
+        }
+    return values
 
 
 def main() -> None:
-    data = fs.load("real_capture_per_engine.json")
+    values = load_preprocessing_recovery()
+    fig, axes = fs.plt.subplots(3, 1, figsize=(fs.COL_W, 3.15), sharex=True)
+    y_positions = list(range(len(ENGINES)))
 
-    x = np.arange(len(ENGINES))
-    n_profiles = len(PROFILES)
-    w = 0.135
-    offsets = np.arange(n_profiles) * w - (n_profiles - 1) * w / 2
+    for ax, (profile, profile_label) in zip(axes, PROFILES, strict=True):
+        for y, (engine, _) in zip(y_positions, ENGINES, strict=True):
+            raw = values[engine][profile]["raw"]
+            oracle = values[engine][profile]["grid_oracle"]
+            ax.plot([raw, oracle], [y, y], color="0.65", linewidth=1.2, zorder=1)
+            ax.plot(
+                raw, y, marker="o", linestyle="none", markersize=4.8,
+                markerfacecolor="white", markeredgecolor="dimgray",
+                markeredgewidth=0.9, zorder=2,
+            )
+            ax.plot(
+                oracle, y, marker="D", linestyle="none", markersize=4.5,
+                markerfacecolor="blue", markeredgecolor="blue", zorder=3,
+            )
 
-    colors = [
-        fs.GRADE_COLORS.get(p, "gray") for p, _ in PROFILES
-    ]
+        ax.set_title(profile_label, loc="left", pad=2, fontsize=8.5)
+        ax.set_yticks(y_positions)
+        ax.set_yticklabels([label for _, label in ENGINES])
+        ax.set_ylim(len(ENGINES) - 0.5, -0.5)
+        ax.set_xlim(0, 100)
+        ax.set_xticks([0, 25, 50, 75, 100])
+        ax.grid(axis="x")
 
-    fig, ax = fs.plt.subplots(figsize=(fs.COL_W, 2.75))
-
-    for i, (prof_key, prof_label) in enumerate(PROFILES):
-        vals = []
-        errs = []
-        for eng_key, _ in ENGINES:
-            key = f"{prof_key}|short|{eng_key}"
-            node = data[key]["char_accuracy"]
-            vals.append(fs.pct(node))
-            errs.append(fs.pct_err(node))
-        ax.bar(
-            x + offsets[i], vals, w,
-            yerr=errs, capsize=2,
-            color=colors[i], edgecolor="black", linewidth=0.4,
-            label=prof_label.replace("\n", " "),
-            error_kw={"elinewidth": 0.6},
-        )
-
-    ax.set_ylabel("Char recovery (%)")
-    ax.set_ylim(0, 100)
-    ax.set_xticks(x)
-    ax.set_xticklabels([lbl for _, lbl in ENGINES])
-    ax.grid(axis="y")
-    ax.legend(ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.02),
-              handlelength=0.9, columnspacing=0.7, frameon=False, fontsize=6.8)
-    # title in LaTeX caption
+    axes[-1].set_xlabel("Matched character recovery (%)")
+    axes[-1].legend(
+        handles=[
+            Line2D([], [], marker="o", linestyle="none", markersize=4.8,
+                   markerfacecolor="white", markeredgecolor="dimgray",
+                   label="Raw input"),
+            Line2D([], [], marker="D", linestyle="none", markersize=4.5,
+                   markerfacecolor="blue", markeredgecolor="blue",
+                   label="Fixed-grid oracle"),
+        ],
+        loc="center right", ncol=2, fontsize=7, handletextpad=0.35,
+        columnspacing=0.8, borderpad=0.35,
+    )
+    fig.subplots_adjust(hspace=0.42)
     fs.save(fig, "real_engine_ocr")
 
 

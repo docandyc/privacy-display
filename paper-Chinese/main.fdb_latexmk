@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex main"] 1783425878.82794 "main.aux" "main.bbl" "main" 1783425883.0726 0
+["bibtex main"] 1783757214.5004 "main.aux" "main.bbl" "main" 1783757216.71366 0
   "./IEEEtran.bst" 1783307844.58055 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "./refs.bib" 1783423722.67499 17655 623a3c45681addccd7461b16177336b5 ""
-  "main.aux" 1783425881.67272 18615 93e64c10b0b991ef541f48ce1a8037b0 "xelatex"
+  "./refs.bib" 1783701206.88322 18300 84720a33657fbc9e2187f8ff5cea5dd1 ""
+  "main.aux" 1783757215.79938 20409 77cf7058a0f67392536639063f9f4394 "xelatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["xdvipdfmx"] 1783425882.13562 "main.xdv" "main.pdf" "main" 1783425883.0753 0
-  "main.xdv" 1783425881.67537 468776 009141eb7f66b0fc794168cd44c4cac0 "xelatex"
+["xdvipdfmx"] 1783757216.10971 "main.xdv" "main.pdf" "main" 1783757216.71498 0
+  "main.xdv" 1783757215.80132 416636 7bd114459c453a8f2fa5d203a18fa817 "xelatex"
   (generated)
   "main.pdf"
   (rewritten before read)
-["xelatex"] 1783425879.05884 "main.tex" "main.xdv" "main" 1783425883.07291 0
+["xelatex"] 1783757214.61966 "main.tex" "main.xdv" "main" 1783757216.71373 0
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
@@ -102,24 +102,23 @@
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "bullet.png" 1783307844.58075 430 e52d8fe748259de33fa611fdd6a099c1 ""
   "figures/all_attackers.pdf" 1783307844.58096 30544 8e38338e61dc4e1632d7d8b1ec647d44 ""
-  "figures/antiocr_heatmap.pdf" 1783307844.58118 40218 466a5024535a0d4f8b17b02248bd352c ""
-  "figures/baselines_scatter.pdf" 1783307844.58153 46364 1994096df1d76d28d1227a496e8598f9 ""
   "figures/multiengine_ocr.pdf" 1783307844.60578 27750 5903be581018e78e30128d78f728f86a ""
-  "figures/pareto_sweep.pdf" 1783307844.60603 30528 2bf4e2447b3806d7410fd67637b9197a ""
-  "figures/readability_robustness_tradeoff.pdf" 1783394703.34011 30929 874e113a9806bba549e6e99d57f384d0 ""
-  "figures/real_capture_bar.pdf" 1783394703.33829 30479 c0f0ba45a872425609af9ae9f4df31a1 ""
-  "figures/real_capture_montage.pdf" 1783394703.33371 1056141 51ae4ca9e71c5143cdbfc1ed8dd8c318 ""
+  "figures/real_capture_bar.pdf" 1783570761.08879 31099 61afbe8148b89ea6f7d619afaf6597ca ""
+  "figures/real_capture_montage.pdf" 1783649064.44519 2357035 b38279e26dfcd6683a45e812cb633073 ""
   "figures/real_detection_drop.pdf" 1783307844.60843 32337 353d306a54031606a09cb4737dbf2bcf ""
-  "figures/real_engine_ocr.pdf" 1783394703.34147 30180 df539e8a1fe9b26d9315b5c7db22f050 ""
-  "figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf" 1783307844.61005 28221 5bee28e38c6638430e368edded0c9386 ""
-  "figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf" 1783307844.65799 92432 d31dad29bf7f8b1c0d16aa09f22d671b ""
+  "figures/real_engine_ocr.pdf" 1783694139.25756 32279 5450c5c68b407e11d54e1bf7c62119c8 ""
+  "figures/study_ratings_likert.pdf" 1783570488.3246 44959 183d8dbabb6d02ce57067984d057ae50 ""
+  "figures/study_typing_paired.pdf" 1783338372.05998 35188 9bea892ecb3ac49d5c0456e15d158c6a ""
+  "figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf" 1783575487.81201 48133 c37e5fb1106bee9709a0b910a65c3468 ""
+  "figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf" 1783575487.81359 87630 77e039d50d1d0f6fe2479fb9da1bf5ff ""
   "ieeeaccess.cls" 1783307844.68959 51025 8bc97a5dab5f214746055d473aea1f85 ""
   "logo.png" 1783307844.6901 9705 6ba9f1039498f006286d6457f067dc20 ""
-  "main.aux" 1783425881.67272 18615 93e64c10b0b991ef541f48ce1a8037b0 "xelatex"
-  "main.bbl" 1783425879.05709 14419 0dc7bdaaf8ae4b971351ca765dd5f5ea "bibtex main"
-  "main.tex" 1783425784.18992 96548 396b67830f12fc77c380bf5422fc323b ""
+  "main.aux" 1783757215.79938 20409 77cf7058a0f67392536639063f9f4394 "xelatex"
+  "main.bbl" 1783757214.61722 15168 e36a1a394855329c205dcfe6838c96bc "bibtex main"
+  "main.tex" 1783757203.86874 87908 cc265f1126ac857622a87063f78e2639 ""
   "notaglinelogo.png" 1783307844.70069 3150 e273b7aed356b5f76c6d0b072166d68c ""
   "t1-formata-bold.tfm" 1783307845.85916 1420 e49288584c4b6aedcaf3809078fdde27 ""
+  "t1-formata-bolditalic.tfm" 1783307845.85953 1672 a22b31dbf0da7ba6594975d3d39e3805 ""
   "t1-formata-condmedium.tfm" 1783307845.85983 1412 69835d9272a4cf9349297208bcc60045 ""
   "t1-formata-medium.tfm" 1783307845.86754 4720 f3dcbbd4c5991060387bb367b565796f ""
   "t1-formata-mediumitalic.tfm" 1783307845.86791 4948 54bfa7890f4a946af8e94df300c347a0 ""

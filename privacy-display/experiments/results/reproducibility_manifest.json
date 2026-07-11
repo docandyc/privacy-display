@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-07-10T08:38:49.006657+00:00",
+  "generated_at_utc": "2026-07-10T14:36:30.114664+00:00",
   "project_root": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/privacy-display",
   "git": {
-    "commit": "15acb3fbcdfcb054c68f17c26a5ace52f4399b4c",
+    "commit": "da61db6f01a0858739283b64a52f35771acfdc28",
     "branch": "master",
     "dirty": true
   },
@@ -367,6 +367,39 @@
       "command": "python experiments/real_capture_preprocessing_attack.py --engines tesseract --json-out experiments/results/real_capture_preprocessing_attack_tesseract.json --md-out experiments/results/real_capture_preprocessing_attack_tesseract.md",
       "purpose": "Regenerate the fixed-grid Tesseract preprocessing-oracle report from its resumable cell matrix.",
       "expected": "experiments/results/real_capture_preprocessing_attack_tesseract.json and real_capture_preprocessing_attack_tesseract.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json",
+        "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
+        "referenced capture image files when matrix cells are missing"
+      ]
+    },
+    {
+      "name": "real_capture_preprocessing_easyocr",
+      "command": ".venv-surya/Scripts/python.exe experiments/real_capture_preprocessing_attack.py --engines easyocr --checkpoint experiments/results/real_capture_preprocessing_rows/matrix.jsonl --json-out experiments/results/real_capture_preprocessing_attack_easyocr.json --md-out experiments/results/real_capture_preprocessing_attack_easyocr.md --workers 1",
+      "purpose": "Regenerate the fixed-grid EasyOCR preprocessing-oracle report from its resumable cell matrix.",
+      "expected": "experiments/results/real_capture_preprocessing_attack_easyocr.json and real_capture_preprocessing_attack_easyocr.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json",
+        "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
+        "referenced capture image files when matrix cells are missing"
+      ]
+    },
+    {
+      "name": "real_capture_preprocessing_surya",
+      "command": ".venv-surya/Scripts/python.exe experiments/real_capture_preprocessing_attack.py --engines surya --checkpoint experiments/results/real_capture_preprocessing_rows/matrix.jsonl --json-out experiments/results/real_capture_preprocessing_attack_surya.json --md-out experiments/results/real_capture_preprocessing_attack_surya.md --workers 1",
+      "purpose": "Regenerate the fixed-grid Surya preprocessing-oracle report from its resumable cell matrix.",
+      "expected": "experiments/results/real_capture_preprocessing_attack_surya.json and real_capture_preprocessing_attack_surya.md",
+      "requires_data": [
+        "experiments/results/real_capture_ocr.json",
+        "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
+        "referenced capture image files when matrix cells are missing"
+      ]
+    },
+    {
+      "name": "real_capture_preprocessing_three_engine",
+      "command": ".venv-surya/Scripts/python.exe experiments/real_capture_preprocessing_attack.py --engines tesseract,easyocr,surya --checkpoint experiments/results/real_capture_preprocessing_rows/matrix.jsonl --json-out experiments/results/real_capture_preprocessing_attack_three_engine.json --md-out experiments/results/real_capture_preprocessing_attack_three_engine.md --workers 1",
+      "purpose": "Validate and aggregate the complete fixed-grid preprocessing matrix across all three OCR engines.",
+      "expected": "17,712 error-free cells plus real_capture_preprocessing_attack_three_engine.{json,md}",
       "requires_data": [
         "experiments/results/real_capture_ocr.json",
         "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
@@ -806,10 +839,46 @@
       "bytes": 1342
     },
     {
+      "path": "experiments/results/real_capture_preprocessing_attack_easyocr.json",
+      "exists": true,
+      "sha256": "686ebe9bf7079594ea90de8acf4a8498b8c16bca87961a54747cd36b8f6d30b1",
+      "bytes": 3641006
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_easyocr.md",
+      "exists": true,
+      "sha256": "4171193dbfd8c9114d1291188c97cb2a6075e25c20a95c076fba3be6714530f0",
+      "bytes": 1344
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_surya.json",
+      "exists": true,
+      "sha256": "4988ff22f34c7b4cb7b76d7bc5b9201aaae6404a89e9ba70522bd4def810ee13",
+      "bytes": 3870836
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_surya.md",
+      "exists": true,
+      "sha256": "ce612fde77fed30806f8ad945111b1b34d8a803bec6717ab5b812da408e33eb0",
+      "bytes": 1342
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_three_engine.json",
+      "exists": true,
+      "sha256": "31b78ce7d3408a2efb71a05fe2b0ad33db64e9bf5e9bbaf720080e75f9a9f505",
+      "bytes": 3641996
+    },
+    {
+      "path": "experiments/results/real_capture_preprocessing_attack_three_engine.md",
+      "exists": true,
+      "sha256": "b01bc4d9106c3ff1515051bfa0734e4308713be9520db3a66e0d2b15219a899d",
+      "bytes": 1346
+    },
+    {
       "path": "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",
       "exists": true,
-      "sha256": "44dc7d88cde8734720511144ef01f91e39c9f9d30b0bf06025933b14245059e3",
-      "bytes": 7536169
+      "sha256": "4c4531f74bc414e0dd266f4f1dd56c56badddeef43b5c61d85da54fdfb4d42b0",
+      "bytes": 14776038
     },
     {
       "path": "experiments/results/seed_sensitivity.json",
@@ -852,14 +921,20 @@
     {
       "path": "README.md",
       "exists": true,
-      "sha256": "e5445a11c697898d4dc0089c509e88a68e2ef0c1a67f0ad9b1b1919c94b1c005",
-      "bytes": 15132
+      "sha256": "45353e28f00d2b58fade4c90fd3057595ae31dec6fa0ba5ee26dfc1de3702b10",
+      "bytes": 15565
     },
     {
       "path": "docs/detection_suite_server.md",
       "exists": true,
       "sha256": "9932f6a5b02bec23319e3071c74728f8ce8df055af3eba1c39d89185500f2fbe",
       "bytes": 3742
+    },
+    {
+      "path": "docs/windows_easyocr_surya_preprocessing.md",
+      "exists": true,
+      "sha256": "3169af55d0bddd04d84754d97080afaaec46dfcfab32274616aafb025fa6ec94",
+      "bytes": 7205
     },
     {
       "path": ".env.example",
@@ -1144,6 +1219,12 @@
       "bytes": 31765
     },
     {
+      "path": "experiments/paper_figures/fig_s5_real_engine_ocr.py",
+      "exists": true,
+      "sha256": "34ea9d606b43deaf16d6cba113ba49f74bb32028f92628de376e235b30185b8c",
+      "bytes": 4078
+    },
+    {
       "path": "experiments/config/real_capture_sensitive_fields.json",
       "exists": true,
       "sha256": "e87897c876b49b3743fa6890ed7f08d221624bb8baddc624259e543a1c441250",
@@ -1218,8 +1299,8 @@
     {
       "path": "src/evaluation/reproducibility_manifest.py",
       "exists": true,
-      "sha256": "ecdcf61ef19451838864ae65318fbb8b7ae3e8b6d18d202d4e1c091b527262a0",
-      "bytes": 29589
+      "sha256": "a180bc00165194c1482e5bb95bd6c685c43df51bd4ecc23c02357ffa6a4971bb",
+      "bytes": 32939
     },
     {
       "path": "src/evaluation/coco_eval.py",
@@ -1254,8 +1335,8 @@
     {
       "path": "src/attack/ocr_evaluator.py",
       "exists": true,
-      "sha256": "ce82bdbb247e62969a12faad228f3647efcb3f25acad70ffe02e271a32753167",
-      "bytes": 17334
+      "sha256": "2dd1445ffc9d359c93742a88bbff805ce8405cc18b69c751514b20ca52b89195",
+      "bytes": 17428
     },
     {
       "path": "src/attack/vlm_evaluator.py",
