@@ -236,8 +236,6 @@ INPUT ./notaglinelogo.png
 INPUT ./figures/real_engine_ocr.pdf
 INPUT ./figures/real_engine_ocr.pdf
 INPUT ./figures/real_engine_ocr.pdf
-INPUT t1-times.tfm
-INPUT t1-formata-mediumitalic.tfm
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
@@ -256,10 +254,10 @@ INPUT t1-formata-regular.tfm
 INPUT ./figures/multiengine_ocr.pdf
 INPUT ./figures/multiengine_ocr.pdf
 INPUT ./figures/multiengine_ocr.pdf
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
 INPUT t1-times.tfm
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
 INPUT ./figures/all_attackers.pdf
 INPUT ./figures/all_attackers.pdf
 INPUT ./figures/all_attackers.pdf

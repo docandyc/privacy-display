@@ -86,14 +86,14 @@
 \citation{b_surya2024}
 \citation{b_easyocr2020}
 \citation{b_smith2007}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}真机拍摄 OCR 实验}{6}{}\protected@file@percent }
-\newlabel{sec:real_capture}{{\mbox  {V-B}}{6}{}{subsection.5.2}{}}
 \citation{b_qwen3vl2025}
 \citation{b_kimi_k26}
 \citation{b_glm45v2025}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}真机拍摄 OCR 实验}{6}{}\protected@file@percent }
+\newlabel{sec:real_capture}{{\mbox  {V-B}}{6}{}{subsection.5.2}{}}
 \citation{b_qwen3vl2025,b_glm45v2025}
 \citation{b_kimi_k26}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 共同标称 3.91-ms UVC 设置下主要匹配短曝光 OCR 比较。匹配前先对重复拍摄取平均；每个档位的 $N=288$ 由 12 个内容项 $\times $ 8 个几何条件 $\times $ 3 次重复组成。排除不可比较的 d0.5/$15^{\circ }$ 运行。}}{7}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 共同标称 3.91\,ms UVC 设置下主要匹配短曝光 OCR 比较。匹配前先对重复拍摄取平均；每个档位的 $N=288$ 由 12 个内容项 $\times $ 8 个几何条件 $\times $ 3 次重复组成。排除不可比较的 d0.5/$15^{\circ }$ 运行。}}{7}{}\protected@file@percent }
 \newlabel{tab:real_ocr_common}{{4}{7}{}{table.4}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 主要匹配短曝光样本池中的显式敏感字段完整恢复率。18 个字段在评分前固定；每个档位的 288 个单元中，有 216 个至少包含一个字段。}}{7}{}\protected@file@percent }
 \newlabel{tab:explicit_fields}{{5}{7}{}{table.5}{}}
@@ -121,6 +121,8 @@
 \newlabel{sec:detection}{{\mbox  {V-D}}{9}{}{subsection.5.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}软件仿真补充实验}{9}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-E}1}合成单子帧 OCR}{9}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-E}2}理论安全边界}{9}{}\protected@file@percent }
+\newlabel{sec:security_frontier}{{\mbox  {V-E}2}{9}{}{subsubsection.5.5.2}{}}
 \citation{b_coco2014}
 \citation{b_mot16}
 \citation{b_yolo26}
@@ -133,13 +135,11 @@
 \newlabel{tab:vlm_content}{{10}{10}{}{table.10}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces 真机 COCO 目标检测（150 张图像；\texttt  {real\_clean} = 未保护拍摄基线）}}{10}{}\protected@file@percent }
 \newlabel{tab:real_coco}{{11}{10}{}{table.11}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-E}2}理论安全边界}{10}{}\protected@file@percent }
-\newlabel{sec:security_frontier}{{\mbox  {V-E}2}{10}{}{subsubsection.5.5.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-E}3}目标检测与跟踪仿真}{10}{}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces 真机 MOT17-09-FRCNN 静帧跟踪（ByteTrack 风格贪心关联，450 帧）}}{10}{}\protected@file@percent }
 \newlabel{tab:real_mot}{{12}{10}{}{table.12}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 四种检测器在未保护拍摄、短曝光受保护拍摄和 150 帧受保护均值下的真机 mAP50。各条件的保护、曝光、分辨率和帧约简方式不同。}}{10}{}\protected@file@percent }
 \newlabel{fig:real_det_drop}{{6}{10}{}{figure.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-E}3}目标检测与跟踪仿真}{10}{}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces 合成单子帧 OCR：三引擎字符恢复率（120 个样本，$n=4$，$\varepsilon =8/255$）}}{11}{}\protected@file@percent }
 \newlabel{tab:ocr_corpus}{{13}{11}{}{table.13}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces 三个 OCR 引擎在原始帧和单个受保护子帧上的字符恢复率；误差线为以语料样本为单位重采样所得的 95\% bootstrap 区间。}}{11}{}\protected@file@percent }
@@ -170,6 +170,7 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}档位权衡与实际启示}{13}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM 感知的设计启示}{13}{}\protected@file@percent }
 \newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{13}{}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}伦理声明}{13}{}\protected@file@percent }
 \citation{b_openai_codex2026}
 \bibstyle{IEEEtran}
 \bibdata{refs}
@@ -188,12 +189,11 @@
 \bibcite{b_nguyen2016}{13}
 \bibcite{b_tran2021}{14}
 \bibcite{b_ghiasi2024}{15}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}伦理声明}{14}{}\protected@file@percent }
+\bibcite{b_yerazunis2001}{16}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-F}}局限性与后续工作}{14}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {VII}结论}{14}{}\protected@file@percent }
 \newlabel{sec:conclusion}{{VII}{14}{}{section.7}{}}
 \@writefile{toc}{\contentsline {section}{REFERENCES}{14}{}\protected@file@percent }
-\bibcite{b_yerazunis2001}{16}
 \bibcite{b_wu2013}{17}
 \bibcite{b_gao2014}{18}
 \bibcite{b_kaleido2015}{19}

@@ -58,7 +58,7 @@ in Section~\ref{sec:user_study}.}
 %% ABSTRACT
 %% ============================================================
 \begin{abstract}
-Screen content can be silently captured and processed by optical character recognition (OCR) or vision-language models (VLMs). This study measures conventional-OCR recovery from temporally masked screens on one USB Video Class (UVC) camera link. The pipeline partitions each frame into rapidly alternating complementary subframes and adds profile-dependent overlays. We collected 10,575 physical captures across 9 distance--angle configurations. The primary common-setting analysis uses the same 288 duplicate-averaged short-exposure units (12 content items $\times$ 8 geometries $\times$ 3 repeats) for each of three profiles. Per-capture best-of-engine mean character recovery was 94.5\% unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression. Readability-priority retained 17.7\% field-micro exact recovery across 432 annotated field opportunities, with 95.0\% matched P99 character recovery. A fixed five-transform, three-engine oracle raised readability-priority recovery to 40.2\% and high-suppression to 13.7\%. A 150-frame mean and on-axis VLM probes recovered substantially more text. The study provides a 10,575-capture evaluation on a single UVC link and maps recovery under fixed preprocessing, temporal averaging, and VLM recognition.
+Screen content can be silently captured and processed by optical character recognition (OCR) or vision-language models (VLMs). This study measures conventional-OCR recovery from temporally masked screens on one USB Video Class (UVC) camera link. The pipeline partitions each frame into rapidly alternating complementary subframes and adds profile-dependent overlays. We collected 10,575 physical captures across 9 distance--angle configurations. The primary common-setting analysis uses the same 288 duplicate-averaged short-exposure units (12 content items $\times$ 8 geometries $\times$ 3 repeats) for each of three profiles. Per-capture best-of-engine mean character recovery was 94.5\% unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression. Readability-priority retained 17.7\% field-micro exact recovery across 432 annotated field opportunities, with 95.0\% matched P99 character recovery. A fixed five-transform, three-engine oracle raised readability-priority recovery to 40.2\% and high-suppression to 13.7\%. A 150-frame mean and on-axis VLM probes recovered substantially more text. The study maps recovery under fixed preprocessing, temporal averaging, and VLM recognition.
 \end{abstract}
 
 \begin{keywords}
@@ -85,7 +85,7 @@ The difficulty is that degrading information for the camera also tends to degrad
 
 Our approach exploits the gap between human temporal integration and camera exposure windows. Each frame is decomposed into $n$ randomly complementary subframes that alternate at high speed. When the exposure is shorter than or close to one subframe duration, the camera records only an incomplete pixel subset, whereas the human observer integrates content across subframes (Fig.~\ref{fig:concept}). Long exposure or video reconstruction covering a full cycle can re-sum the complementary subframes.
 
-This study compares conventional OCR recovery across three display profiles at one UVC control setting. The instrumented pipeline archives each capture as an image for offline recognition. Across the 8 common-setting geometries, matched mean recovery was 94.5\% unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression. The high-suppression profile missed its descriptive $<5\%$ target.
+This study compares conventional OCR recovery across three display profiles at one UVC control setting. The instrumented pipeline archives each capture as an image for offline recognition. Across the 8 common-setting geometries, matched mean recovery is 94.5\% unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression. The high-suppression profile misses its descriptive $<5\%$ target.
 
 Attack-oriented evaluation expands this result. A temporal-mean attack averaged 150 short-exposure frames, nominally 2.5\,s at 60\,fps, and vision-language model (VLM) probes recovered substantial large-font snippets (\S\ref{sec:vlm}). These tests show where recovery rises beyond the primary conventional-OCR setting.
 
@@ -167,7 +167,7 @@ The motivating assets include passwords, financial data, personally identifiable
 
 \subsection{Attacker Capabilities}
 
-Attack capabilities do not form a strict monotonic hierarchy but are jointly determined by exposure, geometry, temporal sampling, and post-processing capabilities. Results are reported across the following scope:
+Attack capabilities do not form a strict monotonic hierarchy but are jointly determined by exposure, geometry, temporal sampling, and post-processing. Results are reported across the following scope:
 \begin{itemize}
 \item \textbf{Primary scope}: Instrumented snapshots at the nominal 3.91\,ms UVC exposure-control setting, followed by per-frame recognition with Surya, EasyOCR, and Tesseract. The primary result uses raw camera crops. A separate three-engine stress test selects per capture among five predeclared deterministic transforms plus the raw input.
 \item \textbf{Extended attacks}: Long exposure, 150-frame temporal averaging, off-axis capture, phase-aware channel reconstruction, object detection and association, and commercially hosted vision-language models (\S\ref{sec:vlm}).
@@ -261,7 +261,7 @@ High-suppression & \checkmark & \checkmark & 2 & 6 & 0.42 & 0.55 & 0.2 \\
 
 The nonlinear profiles depart from strict completeness ($\sum\mathbf{I}_k \neq \mathbf{I}$), producing visible stripes and grain. This trade-off is the opposite of Kaleido-class temporal re-encoding: the latter relies on perceptually complete mixing within a cycle to preserve viewing experience, so full-cycle integration reconstructs an approximation of the original. In the static-content capture threat addressed here, completeness is the entry point for integration attacks. The high-suppression profile therefore trades visible artifacts for lower measured recovery under full-cycle integration.
 
-The paper-facing name ``high-suppression'' reflects the profile's relative recovery in Table~\ref{tab:profile_composition}. The archived identifier remains \texttt{capture\_hardened} (with legacy tag \texttt{vlm}) for reproducibility; \S\ref{sec:real_capture} reports the target miss and residual leakage.
+The paper-facing name ``high-suppression'' reflects the profile's relative recovery in Table~\ref{tab:real_ocr_common}. The archived identifier remains \texttt{capture\_hardened} (with legacy tag \texttt{vlm}) for reproducibility; \S\ref{sec:real_capture} reports the target miss and residual leakage.
 
 \subsection{Partial Inversion Frame}
 
@@ -287,7 +287,7 @@ $\alpha$ & Long-exp.\ char (\%) & Video avg.\ char (\%) \\
 \end{tabular}
 \end{table}
 
-Each display cycle thus contains $n+1$ time slots. At $n=4$ and 240\,Hz the cycle rate is 48\,Hz, below the 60\,Hz design target and potentially producing perceptible flicker; no fixed ``flicker-free threshold'' applies universally across viewing conditions.
+Each display cycle thus contains $n+1$ time slots; the resulting 48\,Hz cycle rate at $n=4$ and 240\,Hz, and its flicker implications, are discussed in the timing analysis above.
 
 \subsection{Implementation Scope}
 
@@ -683,7 +683,7 @@ Readability-priority full ($n{=}4$) & -- & -- & -- \\
 \subsection{Real-Capture Object Detection and Tracking}
 \label{sec:detection}
 
-To probe whether the temporal degradation transfers beyond text, we report an exploratory detection/tracking stress test within the same camera link; evidence strength is not equivalent to the OCR main experiment. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. mAP, mAP50, and average recall (AR) are reported for detection. Tracking uses higher-order tracking accuracy (HOTA), identification F1 (IDF1), multiple-object tracking accuracy (MOTA), and multiple-object tracking precision (MOTP). The protected condition uses the $n=4$ mask+noise profile without overlays or inversion. The \texttt{real\_clean} reference is an unprotected nominal 31.25-ms capture. The \texttt{real\_short} image is the maximum-grayscale-contrast frame from a three-frame protected burst at the nominal 3.91-ms setting, and \texttt{real\_video} is the mean of 150 protected frames acquired nominally at 60\,fps. Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture and an in-project greedy association implementation inspired by ByteTrack~\cite{b_bytetrack2022}. Protection, exposure, resolution, and frame reduction differ across conditions.
+To probe whether the temporal degradation transfers beyond text, we report an exploratory detection/tracking stress test within the same camera link; evidence strength is not equivalent to the OCR main experiment. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. mAP, mAP50, and average recall (AR) are reported for detection. Tracking uses higher-order tracking accuracy (HOTA), identification F1 (IDF1), multiple-object tracking accuracy (MOTA), and multiple-object tracking precision (MOTP). The protected condition uses the $n=4$ mask+noise profile without overlays or inversion. The \texttt{real\_clean} reference is an unprotected nominal 31.25-ms capture. The \texttt{real\_short} image is the maximum-grayscale-contrast frame from a three-frame protected burst at the nominal 3.91-ms setting, and \texttt{real\_video} is the mean of 150 protected frames acquired nominally at 60\,fps. Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture and an in-project greedy association implementation inspired by ByteTrack~\cite{b_bytetrack2022}.
 
 \begin{table}[!t]
 \caption{Real-Capture COCO Detection (150 Images; \texttt{real\_clean} = Unprotected Capture Baseline)}
@@ -789,7 +789,7 @@ Surya & 97.0\% & 2.6\% & 94.4\% \\
 \label{fig:multiengine_ocr}
 \end{figure}
 
-Fig.~\ref{fig:multiengine_ocr} visualizes these results. Single-subframe recovery does not exceed 2.6\% for any engine, confirming a consistent pattern across all three recognizers.
+Fig.~\ref{fig:multiengine_ocr} visualizes these results; single-subframe recovery does not exceed 2.6\% for any engine.
 
 \subsubsection{Theoretical Security Boundary}
 \label{sec:security_frontier}
