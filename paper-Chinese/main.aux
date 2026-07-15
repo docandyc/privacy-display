@@ -48,8 +48,6 @@
 \citation{b_knuth1997}
 \citation{b_song2018}
 \citation{b_goodfellow2015}
-\citation{b_ciede2000}
-\citation{b_wang2004}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 与代表性显示及实体场景隐私方案的适用范围比较。表中各方案针对不同威胁与评估目标，不构成参数匹配的性能主张。}}{3}{}\protected@file@percent }
 \newlabel{tab:kaleido_compare}{{1}{3}{}{table.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {III}威胁模型}{3}{}\protected@file@percent }
@@ -63,11 +61,13 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}时序子帧分解}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}互补对抗噪声}{3}{}\protected@file@percent }
 \newlabel{eq:noise_complement}{{1}{3}{}{equation.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}亮度补偿}{3}{}\protected@file@percent }
+\citation{b_ciede2000}
+\citation{b_wang2004}
 \citation{b_cai2024,b_davis2015}
 \citation{b_davis2015}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 从源内容到受保护显示的时序像素掩蔽系统管线。输入帧被分解为由 CSPRNG 分配的互补像素掩模；随后在高刷新率播放前，插入可选的面向 OCR 的互补噪声、与档位相关的条纹/字形叠加，以及可选的部分反色帧。人类观察者预期可将多个时隙整合为可读视图，而短曝光相机可能仅捕获一个稀疏子帧。长曝光和视频时域平均能够累积多个时隙，并在本文中单独评估。}}{4}{}\protected@file@percent }
 \newlabel{fig:pipeline}{{2}{4}{}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}亮度补偿}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}时序与带宽}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}探索性高抑制档}{4}{}\protected@file@percent }
 \newlabel{sec:hardened}{{\mbox  {IV-E}}{4}{}{subsection.4.5}{}}
@@ -86,11 +86,11 @@
 \citation{b_surya2024}
 \citation{b_easyocr2020}
 \citation{b_smith2007}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}真机拍摄 OCR 实验}{6}{}\protected@file@percent }
+\newlabel{sec:real_capture}{{\mbox  {V-B}}{6}{}{subsection.5.2}{}}
 \citation{b_qwen3vl2025}
 \citation{b_kimi_k26}
 \citation{b_glm45v2025}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}真机拍摄 OCR 实验}{6}{}\protected@file@percent }
-\newlabel{sec:real_capture}{{\mbox  {V-B}}{6}{}{subsection.5.2}{}}
 \citation{b_qwen3vl2025,b_glm45v2025}
 \citation{b_kimi_k26}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 共同标称 3.91\,ms UVC 设置下主要匹配短曝光 OCR 比较。匹配前先对重复拍摄取平均；每个档位的 $N=288$ 由 12 个内容项 $\times $ 8 个几何条件 $\times $ 3 次重复组成。排除不可比较的 d0.5/$15^{\circ }$ 运行。}}{7}{}\protected@file@percent }
@@ -155,22 +155,19 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces 评估的 OCR、检测和跟踪管线中，单个受保护子帧相对干净基线（干净 = 100\%）的剩余能力。各指标在任务内归一化，不可直接跨任务比较。}}{11}{}\protected@file@percent }
 \newlabel{fig:all_attackers}{{8}{11}{}{figure.8}{}}
 \citation{b_soukoreff2003}
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces 打字任务：控制条件与可读性优先掩蔽条件的被试内比较（$N=$ XX；每个条件取每名参与者两次试验的均值；$\Delta $ = 掩蔽 $-$ 控制，附参与者层面 bootstrap 95\% CI）。对每项指标，若预先指定的 Shapiro 检验通过，则采用配对 $t$ 检验（效应量为 Cohen's $d_z$）；否则采用 Wilcoxon 符号秩检验（效应量为秩二列相关 $r_{rb}$）；检验统计量在正文中报告。}}{13}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces 打字任务：控制条件与可读性优先掩蔽条件的被试内比较（$N=56$；每个条件取每名参与者两次试验的均值；$\Delta $ = 掩蔽 $-$ 控制，附参与者层面 bootstrap 95\% CI）。对每项指标，若预先指定的 Shapiro 检验通过，则采用配对 $t$ 检验（效应量为 Cohen's $d_z$）；否则采用 Wilcoxon 符号秩检验（效应量为秩二列相关 $r_{rb}$）；检验统计量在正文中报告。}}{13}{}\protected@file@percent }
 \newlabel{tab:study_typing}{{17}{13}{}{table.17}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces 六种显示条件下的主观评分（$N=$ XX；1--5 级 Likert 量表，越高越好；均值 $\pm $ 标准差）。稳定性为反向闪烁条目，舒适度为即时视觉舒适度条目（\S  \ref {sec:user_study}）；Friedman 检验和 Holm 校正的成对 Wilcoxon 检验统计量在正文中报告。}}{13}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces 六种显示条件下的主观评分（$N=56$；1--5 级 Likert 量表，越高越好；均值 $\pm $ 标准差）。稳定性为反向闪烁条目，舒适度为即时视觉舒适度条目（\S  \ref {sec:user_study}）；Friedman 检验和 Holm 校正的成对 Wilcoxon 检验统计量在正文中报告。}}{13}{}\protected@file@percent }
 \newlabel{tab:study_ratings}{{18}{13}{}{table.18}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces 控制条件与可读性优先掩蔽条件下的被试内打字表现：每条灰线代表一名参与者（每个条件下两次试验的均值）；标记表示组均值及参与者层面的 bootstrap 95\% 置信区间。各面板依次显示转录准确率、每分钟词数和首次按键延迟。}}{13}{}\protected@file@percent }
 \newlabel{fig:study_typing}{{9}{13}{}{figure.9}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {VI}讨论}{13}{}\protected@file@percent }
 \newlabel{sec:discussion}{{VI}{13}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}主要发现与研究价值}{13}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces 六种评分显示条件下的可读性、稳定性和即时视觉舒适度的 1--5 级 Likert 平均评分（误差线：标准差），条件从无掩蔽锚点排列至可读性优先完整配置。所有条目均为分值越高越好。}}{13}{}\protected@file@percent }
 \newlabel{fig:study_ratings}{{10}{13}{}{figure.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}主要发现与研究价值}{13}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}时域积分与攻击升级}{13}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}档位权衡与实际启示}{13}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM 感知的设计启示}{13}{}\protected@file@percent }
-\newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{13}{}{subsection.6.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}伦理声明}{13}{}\protected@file@percent }
 \citation{b_openai_codex2026}
 \bibstyle{IEEEtran}
 \bibdata{refs}
@@ -186,14 +183,17 @@
 \bibcite{b_naor1994}{10}
 \bibcite{b_zhong2023}{11}
 \bibcite{b_fang2019}{12}
-\bibcite{b_nguyen2016}{13}
-\bibcite{b_tran2021}{14}
-\bibcite{b_ghiasi2024}{15}
-\bibcite{b_yerazunis2001}{16}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM 感知的设计启示}{14}{}\protected@file@percent }
+\newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{14}{}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}伦理声明}{14}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-F}}局限性与后续工作}{14}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {VII}结论}{14}{}\protected@file@percent }
 \newlabel{sec:conclusion}{{VII}{14}{}{section.7}{}}
 \@writefile{toc}{\contentsline {section}{REFERENCES}{14}{}\protected@file@percent }
+\bibcite{b_nguyen2016}{13}
+\bibcite{b_tran2021}{14}
+\bibcite{b_ghiasi2024}{15}
+\bibcite{b_yerazunis2001}{16}
 \bibcite{b_wu2013}{17}
 \bibcite{b_gao2014}{18}
 \bibcite{b_kaleido2015}{19}
@@ -234,4 +234,4 @@
 \bibcite{b_mot16}{54}
 \bibcite{b_soukoreff2003}{55}
 \bibcite{b_openai_codex2026}{56}
-\gdef \@abspage@last{15}
+\gdef \@abspage@last{16}

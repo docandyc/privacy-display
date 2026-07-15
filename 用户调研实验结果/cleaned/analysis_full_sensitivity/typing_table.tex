@@ -1,0 +1,16 @@
+\begin{tabular}{lccc}
+\toprule
+Metric & Control & Masked & $\Delta$ [95\% CI] \\
+\midrule
+WPM & 21.65 & 20.62 & -1.03 [-1.78, -0.27] \\
+CPM & 108.25 & 103.11 & -5.14 [-8.90, -1.43] \\
+Accuracy (\%) & 96.81 & 95.11 & -1.70 [-3.28, -0.16] \\
+Attempted chars & 37.15 & 35.61 & -1.53 [-2.66, -0.40] \\
+First-key latency (ms) & 752.47 & 841.46 & 88.99 [-25.02, 201.79] \\
+\bottomrule
+\end{tabular}
+% wpm: paired_t p=0.009 d_z=-0.34 statistic=-2.69
+% cpm: paired_t p=0.009 d_z=-0.34 statistic=-2.69
+% accuracy: wilcoxon_signed_rank p=0.025 r_rb=-0.35 statistic=463.00
+% attempted_chars: paired_t p=0.011 d_z=-0.34 statistic=-2.62
+% first_key_latency_ms: wilcoxon_signed_rank p=0.176 r_rb=0.20 statistic=757.00

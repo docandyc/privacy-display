@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex main"] 1783833088.61245 "main.aux" "main.bbl" "main" 1783834433.99637 0
+["bibtex main"] 1784091107.10413 "main.aux" "main.bbl" "main" 1784091108.52502 0
   "./IEEEtran.bst" 1783213627.24571 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
   "./refs.bib" 1783770520.41861 18563 43b56b6889fbc1a764742fa1d27b4a31 ""
-  "main.aux" 1783834433.1738 21516 debc8a5bdbba8c1705f35028a07427d2 "xelatex"
+  "main.aux" 1784091107.71275 21518 5082e16acbbf4f9d8a96fd672fed2ace "xelatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["xdvipdfmx"] 1783834433.4885 "main.xdv" "main.pdf" "main" 1783834433.99765 0
-  "main.xdv" 1783834433.17477 147356 649a455cd67ee8b9aa9af478a21c2b04 "xelatex"
+["xdvipdfmx"] 1784091108.03251 "main.xdv" "main.pdf" "main" 1784091108.52599 0
+  "main.xdv" 1784091107.71403 150524 a65d26a720d3605ba250df8e064a3d24 "xelatex"
   (generated)
   "main.pdf"
   (rewritten before read)
-["xelatex"] 1783834432.56529 "main.tex" "main.xdv" "main" 1783834433.9965 0
+["xelatex"] 1784091107.2044 "main.tex" "main.xdv" "main" 1784091108.52508 0
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm" 1136768653 6672 e3ab9e37e925f3045c9005e6d1473d56 ""
@@ -94,18 +94,19 @@
   "figures/real_capture_montage.pdf" 1783649064.44519 2357035 b38279e26dfcd6683a45e812cb633073 ""
   "figures/real_detection_drop.pdf" 1783213638.12364 32337 353d306a54031606a09cb4737dbf2bcf ""
   "figures/real_engine_ocr.pdf" 1783694139.25756 32279 5450c5c68b407e11d54e1bf7c62119c8 ""
-  "figures/study_ratings_likert.pdf" 1783570488.3246 44959 183d8dbabb6d02ce57067984d057ae50 ""
-  "figures/study_typing_paired.pdf" 1783338372.05998 35188 9bea892ecb3ac49d5c0456e15d158c6a ""
+  "figures/study_ratings_likert.pdf" 1784014466.50922 35330 36d39e26ab1ad2e63f9b87ba2a81eebb ""
+  "figures/study_typing_paired.pdf" 1784022682.70882 30572 c54088274d63cc3c0eb9d62a7146293e ""
   "figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf" 1783575487.81201 48133 c37e5fb1106bee9709a0b910a65c3468 ""
   "figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf" 1783575487.81359 87630 77e039d50d1d0f6fe2479fb9da1bf5ff ""
   "ieeeaccess.cls" 1783482759.43809 51025 d9615b56cc593121d2775defdbf62c1c ""
   "logo.png" 1783213627.24679 9705 6ba9f1039498f006286d6457f067dc20 ""
-  "main.aux" 1783834433.1738 21516 debc8a5bdbba8c1705f35028a07427d2 "xelatex"
-  "main.bbl" 1783833336.1442 15137 56616dde2902dbe55f4a52c4bb859bd4 "bibtex main"
-  "main.tex" 1783834408.86593 94980 56f4287a119f19aa91e5932524f7066f ""
+  "main.aux" 1784091107.71275 21518 5082e16acbbf4f9d8a96fd672fed2ace "xelatex"
+  "main.bbl" 1784091107.20228 15411 380ac26858588ec1451b3ba6bfe0075c "bibtex main"
+  "main.tex" 1784091091.25205 97189 e77905f077f59cc89eab5ee489cc3c1a ""
   "notaglinelogo.png" 1783213627.24693 3150 e273b7aed356b5f76c6d0b072166d68c ""
   "t1-formata-bold.tfm" 1783213630.51158 1420 e49288584c4b6aedcaf3809078fdde27 ""
   "t1-formata-condmedium.tfm" 1783213630.51186 1412 69835d9272a4cf9349297208bcc60045 ""
+  "t1-formata-italic.tfm" 1783213630.51337 1680 d34027e258a8848ca1ab21845470a33a ""
   "t1-formata-medium.tfm" 1783213630.51431 4720 f3dcbbd4c5991060387bb367b565796f ""
   "t1-formata-mediumitalic.tfm" 1783213630.51754 4948 54bfa7890f4a946af8e94df300c347a0 ""
   "t1-formata-regsymb.tfm" 1783213630.51942 432 19a4c7f187df1bdfaae5753cb3e3d2f5 ""
