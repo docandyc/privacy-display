@@ -45,14 +45,13 @@
 This manuscript includes a minimal-risk human-subject usability study. The
 authors' institution does not maintain an ethics review committee for
 non-medical behavioral experiments of this type. Before each session, the
-experimenter individually confirmed informed consent and photosensitivity-
-screening eligibility in person. The study also followed the withdrawal
+experimenter individually confirmed informed consent and photosensitivity-screening eligibility in person. The study also followed the withdrawal
 safeguards described in Section~\ref{sec:user_study}, and only de-identified
 data are analyzed and reported.}
 
 \markboth
-{Author \headeretal: Temporal Pixel Masking and Conventional OCR Recovery}
-{Author \headeretal: Temporal Pixel Masking and Conventional OCR Recovery}
+{\TODO{Author} \headeretal: Temporal Pixel Masking and Conventional OCR Recovery}
+{\TODO{Author} \headeretal: Temporal Pixel Masking and Conventional OCR Recovery}
 
 \corresp{Corresponding author: \TODO{Corresponding author email}.}
 
@@ -60,7 +59,7 @@ data are analyzed and reported.}
 %% ABSTRACT
 %% ============================================================
 \begin{abstract}
-Screen content can be covertly photographed and transcribed by optical character recognition (OCR) or vision-language models (VLMs). We present temporal pixel masking, a display method exploiting differences between human temporal integration and short camera exposures. A base frame is decomposed into rapidly alternating, cryptographically randomized complementary subframes; noise, stripe/glyph overlays, and a partial inversion frame can reduce recoverability. Short rolling-shutter exposures may capture temporally mixed fragments rather than fully integrated frames. We evaluate a 240 Hz software prototype using one USB Video Class (UVC) webcam across nine geometries and 10,575 captures. Under calibrated short exposures, best-of-engine OCR character recovery decreased from 94.1\% unprotected to 15.1\% for the readability-priority profile and 5.0\% (95\% CI [4.3, 5.8]\%) for the capture-hardened profile; exact-match rates decreased from 65.7\% to 0.4\% and 0\%, respectively. The latter approaches, but does not establish, the below-5\% recovery target. Video temporal averaging (at least 67 ms) recovered 47.9--71.1\% of characters, and three VLMs reached 77.8\% exact match from short-exposure images of large-font short text at 0.5 m. Under long exposure, masking could increase recovery over the unprotected baseline by reducing luminance into the sensor's linear range. These results establish feasibility for mitigating conventional OCR in the tested short-exposure UVC-camera link, but not protection against temporal integration or VLM attackers. In 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14 WPM; readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of 5, indicating measurable usability costs.
+Screen content can be covertly photographed and transcribed by optical character recognition (OCR) or vision-language models (VLMs). We present temporal pixel masking, a display method exploiting differences between human temporal integration and short camera exposures. A base frame is decomposed into rapidly alternating, cryptographically randomized complementary subframes; noise, stripe/glyph overlays, and a partial inversion frame can reduce recoverability. Short rolling-shutter exposures may capture temporally mixed fragments rather than fully integrated frames. We evaluate a 240 Hz software prototype using one USB Video Class (UVC) webcam across nine geometries and 10,575 captures. Across nine archived geometries, best-of-engine OCR character recovery decreased from 94.1\% unprotected to 15.1\% for the readability-priority profile and 5.0\% for the high-suppression profile; exact-match rates decreased from 65.7\% to 0.4\% and 0\%, respectively. The latter meets the descriptive $<$10\% recovery target. Video temporal averaging of 150 frames recovered 47.9--71.1\% of characters, and the strongest of three tested VLMs reached 77.8\% exact match on 0.5\,m short-exposure captures, with recovery concentrated on large-font short snippets. Under long exposure, masking could increase recovery over the unprotected baseline, consistent with reduced luminance shifting the sensor into its linear range. These results establish feasibility for mitigating conventional OCR in the tested short-exposure UVC-camera link, but not protection against temporal integration or VLM attackers. In 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14 WPM; readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of 5, indicating measurable usability costs.
 \end{abstract}
 
 \begin{keywords}
@@ -85,9 +84,9 @@ Current screen-privacy solutions each address a narrow threat subset: spatial, s
 
 Our approach exploits the gap between human temporal integration and camera exposure windows by decomposing each frame into $n$ randomly complementary subframes that alternate at high speed. When the exposure is shorter than or close to one subframe duration, the camera records only an incomplete pixel subset, whereas the human observer integrates content across subframes (Fig.~\ref{fig:concept}). Long exposure or video reconstruction covering a full cycle can, however, re-sum the complementary subframes.
 
-This study compares conventional OCR recovery across three display profiles at one UVC control setting, with an instrumented pipeline archiving each capture as an image for offline recognition. Across the 8 common-setting geometries, matched mean recovery is 94.5\% unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression, with the latter meeting its descriptive $<10\%$ target.
+This study compares conventional OCR recovery across three display profiles at one USB Video Class (UVC) control setting, with an instrumented pipeline archiving each capture as an image for offline recognition. Across the 8 common-setting geometries, matched mean recovery is 94.5\% unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression, with the latter meeting its descriptive $<10\%$ target.
 
-Attack-oriented evaluation expands this result: a temporal-mean attack averaging 150 short-exposure frames (nominally 2.5\,s at 60\,fps) and vision-language model (VLM) probes recovered substantial large-font snippets (\S\ref{sec:vlm}), showing where recovery rises beyond the primary conventional-OCR setting.
+Attack-oriented evaluation expands this result: a temporal-mean attack averaging 150 short-exposure frames (nominally 2.5\,s at 60\,fps) and vision-language model (VLM) probes recovered considerable large-font text (\S\ref{sec:vlm}), showing where recovery rises beyond the primary conventional-OCR setting.
 
 \begin{figure}[!t]
 \centering
@@ -107,7 +106,7 @@ The main contributions of this paper are:
 \item \textbf{Attack and cross-task mapping}: Per-sample strongest digital attack recovery reaches 95.2\%. A 150-frame camera mean recovers 71.1\% for readability-priority and 47.9\% for high-suppression, rising to 79.7\% and 53.9\% after the underexposed geometry is excluded. VLM probes recover substantial large-font content. Detection and tracking stress tests cover four detectors on 150 real-capture COCO images and 450 MOT still-frame captures, with additional software diagnostics on 8 COCO images and 5,316 MOT frames. Together, these experiments map recovery across text recognition, temporal integration, detection, and tracking.
 \end{enumerate}
 
-\S\ref{sec:related} reviews prior work, \S\ref{sec:threat} defines the threat model, and \S\ref{sec:method} presents the design. \S\ref{sec:evaluation} reports OCR evidence, VLM probes, detection/tracking stress tests, simulation diagnostics, and the usability study. \S\S\ref{sec:discussion} and~\ref{sec:conclusion} discuss the evidence hierarchy.
+\S\ref{sec:related} reviews prior work, \S\ref{sec:threat} defines the threat model, and \S\ref{sec:method} presents the design. \S\ref{sec:evaluation} reports OCR evidence, VLM probes, the usability study, detection/tracking stress tests, and simulation diagnostics. \S\S\ref{sec:discussion} and~\ref{sec:conclusion} discuss the evidence hierarchy.
 
 
 %% ============================================================
@@ -175,11 +174,11 @@ Attack capabilities do not form a strict monotonic hierarchy but are jointly det
 
 \subsection{Attacker Knowledge}
 
-The attacker \emph{knows} the temporal masking algorithm, the subframe count~$n$, and candidate period parameters, but does \emph{not know} the current cycle's mask seed or phase starting point. The cryptographically secure pseudorandom number generator (CSPRNG) provides per-cycle mask randomization to prevent fixed-pattern learning and cross-cycle correlation; it does not provide a cryptographic guarantee against full-cycle averaging attacks. Once an attacker obtains and registers a complete cycle, an unknown seed cannot prevent linear reconstruction. Sparse sampling may disrupt glyph evidence used by conventional OCR, but the present design does not isolate binarization, segmentation, or recognition as the responsible stage. End-to-end VLMs recovered substantial text from the same archived fragments (\S\ref{sec:vlm}), so the conventional-OCR observation does not transfer to those models.
+The attacker \emph{knows} the temporal masking algorithm, the subframe count~$n$, and candidate period parameters, but does \emph{not know} the current cycle's mask seed or phase starting point. The cryptographically secure pseudorandom number generator (CSPRNG) provides per-cycle mask randomization to prevent fixed-pattern learning and cross-cycle correlation; it does not provide a cryptographic guarantee against full-cycle averaging attacks. Once an attacker obtains and registers a complete cycle, an unknown seed cannot prevent linear reconstruction. Sparse sampling may disrupt glyph evidence used by conventional OCR, but the present design does not isolate binarization, segmentation, or recognition as the responsible stage. End-to-end VLMs recovered appreciable text from the same archived fragments (\S\ref{sec:vlm}), so the conventional-OCR observation does not transfer to those models.
 
 \subsection{Protection Goals}
 
-We use tiered design goals under short exposure to interpret the evaluated profiles. High-suppression targets conventional OCR character recovery $<10\%$ with exact match $=0\%$, whereas readability-priority targets a relative reduction of at least 80\% with exact match $<1\%$. These descriptive thresholds organize the profile comparison. Object-detection mean average precision at 0.50 intersection over union (mAP50) provides a secondary diagnostic, while $\Delta E_{00}$ and SSIM quantify digital reconstruction quality.
+We use tiered design goals under short exposure to interpret the evaluated profiles. High-suppression targets conventional OCR character recovery $<10\%$ with exact match $=0\%$, whereas readability-priority targets a relative reduction of at least 80\% with exact match $<1\%$. These descriptive thresholds organize the profile comparison. Object-detection mean average precision at 0.50 intersection over union (mAP50) provides a secondary diagnostic, while $\Delta E_{00}$ and the structural similarity index (SSIM) quantify digital reconstruction quality.
 
 
 %% ============================================================
@@ -261,13 +260,13 @@ High-suppression & \checkmark & \checkmark & 2 & 6 & 0.42 & 0.55 & 0.2 \\
 
 The nonlinear profiles depart from strict completeness ($\sum\mathbf{I}_k \neq \mathbf{I}$), producing visible stripes and grain. This trade-off is the opposite of Kaleido-class temporal re-encoding: the latter relies on perceptually complete mixing within a cycle to preserve viewing experience, so full-cycle integration reconstructs an approximation of the original. In the static-content capture threat addressed here, completeness is the entry point for integration attacks. The high-suppression profile therefore trades visible artifacts for lower measured recovery under full-cycle integration.
 
-The paper-facing name ``high-suppression'' reflects the profile's relative recovery in Table~\ref{tab:real_ocr_common}. The archived identifier remains \texttt{capture\_hardened} (with legacy tag \texttt{vlm}) for reproducibility; \S\ref{sec:real_capture} reports the target miss and residual leakage.
+The paper-facing name ``high-suppression'' reflects the profile's relative recovery in Table~\ref{tab:real_ocr_common}. The archived identifier remains \texttt{capture\_hardened} (with legacy tag \texttt{vlm}) for reproducibility; \S\ref{sec:real_capture} reports residual leakage and behavior under the preprocessing oracle.
 
 \subsection{Partial Inversion Frame}
 
 A long-exposure attack occurs when the exposure window covers a full display cycle ($n=4$ at 240\,Hz yields a basic cycle of approximately 16.7\,ms; with an inversion frame the $n+1$ slot cycle is approximately 20.8\,ms), where the archived long-exposure labels of 31.25 and 125\,ms are nominal values derived from UVC controls rather than photometric measurements. To counter this threat in the normalized domain $\mathbf{I}\in[0,1]$, the implementation inserts a \textbf{partial inversion frame} $\alpha(\mathbf{1}-\mathbf{I})$ after each $n$-subframe cycle. The equivalent 8-bit expression is $\alpha(255-\mathbf{I}_{8})$. Higher $\alpha$ changes both the integrated signal and the digital reconstruction's luminance and contrast.
 
-A real-capture inversion-strength ablation (Table~\ref{tab:inversion_ablation}; pipeline per \S\ref{sec:real_capture}) found 68.6\% recovery at $\alpha=0$ and 67.0\% at $\alpha=0.2$. Point estimates across $\alpha\in[0,0.5]$ ranged from 61.7\% to 72.0\%; the capture-resampling intervals are descriptive and interval overlap is not an equivalence test. The ablation holds the Strong overlay fixed and uses a five-item account/code/CET6 subset. Its $\alpha=0.2$ value ($N=135$) is not a repeated estimate of the readability-priority row. Near-full inversion ($\alpha=1.0$) reduced observed recovery to 18.1\% while severely degrading the digital integrated view. Under the 150-frame temporal mean, weak-inversion settings retained 64--73\% recovery. The readability-priority choice of $\alpha=0.2$ is a modeled design decision, not a validated optimum.
+A real-capture inversion-strength ablation (Table~\ref{tab:inversion_ablation}; pipeline per \S\ref{sec:real_capture}) found 68.6\% recovery at $\alpha=0$ and 67.0\% at $\alpha=0.2$. Point estimates across $\alpha\in[0,0.5]$ ranged from 61.7\% to 72.0\%; the capture-resampling intervals are descriptive and interval overlap is not an equivalence test. The ablation holds the Strong overlay fixed and uses a five-item account/code/CET6 subset. Its $\alpha=0.2$ value ($N=135$) is not a repeated estimate of the readability-priority row. Near-full inversion ($\alpha=1.0$) reduced observed recovery to 18.1\% while severely degrading the digital integrated view. Under the 150-frame temporal mean, settings at $\alpha\leq0.5$ retained 64--73\% recovery. The readability-priority choice of $\alpha=0.2$ is a modeled design decision, not a validated optimum.
 
 \begin{table}[!t]
 \caption{Inversion Frame Strength $\alpha$ Ablation on the Fixed Strong Overlay ($\alpha_s=0.10$, $\alpha_g=0.12$): Real-Capture Best-of-Engine Character Recovery (Mean and 95\% Capture-Resampling Interval, Five Account/Code/CET6 Items Pooled Across 9 Geometric Conditions; $N=135$ per Setting for Long Exposure, $N=45$ for Video Temporal Averaging). This Five-Item Subset Differs from the 12-Item Readability-Priority Rows in Table~\ref{tab:real_ocr_full_pool}.}
@@ -417,7 +416,7 @@ Profile & Attack mode & $N$ & Char recovery [95\% summary] & Exact match & Leak 
 
 \item \textbf{Long exposure produces a position-dependent reversal}: The unprotected long-exposure baseline is 47.3\% char, below the readability-priority profile's 60.9\%. At the sole 125\,ms position (0.5\,m/$15^{\circ}$), unprotected recovery is 1.1\% versus 46.3\% readability-priority, with visible clipping in the full-brightness image. At 31.25\,ms, the expected direction holds at 0.5\,m, whereas five of six 1.0--1.5\,m positions show higher readability-priority recovery. Residual stripe/glyph edges interacting with geometry-specific saturation or contrast compression provide a candidate explanation. Short-exposure recovery remains lower for readability-priority at every position.
 
-\item \textbf{High-suppression reduces integration leakage}: This exploratory stress profile yields 9.3\% char [7.9, 10.9] / 0\% exact for nominal long exposure and 47.9\% char [41.8, 54.0] / 5.6\% exact [1.9, 10.2] under the 150-frame mean. Brackets are capture-resampling summaries. The pooled mean includes substantial inter-position variation and a 0\% underexposed session. Excluding that session raises video recovery to 53.9\% [48.0, 59.9] and exact match to 6.3\%. The user study evaluates readability-priority rather than this visibly stronger profile.
+\item \textbf{High-suppression reduces integration leakage}: This exploratory stress profile yields 9.3\% char [7.9, 10.9] / 0\% exact for nominal long exposure and 47.9\% char [41.8, 54.0] / 5.6\% exact [1.9, 10.2] under the 150-frame mean. Brackets are capture-resampling summaries. The pooled mean includes considerable inter-position variation and a 0\% underexposed session. Excluding that session raises video recovery to 53.9\% [48.0, 59.9] and exact match to 6.3\%. The user study evaluates readability-priority rather than this visibly stronger profile.
 
 \item \textbf{Geometric trends}: Across 9~conditions (0.5--1.5\,m $\times$ 0--30$^{\circ}$), protected short-exposure recovery remains below unprotected recovery. Geometry-specific values are reported descriptively because the archived design is unbalanced.
 \end{enumerate}
@@ -586,11 +585,10 @@ Table~\ref{tab:real_vlm} presents the pooled VLM probe results, where short-expo
 \item \textbf{Sustained video aggregation strongly increases VLM recovery}: At 0.5\,m, missingness bounds for the 150-frame mean span 58.3--91.7\% exact and 61.2--95.5\% character recovery across models. In the failure-free 1.5\,m session, the 150-frame mean yields 58.3--66.7\% exact and 88.5--90.3\% character recovery, while single-best-frame exact recovery is 0--8.3\%. The accompanying 12.7--29.8\% single-best character values rest on low-information inputs, where fluent language-prior completions can inflate character recovery even though the prompt prohibits guessing; the exact-match counts are the more conservative reading.
 \end{enumerate}
 
-Although high-suppression strongly reduces dense small-text recovery under conventional OCR, VLMs still recover many large-font credentials, code snippets, and digit strings, making content-adaptive, VLM-aware temporal protection the logical next step.
+Although high-suppression strongly reduces dense small-text recovery under conventional OCR, VLMs still recover many large-font credentials, code snippets, and digit strings, and content-adaptive, VLM-aware temporal profiles warrant investigation.
 
 % Keep the human-facing evidence ahead of the secondary detection/tracking
 % stress tests so the evaluation order reflects its greater importance.
-\long\def\deferreduserstudy{
 % ----------------------------------------------------------
 \subsection{User Experience Study}
 \label{sec:user_study}
@@ -658,7 +656,7 @@ Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $
 \end{tabular}
 \end{table}
 
-\textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the typing task. Relative to the control condition, the readability-priority full configuration changed mean accuracy by $-1.71$ percentage points (95\% CI $[-3.39, -0.04]$, Wilcoxon $W=428$, $p=0.043$, $r_{rb}=-0.33$), WPM by $-1.14$ (95\% CI $[-1.91, -0.39]$, $t(55)=-2.93$, $p=0.005$, $d_z=-0.39$), and first-keystroke latency by $+91.0$\,ms (95\% CI $[-31.1, +210.7]$, Wilcoxon $W=641$, $p=0.200$, $r_{rb}=0.20$); CPM and attempted characters gave $p=0.005$ ($d_z=-0.39$) and $p=0.004$ ($d_z=-0.40$), respectively. Table~\ref{tab:study_ratings} and Fig.~\ref{fig:study_ratings} summarize the subjective ratings: Friedman tests yielded $\chi^2(5)=72.2$ ($p=3.5\times10^{-14}$) for readability, $\chi^2(5)=123.2$ ($p=6.5\times10^{-25}$) for stability, and $\chi^2(5)=98.5$ ($p=1.1\times10^{-19}$) for immediate visual comfort; Holm-corrected pairwise comparisons between the readability-priority full configuration and the unmasked anchor gave $p=2.6\times10^{-4}$, $p=2.2\times10^{-7}$, and $p=1.8\times10^{-6}$ on the three items, respectively.
+\textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the typing task. Relative to the control condition, the readability-priority full configuration changed mean accuracy by $-1.71$ percentage points (95\% CI $[-3.39, -0.04]$, Wilcoxon $W=428$, $p=0.043$, $r_{rb}=-0.33$), WPM by $-1.14$ (95\% CI $[-1.91, -0.39]$, $t(55)=-2.93$, $p=0.005$, $d_z=-0.39$), and first-keystroke latency by $+91.0$\,ms (95\% CI $[-31.1, +210.7]$, Wilcoxon $W=641$, $p=0.200$, $r_{rb}=0.20$); CPM and attempted characters gave $p=0.005$ ($d_z=-0.39$) and $p=0.004$ ($d_z=-0.40$), respectively. Under Holm correction across the five typing metrics, WPM, CPM, and attempted characters remain significant whereas the accuracy difference ($p=0.043$, rank 4 of 5) does not. Table~\ref{tab:study_ratings} and Fig.~\ref{fig:study_ratings} summarize the subjective ratings: Friedman tests yielded $\chi^2(5)=72.2$ ($p=3.5\times10^{-14}$) for readability, $\chi^2(5)=123.2$ ($p=6.5\times10^{-25}$) for stability, and $\chi^2(5)=98.5$ ($p=1.1\times10^{-19}$) for immediate visual comfort; Holm-corrected pairwise comparisons between the readability-priority full configuration and the unmasked anchor gave $p=2.6\times10^{-4}$, $p=2.2\times10^{-7}$, and $p=1.8\times10^{-6}$ on the three items, respectively.
 
 \begin{figure}[!t]
 \centering
@@ -674,9 +672,6 @@ Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $
 \label{fig:study_ratings}
 \end{figure}
 
-}
-
-\deferreduserstudy
 
 % ----------------------------------------------------------
 \subsection{Real-Capture Object Detection and Tracking}
@@ -748,7 +743,7 @@ Detector & Condition & HOTA & IDF1 \\
 \end{tabular}
 \end{table}
 
-Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Fig.~\ref{fig:real_det_drop}), representing relative decreases exceeding 85\%, while the \texttt{real\_video} condition yields 3.0--7.3\%, also below the \texttt{real\_clean} baselines. Because protection, exposure, resolution, and frame reduction differ across conditions, these values form a cross-task stress test rather than an isolated protection effect. In still-frame tracking, HOTA decreases from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.6--12.1\% to 4.4--6.5\%.
+Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Table~\ref{tab:real_coco}, Fig.~\ref{fig:real_det_drop}), representing relative decreases exceeding 85\%, while the \texttt{real\_video} condition yields 3.0--7.3\%, also below the \texttt{real\_clean} baselines. Because protection, exposure, resolution, and frame reduction differ across conditions, these values form a cross-task stress test rather than an isolated protection effect. In still-frame tracking (Table~\ref{tab:real_mot}), HOTA decreases from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.6--12.1\% to 4.4--6.5\%.
 
 \begin{figure}[!t]
 \centering
@@ -792,7 +787,7 @@ Fig.~\ref{fig:multiengine_ocr} visualizes these results; single-subframe recover
 
 \subsubsection{Theoretical Security Boundary}
 \label{sec:security_frontier}
-When an attacker accumulates registered frames covering a full cycle, complementary subframes can be re-summed in the ideal linear model of~(\ref{eq:noise_complement}), with the archived per-sample strongest digital attack recovering 95.2\% and pure full-cycle temporal averaging recovering 94.3\%---values that empirically mark the reconstruction boundary of the evaluated linear decomposition. The high-suppression profile yields 47.9\% pooled recovery under the 150-frame mean and 53.9\% after excluding the underexposed position. Character recovery also depends on content and the physical imaging path.
+When an attacker accumulates registered frames covering a full cycle, complementary subframes can be re-summed in the ideal linear model of~(\ref{eq:noise_complement}), with the archived per-sample strongest digital attack recovering 95.2\% and pure full-cycle temporal averaging recovering 94.3\% (Table~\ref{tab:digital_boundary})---values that empirically mark the reconstruction boundary of the evaluated linear decomposition. The high-suppression profile yields 47.9\% pooled recovery under the 150-frame mean and 53.9\% after excluding the underexposed position. Character recovery also depends on content and the physical imaging path.
 
 \begin{table}[!t]
 \caption{Archived Digital Reconstruction Boundary (Tesseract)}
@@ -885,7 +880,7 @@ Detector & Condition & MOTA & MOTP & IDF1 \\
 \end{tabular}
 \end{table}
 
-On the 8 COCO images, single-subframe mAP50 across the four detectors is 0--6.0\%. Across the 5,316 MOT frames, single-subframe IDF1 is 0.1--5.4\%, while MOTA includes negative and nonmonotonic values. Negative MOTA occurs when the false-positive, false-negative, and identity-error penalties exceed the number of ground-truth objects; it is not a negative detection probability. Detector architecture, confidence thresholds, proposal density, and the greedy associator jointly shape the observed differences.
+On the 8 COCO images, single-subframe mAP50 across the four detectors is 0--6.0\%. Across the 5,316 MOT frames, single-subframe IDF1 is 0.1--5.4\%, while MOTA includes negative and nonmonotonic values. Negative MOTA occurs when the false-positive, false-negative, and identity-error penalties exceed the number of ground-truth objects; it is not a negative detection probability. Detector architecture, confidence thresholds, proposal density, and the greedy associator jointly shape the observed differences. Fig.~\ref{fig:all_attackers} summarizes the residual capability of a single protected subframe relative to the clean baseline across the evaluated OCR, detection, and tracking pipelines.
 
 \begin{figure}[!t]
 \centering
@@ -931,7 +926,7 @@ This research is defensive in nature, aiming to protect screen content from unau
 
 The physical evidence comes from one S600 UVC webcam, and profile order was fixed rather than randomized. Exposure values are control-derived labels rather than photometric shutter measurements. The archive also lacks decoded auto-exposure state, gain, white-balance, focus, ambient illuminance, display--camera phase, and physical panel luminance. These factors can interact with time, geometry, and profile order.
 
-The current PoC operates at the application layer with fixed panel output. It lacks photometric slot-timing measurements, luminance-matched static controls, and matched noise-off versions of the enhanced profiles. Temporal sparsity, duty-cycle luminance, overlays, panel response, camera exposure, and ISP processing therefore remain coupled. Rolling-shutter row mixing and panel transitions are candidate explanations for the simulation-to-real gap.
+The current PoC operates at the application layer with fixed panel output. It lacks photometric slot-timing measurements, luminance-matched static controls, and matched noise-off versions of the enhanced profiles. Temporal sparsity, duty-cycle luminance, overlays, panel response, camera exposure, and image signal processor (ISP) processing therefore remain coupled. Rolling-shutter row mixing and panel transitions are candidate explanations for the simulation-to-real gap.
 
 The content-cluster intervals hold the tested geometries fixed, and the 12-item corpus is too small for script-level inference. Detection uses 150 COCO images at one position, while tracking uses 450 still-frame captures from one MOT17 sequence. The VLM probes use one on-axis profile, three API endpoints, and raw JPEG inputs. Commercial OCR, learned restoration, and unconstrained adaptive preprocessing may recover additional text. The 150-frame experiment also leaves the duration--recovery curve unresolved.
 
@@ -946,9 +941,9 @@ Future work should randomize profile order, lock camera parameters, record batch
 
 We evaluated temporal pixel masking on one UVC camera link. Across 8 common-setting geometries, the same 288 matched units per profile (12 content items $\times$ 8 geometries $\times$ 3 repeats) yield 94.5\% mean recovery unprotected, 17.8\% for readability-priority, and 5.6\% for high-suppression. Paired content-cluster contrasts are 76.7 percentage points ([74.3, 79.2]) and 88.9 points ([85.5, 91.9]). Readability-priority retains 17.7\% matched field-micro recovery and 95.0\% P99 character recovery, while high-suppression meets its descriptive $<10\%$ target.
 
-Attack-oriented evaluation recovers substantially more information: a 150-frame temporal mean reaches 71.1\% character recovery for readability-priority and 47.9\% for high-suppression, rising to 79.7\% and 53.9\% at the common settings; in the full 9-geometry sensitivity pool, long-exposure recovery is 60.9\% for readability-priority versus 47.3\% unprotected. On-axis VLM probes also recover substantial large-font content, while the three-engine preprocessing oracle reaches 40.2\% for readability-priority and 13.7\% for high-suppression.
+Attack-oriented evaluation recovers substantially more information: a 150-frame temporal mean reaches 71.1\% character recovery for readability-priority and 47.9\% for high-suppression, rising to 79.7\% and 53.9\% at the common settings; in the full 9-geometry sensitivity pool, long-exposure recovery is 60.9\% for readability-priority versus 47.3\% unprotected. On-axis VLM probes also recover considerable large-font content, while the three-engine preprocessing oracle reaches 40.2\% for readability-priority and 13.7\% for high-suppression.
 
-Detection and tracking stress tests show the same directional change across four detectors, and the archived data, scripts, and per-sample records are public, serving as a baseline for comparing future temporal display-privacy methods and attacks.
+In a 56-participant user study, readability-priority masking retained 94.83\% typing accuracy while reducing speed by 1.14\,WPM; subjective readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of~5, confirming measurable usability costs concentrated in perceived stability for the readability-priority operating point. Detection and tracking stress tests show the same directional OCR-reduction pattern across four detectors. Future work should extend capture to additional cameras and displays, map VLM-aware adaptive profiles, and evaluate comfort over longer sessions.
 
 %% ============================================================
 %% ACKNOWLEDGMENT
@@ -956,7 +951,6 @@ Detection and tracking stress tests show the same directional change across four
 \section*{Acknowledgment}
 \TODO{Acknowledgment to be filled.}
 
-OpenAI Codex~\cite{b_openai_codex2026} assisted with analysis-script development, consistency checks, and English revision of the Abstract. The authors specified the scientific decisions, verified generated analyses against archived data, reviewed all retained text and code, and remain responsible for the manuscript.
 
 
 %% ============================================================
@@ -966,7 +960,7 @@ OpenAI Codex~\cite{b_openai_codex2026} assisted with analysis-script development
 \bibliography{refs}
 
 \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{profiles/hzy.JPG}}]{ZHEYUAN HUANG}
-is currently pursuing the B.S. degree in Software Engineering from Zhejiang University of Water Resources and Electric Power. His current work focuses on computer vision and artificial intelligence.
+is currently pursuing the B.S. degree in software engineering with Zhejiang University of Water Resources and Electric Power. His current work focuses on computer vision and artificial intelligence.
 \end{IEEEbiography}
 
 \EOD

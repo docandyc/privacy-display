@@ -22,7 +22,6 @@
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{}\protected@file@percent }
 \newlabel{sec:related}{{II}{2}{}{section.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Screen Visual Eavesdropping Threats}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Display Privacy Protection}{2}{}\protected@file@percent }
 \citation{b_nguyen2016,b_tran2021,b_ghiasi2024}
 \citation{b_yerazunis2001}
 \citation{b_wu2013}
@@ -43,6 +42,7 @@
 \citation{b_thys2019,b_xu2020}
 \citation{b_gu2024}
 \citation{b_niu2021}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Display Privacy Protection}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Adversarial Perturbations and Physical-World Robustness}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {III}Threat Model}{3}{}\protected@file@percent }
 \newlabel{sec:threat}{{III}{3}{}{section.3}{}}
@@ -55,7 +55,6 @@
 \citation{b_goodfellow2015}
 \citation{b_ciede2000}
 \citation{b_wang2004}
-\citation{b_cai2024,b_davis2015}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Scope Comparison with Representative Display and Physical-Scene Privacy Schemes. Entries Describe Different Threats and Evaluation Targets; They Are Not Matched-Parameter Performance Claims.}}{4}{}\protected@file@percent }
 \newlabel{tab:kaleido_compare}{{1}{4}{}{table.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Protection Goals}{4}{}\protected@file@percent }
@@ -65,10 +64,11 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Complementary Adversarial Noise}{4}{}\protected@file@percent }
 \newlabel{eq:noise_complement}{{1}{4}{}{equation.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Luminance Compensation}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Timing and Bandwidth}{4}{}\protected@file@percent }
+\citation{b_cai2024,b_davis2015}
 \citation{b_davis2015}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Temporal pixel masking system pipeline from source content to protected display. The input frame is decomposed into CSPRNG-assigned complementary pixel masks; optional complementary OCR-oriented noise, profile-dependent stripe/glyph overlays, and an optional partial inversion frame are then inserted before high-refresh playback. A human observer is expected to integrate multiple slots into a readable view, whereas a short-exposure camera may capture only a sparse subframe. Long exposure and video temporal averaging can accumulate multiple slots and are evaluated separately.}}{5}{}\protected@file@percent }
 \newlabel{fig:pipeline}{{2}{5}{}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Timing and Bandwidth}{5}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Exploratory High-Suppression Profile}{5}{}\protected@file@percent }
 \newlabel{sec:hardened}{{\mbox  {IV-E}}{5}{}{subsection.4.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Partial Inversion Frame}{5}{}\protected@file@percent }
@@ -152,27 +152,26 @@
 \newlabel{tab:ocr_corpus}{{15}{15}{}{table.15}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Character recovery for three OCR engines on original frames and single protected subframes; error bars are 95\% bootstrap intervals resampled by corpus sample.}}{15}{}\protected@file@percent }
 \newlabel{fig:multiengine_ocr}{{9}{15}{}{figure.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Archived Digital Reconstruction Boundary (Tesseract)}}{15}{}\protected@file@percent }
-\newlabel{tab:digital_boundary}{{16}{15}{}{table.16}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}2}Theoretical Security Boundary}{15}{}\protected@file@percent }
 \newlabel{sec:security_frontier}{{\mbox  {V-F}2}{15}{}{subsubsection.5.6.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}3}Detection and Tracking Simulation}{15}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Archived Digital Reconstruction Boundary (Tesseract)}}{15}{}\protected@file@percent }
+\newlabel{tab:digital_boundary}{{16}{15}{}{table.16}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images)}}{15}{}\protected@file@percent }
 \newlabel{tab:coco_sim}{{17}{15}{}{table.17}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; 5,316 Frames)}}{15}{}\protected@file@percent }
 \newlabel{tab:mot_sim}{{18}{15}{}{table.18}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-F}3}Detection and Tracking Simulation}{15}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{15}{}\protected@file@percent }
-\newlabel{sec:discussion}{{VI}{15}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Principal Findings and Research Value}{15}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Residual capability of one protected subframe relative to the clean baseline (clean = 100\%) across the evaluated OCR, detection, and tracking pipelines. The metrics are normalized within task and are not directly commensurate across tasks.}}{16}{}\protected@file@percent }
 \newlabel{fig:all_attackers}{{10}{16}{}{figure.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{16}{}\protected@file@percent }
+\newlabel{sec:discussion}{{VI}{16}{}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Principal Findings and Research Value}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Integration and Attacker Escalation}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Profile Trade-offs and Practical Implications}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM-Aware Implications}{16}{}\protected@file@percent }
 \newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{16}{}{subsection.6.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}Ethics Statement}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-F}}Limitations and Future Work}{16}{}\protected@file@percent }
-\citation{b_openai_codex2026}
 \bibstyle{IEEEtran}
 \bibdata{refs}
 \bibcite{b_wang2026}{1}
@@ -196,11 +195,11 @@
 \bibcite{b_kaleido2015}{19}
 \bibcite{b_rainbow2018}{20}
 \bibcite{b_lim2007}{21}
-\bibcite{b_goodfellow2015}{22}
-\bibcite{b_madry2018}{23}
 \@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{17}{}\protected@file@percent }
 \newlabel{sec:conclusion}{{VII}{17}{}{section.7}{}}
 \@writefile{toc}{\contentsline {section}{REFERENCES}{17}{}\protected@file@percent }
+\bibcite{b_goodfellow2015}{22}
+\bibcite{b_madry2018}{23}
 \bibcite{b_carlini2017}{24}
 \bibcite{b_eykholt2018}{25}
 \bibcite{b_thys2019}{26}
@@ -233,6 +232,5 @@
 \bibcite{b_bytetrack2022}{53}
 \bibcite{b_coco2014}{54}
 \bibcite{b_mot16}{55}
-\bibcite{b_openai_codex2026}{56}
 \@writefile{toc}{\contentsline {subsection}{ZHEYUAN HUANG}{18}{}\protected@file@percent }
 \gdef \@abspage@last{18}
