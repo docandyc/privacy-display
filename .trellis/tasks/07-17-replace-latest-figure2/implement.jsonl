@@ -1,0 +1,2 @@
+{"file":".trellis/spec/guides/latex-paper-build-thinking-guide.md","reason":"Defines the required complete latexmk build and final unresolved-reference checks for manuscript PDF changes."}
+{"file":".trellis/spec/backend/quality-guidelines.md","reason":"Defines the editable Visio paper-figure contract, including viewport preservation and visual inspection of the standalone and compiled figure."}

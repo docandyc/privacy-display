@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex main"] 1784161831.89585 "main.aux" "main.bbl" "main" 1784162874.20779 0
+["bibtex main"] 1784278785.97596 "main.aux" "main.bbl" "main" 1784278787.36947 0
   "./IEEEtran.bst" 1783213627.24571 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "./refs.bib" 1784105712.27876 18291 335b9261a15065f5422e2b78e3e133ee ""
-  "main.aux" 1784162873.53578 21545 56ebeab9af5307fb9014fba8ea49824d "xelatex"
+  "./refs.bib" 1784249336.70864 19880 c34009586eef051ebc31542bf3af17b3 ""
+  "main.aux" 1784278786.70285 21800 4699fdd9e915d7a715f3770929efa532 "xelatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["xdvipdfmx"] 1784162873.79484 "main.xdv" "main.pdf" "main" 1784162874.20875 0
-  "main.xdv" 1784162873.53669 150752 42aa815c4b648436d3bc2e392defda56 "xelatex"
+["xdvipdfmx"] 1784278786.96076 "main.xdv" "main.pdf" "main" 1784278787.37051 0
+  "main.xdv" 1784278786.70386 161696 7060fcaaaf4c12c81afe9fb8cd318929 "xelatex"
   (generated)
   "main.pdf"
   (rewritten before read)
-["xelatex"] 1784162872.95166 "main.tex" "main.xdv" "main" 1784162874.20786 0
+["xelatex"] 1784278786.09781 "main.tex" "main.xdv" "main" 1784278787.36955 0
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm" 1136768653 6672 e3ab9e37e925f3045c9005e6d1473d56 ""
@@ -80,6 +80,7 @@
   "/usr/local/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty" 1731446765 6696 886c9f3087d0b973ed2c19aa79cb3023 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1pcr.fd" 1137110629 798 d5895e9edc628f2be019beb2c0ec66df ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd" 1137110629 774 61d7da1e9f9e74989b196d147e623736 ""
+  "/usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty" 1730496337 14552 27664839421e418b87f56fa4c6f66b1a ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/tools/bm.sty" 1717359999 13236 1aba485b47e3c79a47dc0906cc971820 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty" 1727642399 55384 b454dec21c2d9f45ec0b793f0995b992 ""
@@ -97,12 +98,12 @@
   "figures/study_ratings_likert.pdf" 1784014466.50922 35330 36d39e26ab1ad2e63f9b87ba2a81eebb ""
   "figures/study_typing_paired.pdf" 1784022682.70882 30572 c54088274d63cc3c0eb9d62a7146293e ""
   "figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf" 1783575487.81201 48133 c37e5fb1106bee9709a0b910a65c3468 ""
-  "figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf" 1783575487.81359 87630 77e039d50d1d0f6fe2479fb9da1bf5ff ""
+  "figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf" 1784272579.94198 92224 f2e7d032abae066d9fbaf0b45ccf227f ""
   "ieeeaccess.cls" 1783482759.43809 51025 d9615b56cc593121d2775defdbf62c1c ""
   "logo.png" 1783213627.24679 9705 6ba9f1039498f006286d6457f067dc20 ""
-  "main.aux" 1784162873.53578 21545 56ebeab9af5307fb9014fba8ea49824d "xelatex"
-  "main.bbl" 1784161832.01733 15158 e8da51b61ac8022846017e9b214f64cb "bibtex main"
-  "main.tex" 1784162865.25759 97301 fedec00f5735ddce540f8be608330049 ""
+  "main.aux" 1784278786.70285 21800 4699fdd9e915d7a715f3770929efa532 "xelatex"
+  "main.bbl" 1784278786.09674 16835 89136513057125d7a7022407f1fd04a6 "bibtex main"
+  "main.tex" 1784277495.62257 104074 db88c09e9a14a92bd4a638a1d074f803 ""
   "notaglinelogo.png" 1783213627.24693 3150 e273b7aed356b5f76c6d0b072166d68c ""
   "profiles/hzy.JPG" 1784101151.72013 540713 57124276c4e79809d7e898a5365be7fa ""
   "t1-formata-bold.tfm" 1783213630.51158 1420 e49288584c4b6aedcaf3809078fdde27 ""

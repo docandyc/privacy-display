@@ -1,0 +1,2 @@
+{"file":".trellis/spec/guides/latex-paper-build-thinking-guide.md","reason":"Check the final latexmk status, citations, references, labels, and extracted PDF placeholders."}
+{"file":".trellis/spec/backend/quality-guidelines.md","reason":"Check Figure 2 page geometry, viewport compatibility, text legibility, clipping, collisions, and manuscript-page rendering."}
