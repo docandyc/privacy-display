@@ -1,0 +1,3 @@
+{"file":"docs/superpowers/specs/2026-07-17-figure2-m1-flowchart-design.md","reason":"Acceptance criteria for source/final synchronization, unchanged geometry, and visual verification."}
+{"file":".trellis/spec/guides/latex-paper-build-thinking-guide.md","reason":"Quality checks for the regenerated paper PDF and its LaTeX integration."}
+{"file":".trellis/spec/backend/quality-guidelines.md","reason":"Quality contract for canonical Visio/PDF synchronization, idempotent migration, topology preservation, and rendered-page inspection."}

@@ -1,0 +1,3 @@
+{"file":"docs/superpowers/specs/2026-07-17-figure2-m1-flowchart-design.md","reason":"Approved artifact-chain, wording, layout, and verification contract for the M1 correction."}
+{"file":".trellis/spec/guides/latex-paper-build-thinking-guide.md","reason":"Paper-asset build and viewport consistency guidance for the re-exported Figure 2 PDF."}
+{"file":".trellis/spec/backend/quality-guidelines.md","reason":"Executable contract for source-synchronized Visio figure maintenance, atomic VSDX migration, COM fallback, and visual verification."}
