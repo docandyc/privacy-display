@@ -44,7 +44,7 @@
           ],
           "required_labels": [
             "Source and secure decomposition",
-            "GPU synthesis and temporal sequence",
+            "Subframe composition and sequencing",
             "Observer asymmetry"
           ],
           "required_formulas": [],
@@ -142,11 +142,11 @@
             "arrow_dense"
           ],
           "required_labels": [
-            "GPU subframe synthesis",
+            "Offline subframe composition",
             "Optional: anti-OCR / inversion",
             "Complementary adversarial noise",
             "High-refresh display",
-            "240–360 Hz",
+            "nominal 240 Hz",
             "time t"
           ],
           "required_formulas": [
@@ -154,7 +154,7 @@
             "Σ Nₖ = 0"
           ],
           "required_component_motifs": [
-            "wide GPU module",
+            "wide offline composition module",
             "four sparse subframes",
             "subordinate noise module"
           ],
@@ -164,7 +164,7 @@
             "time arrow"
           ],
           "required_ports_or_boundaries": [
-            "GPU ports",
+            "composition ports",
             "stage handoffs"
           ],
           "text_layout_facts": [
@@ -250,7 +250,7 @@
             "Samples one short exposure",
             "Short-exposure sampling",
             "OCR ×",
-            "Unreadable fragment"
+            "Partially observed subframe"
           ],
           "required_formulas": [],
           "required_component_motifs": [
@@ -383,7 +383,7 @@
           773
         ],
         "container_id": "stage_2",
-        "review_focus": "GPU noise subframes"
+        "review_focus": "offline composition, noise, and subframes"
       },
       {
         "id": "human_output",
@@ -517,11 +517,11 @@
       {
         "id": "A003",
         "source_region": "stage_1_to_stage_2",
-        "source_fact": "Masks feed GPU synthesis.",
+        "source_fact": "Masks feed offline subframe composition.",
         "from_visual_object": "mask_exit",
         "from_anchor_description": "junction center",
         "to_visual_object": "gpu_in",
-        "to": "GPU input port",
+        "to": "composition input port",
         "to_anchor_description": "port center",
         "direction": "left_to_right",
         "route_shape": "straight_horizontal",
@@ -549,7 +549,7 @@
         "from_visual_object": "optional_out",
         "from_anchor_description": "port center",
         "to_visual_object": "gpu_top",
-        "to": "GPU top port",
+        "to": "composition top port",
         "to_anchor_description": "port center",
         "direction": "top_to_bottom",
         "route_shape": "straight_vertical",
@@ -578,7 +578,7 @@
         "from_visual_object": "noise_out",
         "from_anchor_description": "port center",
         "to_visual_object": "gpu_bottom",
-        "to": "GPU bottom port",
+        "to": "composition bottom port",
         "to_anchor_description": "port center",
         "direction": "bottom_to_top",
         "route_shape": "straight_vertical",
@@ -593,7 +593,7 @@
         ],
         "must_not_cross": [
           "noise formula",
-          "GPU formula"
+          "composition formula"
         ],
         "relative_position_facts": [
           "centered below GPU"
@@ -860,7 +860,7 @@
         "from_visual_object": "sampled_fragment",
         "from_anchor_description": "right edge midpoint",
         "to_visual_object": "ocr_failure",
-        "to": "OCR mark left edge",
+        "to": "OCR outcome marker left edge",
         "to_anchor_description": "left edge midpoint",
         "direction": "left_to_right",
         "route_shape": "straight_horizontal",
@@ -978,11 +978,11 @@
     {
       "id": "stage_1_title",
       "type": "text_block",
-      "x": 38,
+      "x": 25.5,
       "y": 34,
-      "w": 485,
+      "w": 510,
       "h": 48,
-      "text": "1  Secure mask generation",
+      "text": "1  CSPRNG-based mask assignment",
       "z": 12,
       "container_id": "stage_1",
       "text_role": "panel_title",
@@ -990,8 +990,8 @@
         "source_font_family": "Arial",
         "font_family": "Arial",
         "font_role": "sans",
-        "font_size_pt": 8.2,
-        "min_font_size_pt": 7.6,
+        "font_size_pt": 7.2,
+        "min_font_size_pt": 6.6000000000000005,
         "text_fit": "single_line",
         "constrain_text_box": true,
         "text_margin_in": 0.0,
@@ -1006,7 +1006,7 @@
       "y": 34,
       "w": 655,
       "h": 48,
-      "text": "2  GPU synthesis and temporal sequence",
+      "text": "2  Subframe composition and sequencing",
       "z": 12,
       "container_id": "stage_2",
       "text_role": "panel_title",
@@ -1660,7 +1660,7 @@
       "y": 268,
       "w": 270,
       "h": 42,
-      "text": "GPU subframe",
+      "text": "Offline subframe",
       "z": 12,
       "container_id": "gpu_synthesis",
       "text_role": "module_title",
@@ -1684,7 +1684,7 @@
       "y": 305,
       "w": 270,
       "h": 42,
-      "text": "synthesis",
+      "text": "composition",
       "z": 12,
       "container_id": "gpu_synthesis",
       "text_role": "module_title",
@@ -2131,7 +2131,7 @@
       "y": 457,
       "w": 320,
       "h": 34,
-      "text": "240-360 Hz",
+      "text": "nominal 240 Hz",
       "z": 12,
       "container_id": "stage_2",
       "text_role": "small_label",
@@ -2882,7 +2882,7 @@
       "y": 610,
       "w": 170,
       "h": 32,
-      "text": "Unreadable",
+      "text": "Partially",
       "z": 12,
       "container_id": "stage_3_camera",
       "text_role": "output_label",
@@ -2902,11 +2902,11 @@
     {
       "id": "unreadable_label_2",
       "type": "text_block",
-      "x": 1660,
+      "x": 1625,
       "y": 645,
-      "w": 170,
+      "w": 270,
       "h": 30,
-      "text": "fragment",
+      "text": "observed subframe",
       "z": 12,
       "container_id": "stage_3_camera",
       "text_role": "output_label",
@@ -2914,7 +2914,7 @@
         "source_font_family": "Arial",
         "font_family": "Arial",
         "font_role": "sans",
-        "font_size_pt": 6.8,
+        "font_size_pt": 6.5,
         "min_font_size_pt": 6.5,
         "text_fit": "single_line",
         "constrain_text_box": true,

@@ -18,9 +18,9 @@ All four artifacts must agree after the change. Historical round-1/round-2 scene
 | `2  GPU synthesis and temporal sequence` | `2  Subframe composition and sequencing` |
 | `GPU subframe` / `synthesis` | `Offline subframe` / `composition` |
 | `240-360 Hz` | `nominal 240 Hz` |
-| `Unreadable` / `fragment` | `Partially observed` / `subframe` |
+| `Unreadable` / `fragment` | `Partially` / `observed subframe` |
 
-`OCR ×` remains unchanged. The optional `empirical outcome` note is omitted because the camera-output panel is already dense and the revised fragment label provides the necessary epistemic qualification.
+`OCR ×` remains unchanged. The optional `empirical outcome` note is omitted because the camera-output panel is already dense and the revised subframe label provides the necessary epistemic qualification. The line split is chosen from measured Arial Bold text extents: `Partially observed` does not fit beside `Short-exposure` at the maintained scale, while `Partially` / `observed subframe` preserves the full wording without collision.
 
 ## Implementation Strategy
 
@@ -33,11 +33,11 @@ Use a source-synchronized minimal patch:
 
 ## Layout Rules
 
-Preserve all node bounds, connectors, styles, page geometry, and the LaTeX viewport. Keep the two longer module/output labels on two lines. If visual inspection reveals clipping, adjust only the affected text shape's font fit or width while preserving its surrounding module geometry.
+Preserve all node bounds, connectors, styles, page geometry, and the LaTeX viewport. Keep the two longer module/output labels on two lines. The longer stage-1 title uses a 7.2 pt font and a title-only width increase that remains inside the existing panel. The `observed subframe` line receives a wider 270 px text-only box below the sampled frame so Visio keeps it on one line. No panel, module, or connector geometry changes.
 
 ## Verification
 
-* Search maintained source and canonical VSDX package text: every obsolete label must be absent and every replacement present in its intended role.
+* Search the generated round-3 scene and canonical VSDX package text: every obsolete label must be absent and every replacement present in its intended role. Obsolete strings may remain only in explicit migration-match tables in the maintenance scripts.
 * Extract PDF text to confirm the re-export contains the replacement labels.
 * Compare pre/post page size and Visio shape geometry to prove the viewport remains valid.
 * Render the cropped figure region to PNG and inspect for wrapping, clipping, overlap, unreadable glyphs, and unintended layout changes.

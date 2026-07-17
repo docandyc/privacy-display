@@ -1331,6 +1331,64 @@ panel = integrate_brightness_aligned(frames)[int(1080 * 0.40):int(1080 * 0.61)]
 
 ---
 
+## Scenario: Editable Visio Paper-Figure Maintenance
+
+### 1. Scope / Trigger
+- Trigger: changing a canonical paper figure whose editable source is a Visio `.vsdx`, especially when a maintained `scene.json`/builder and an exported paper PDF must remain synchronized.
+
+### 2. Signatures
+- Figure 2 source regeneration: `python paper/figures/visio/figure2_method_pipeline/build_round3_scene.py`
+- Figure 2 targeted migration: `python paper/figures/visio/figure2_method_pipeline/apply_m1_wording.py [--refresh-fits]`
+- Figure 2 PDF export: `python paper/figures/visio/figure2_method_pipeline/export_final_pdf.py`
+- Scene validation: `python <visiomaster>/scripts/scene_validate.py --strict <scene.json>`
+
+### 3. Contracts
+- Update the latest maintained builder/scene and the canonical VSDX/PDF together. Historical round artifacts and review evidence remain immutable unless the task explicitly targets them.
+- A targeted VSDX migration must classify the package as wholly old or wholly new before writing. A mixed state is an error; do not apply broad best-effort replacement.
+- Rewrite the VSDX through a temporary ZIP package, apply any measured Visio text-fit cells to the temporary file, and replace the canonical file only after all steps succeed.
+- `pywin32` is optional for local Visio automation. When it is unavailable, invoke native Windows PowerShell COM in a checked subprocess, pass paths through task-specific environment keys, and release both document and application COM objects in `finally` blocks.
+- Preserve page size, figure viewport, non-target shape geometry, and connector topology. If page geometry changes deliberately, update the matching `\includegraphics` viewport in `paper/main.tex` in the same change.
+- Text extraction is necessary but not sufficient. Render the canonical PDF and the compiled manuscript page, then inspect them for wrapping, clipping, collision, and semantic ambiguity.
+
+### 4. Validation & Error Matrix
+- Old and new target strings coexist in page XML -> raise `RuntimeError` and leave the canonical VSDX untouched.
+- Expected `visio/pages/page1.xml` is missing -> raise `RuntimeError` and leave the canonical VSDX untouched.
+- `pywin32` import is unavailable -> use the PowerShell Visio COM fallback.
+- Visio/COM export fails -> propagate the subprocess/COM failure; do not report or commit a regenerated PDF.
+- Exported page size differs from the baseline -> either restore the original page geometry or deliberately update and visually verify the manuscript viewport.
+- Strict scene validation reports errors or audit `[REBUILD]` findings -> repair the affected subsystem before publication export.
+
+### 5. Good/Base/Bad Cases
+- Good: regenerate the current scene, apply an idempotent text migration, export through Visio, prove non-target geometry unchanged, and visually inspect the standalone and manuscript renders.
+- Base: re-run the migration on an already-updated VSDX and receive an `already patched` result without rewriting the canonical file.
+- Bad: edit only the PDF or VSDX while leaving the maintained builder/scene stale, because the next regeneration restores the retired wording.
+- Bad: install or require `pywin32` merely to export when native PowerShell Visio COM is already available on the Windows host.
+
+### 6. Tests Required
+- Assert the generated scene contains each replacement in its intended node and no retired visible label.
+- Assert all non-target scene nodes and the complete edge list match the baseline.
+- Assert VSDX package text has zero retired-label occurrences and exactly one occurrence of every replacement.
+- Assert a second migration run is idempotent and a mixed old/new fixture fails without replacing the source file.
+- Assert Visio shape identity and non-target text/geometry remain unchanged; verify only approved text boxes change fit geometry.
+- Assert the PDF page count and media box match the baseline, then visually inspect the rendered figure and compiled paper page.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+page_xml = page_xml.replace("old label", "new label")
+Path("final/figure.vsdx").write_bytes(rebuilt_package)
+```
+
+#### Correct
+```python
+with NamedTemporaryFile(dir=VSDX.parent, suffix=".vsdx", delete=False) as temporary:
+    temp_path = Path(temporary.name)
+state = _rewrite_package(VSDX, temp_path)  # wholly old/new; mixed state raises
+if state == "old":
+    _apply_measured_text_fits(temp_path)
+    temp_path.replace(VSDX)
+```
+
 ## Testing Requirements
 
 <!-- What level of testing is expected -->

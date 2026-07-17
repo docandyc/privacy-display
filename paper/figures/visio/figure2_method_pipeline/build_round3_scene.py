@@ -9,6 +9,42 @@ ROOT = Path(__file__).resolve().parent
 INVENTORY_SCENE = ROOT / "figure2_method_pipeline.round2.scene.json"
 OUTPUT_SCENE = ROOT / "figure2_method_pipeline.round3.scene.json"
 
+METADATA_TEXT_REPLACEMENTS = (
+    ("GPU synthesis and temporal sequence", "Subframe composition and sequencing"),
+    ("GPU subframe synthesis", "Offline subframe composition"),
+    ("High-refresh display · 240–360 Hz", "High-refresh display · nominal 240 Hz"),
+    ("240–360 Hz", "nominal 240 Hz"),
+    ("240-360 Hz", "nominal 240 Hz"),
+    ("Unreadable fragment label", "Partially observed subframe label"),
+    ("Unreadable fragment", "Partially observed subframe"),
+    ("The sparse fragment reaches an OCR failure mark.",
+     "The partially observed subframe reaches an OCR outcome marker."),
+    ("fragment and OCR mark aligned", "partially observed subframe and OCR marker aligned"),
+    ("fragment right edge", "partially observed subframe right edge"),
+    ("OCR mark left edge", "OCR outcome marker left edge"),
+    ("GPU synthesis", "offline subframe composition"),
+    ("GPU module", "offline composition module"),
+    ("GPU input", "composition input"),
+    ("GPU output", "composition output"),
+    ("GPU top", "composition top"),
+    ("GPU bottom", "composition bottom"),
+    ("GPU ports", "composition ports"),
+    ("GPU formula", "composition formula"),
+    ("GPU and first subframe aligned", "composition module and first subframe aligned"),
+)
+
+
+def rewrite_metadata_text(value):
+    if isinstance(value, str):
+        for old, new in METADATA_TEXT_REPLACEMENTS:
+            value = value.replace(old, new)
+        return value
+    if isinstance(value, list):
+        return [rewrite_metadata_text(item) for item in value]
+    if isinstance(value, dict):
+        return {key: rewrite_metadata_text(item) for key, item in value.items()}
+    return value
+
 
 def style(**kwargs):
     return kwargs
@@ -72,7 +108,7 @@ def grid(node_id, x, y, w, h, rows, cols, cells, container_id, *, line="#D8E0EA"
 
 def main():
     inventory = json.loads(INVENTORY_SCENE.read_text(encoding="utf-8"))
-    metadata = copy.deepcopy(inventory["metadata"])
+    metadata = rewrite_metadata_text(copy.deepcopy(inventory["metadata"]))
     metadata.update({
         "created_by": "codex.visiomaster.fresh_round3",
         "replica_stage": "detail_polish",
@@ -91,7 +127,8 @@ def main():
         {"id": "stage_1_input", "crop_type": "input", "source_bbox_px": [0, 80, 705, 700],
          "target_bbox": [20, 20, 540, 773], "container_id": "stage_1", "review_focus": "input security masks"},
         {"id": "central_core", "crop_type": "core", "source_bbox_px": [680, 60, 1350, 735],
-         "target_bbox": [550, 20, 1240, 773], "container_id": "stage_2", "review_focus": "GPU noise subframes"},
+         "target_bbox": [550, 20, 1240, 773], "container_id": "stage_2",
+         "review_focus": "offline composition, noise, and subframes"},
         {"id": "human_output", "crop_type": "output", "source_bbox_px": [1320, 60, 1983, 330],
          "target_bbox": [1350, 90, 1940, 350], "container_id": "stage_3_human", "review_focus": "right output human"},
         {"id": "camera_output", "crop_type": "output", "source_bbox_px": [1320, 380, 1983, 760],
@@ -123,9 +160,9 @@ def main():
              source_bbox_px=[1320, 50, 1983, 760], source_aspect_ratio=0.934,
              style=style(fill="#FBFDFF", line="#B7C5D8", line_weight_pt=0.9,
                          line_dash="solid", rounding_in=0.04)),
-        label("stage_1_title", 38, 34, 485, 48, "1  Secure mask generation", "stage_1",
-              size=8.2, weight="bold", role="panel_title"),
-        label("stage_2_title", 568, 34, 655, 48, "2  GPU synthesis and temporal sequence", "stage_2",
+        label("stage_1_title", 25.5, 34, 510, 48, "1  CSPRNG-based mask assignment", "stage_1",
+              size=7.2, weight="bold", role="panel_title"),
+        label("stage_2_title", 568, 34, 655, 48, "2  Subframe composition and sequencing", "stage_2",
               size=8.2, weight="bold", role="panel_title"),
         label("stage_3_title", 1268, 34, 675, 48, "3  Observer asymmetry", "stage_3",
               size=8.2, weight="bold", role="panel_title"),
@@ -172,9 +209,9 @@ def main():
              source_bbox_px=[700,225,1000,425], source_aspect_ratio=1.5,
              style=style(fill="#FFFFFF", line=navy, line_weight_pt=1.5,
                          line_dash="solid", rounding_in=0.04)),
-        label("gpu_title", 590, 268, 270, 42, "GPU subframe", "gpu_synthesis",
+        label("gpu_title", 590, 268, 270, 42, "Offline subframe", "gpu_synthesis",
               size=7.7, weight="bold", role="module_title"),
-        label("gpu_title_2", 590, 305, 270, 42, "synthesis", "gpu_synthesis",
+        label("gpu_title_2", 590, 305, 270, 42, "composition", "gpu_synthesis",
               size=7.7, weight="bold", role="module_title"),
         label("gpu_formula", 588, 350, 274, 44, "I_k = I ⊙ M_k + N_k", "gpu_synthesis",
               size=8.1, role="formula", font="Cambria Math"),
@@ -206,7 +243,7 @@ def main():
              [(1,0),(2,2),(3,4),(5,0),(6,2),(7,4),(8,1)], "stage_2"),
         label("high_refresh_label", 895, 420, 320, 34, "High-refresh display", "stage_2",
               size=7.5, weight="bold"),
-        label("refresh_rate_label", 895, 457, 320, 34, "240-360 Hz", "stage_2",
+        label("refresh_rate_label", 895, 457, 320, 34, "nominal 240 Hz", "stage_2",
               size=7.5, weight="bold"),
         label("time_label", 1000, 526, 110, 34, "time t", "stage_2", size=7.2),
 
@@ -280,10 +317,10 @@ def main():
               size=7.0, color=red, weight="bold"),
         label("camera_sampling_label_2", 1470, 645, 215, 30, "sampling", "stage_3_camera",
               size=7.0, color=red, weight="bold"),
-        label("unreadable_label", 1660, 610, 170, 32, "Unreadable", "stage_3_camera",
+        label("unreadable_label", 1660, 610, 170, 32, "Partially", "stage_3_camera",
               size=6.8, color=red, weight="bold", role="output_label"),
-        label("unreadable_label_2", 1660, 645, 170, 30, "fragment", "stage_3_camera",
-              size=6.8, color=red, weight="bold", role="output_label"),
+        label("unreadable_label_2", 1625, 645, 270, 30, "observed subframe", "stage_3_camera",
+              size=6.5, color=red, weight="bold", role="output_label"),
     ]
 
     edges = [
