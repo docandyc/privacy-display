@@ -366,6 +366,11 @@ def analyze_study(db_path: str | Path, output_dir: str | Path, *, bootstrap_samp
             rng,
         )
 
+    typing_p_values = [typing_report[m]["p_value"] for m in TYPING_METRICS]
+    typing_holm = holm_adjust(typing_p_values)
+    for metric, adj_p in zip(TYPING_METRICS, typing_holm):
+        typing_report[metric]["holm_p"] = adj_p
+
     rating_summary = {
         condition: {
             dimension: {
@@ -380,7 +385,7 @@ def analyze_study(db_path: str | Path, output_dir: str | Path, *, bootstrap_samp
         "analysis_plan": {
             "target_n": TARGET_N,
             "unit_of_analysis": "participant means across two repetitions per typing condition",
-            "typing": "paired t if Shapiro p>=.05, otherwise Wilcoxon; effect size and participant bootstrap CI",
+            "typing": "paired t if Shapiro p>=.05, otherwise Wilcoxon; effect size and participant bootstrap CI; Holm correction across five metrics",
             "ratings": "Friedman plus pairwise Wilcoxon with Holm correction",
             "exclusions": [
                 "debug/demo", "incomplete rows", "refresh <200Hz", "control accuracy <50%",

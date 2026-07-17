@@ -2,7 +2,7 @@
   "analysis_plan": {
     "target_n": 24,
     "unit_of_analysis": "participant means across two repetitions per typing condition",
-    "typing": "paired t if Shapiro p>=.05, otherwise Wilcoxon; effect size and participant bootstrap CI",
+    "typing": "paired t if Shapiro p>=.05, otherwise Wilcoxon; effect size and participant bootstrap CI; Holm correction across five metrics",
     "ratings": "Friedman plus pairwise Wilcoxon with Holm correction",
     "exclusions": [
       "debug/demo",
@@ -68,7 +68,8 @@
       "statistic": -2.9326948365333165,
       "p_value": 0.004890243863958562,
       "effect_name": "cohen_dz",
-      "effect": -0.3918978320810243
+      "effect": -0.3918978320810243,
+      "holm_p": 0.021651447068344494
     },
     "cpm": {
       "n": 56,
@@ -84,7 +85,8 @@
       "statistic": -2.932694836533318,
       "p_value": 0.004890243863958542,
       "effect_name": "cohen_dz",
-      "effect": -0.39189783208102447
+      "effect": -0.39189783208102447,
+      "holm_p": 0.021651447068344494
     },
     "accuracy": {
       "n": 56,
@@ -100,7 +102,8 @@
       "statistic": 428.0,
       "p_value": 0.043138979933109646,
       "effect_name": "rank_biserial",
-      "effect": -0.32862745098039214
+      "effect": -0.32862745098039214,
+      "holm_p": 0.08627795986621929
     },
     "attempted_chars": {
       "n": 56,
@@ -116,7 +119,8 @@
       "statistic": -2.976271606671132,
       "p_value": 0.004330289413668899,
       "effect_name": "cohen_dz",
-      "effect": -0.3977210229338067
+      "effect": -0.3977210229338067,
+      "holm_p": 0.021651447068344494
     },
     "first_key_latency_ms": {
       "n": 56,
@@ -132,7 +136,8 @@
       "statistic": 641.0,
       "p_value": 0.20031232247291197,
       "effect_name": "rank_biserial",
-      "effect": 0.19674185463659147
+      "effect": 0.19674185463659147,
+      "holm_p": 0.20031232247291197
     }
   },
   "rating_summary": {
