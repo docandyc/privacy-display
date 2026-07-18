@@ -60,7 +60,7 @@ data are analyzed and reported.}
 %% ABSTRACT
 %% ============================================================
 \begin{abstract}
-Screen content can be covertly photographed and transcribed by optical character recognition (OCR) or vision-language models (VLMs). We present temporal pixel masking, a display method exploiting differences between human temporal integration and short camera exposures. A base frame is decomposed into rapidly alternating, cryptographically randomized complementary subframes; noise, stripe/glyph overlays, and a partial inversion frame can reduce recoverability. Short rolling-shutter exposures may capture temporally mixed fragments rather than fully integrated frames. We evaluate a 240 Hz software prototype using one USB Video Class (UVC) webcam across nine geometries and 10,575 captures. Across nine archived geometries, best-of-engine OCR character recovery decreased from 94.1\% unprotected to 15.1\% for the readability-priority profile and 5.0\% for the high-suppression profile; exact-match rates decreased from 65.7\% to 0.4\% and 0\%, respectively. The latter meets the descriptive $<$10\% recovery target. Video temporal averaging of 150 frames recovered 47.9--71.1\% of characters, and the strongest of three tested VLMs reached 77.8\% exact match on 0.5\,m short-exposure captures, with recovery concentrated on large-font short snippets. Under long exposure, masking could increase recovery over the unprotected baseline, consistent with reduced luminance shifting the sensor into its linear range. These results establish feasibility for mitigating conventional OCR in the tested short-exposure UVC-camera link, but not protection against temporal integration or VLM attackers. In 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14 WPM; readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of 5, indicating measurable usability costs.
+Screen content can be covertly photographed and transcribed by optical character recognition (OCR) or vision-language models (VLMs). We present temporal pixel masking, a display method exploiting differences between human temporal integration and short camera exposures. A base frame is decomposed into rapidly alternating, cryptographically randomized complementary subframes; noise, stripe/glyph overlays, and a partial inversion frame can reduce recoverability. Short rolling-shutter exposures may capture temporally mixed fragments rather than fully integrated frames. We evaluate a 240 Hz software prototype using one USB Video Class (UVC) webcam across nine geometries and 10,575 captures, best-of-engine OCR character recovery decreased from 94.1\% unprotected to 15.1\% for the readability-priority profile and 5.0\% for the high-suppression profile; exact-match rates decreased from 65.7\% to 0.4\% and 0\%, respectively. The latter meets the descriptive $<$10\% recovery target. Video temporal averaging of 150 frames recovered 47.9--71.1\% of characters, and the strongest of three tested VLMs reached 77.8\% exact match on 0.5\,m short-exposure captures, with recovery concentrated on large-font short snippets. Under long exposure, masking could increase recovery over the unprotected baseline, consistent with reduced luminance shifting the sensor into its linear range. These results establish feasibility for mitigating conventional OCR in the tested short-exposure UVC-camera link, but not protection against temporal integration or VLM attackers. In 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14 WPM; readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of 5, indicating measurable usability costs.
 \end{abstract}
 
 \begin{keywords}
@@ -178,7 +178,7 @@ The attacker \emph{knows} the temporal masking algorithm, the subframe count~$n$
 
 \subsection{Protection Goals}
 
-We use tiered design goals under short exposure to interpret the evaluated profiles. High-suppression targets conventional OCR character recovery $<10\%$ with exact match $=0\%$, whereas readability-priority targets a relative reduction of at least 80\% with exact match $<1\%$. These descriptive thresholds organize the profile comparison. Object-detection mean average precision at 0.50 intersection over union (mAP50) provides a secondary diagnostic, while $\Delta E_{00}$ and the structural similarity index (SSIM) quantify digital reconstruction quality.
+We use tiered design goals under short exposure to interpret the evaluated profiles. High-suppression targets conventional OCR character recovery $<10\%$ with exact match $=0\%$, whereas readability-priority targets a relative reduction of at least 80\% with exact match $<1\%$. These descriptive thresholds organize the profile comparison. Object-detection mean average precision at 0.50 intersection over union (IoU) threshold (mAP50) provides a secondary diagnostic, while $\Delta E_{00}$ and the structural similarity index (SSIM) quantify digital reconstruction quality.
 
 
 %% ============================================================
@@ -212,7 +212,7 @@ We overlay adversarial noise $\mathbf{N}_1, \ldots, \mathbf{N}_n$ on the subfram
 \sum_{k=1}^{n}\mathbf{N}_k = \mathbf{0}
 \label{eq:noise_complement}
 \end{equation}
-Equation~(\ref{eq:noise_complement}) holds strictly only in the ideal linear domain prior to summation, clipping, and the display transfer function. Motivated by prior work showing that small text-image perturbations can significantly mislead OCR systems~\cite{b_song2018}, noise is generated per cycle by single-step fast gradient sign method (FGSM)~\cite{b_goodfellow2015} or iterative sign-PGD~\cite{b_madry2018} updates under an $\varepsilon=8/255$ bound, rotating across eight OCR and detector targets; depending on availability, gradients come from the EasyOCR recognition network, a differentiable shadow objective, or a deterministic image-space surrogate. The resulting noise is then decomposed complementarily in the temporal domain. The user-study web implementation substitutes a deterministic image-space texture of comparable amplitude for these model-gradient perturbations (\S\ref{sec:user_study}). Because displays cannot emit negative radiance, the implementation uses a pedestal level and numerical clipping; consequently, after gamma correction, quantization, clipping, and camera imaging, the noise is not guaranteed to cancel physically.
+Equation~(\ref{eq:noise_complement}) holds strictly only in the ideal linear domain prior to summation, clipping, and the display transfer function. Motivated by prior work showing that small text-image perturbations can significantly mislead OCR systems~\cite{b_song2018}, noise is generated per cycle by single-step fast gradient sign method (FGSM)~\cite{b_goodfellow2015} or iterative sign projected gradient descent (PGD)~\cite{b_madry2018} updates under an $\varepsilon=8/255$ bound, rotating across eight OCR and detector targets; depending on availability, gradients come from the EasyOCR recognition network, a differentiable shadow objective, or a deterministic image-space surrogate. The resulting noise is then decomposed complementarily in the temporal domain. The user-study web implementation substitutes a deterministic image-space texture of comparable amplitude for these model-gradient perturbations (\S\ref{sec:user_study}). Because displays cannot emit negative radiance, the implementation uses a pedestal level and numerical clipping; consequently, after gamma correction, quantization, clipping, and camera imaging, the noise is not guaranteed to cancel physically.
 
 \textbf{Component role}: The random dot-pattern mask is the primary temporal mechanism, while complementary noise is an optional ideal-domain component and stripe/glyph overlays together with partial inversion are nonlinear additions used by the enhanced profiles below. The archived composite-profile definitions preserve correspondence with the captured data, and the physical analysis compares both individual ablations and complete profiles.
 
@@ -623,7 +623,7 @@ Scoring no longer compares characters position-by-position but aligns the full t
 \label{tab:study_typing}
 \centering
 \footnotesize
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lccc}
 \toprule
 Metric & Control & Masked & $\Delta$ [95\% CI] \\
@@ -642,7 +642,7 @@ First-key latency (ms) & 742.64 & 833.61 & $+90.96$ [$-31.11$, $+210.69$] \\
 \label{tab:study_ratings}
 \centering
 \footnotesize
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lccc}
 \toprule
 Condition & Readability & Stability & Comfort \\
@@ -678,7 +678,7 @@ Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $
 \subsection{Real-Capture Object Detection and Tracking}
 \label{sec:detection}
 
-To probe whether the temporal degradation transfers beyond text, we report an exploratory detection/tracking stress test within the same camera link, noting that the evidence strength is not equivalent to the OCR main experiment. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. mAP, mAP50, and average recall (AR) are reported for detection. Tracking uses higher-order tracking accuracy (HOTA), identification F1 (IDF1), multiple-object tracking accuracy (MOTA), and multiple-object tracking precision (MOTP). The protected condition uses the $n=4$ mask+noise profile without overlays or inversion. The \texttt{real\_clean} reference is an unprotected nominal 31.25-ms capture. The \texttt{real\_short} image is the maximum-grayscale-contrast frame from a three-frame protected burst at the nominal 3.91-ms setting, and \texttt{real\_video} is the mean of 150 protected frames acquired nominally at 60\,fps. Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture and an in-project greedy association implementation inspired by ByteTrack~\cite{b_bytetrack2022}.
+To probe whether the temporal degradation transfers beyond text, we report an exploratory detection/tracking stress test within the same camera link, noting that the evidence strength is not equivalent to the OCR main experiment. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. mAP, mAP50, and average recall (AR) are reported for detection. Real-capture tracking uses higher-order tracking accuracy (HOTA) and identification F1 (IDF1); simulated tracking additionally reports multiple-object tracking accuracy (MOTA) and multiple-object tracking precision (MOTP). The protected condition uses the $n=4$ mask+noise profile without overlays or inversion. The \texttt{real\_clean} reference is an unprotected nominal 31.25-ms capture. The \texttt{real\_short} image is the maximum-grayscale-contrast frame from a three-frame protected burst at the nominal 3.91-ms setting, and \texttt{real\_video} is the mean of 150 protected frames acquired nominally at 60\,fps. Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture and an in-project greedy association implementation inspired by ByteTrack~\cite{b_bytetrack2022}.
 
 \begin{table}[!t]
 \caption{Real-Capture COCO Detection (150 Images; \texttt{real\_clean} = Unprotected Capture Baseline)}
@@ -947,6 +947,12 @@ We evaluated temporal pixel masking on one UVC camera link. Across 8 common-sett
 Attack-oriented evaluation recovers substantially more information: a 150-frame temporal mean reaches 71.1\% character recovery for readability-priority and 47.9\% for high-suppression, rising to 79.7\% and 53.9\% at the common settings; in the full 9-geometry sensitivity pool, long-exposure recovery is 60.9\% for readability-priority versus 47.3\% unprotected. On-axis VLM probes also recover considerable large-font content, while the three-engine preprocessing oracle reaches 40.2\% for readability-priority and 13.7\% for high-suppression.
 
 In a 56-participant user study, readability-priority masking retained 94.83\% typing accuracy while reducing speed by 1.14\,WPM; subjective readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of~5, confirming measurable usability costs concentrated in perceived stability for the readability-priority operating point. Detection and tracking stress tests show the same directional OCR-reduction pattern across four detectors. Future work should extend capture to additional cameras and displays, map VLM-aware adaptive profiles, and evaluate comfort over longer sessions.
+
+%% ============================================================
+%% DATA AVAILABILITY
+%% ============================================================
+\section*{Data Availability}
+The data and code that support the findings of this study are available from the corresponding author upon reasonable request.
 
 %% ============================================================
 %% ACKNOWLEDGMENT

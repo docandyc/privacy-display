@@ -234,12 +234,12 @@ INPUT ./notaglinelogo.png
 INPUT ./figures/real_capture_montage.pdf
 INPUT ./figures/real_capture_montage.pdf
 INPUT ./figures/real_capture_montage.pdf
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
 INPUT ./figures/real_capture_bar.pdf
 INPUT ./figures/real_capture_bar.pdf
 INPUT ./figures/real_capture_bar.pdf
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
 INPUT ./figures/real_engine_ocr.pdf
 INPUT ./figures/real_engine_ocr.pdf
 INPUT ./figures/real_engine_ocr.pdf
@@ -305,6 +305,9 @@ INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
 INPUT t1-times-italic.tfm
 INPUT t1-times-italic.tfm
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
