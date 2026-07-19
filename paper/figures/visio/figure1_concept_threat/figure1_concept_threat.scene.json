@@ -7,7 +7,7 @@
     "fidelity": "exact",
     "replica_review_mode": "strict_replica",
     "replica_stage": "layout_topology",
-    "source_image": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/paper/figures/visio/figure1_concept_threat/source/original.png",
+    "source_image": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/source/original.png",
     "source_aspect_ratio": 1.5,
     "region_strategy": "region_first",
     "font_scale": {

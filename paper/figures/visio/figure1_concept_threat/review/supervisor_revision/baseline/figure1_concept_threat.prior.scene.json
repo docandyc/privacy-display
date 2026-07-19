@@ -2,12 +2,12 @@
   "version": "0.1",
   "metadata": {
     "title": "Physical visual eavesdropping and asymmetric perception",
-    "created_by": "codex.visiomaster.supervisor_revision",
+    "created_by": "codex.visiomaster.fresh_round2",
     "style_profile": "paper_white",
     "fidelity": "exact",
     "replica_review_mode": "strict_replica",
     "replica_stage": "detail_polish",
-    "source_image": "E:/毕设/privacy-display/paper/figures/visio/figure1_concept_threat/source/original.png",
+    "source_image": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/paper/figures/visio/figure1_concept_threat/source/original.png",
     "source_aspect_ratio": 1.5,
     "region_strategy": "region_first",
     "font_scale": {
@@ -17,14 +17,10 @@
       "display_text": 7.5
     },
     "notes": [
-      "Supervisor-approved semantic revision of the editable round-two scene.",
+      "Fresh full-scene reauthoring from source inventory and round-one findings.",
       "Human, subframe, and camera zones use independent vertical bands.",
       "Every long English label uses dedicated rows and explicit text margins.",
-      "Office geometry is reauthored as simplified editable editorial line art.",
-      "Panel (a) remains unchanged; panel (b) uses complementary 5x5 A glyph subsets.",
-      "Fast time text is removed; three local rightward arrows encode sequence order.",
-      "The selected camera fragment exactly matches subframe 2.",
-      "OCR failure is shown with a large editable red X."
+      "Office geometry is reauthored as simplified editable editorial line art."
     ],
     "source_visual_inventory": {
       "analysis_basis": "visual_llm_source_image",
@@ -147,22 +143,22 @@
             "small_text"
           ],
           "required_labels": [
-            "Rapid complementary subframes"
+            "Rapid complementary subframes",
+            "Fast time"
           ],
           "required_formulas": [],
           "required_component_motifs": [
-            "four 5x5 displays containing mutually exclusive subsets of one capital A",
-            "one selected exposure bracket around subframe 2"
+            "four sparse display thumbnails",
+            "one selected exposure bracket"
           ],
           "required_edge_motifs": [
-            "three unobstructed rightward inter-frame sequence arrows"
+            "right-pointing fast-time arrow"
           ],
           "required_ports_or_boundaries": [
             "selected second subframe"
           ],
           "text_layout_facts": [
-            "four thumbnails share one baseline",
-            "no Fast time text"
+            "four thumbnails share one baseline"
           ],
           "box_style_facts": [
             "light-cyan screens",
@@ -196,12 +192,13 @@
           "required_labels": [
             "Human eye",
             "Temporal integration",
-            "Readable"
+            "Readable",
+            "PRIVATE DATA"
           ],
           "required_formulas": [],
           "required_component_motifs": [
             "eye",
-            "readable display containing the complete 5x5 A"
+            "readable display"
           ],
           "required_edge_motifs": [
             "four green subframe-to-eye arrows",
@@ -249,8 +246,8 @@
           "required_formulas": [],
           "required_component_motifs": [
             "camera",
-            "fragment identical to selected subframe 2",
-            "OCR symbol overlaid by a large red X"
+            "sparse fragment",
+            "OCR failure"
           ],
           "required_edge_motifs": [
             "selected frame to camera",
@@ -462,6 +459,35 @@
         ],
         "relative_position_facts": [
           "lower boundary of capture cone"
+        ],
+        "certainty": "certain"
+      },
+      {
+        "id": "A003",
+        "source_region": "subframe_row",
+        "source_fact": "Fast-time arrow runs rightward above the four subframes.",
+        "from_visual_object": "time_start",
+        "from": "time_start (free point)",
+        "from_anchor_description": "free point",
+        "to_visual_object": "time_end",
+        "to": "time_end (free point)",
+        "to_anchor_description": "free point",
+        "direction": "left_to_right",
+        "route_shape": "straight_horizontal",
+        "line_style": "solid",
+        "arrowhead": "end",
+        "semantic_intent": "annotation",
+        "source_bbox_px": [
+          780,
+          410,
+          1410,
+          450
+        ],
+        "must_not_cross": [
+          "Rapid complementary subframes"
+        ],
+        "relative_position_facts": [
+          "above subframe row"
         ],
         "certainty": "certain"
       },
@@ -694,141 +720,6 @@
         ],
         "relative_position_facts": [
           "lower outcome lane"
-        ],
-        "certainty": "certain"
-      },
-      {
-        "id": "A003a",
-        "source_region": "subframe_row",
-        "source_fact": "A short rightward arrow connects subframe 1 to subframe 2.",
-        "from_visual_object": "subframe_1",
-        "from_anchor_description": "right-side gap",
-        "from": "subframe_1 (right-side gap)",
-        "to_visual_object": "subframe_2",
-        "to_anchor_description": "left-side gap",
-        "to": "subframe_2 (left-side gap)",
-        "direction": "left_to_right",
-        "route_shape": "straight_horizontal",
-        "line_style": "solid",
-        "arrowhead": "end",
-        "semantic_intent": "annotation",
-        "source_bbox_px": [
-          905,
-          500,
-          935,
-          530
-        ],
-        "must_not_cross": [],
-        "relative_position_facts": [
-          "centered in the gap between adjacent displays"
-        ],
-        "certainty": "certain"
-      },
-      {
-        "id": "A003b",
-        "source_region": "subframe_row",
-        "source_fact": "A short rightward arrow connects subframe 2 to subframe 3.",
-        "from_visual_object": "subframe_2",
-        "from_anchor_description": "right-side gap",
-        "from": "subframe_2 (right-side gap)",
-        "to_visual_object": "subframe_3",
-        "to_anchor_description": "left-side gap",
-        "to": "subframe_3 (left-side gap)",
-        "direction": "left_to_right",
-        "route_shape": "straight_horizontal",
-        "line_style": "solid",
-        "arrowhead": "end",
-        "semantic_intent": "annotation",
-        "source_bbox_px": [
-          1055,
-          500,
-          1085,
-          530
-        ],
-        "must_not_cross": [],
-        "relative_position_facts": [
-          "centered in the gap between adjacent displays"
-        ],
-        "certainty": "certain"
-      },
-      {
-        "id": "A003c",
-        "source_region": "subframe_row",
-        "source_fact": "A short rightward arrow connects subframe 3 to subframe 4.",
-        "from_visual_object": "subframe_3",
-        "from_anchor_description": "right-side gap",
-        "from": "subframe_3 (right-side gap)",
-        "to_visual_object": "subframe_4",
-        "to_anchor_description": "left-side gap",
-        "to": "subframe_4 (left-side gap)",
-        "direction": "left_to_right",
-        "route_shape": "straight_horizontal",
-        "line_style": "solid",
-        "arrowhead": "end",
-        "semantic_intent": "annotation",
-        "source_bbox_px": [
-          1205,
-          500,
-          1235,
-          530
-        ],
-        "must_not_cross": [],
-        "relative_position_facts": [
-          "centered in the gap between adjacent displays"
-        ],
-        "certainty": "certain"
-      },
-      {
-        "id": "A012",
-        "source_region": "camera_output",
-        "source_fact": "The first thick diagonal stroke forms half of the large red OCR X.",
-        "from_visual_object": "ocr_failure",
-        "from_anchor_description": "upper-left interior",
-        "from": "ocr_failure (upper-left interior)",
-        "to_visual_object": "ocr_failure",
-        "to_anchor_description": "lower-right interior",
-        "to": "ocr_failure (lower-right interior)",
-        "direction": "none",
-        "route_shape": "diagonal",
-        "line_style": "solid",
-        "arrowhead": "none",
-        "semantic_intent": "annotation",
-        "source_bbox_px": [
-          1395,
-          798,
-          1500,
-          890
-        ],
-        "must_not_cross": [],
-        "relative_position_facts": [
-          "overlays the OCR symbol"
-        ],
-        "certainty": "certain"
-      },
-      {
-        "id": "A013",
-        "source_region": "camera_output",
-        "source_fact": "The second thick diagonal stroke completes the large red OCR X.",
-        "from_visual_object": "ocr_failure",
-        "from_anchor_description": "upper-right interior",
-        "from": "ocr_failure (upper-right interior)",
-        "to_visual_object": "ocr_failure",
-        "to_anchor_description": "lower-left interior",
-        "to": "ocr_failure (lower-left interior)",
-        "direction": "none",
-        "route_shape": "diagonal",
-        "line_style": "solid",
-        "arrowhead": "none",
-        "semantic_intent": "annotation",
-        "source_bbox_px": [
-          1395,
-          798,
-          1500,
-          890
-        ],
-        "must_not_cross": [],
-        "relative_position_facts": [
-          "overlays the OCR symbol"
         ],
         "certainty": "certain"
       }
@@ -1895,10 +1786,10 @@
     {
       "id": "integration_line1",
       "type": "text_block",
-      "x": 1300,
-      "y": 330,
-      "w": 200,
-      "h": 45,
+      "x": 1260,
+      "y": 300,
+      "w": 230,
+      "h": 36,
       "text": "Temporal",
       "z": 20,
       "container_id": "human_region",
@@ -1926,10 +1817,10 @@
     {
       "id": "integration_line2",
       "type": "text_block",
-      "x": 1300,
-      "y": 375,
-      "w": 200,
-      "h": 45,
+      "x": 1260,
+      "y": 336,
+      "w": 230,
+      "h": 36,
       "text": "integration",
       "z": 20,
       "container_id": "human_region",
@@ -1988,98 +1879,68 @@
         "line_weight_pt": 0.9,
         "rounding_in": 0.0,
         "shadow": null
-      },
-      "allow_overlap": true
+      }
     },
     {
-      "id": "readable_glyph_grid",
-      "type": "grid_matrix",
-      "x": 1340,
+      "id": "readable_private",
+      "type": "text_block",
+      "x": 1290,
       "y": 155,
-      "w": 90,
-      "h": 90,
-      "text": "",
-      "z": 13,
+      "w": 190,
+      "h": 48,
+      "text": "PRIVATE",
+      "z": 20,
       "container_id": "human_region",
-      "rows": 5,
-      "cols": 5,
-      "allow_overlap": true,
-      "colored_cells": [
-        [
-          0,
-          1,
-          "#17365D"
-        ],
-        [
-          0,
-          2,
-          "#17365D"
-        ],
-        [
-          0,
-          3,
-          "#17365D"
-        ],
-        [
-          1,
-          0,
-          "#17365D"
-        ],
-        [
-          1,
-          4,
-          "#17365D"
-        ],
-        [
-          2,
-          0,
-          "#17365D"
-        ],
-        [
-          2,
-          1,
-          "#17365D"
-        ],
-        [
-          2,
-          2,
-          "#17365D"
-        ],
-        [
-          2,
-          3,
-          "#17365D"
-        ],
-        [
-          2,
-          4,
-          "#17365D"
-        ],
-        [
-          3,
-          0,
-          "#17365D"
-        ],
-        [
-          3,
-          4,
-          "#17365D"
-        ],
-        [
-          4,
-          0,
-          "#17365D"
-        ],
-        [
-          4,
-          4,
-          "#17365D"
-        ]
-      ],
+      "semantic_role": "node_text",
+      "text_role": "node_text",
       "style": {
-        "cell_fill": "#DFF3FA",
-        "grid_line": "#C5DEEA",
-        "grid_line_weight_pt": 0.25
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "readable_data",
+      "type": "text_block",
+      "x": 1290,
+      "y": 205,
+      "w": 190,
+      "h": 48,
+      "text": "DATA",
+      "z": 20,
+      "container_id": "human_region",
+      "semantic_role": "node_text",
+      "text_role": "node_text",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.8,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
       }
     },
     {
@@ -2166,6 +2027,68 @@
       }
     },
     {
+      "id": "fast_label",
+      "type": "text_block",
+      "x": 750,
+      "y": 310,
+      "w": 110,
+      "h": 42,
+      "text": "Fast",
+      "z": 20,
+      "container_id": "subframe_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.5,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
+      "id": "time_label",
+      "type": "text_block",
+      "x": 750,
+      "y": 347,
+      "w": 110,
+      "h": 42,
+      "text": "time",
+      "z": 20,
+      "container_id": "subframe_region",
+      "semantic_role": "small_label",
+      "text_role": "small_label",
+      "style": {
+        "source_font_family": "Arial",
+        "font_family": "Arial",
+        "font_family_candidates": [
+          "Arial",
+          "Helvetica",
+          "Calibri"
+        ],
+        "font_role": "sans",
+        "font_size_pt": 6.5,
+        "min_font_size_pt": 6.5,
+        "text_fit": "single_line",
+        "constrain_text_box": true,
+        "text_margin_in": 0.0,
+        "text_align": 1,
+        "text_color": "#17365D",
+        "font_weight": "bold"
+      }
+    },
+    {
       "id": "subframe_1",
       "type": "rounded_process",
       "x": 785,
@@ -2186,35 +2109,34 @@
     {
       "id": "subframe_grid_1",
       "type": "grid_matrix",
-      "x": 809,
+      "x": 795,
       "y": 475,
-      "w": 72,
+      "w": 100,
       "h": 72,
       "text": "",
       "z": 13,
       "container_id": "subframe_region",
-      "rows": 5,
+      "rows": 4,
       "cols": 5,
-      "allow_overlap": true,
       "colored_cells": [
         [
           0,
-          1,
-          "#17365D"
-        ],
-        [
-          1,
-          4,
-          "#17365D"
-        ],
-        [
-          2,
-          2,
-          "#17365D"
-        ],
-        [
-          4,
           0,
+          "#17365D"
+        ],
+        [
+          0,
+          2,
+          "#17365D"
+        ],
+        [
+          2,
+          4,
+          "#17365D"
+        ],
+        [
+          3,
+          1,
           "#17365D"
         ]
       ],
@@ -2279,35 +2201,34 @@
     {
       "id": "subframe_grid_2",
       "type": "grid_matrix",
-      "x": 959,
+      "x": 945,
       "y": 475,
-      "w": 72,
+      "w": 100,
       "h": 72,
       "text": "",
       "z": 13,
       "container_id": "subframe_region",
-      "rows": 5,
+      "rows": 4,
       "cols": 5,
-      "allow_overlap": true,
       "colored_cells": [
         [
           0,
-          2,
-          "#17365D"
-        ],
-        [
           1,
+          "#17365D"
+        ],
+        [
           0,
+          3,
+          "#17365D"
+        ],
+        [
+          0,
+          4,
           "#17365D"
         ],
         [
           2,
-          3,
-          "#17365D"
-        ],
-        [
-          3,
-          4,
+          2,
           "#17365D"
         ]
       ],
@@ -2372,29 +2293,38 @@
     {
       "id": "subframe_grid_3",
       "type": "grid_matrix",
-      "x": 1109,
+      "x": 1095,
       "y": 475,
-      "w": 72,
+      "w": 100,
       "h": 72,
       "text": "",
       "z": 13,
       "container_id": "subframe_region",
-      "rows": 5,
+      "rows": 4,
       "cols": 5,
-      "allow_overlap": true,
       "colored_cells": [
         [
+          1,
           0,
+          "#17365D"
+        ],
+        [
+          2,
+          1,
+          "#17365D"
+        ],
+        [
+          3,
+          2,
+          "#17365D"
+        ],
+        [
+          2,
           3,
           "#17365D"
         ],
         [
-          2,
-          0,
-          "#17365D"
-        ],
-        [
-          2,
+          1,
           4,
           "#17365D"
         ]
@@ -2460,30 +2390,39 @@
     {
       "id": "subframe_grid_4",
       "type": "grid_matrix",
-      "x": 1259,
+      "x": 1245,
       "y": 475,
-      "w": 72,
+      "w": 100,
       "h": 72,
       "text": "",
       "z": 13,
       "container_id": "subframe_region",
-      "rows": 5,
+      "rows": 4,
       "cols": 5,
-      "allow_overlap": true,
       "colored_cells": [
         [
+          0,
           2,
-          1,
           "#17365D"
         ],
         [
+          0,
           3,
+          "#17365D"
+        ],
+        [
+          1,
+          3,
+          "#17365D"
+        ],
+        [
+          2,
           0,
           "#17365D"
         ],
         [
-          4,
-          4,
+          3,
+          3,
           "#17365D"
         ]
       ],
@@ -2769,9 +2708,9 @@
       "id": "sampling_label_1",
       "type": "text_block",
       "x": 1020,
-      "y": 700,
+      "y": 710,
       "w": 300,
-      "h": 45,
+      "h": 36,
       "text": "Short-exposure",
       "z": 20,
       "container_id": "camera_region",
@@ -2786,7 +2725,7 @@
           "Calibri"
         ],
         "font_role": "sans",
-        "font_size_pt": 6.5,
+        "font_size_pt": 6.3,
         "min_font_size_pt": 6.5,
         "text_fit": "single_line",
         "constrain_text_box": true,
@@ -2800,9 +2739,9 @@
       "id": "sampling_label_2",
       "type": "text_block",
       "x": 1020,
-      "y": 745,
+      "y": 748,
       "w": 300,
-      "h": 45,
+      "h": 36,
       "text": "sampling",
       "z": 20,
       "container_id": "camera_region",
@@ -2817,7 +2756,7 @@
           "Calibri"
         ],
         "font_role": "sans",
-        "font_size_pt": 6.5,
+        "font_size_pt": 6.3,
         "min_font_size_pt": 6.5,
         "text_fit": "single_line",
         "constrain_text_box": true,
@@ -2848,35 +2787,24 @@
     {
       "id": "fragment_grid",
       "type": "grid_matrix",
-      "x": 1218,
-      "y": 812,
-      "w": 60,
+      "x": 1200,
+      "y": 810,
+      "w": 95,
       "h": 60,
       "text": "",
       "z": 13,
       "container_id": "camera_region",
-      "rows": 5,
+      "rows": 4,
       "cols": 5,
-      "allow_overlap": true,
       "colored_cells": [
         [
           0,
-          2,
-          "#17365D"
-        ],
-        [
-          1,
           0,
           "#17365D"
         ],
         [
-          2,
           3,
-          "#17365D"
-        ],
-        [
           3,
-          4,
           "#17365D"
         ]
       ],
@@ -2989,7 +2917,7 @@
       "y": 798,
       "w": 105,
       "h": 92,
-      "text": "OCR",
+      "text": "OCR ×",
       "z": 13,
       "container_id": "camera_region",
       "style": {
@@ -3059,60 +2987,16 @@
       "z": 30
     },
     {
-      "id": "sequence_1_to_2",
+      "id": "time_axis",
       "type": "lane_arrow",
-      "arrow_plan_id": "A003a",
+      "arrow_plan_id": "A003",
       "from_point": [
-        912,
-        515
+        785,
+        430
       ],
       "to_point": [
-        928,
-        515
-      ],
-      "route": "horizontal",
-      "lane_axis": "horizontal",
-      "style": {
-        "line": "#17365D",
-        "line_weight_pt": 1.15,
-        "end_arrow": "triangle",
-        "arrow_size": "small"
-      },
-      "z": 25
-    },
-    {
-      "id": "sequence_2_to_3",
-      "type": "lane_arrow",
-      "arrow_plan_id": "A003b",
-      "from_point": [
-        1062,
-        515
-      ],
-      "to_point": [
-        1078,
-        515
-      ],
-      "route": "horizontal",
-      "lane_axis": "horizontal",
-      "style": {
-        "line": "#17365D",
-        "line_weight_pt": 1.15,
-        "end_arrow": "triangle",
-        "arrow_size": "small"
-      },
-      "z": 25
-    },
-    {
-      "id": "sequence_3_to_4",
-      "type": "lane_arrow",
-      "arrow_plan_id": "A003c",
-      "from_point": [
-        1212,
-        515
-      ],
-      "to_point": [
-        1228,
-        515
+        1350,
+        430
       ],
       "route": "horizontal",
       "lane_axis": "horizontal",
@@ -3256,48 +3140,6 @@
         "arrow_size": "small"
       },
       "z": 25
-    },
-    {
-      "id": "ocr_x_down",
-      "type": "line_segment",
-      "arrow_plan_id": "A012",
-      "from_point": [
-        1403,
-        806
-      ],
-      "to_point": [
-        1492,
-        882
-      ],
-      "route": "straight",
-      "allow_diagonal": true,
-      "style": {
-        "line": "#D94722",
-        "line_weight_pt": 3.2,
-        "end_arrow": "none"
-      },
-      "z": 31
-    },
-    {
-      "id": "ocr_x_up",
-      "type": "line_segment",
-      "arrow_plan_id": "A013",
-      "from_point": [
-        1492,
-        806
-      ],
-      "to_point": [
-        1403,
-        882
-      ],
-      "route": "straight",
-      "allow_diagonal": true,
-      "style": {
-        "line": "#D94722",
-        "line_weight_pt": 3.2,
-        "end_arrow": "none"
-      },
-      "z": 31
     }
   ],
   "assets": []

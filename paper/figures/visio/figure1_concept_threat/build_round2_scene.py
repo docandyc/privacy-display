@@ -4,27 +4,163 @@ import copy
 import json
 from pathlib import Path
 
-from build_round1_scene import box, grid, label, node, sty
+from build_round1_scene import box, label, node, sty
 
 
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "figure1_concept_threat.round2.scene.json"
 
 
+GLYPH_A_CELLS = {
+    (0, 1), (0, 2), (0, 3),
+    (1, 0), (1, 4),
+    (2, 0), (2, 1), (2, 2), (2, 3), (2, 4),
+    (3, 0), (3, 4),
+    (4, 0), (4, 4),
+}
+SUBFRAME_CELLS = (
+    {(0, 1), (1, 4), (2, 2), (4, 0)},
+    {(0, 2), (1, 0), (2, 3), (3, 4)},
+    {(0, 3), (2, 0), (2, 4)},
+    {(2, 1), (3, 0), (4, 4)},
+)
+SELECTED_SUBFRAME_INDEX = 1
+
+
+def glyph_grid(node_id, x, y, w, h, cells, container):
+    return node(
+        node_id, "grid_matrix", x, y, w, h,
+        container=container, z=13, rows=5, cols=5,
+        allow_overlap=True,
+        colored_cells=[[row, col, "#17365D"] for row, col in sorted(cells)],
+        style=sty(
+            cell_fill="#DFF3FA",
+            grid_line="#C5DEEA",
+            grid_line_weight_pt=0.25,
+        ),
+    )
+
+
+def validate_glyph_partition() -> None:
+    flattened = [cell for subframe in SUBFRAME_CELLS for cell in subframe]
+    if len(flattened) != len(set(flattened)):
+        raise ValueError("Complementary A subframes must be mutually exclusive")
+    if set(flattened) != GLYPH_A_CELLS:
+        raise ValueError("Complementary A subframes must reconstruct the full glyph")
+
+
 def main():
+    validate_glyph_partition()
     inventory_scene = json.loads((ROOT / "figure1_concept_threat.scene.json").read_text(encoding="utf-8"))
     metadata = copy.deepcopy(inventory_scene["metadata"])
     metadata.update({
-        "created_by": "codex.visiomaster.fresh_round2",
+        "created_by": "codex.visiomaster.supervisor_revision",
         "replica_stage": "detail_polish",
         "prior_scene_policy": "reuse_source_inventory_and_arrow_plan_only; reauthor_all_visible_nodes",
         "notes": [
-            "Fresh full-scene reauthoring from source inventory and round-one findings.",
+            "Supervisor-approved semantic revision of the editable round-two scene.",
             "Human, subframe, and camera zones use independent vertical bands.",
             "Every long English label uses dedicated rows and explicit text margins.",
             "Office geometry is reauthored as simplified editable editorial line art.",
+            "Panel (a) remains unchanged; panel (b) uses complementary 5x5 A glyph subsets.",
+            "Fast time text is removed; three local rightward arrows encode sequence order.",
+            "The selected camera fragment exactly matches subframe 2.",
+            "OCR failure is shown with a large editable red X.",
         ],
     })
+    inventory_regions = {
+        region["id"]: region
+        for region in metadata["source_visual_inventory"]["regions"]
+    }
+    inventory_regions["subframe_row"].update({
+        "required_labels": ["Rapid complementary subframes"],
+        "required_component_motifs": [
+            "four 5x5 displays containing mutually exclusive subsets of one capital A",
+            "one selected exposure bracket around subframe 2",
+        ],
+        "required_edge_motifs": ["three unobstructed rightward inter-frame sequence arrows"],
+        "text_layout_facts": ["four thumbnails share one baseline", "no Fast time text"],
+    })
+    inventory_regions["human_output"].update({
+        "required_labels": ["Human eye", "Temporal integration", "Readable"],
+        "required_component_motifs": ["eye", "readable display containing the complete 5x5 A"],
+    })
+    inventory_regions["camera_output"].update({
+        "required_component_motifs": [
+            "camera",
+            "fragment identical to selected subframe 2",
+            "OCR symbol overlaid by a large red X",
+        ],
+    })
+
+    metadata["arrow_plan"] = [
+        plan for plan in metadata["arrow_plan"] if plan["id"] != "A003"
+    ]
+    metadata["arrow_plan"].extend([
+        {
+            "id": "A003a", "source_region": "subframe_row",
+            "source_fact": "A short rightward arrow connects subframe 1 to subframe 2.",
+            "from_visual_object": "subframe_1", "from_anchor_description": "right-side gap",
+            "from": "subframe_1 (right-side gap)",
+            "to_visual_object": "subframe_2", "to_anchor_description": "left-side gap",
+            "to": "subframe_2 (left-side gap)",
+            "direction": "left_to_right", "route_shape": "straight_horizontal",
+            "line_style": "solid", "arrowhead": "end", "semantic_intent": "annotation",
+            "source_bbox_px": [905, 500, 935, 530], "must_not_cross": [],
+            "relative_position_facts": ["centered in the gap between adjacent displays"],
+            "certainty": "certain",
+        },
+        {
+            "id": "A003b", "source_region": "subframe_row",
+            "source_fact": "A short rightward arrow connects subframe 2 to subframe 3.",
+            "from_visual_object": "subframe_2", "from_anchor_description": "right-side gap",
+            "from": "subframe_2 (right-side gap)",
+            "to_visual_object": "subframe_3", "to_anchor_description": "left-side gap",
+            "to": "subframe_3 (left-side gap)",
+            "direction": "left_to_right", "route_shape": "straight_horizontal",
+            "line_style": "solid", "arrowhead": "end", "semantic_intent": "annotation",
+            "source_bbox_px": [1055, 500, 1085, 530], "must_not_cross": [],
+            "relative_position_facts": ["centered in the gap between adjacent displays"],
+            "certainty": "certain",
+        },
+        {
+            "id": "A003c", "source_region": "subframe_row",
+            "source_fact": "A short rightward arrow connects subframe 3 to subframe 4.",
+            "from_visual_object": "subframe_3", "from_anchor_description": "right-side gap",
+            "from": "subframe_3 (right-side gap)",
+            "to_visual_object": "subframe_4", "to_anchor_description": "left-side gap",
+            "to": "subframe_4 (left-side gap)",
+            "direction": "left_to_right", "route_shape": "straight_horizontal",
+            "line_style": "solid", "arrowhead": "end", "semantic_intent": "annotation",
+            "source_bbox_px": [1205, 500, 1235, 530], "must_not_cross": [],
+            "relative_position_facts": ["centered in the gap between adjacent displays"],
+            "certainty": "certain",
+        },
+        {
+            "id": "A012", "source_region": "camera_output",
+            "source_fact": "The first thick diagonal stroke forms half of the large red OCR X.",
+            "from_visual_object": "ocr_failure", "from_anchor_description": "upper-left interior",
+            "from": "ocr_failure (upper-left interior)",
+            "to_visual_object": "ocr_failure", "to_anchor_description": "lower-right interior",
+            "to": "ocr_failure (lower-right interior)",
+            "direction": "none", "route_shape": "diagonal",
+            "line_style": "solid", "arrowhead": "none", "semantic_intent": "annotation",
+            "source_bbox_px": [1395, 798, 1500, 890], "must_not_cross": [],
+            "relative_position_facts": ["overlays the OCR symbol"], "certainty": "certain",
+        },
+        {
+            "id": "A013", "source_region": "camera_output",
+            "source_fact": "The second thick diagonal stroke completes the large red OCR X.",
+            "from_visual_object": "ocr_failure", "from_anchor_description": "upper-right interior",
+            "from": "ocr_failure (upper-right interior)",
+            "to_visual_object": "ocr_failure", "to_anchor_description": "lower-left interior",
+            "to": "ocr_failure (lower-left interior)",
+            "direction": "none", "route_shape": "diagonal",
+            "line_style": "solid", "arrowhead": "none", "semantic_intent": "annotation",
+            "source_bbox_px": [1395, 798, 1500, 890], "must_not_cross": [],
+            "relative_position_facts": ["overlays the OCR symbol"], "certainty": "certain",
+        },
+    ])
     metadata["region_plan"] = [
         {"id":"global_layout","crop_type":"global","source_bbox_px":[0,0,1536,1024],
          "target_bbox":[0,0,1536,1024],"review_focus":"global layout and two-panel balance"},
@@ -150,41 +286,35 @@ def main():
         node("human_pupil", "ellipse_node", 982, 162, 42, 56, container="human_region", z=14,
              allow_overlap=True, style=sty(fill="#179447", line=green, line_weight_pt=1.0,
                                            font_family="Arial", font_size_pt=7.0)),
-        label("integration_line1", 1260, 300, 230, 36, "Temporal", "human_region",
+        label("integration_line1", 1300, 330, 200, 45, "Temporal", "human_region",
               size=6.5, color=green, weight="bold"),
-        label("integration_line2", 1260, 336, 230, 36, "integration", "human_region",
+        label("integration_line2", 1300, 375, 200, 45, "integration", "human_region",
               size=6.5, color=green, weight="bold"),
         box("readable_display", 1270, 130, 230, 160, "human_region", fill="#FFFFFF",
             line=navy, weight=1.35, rounded=True),
-        box("readable_screen", 1285, 148, 200, 105, "human_region", fill=pale_blue, line=navy, weight=0.9),
-        label("readable_private", 1290, 155, 190, 48, "PRIVATE", "human_region",
-              size=6.8, weight="bold", role="node_text"),
-        label("readable_data", 1290, 205, 190, 48, "DATA", "human_region",
-              size=6.8, weight="bold", role="node_text"),
+        box("readable_screen", 1285, 148, 200, 105, "human_region", fill=pale_blue, line=navy,
+            weight=0.9, allow_overlap=True),
+        glyph_grid("readable_glyph_grid", 1340, 155, 90, 90, GLYPH_A_CELLS, "human_region"),
         box("readable_stand", 1378, 290, 30, 27, "human_region", fill="#FFFFFF", weight=0.9),
         node("readable_base", "polygon_node", 1355, 315, 78, 12, container="human_region", z=11,
              points=[[0,0],[1,0],[1,1],[0,1]], style=sty(fill=navy, line=navy, line_weight_pt=0.5)),
         label("readable_label", 1235, 82, 265, 48, "Readable", "human_region",
               size=6.5, color=green, weight="bold", role="output_label"),
 
-        label("fast_label", 750, 310, 110, 42, "Fast", "subframe_region",
-              size=6.5, weight="bold"),
-        label("time_label", 750, 347, 110, 42, "time", "subframe_region",
-              size=6.5, weight="bold"),
         box("subframe_1", 785, 465, 120, 100, "subframe_region", fill="#FFFFFF", weight=1.1, rounded=True),
-        grid("subframe_grid_1", 795, 475, 100, 72, [(0,0),(0,2),(2,4),(3,1)], "subframe_region"),
+        glyph_grid("subframe_grid_1", 809, 475, 72, 72, SUBFRAME_CELLS[0], "subframe_region"),
         node("subframe_1_base", "polygon_node", 820, 565, 50, 12, container="subframe_region", z=12,
              points=[[0,0],[1,0],[1,1],[0,1]], style=sty(fill=navy,line=navy,line_weight_pt=0.5)),
         box("subframe_2", 935, 465, 120, 100, "subframe_region", fill="#FFFFFF", weight=1.1, rounded=True),
-        grid("subframe_grid_2", 945, 475, 100, 72, [(0,1),(0,3),(0,4),(2,2)], "subframe_region"),
+        glyph_grid("subframe_grid_2", 959, 475, 72, 72, SUBFRAME_CELLS[1], "subframe_region"),
         node("subframe_2_base", "polygon_node", 970, 565, 50, 12, container="subframe_region", z=12,
              points=[[0,0],[1,0],[1,1],[0,1]], style=sty(fill=navy,line=navy,line_weight_pt=0.5)),
         box("subframe_3", 1085, 465, 120, 100, "subframe_region", fill="#FFFFFF", weight=1.1, rounded=True),
-        grid("subframe_grid_3", 1095, 475, 100, 72, [(1,0),(2,1),(3,2),(2,3),(1,4)], "subframe_region"),
+        glyph_grid("subframe_grid_3", 1109, 475, 72, 72, SUBFRAME_CELLS[2], "subframe_region"),
         node("subframe_3_base", "polygon_node", 1120, 565, 50, 12, container="subframe_region", z=12,
              points=[[0,0],[1,0],[1,1],[0,1]], style=sty(fill=navy,line=navy,line_weight_pt=0.5)),
         box("subframe_4", 1235, 465, 120, 100, "subframe_region", fill="#FFFFFF", weight=1.1, rounded=True),
-        grid("subframe_grid_4", 1245, 475, 100, 72, [(0,2),(0,3),(1,3),(2,0),(3,3)], "subframe_region"),
+        glyph_grid("subframe_grid_4", 1259, 475, 72, 72, SUBFRAME_CELLS[3], "subframe_region"),
         node("subframe_4_base", "polygon_node", 1270, 565, 50, 12, container="subframe_region", z=12,
              points=[[0,0],[1,0],[1,1],[0,1]], style=sty(fill=navy,line=navy,line_weight_pt=0.5)),
         node("selection_left", "bracket", 925, 450, 16, 135, container="subframe_region", z=18,
@@ -210,20 +340,23 @@ def main():
              style=sty(fill="#FFFFFF", line=red, line_weight_pt=1.0)),
         label("camera_label", 850, 905, 180, 48, "Camera", "camera_region",
               size=6.7, color=red, weight="bold"),
-        label("sampling_label_1", 1020, 710, 300, 36, "Short-exposure", "camera_region",
-              size=6.3, color=red, weight="bold"),
-        label("sampling_label_2", 1020, 748, 300, 36, "sampling", "camera_region",
-              size=6.3, color=red, weight="bold"),
+        label("sampling_label_1", 1020, 700, 300, 45, "Short-exposure", "camera_region",
+              size=6.5, color=red, weight="bold"),
+        label("sampling_label_2", 1020, 745, 300, 45, "sampling", "camera_region",
+              size=6.5, color=red, weight="bold"),
         box("fragment_display", 1190, 800, 115, 88, "camera_region", fill="#FFFFFF",
             line=navy, weight=1.1, rounded=True),
-        grid("fragment_grid", 1200, 810, 95, 60, [(0,0),(3,3)], "camera_region"),
+        glyph_grid(
+            "fragment_grid", 1218, 812, 60, 60,
+            SUBFRAME_CELLS[SELECTED_SUBFRAME_INDEX], "camera_region",
+        ),
         node("fragment_base", "polygon_node", 1222, 888, 50, 12, container="camera_region", z=12,
              points=[[0,0],[1,0],[1,1],[0,1]], style=sty(fill=navy,line=navy,line_weight_pt=0.5)),
         label("fragment_label_1", 1170, 905, 240, 48, "Unreadable", "camera_region",
               size=6.5, color=red, weight="bold"),
         label("fragment_label_2", 1170, 943, 240, 48, "fragment", "camera_region",
               size=6.5, color=red, weight="bold"),
-        node("ocr_failure", "ellipse_node", 1395, 798, 105, 92, text="OCR ×", container="camera_region", z=13,
+        node("ocr_failure", "ellipse_node", 1395, 798, 105, 92, text="OCR", container="camera_region", z=13,
              style=sty(fill="#FFFFFF", line=red, line_weight_pt=1.25, text_color=navy,
                        source_font_family="Arial", font_family="Arial", font_family_candidates=["Arial","Calibri"],
                        font_role="sans", font_size_pt=6.8, min_font_size_pt=6.5, font_weight="bold",
@@ -237,8 +370,14 @@ def main():
         {"id":"capture_ray_lower","type":"line_segment","arrow_plan_id":"A002",
          "from_point":[480,430],"to_point":[610,630],"route":"straight","allow_diagonal":True,
          "style":{"line":red,"line_weight_pt":1.0,"line_dash":"dash","end_arrow":"none"},"z":30},
-        {"id":"time_axis","type":"lane_arrow","arrow_plan_id":"A003",
-         "from_point":[785,430],"to_point":[1350,430],"route":"horizontal","lane_axis":"horizontal",
+        {"id":"sequence_1_to_2","type":"lane_arrow","arrow_plan_id":"A003a",
+         "from_point":[912,515],"to_point":[928,515],"route":"horizontal","lane_axis":"horizontal",
+         "style":{"line":navy,"line_weight_pt":1.15,"end_arrow":"triangle","arrow_size":"small"},"z":25},
+        {"id":"sequence_2_to_3","type":"lane_arrow","arrow_plan_id":"A003b",
+         "from_point":[1062,515],"to_point":[1078,515],"route":"horizontal","lane_axis":"horizontal",
+         "style":{"line":navy,"line_weight_pt":1.15,"end_arrow":"triangle","arrow_size":"small"},"z":25},
+        {"id":"sequence_3_to_4","type":"lane_arrow","arrow_plan_id":"A003c",
+         "from_point":[1212,515],"to_point":[1228,515],"route":"horizontal","lane_axis":"horizontal",
          "style":{"line":navy,"line_weight_pt":1.15,"end_arrow":"triangle","arrow_size":"small"},"z":25},
         {"id":"frame1_to_eye","type":"arrow_connector","arrow_plan_id":"A004",
          "from":"subframe_1:top@0.50","to":"human_eye:bottom@0.15","route":"straight",
@@ -269,6 +408,12 @@ def main():
         {"id":"fragment_to_ocr","type":"lane_arrow","arrow_plan_id":"A011",
          "from":"fragment_display:right@0.50","to":"ocr_failure:left@0.50","route":"horizontal","lane_axis":"horizontal",
          "style":{"line":red,"line_weight_pt":1.25,"end_arrow":"triangle","arrow_size":"small"},"z":25},
+        {"id":"ocr_x_down","type":"line_segment","arrow_plan_id":"A012",
+         "from_point":[1403,806],"to_point":[1492,882],"route":"straight","allow_diagonal":True,
+         "style":{"line":red,"line_weight_pt":3.2,"end_arrow":"none"},"z":31},
+        {"id":"ocr_x_up","type":"line_segment","arrow_plan_id":"A013",
+         "from_point":[1492,806],"to_point":[1403,882],"route":"straight","allow_diagonal":True,
+         "style":{"line":red,"line_weight_pt":3.2,"end_arrow":"none"},"z":31},
     ]
 
     scene = {
