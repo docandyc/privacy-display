@@ -23,18 +23,18 @@ Revise the editable Visio version of Figure 1 so the right-hand panel directly s
 
 ## Acceptance Criteria
 
-* [ ] Panel (a) is visually unchanged at publication size.
-* [ ] `Fast time` is absent from the scene, VSDX, SVG/PNG previews, and final PDF.
-* [ ] The four subframe grids are mutually exclusive and their union is exactly one recognizable capital `A`.
-* [ ] The human output shows the same complete `A`.
-* [ ] The camera output uses the exact pixel set from the bracketed second subframe.
-* [ ] The temporal order cue points right and is not crossed, hidden, or visually broken by other connectors.
-* [ ] The OCR result contains a prominent red X that remains obvious at 3.50-inch publication width.
-* [ ] No labels overlap, wrap unexpectedly, or fall below the established 6.5 pt minimum.
-* [ ] Scene validation, complexity review, and module audit pass without blocking defects.
-* [ ] Editable VSDX plus SVG/PNG review outputs and a single-page PDF are generated successfully.
-* [ ] English and Chinese final VSDX/PDF mirrors are byte-identical.
-* [ ] Both manuscripts build successfully and Figure 1 is visually inspected in the compiled pages.
+* [x] Panel (a) is visually unchanged at publication size.
+* [x] `Fast time` is absent from the scene, VSDX, SVG/PNG previews, and final PDF.
+* [x] The four subframe grids are mutually exclusive and their union is exactly one recognizable capital `A`.
+* [x] The human output shows the same complete `A`.
+* [x] The camera output uses the exact pixel set from the bracketed second subframe.
+* [x] The temporal order cue points right and is not crossed, hidden, or visually broken by other connectors.
+* [x] The OCR result contains a prominent red X that remains obvious at 3.50-inch publication width.
+* [x] No labels overlap, wrap unexpectedly, or fall below the established 6.5 pt minimum.
+* [x] Scene validation, complexity review, and module audit pass without blocking defects.
+* [x] Editable VSDX plus SVG/PNG review outputs and a single-page PDF are generated successfully.
+* [x] English and Chinese final VSDX/PDF mirrors are byte-identical.
+* [x] Both manuscripts build successfully and Figure 1 is visually inspected in the compiled pages.
 
 ## Definition of Done
 
@@ -68,4 +68,3 @@ Update the existing `build_round2_scene.py` source-of-truth generator and regene
 * Canonical scene generator: `paper/figures/visio/figure1_concept_threat/build_round2_scene.py`.
 * Canonical editable output: `paper/figures/visio/figure1_concept_threat/final/figure1_concept_threat.vsdx`.
 * Existing untracked Visio lock/temp file and `paper/review_report.md` predate this task and must not be removed or committed.
-
