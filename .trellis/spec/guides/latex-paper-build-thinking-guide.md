@@ -20,6 +20,18 @@ Use this checklist whenever a paper source, bibliography, label, figure, or gene
 - [ ] The final log contains no `Label(s) may have changed`.
 - [ ] Extracted PDF text contains no citation placeholders such as `[?]`, `(?)`, or repeated `??`.
 
+## Editable Visio figure integrity
+
+Use these checks when a manuscript figure has an editable `.vsdx` source plus mirrored English/Chinese PDFs:
+
+- [ ] Treat the checked-in final VSDX as authoritative for any panel explicitly requested to remain unchanged; a scene generator may have drifted from the reviewed editable file.
+- [ ] Before regeneration, preserve a baseline VSDX/PDF and compare unaffected panels at publication size. For an exact preservation claim, compare normalized Shape XML as well as pixels.
+- [ ] Keep the scene, final VSDX, final PDF, and review PNG semantically aligned with a deterministic validator for task-specific invariants.
+- [ ] Verify mirrored English/Chinese VSDX and PDF files by SHA-256, not by filename or file size.
+- [ ] Check the figure PDF `MediaBox` against any `viewport=...,clip` in both manuscripts, then inspect the actual compiled page rather than only the standalone figure.
+- [ ] Do not “fix” PDF xref-row trailing spaces to satisfy a text whitespace checker. This repository assigns PDFs `diff=astextplain`; run the whitespace gate on text sources while validating PDFs structurally.
+- [ ] If a build host lacks a manuscript font, use a review-only source copy or an environment-local alias for verification. Do not commit a typography change as part of an unrelated figure task.
+
 ## Citation and hardware integrity
 
 - [ ] Verify every new DOI and arXiv identifier against a primary metadata source (publisher/Crossref, arXiv API, conference proceedings, or official project documentation).
