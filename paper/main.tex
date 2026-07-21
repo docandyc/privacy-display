@@ -83,7 +83,7 @@ We investigate this question through \emph{temporal pixel masking}, a display-si
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\columnwidth,viewport=0 0 252 168,clip]{figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf}
+\includegraphics[width=\columnwidth]{figures/visio/figure1_concept_threat/final/figure1_concept_threat.png}
 \caption{Threat scenario and operating principle of temporal pixel masking. (a) A nearby camera can capture sensitive on-screen content without accessing the host system. (b) Human vision integrates complementary subframes, while a short camera exposure can intersect only part of a display cycle and leave OCR with an incomplete fragment. Long exposure or multi-frame reconstruction can accumulate more information.}
 \label{fig:concept}
 \end{figure}
@@ -196,7 +196,7 @@ Pixel assignments are generated from a ChaCha20~\cite{b_chacha2008} CSPRNG, with
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=\textwidth,viewport=0 0 515.52 206.16,clip]{figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf}
+\includegraphics[width=\textwidth]{figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.cropped.png}
 \caption{Temporal pixel masking system pipeline from source content to protected display. The input frame is decomposed into CSPRNG-assigned complementary pixel masks; optional complementary OCR-oriented noise, profile-dependent stripe/glyph overlays, and an optional partial inversion frame are then inserted before high-refresh playback. A human observer is expected to integrate multiple slots into a readable view, whereas a short-exposure camera may capture only a sparse subframe. Long exposure and video temporal averaging can accumulate multiple slots and are evaluated separately.}
 \label{fig:pipeline}
 \end{figure*}

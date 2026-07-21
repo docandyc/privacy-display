@@ -100,7 +100,7 @@
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\columnwidth,viewport=0 0 252 168,clip]{figures/visio/figure1_concept_threat/final/figure1_concept_threat.pdf}
+\includegraphics[width=\columnwidth]{figures/visio/figure1_concept_threat/final/figure1_concept_threat.png}
 \caption{时序像素掩蔽的威胁场景与运行原理。(a) 附近的相机无需访问主机系统，即可拍摄屏幕上的敏感内容。(b) 人类视觉会整合互补子帧，而短曝光相机可能只与显示周期的一部分重叠，留给 OCR 的是不完整片段。长曝光或多帧重构可累积更多信息。}
 \label{fig:concept}
 \end{figure}
@@ -210,7 +210,7 @@ Lim~\cite{b_lim2007} & 浏览器键盘 & 单次数字屏幕截取 & 视觉暂留
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=\textwidth,viewport=0 0 515.52 206.16,clip]{figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.pdf}
+\includegraphics[width=\textwidth]{figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.cropped.png}
 \caption{从源内容到受保护显示的时序像素掩蔽系统管线。输入帧被分解为由 CSPRNG 分配的互补像素掩模；随后在高刷新率播放前，插入可选的面向 OCR 的互补噪声、与档位相关的条纹/字形叠加，以及可选的部分反色帧。人类观察者预期可将多个时隙整合为可读视图，而短曝光相机可能仅捕获一个稀疏子帧。长曝光和视频时域平均能够累积多个时隙，并在本文中单独评估。}
 \label{fig:pipeline}
 \end{figure*}
