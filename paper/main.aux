@@ -11,7 +11,7 @@
 \citation{b_wang2026}
 \citation{b_ponemon2016}
 \citation{b_eiband2017}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Threat scenario and operating principle of temporal pixel masking. (a) A nearby camera can capture sensitive on-screen content without accessing the host system. (b) Human vision integrates complementary subframes, while a short camera exposure can intersect only part of a display cycle and leave OCR with an incomplete fragment. Long exposure or multi-frame reconstruction can accumulate more information.}}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Threat scenario and operating principle of temporal pixel masking. (a) A nearby camera can capture sensitive on-screen content without accessing the host system. (b) Human vision integrates complementary subframes, while a short camera exposure can intersect only part of a display cycle and leave OCR with an incomplete fragment.}}{2}{}\protected@file@percent }
 \newlabel{fig:concept}{{1}{2}{}{figure.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{}\protected@file@percent }
 \newlabel{sec:related}{{II}{2}{}{section.2}{}}
@@ -46,19 +46,16 @@
 \citation{b_demoire2018}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Display Privacy Protection}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Machine Recognition and Physical-World Robustness}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Threat Model}{3}{}\protected@file@percent }
+\newlabel{sec:threat}{{III}{3}{}{section.3}{}}
+\citation{b_chacha2008}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Scope comparison with representative screen-privacy systems. Entries describe different threat models and evaluation targets, they are not matched-parameter performance claims.}}{4}{}\protected@file@percent }
+\newlabel{tab:kaleido_compare}{{1}{4}{}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Threat Scenario and Protected Assets}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Attacker Capabilities and Knowledge}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Security Objectives and Explicit Boundaries}{4}{}\protected@file@percent }
 \citation{b_chacha2008}
 \citation{b_knuth1997}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Scope comparison with representative screen-privacy systems. Entries describe different threat models and evaluation targets; they are not matched-parameter performance claims.}}{4}{}\protected@file@percent }
-\newlabel{tab:kaleido_compare}{{1}{4}{}{table.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {III}Threat Model}{4}{}\protected@file@percent }
-\newlabel{sec:threat}{{III}{4}{}{section.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Protected Assets and Evaluated Content}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Attacker Capabilities}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Attacker Knowledge}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Protection Goals}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {IV}System Design}{4}{}\protected@file@percent }
-\newlabel{sec:method}{{IV}{4}{}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Temporal Subframe Decomposition}{4}{}\protected@file@percent }
 \citation{b_song2018}
 \citation{b_goodfellow2015}
 \citation{b_madry2018}
@@ -66,120 +63,125 @@
 \citation{b_wang2004}
 \citation{b_cai2024,b_davis2015}
 \citation{b_davis2015}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}System Design}{5}{}\protected@file@percent }
+\newlabel{sec:method}{{IV}{5}{}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Temporal Subframe Decomposition}{5}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Complementary Adversarial Noise}{5}{}\protected@file@percent }
 \newlabel{eq:noise_complement}{{1}{5}{}{equation.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Luminance Model Across Rendering Paths}{5}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Timing and Bandwidth}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Exploratory High-Suppression Profile}{5}{}\protected@file@percent }
-\newlabel{sec:hardened}{{\mbox  {IV-E}}{5}{}{subsection.4.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Temporal pixel masking system pipeline from source content to protected display. The input frame is decomposed into CSPRNG-assigned complementary pixel masks; optional complementary OCR-oriented noise, profile-dependent stripe/glyph overlays, and an optional partial inversion frame are then inserted before high-refresh playback. A human observer is expected to integrate multiple slots into a readable view, whereas a short-exposure camera may capture only a sparse subframe. Long exposure and video temporal averaging can accumulate multiple slots and are evaluated separately.}}{6}{}\protected@file@percent }
 \newlabel{fig:pipeline}{{2}{6}{}{figure.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Profile Composition Summary ($n=4$ for All Profiles)}}{6}{}\protected@file@percent }
-\newlabel{tab:profile_composition}{{2}{6}{}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Operating Profiles and Scope}{6}{}\protected@file@percent }
+\newlabel{sec:hardened}{{\mbox  {IV-E}}{6}{}{subsection.4.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Partial Inversion Frame}{6}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-G}}Implementation Scope and Reproducibility}{6}{}\protected@file@percent }
 \citation{b_emeet_s600}
-\citation{b_wang2004}
-\citation{b_surya2024}
-\citation{b_easyocr2020}
-\citation{b_smith2007}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Component-Level Definitions of the Evaluated Operating Profiles. Exact Parameter Instances Are Reported in Section~\ref {sec:setup}.}}{7}{}\protected@file@percent }
+\newlabel{tab:profile_definitions}{{2}{7}{}{table.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {V}Experimental Evaluation}{7}{}\protected@file@percent }
 \newlabel{sec:evaluation}{{V}{7}{}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Experimental Setup}{7}{}\protected@file@percent }
 \newlabel{sec:setup}{{\mbox  {V-A}}{7}{}{subsection.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Real-Capture OCR Experiment}{7}{}\protected@file@percent }
-\newlabel{sec:real_capture}{{\mbox  {V-B}}{7}{}{subsection.5.2}{}}
+\citation{b_wang2004}
+\citation{b_surya2024}
+\citation{b_easyocr2020}
+\citation{b_smith2007}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Exact Profile Instances Used in the Physical-Capture Evaluation ($n=4$ for All Profiles). The Readability-Priority Row Is the Archived \texttt  {deployed} Condition and Explicitly Overrides the Reusable \texttt  {strong} Defaults.}}{8}{}\protected@file@percent }
+\newlabel{tab:profile_composition}{{3}{8}{}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Real-Capture OCR Experiment}{8}{}\protected@file@percent }
+\newlabel{sec:real_capture}{{\mbox  {V-B}}{8}{}{subsection.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Primary Matched Short-Exposure OCR Comparison at the Common Nominal 3.91-ms UVC Setting. Duplicate Captures Are Averaged Before Matching; $N=288$ per Profile Comprises 12 Content Items $\times $ 8 Geometries $\times $ 3 Repeats. Paired contrasts resample the 12 content items as clusters while holding the 8 tested geometries fixed; they do not treat the 288 units as independent population samples. The noncomparable d0.5/$15^{\circ }$ run is excluded.}}{9}{}\protected@file@percent }
+\newlabel{tab:real_ocr_common}{{4}{9}{}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Explicit Sensitive-Field Exact Recovery in the Primary Matched Short-Exposure Pool. The 18 Fields Were Fixed Before Scoring; 216 of 288 Units per Profile Contain at Least One Field.}}{9}{}\protected@file@percent }
+\newlabel{tab:explicit_fields}{{5}{9}{}{table.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Real-capture montage at 1.0\,m and $0^{\circ }$. Within each vertically stacked profile group (unprotected, readability-priority, and high-suppression), panels show, from top to bottom, the digital integrated reconstruction, 3.91\,ms short-exposure capture, and 31.25\,ms long-exposure capture. Camera panels are identically cropped from the archived raw camera JPEGs with no geometric correction or brightness gain, so they differ from the geometrically corrected crops used for OCR evaluation. Digital panels use the same $1920\times 1080$ black playback canvas and brightness-aligned full-cycle integration for each profile (for the unprotected profile this integration equals the displayed source frame); the readability-priority and high-suppression reconstructions include the recorded $\alpha =0.2$ inversion slot. These digital views are not direct evidence of human readability or visual comfort.}}{9}{}\protected@file@percent }
+\newlabel{fig:montage}{{3}{9}{}{figure.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Single-UVC Real-Capture OCR Sensitivity Pool (Best-of-Engine; $N$ = Captures per Row; All 9 Geometries). This is an unbalanced all-available archive, not the primary comparison. Brackets are 95\% capture-resampling summaries, not population confidence intervals. Each video row averages 150 frames for one content--position video unit (nominally 2.5\,s at 60\,fps). The primary matched estimate is Table~\ref {tab:real_ocr_common}.}}{10}{}\protected@file@percent }
+\newlabel{tab:real_ocr_full_pool}{{6}{10}{}{table.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Best-of-engine OCR character recovery and exact match for three representative real-capture profiles (unprotected, readability-priority, and high-suppression) under short exposure, long exposure, and a 150-frame video temporal mean, pooled across the 9 tested distance--angle configurations. This unbalanced sensitivity pool is distinct from the primary matched comparison in Table~\ref {tab:real_ocr_common}. Lower bars indicate less recovered text. The long-exposure and video bars expose the integration boundary: the readability-priority profile retains substantial recoverable content even when its short-exposure bar is low. Readability-priority sample counts include the disclosed five-item repeat and therefore differ from the other profiles.}}{10}{}\protected@file@percent }
+\newlabel{fig:bar_attack}{{4}{10}{}{figure.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Real-Capture Short-Exposure OCR: Per-Engine Results (Pooled Across 9 Geometric Conditions)}}{10}{}\protected@file@percent }
+\newlabel{tab:real_ocr_engine}{{7}{10}{}{table.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Inversion-Strength Ablation}{10}{}\protected@file@percent }
+\newlabel{sec:inversion_ablation}{{\mbox  {V-C}}{10}{}{subsection.5.3}{}}
 \citation{b_qwen3vl2025}
 \citation{b_kimi_k26}
 \citation{b_glm45v2025}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Primary Matched Short-Exposure OCR Comparison at the Common Nominal 3.91-ms UVC Setting. Duplicate Captures Are Averaged Before Matching; $N=288$ per Profile Comprises 12 Content Items $\times $ 8 Geometries $\times $ 3 Repeats. The Noncomparable d0.5/$15^{\circ }$ Run Is Excluded.}}{9}{}\protected@file@percent }
-\newlabel{tab:real_ocr_common}{{3}{9}{}{table.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Explicit Sensitive-Field Exact Recovery in the Primary Matched Short-Exposure Pool. The 18 Fields Were Fixed Before Scoring; 216 of 288 Units per Profile Contain at Least One Field.}}{9}{}\protected@file@percent }
-\newlabel{tab:explicit_fields}{{4}{9}{}{table.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Inversion-Strength Ablation}{9}{}\protected@file@percent }
-\newlabel{sec:inversion_ablation}{{\mbox  {V-C}}{9}{}{subsection.5.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Real-Capture VLM Probes}{9}{}\protected@file@percent }
-\newlabel{sec:vlm}{{\mbox  {V-D}}{9}{}{subsection.5.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Real-capture montage at 1.0\,m and $0^{\circ }$. Within each vertically stacked profile group (unprotected, readability-priority, and high-suppression), panels show, from top to bottom, the digital integrated reconstruction, 3.91\,ms short-exposure capture, and 31.25\,ms long-exposure capture. Camera panels are identically cropped from the archived raw camera JPEGs with no geometric correction or brightness gain, so they differ from the geometrically corrected crops used for OCR evaluation. Digital panels use the same $1920\times 1080$ black playback canvas and brightness-aligned full-cycle integration for each profile (for the unprotected profile this integration equals the displayed source frame); the readability-priority and high-suppression reconstructions include the recorded $\alpha =0.2$ inversion slot. These digital views are not direct evidence of human readability or visual comfort.}}{9}{}\protected@file@percent }
-\newlabel{fig:montage}{{3}{9}{}{figure.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Single-UVC Real-Capture OCR Sensitivity Pool (Best-of-Engine; $N$ = Captures per Row; All 9 Geometries). Brackets Are 95\% Capture-Resampling Summaries, Not Population Confidence Intervals. Video Rows Average 150 Frames. The Primary Matched Estimate Is Table~\ref {tab:real_ocr_common}.}}{10}{}\protected@file@percent }
-\newlabel{tab:real_ocr_full_pool}{{5}{10}{}{table.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Best-of-engine OCR character recovery and exact match for three representative real-capture profiles (unprotected, readability-priority, and high-suppression) under short exposure, long exposure, and a 150-frame video temporal mean, pooled across the 9 tested distance--angle configurations. Lower bars indicate less recovered text. The long-exposure and video bars expose the integration boundary: the readability-priority profile retains substantial recoverable content even when its short-exposure bar is low. Readability-priority sample counts include the disclosed five-item repeat and therefore differ from the other profiles.}}{10}{}\protected@file@percent }
-\newlabel{fig:bar_attack}{{4}{10}{}{figure.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Real-Capture Short-Exposure OCR: Per-Engine Results (Pooled Across 9 Geometric Conditions)}}{10}{}\protected@file@percent }
-\newlabel{tab:real_ocr_engine}{{6}{10}{}{table.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Matched Common-Setting Character Recovery Under the Fixed Preprocessing Grid. Each Cell Is Raw Input $\rightarrow $ Per-Capture Grid Oracle (\%); $N=288$ per Profile After Duplicate Averaging and Matching.}}{10}{}\protected@file@percent }
-\newlabel{tab:preprocessing_grid}{{7}{10}{}{table.7}{}}
 \citation{b_qwen3vl2025,b_glm45v2025}
 \citation{b_kimi_k26}
-\citation{b_shi2023,b_jiang2025}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Matched Common-Setting Character Recovery Under the Fixed Preprocessing Grid. Each Cell Is Raw Input $\rightarrow $ Per-Capture Grid Oracle (\%); $N=288$ per Profile After Duplicate Averaging and Matching.}}{11}{}\protected@file@percent }
+\newlabel{tab:preprocessing_grid}{{8}{11}{}{table.8}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Raw-input versus fixed-grid-oracle character recovery for each OCR engine on the matched common-setting pool ($N=288$ per profile). The oracle selects the best of raw plus five predeclared transforms separately for each capture and metric. Lines show within-engine increases, not uncertainty intervals. Exact values appear in Table~\ref {tab:preprocessing_grid}.}}{11}{}\protected@file@percent }
 \newlabel{fig:real_engine_ocr}{{5}{11}{}{figure.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Inversion Frame Strength $\alpha $ Ablation on the Fixed Strong Overlay ($\alpha _s=0.10$, $\alpha _g=0.12$): Real-Capture Best-of-Engine Character Recovery (Mean and 95\% Capture-Resampling Interval, Five Account/Code/CET6 Items Pooled Across 9 Geometric Conditions; $N=135$ per Setting for Long Exposure, $N=45$ for Video Temporal Averaging). This Five-Item Subset Differs from the 12-Item Readability-Priority Rows in Table~\ref {tab:real_ocr_full_pool}.}}{11}{}\protected@file@percent }
-\newlabel{tab:inversion_ablation}{{8}{11}{}{table.8}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Real-Capture VLM Probes (0$^{\circ }$ On-Axis; All Rows Except the Original Short Baseline Are High-Suppression). Each VLM Cell Reports Exact Count / Char / $N$ (Recoveries / \% / Effective Calls); Cells with Failures Are Conditional on Parseable Responses. OCR BoE Shows the Same-Batch Three-Engine Best-of-Engine Reference (Exact / Char, \%). The Temporal-Mean Rows Average 150 Short-Exposure Frames; Other Aggregate Views Are Defined in the Text. The 0.5\,m High-Suppression Short Row Uses the Adequate-Exposure Attacker-Favorable 141107 Session; the Only Alternative 0.5\,m Session Was Underexposed and Yielded 0/36 Qwen Exact Matches.}}{12}{}\protected@file@percent }
-\newlabel{tab:real_vlm}{{9}{12}{}{table.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces 0.5\,m High-Suppression Short-Exposure VLM Character Recovery by Content Type. Baseline Column Shows Same-Session Unprotected Original Short Results for Qwen (Kimi/GLM Similar); GLM Had Occasional Call Failures, Parenthesized $N$ Shows Effective Count. At 1.5\,m, CET6 Dense Pages Yield 0\% Char Across All Three Models.}}{12}{}\protected@file@percent }
-\newlabel{tab:vlm_content}{{10}{12}{}{table.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Inversion Frame Strength $\alpha $ Ablation on the Fixed Strong Overlay ($\alpha _s=0.10$, $\alpha _g=0.12$): Real-Capture Best-of-Engine Character Recovery (Mean and 95\% Capture-Resampling Interval, Five Account/Code/CET6 Items Pooled Across 9 Geometric Conditions; $N=135$ per Setting for Long Exposure, $N=45$ for Video Temporal Averaging). This Five-Item Subset Differs from the 12-Item Readability-Priority Rows in Table~\ref {tab:real_ocr_full_pool}.}}{11}{}\protected@file@percent }
+\newlabel{tab:inversion_ablation}{{9}{11}{}{table.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Real-Capture VLM Probes}{11}{}\protected@file@percent }
+\newlabel{sec:vlm}{{\mbox  {V-D}}{11}{}{subsection.5.4}{}}
+\citation{b_shi2023,b_jiang2025}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}User Experience Study}{12}{}\protected@file@percent }
 \newlabel{sec:user_study}{{\mbox  {V-E}}{12}{}{subsection.5.5}{}}
 \citation{b_soukoreff2003}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Real-Capture VLM Probes (0$^{\circ }$ On-Axis; All Rows Except the Original Short Baseline Are High-Suppression). Each VLM Cell Reports Exact Count / Char / $N$ (Recoveries / \% / Effective Calls); Cells with Failures Are Conditional on Parseable Responses. OCR BoE Shows the Same-Batch Three-Engine Best-of-Engine Reference (Exact / Char, \%). The Temporal-Mean Rows Average 150 Short-Exposure Frames; Other Aggregate Views Are Defined in the Text. The 0.5\,m High-Suppression Short Row Uses the Adequate-Exposure Attacker-Favorable 141107 Session; the Only Alternative 0.5\,m Session Was Underexposed and Yielded 0/36 Qwen Exact Matches.}}{13}{}\protected@file@percent }
+\newlabel{tab:real_vlm}{{10}{13}{}{table.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces 0.5\,m High-Suppression Short-Exposure VLM Character Recovery by Content Type. Baseline Column Shows Same-Session Unprotected Original Short Results for Qwen (Kimi/GLM Similar); GLM Had Occasional Call Failures, Parenthesized $N$ Shows Effective Count. At 1.5\,m, CET6 Dense Pages Yield 0\% Char Across All Three Models.}}{13}{}\protected@file@percent }
+\newlabel{tab:vlm_content}{{11}{13}{}{table.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Typing Task: Within-Subject Comparison of the Control and Readability-Priority Masked Conditions ($N=56$; Participant Means Over Two Trials per Condition; $\Delta $ = Masked $-$ Control With Participant-Level Bootstrap 95\% CI). Per Metric, a Paired $t$-Test Is Used When the Pre-Specified Shapiro Test Passes (Effect Size Cohen's $d_z$), Otherwise a Wilcoxon Signed-Rank Test (Effect Size Rank-Biserial $r_{rb}$); Test Statistics Are Reported in the Text}}{14}{}\protected@file@percent }
+\newlabel{tab:study_typing}{{12}{14}{}{table.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Subjective Ratings for the Six Display Conditions ($N=56$; 1--5 Likert, Higher Is Better; Mean $\pm $ SD). Stability Is the Inverse-Flicker Item and Comfort the Immediate Visual Comfort Item (\S  \ref {sec:user_study}); Friedman and Holm-Corrected Pairwise Wilcoxon Statistics Are Reported in the Text}}{14}{}\protected@file@percent }
+\newlabel{tab:study_ratings}{{13}{14}{}{table.13}{}}
 \citation{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}
 \citation{b_bytetrack2022}
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Typing Task: Within-Subject Comparison of the Control and Readability-Priority Masked Conditions ($N=56$; Participant Means Over Two Trials per Condition; $\Delta $ = Masked $-$ Control With Participant-Level Bootstrap 95\% CI). Per Metric, a Paired $t$-Test Is Used When the Pre-Specified Shapiro Test Passes (Effect Size Cohen's $d_z$), Otherwise a Wilcoxon Signed-Rank Test (Effect Size Rank-Biserial $r_{rb}$); Test Statistics Are Reported in the Text}}{14}{}\protected@file@percent }
-\newlabel{tab:study_typing}{{11}{14}{}{table.11}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Subjective Ratings for the Six Display Conditions ($N=56$; 1--5 Likert, Higher Is Better; Mean $\pm $ SD). Stability Is the Inverse-Flicker Item and Comfort the Immediate Visual Comfort Item (\S  \ref {sec:user_study}); Friedman and Holm-Corrected Pairwise Wilcoxon Statistics Are Reported in the Text}}{14}{}\protected@file@percent }
-\newlabel{tab:study_ratings}{{12}{14}{}{table.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Within-subject typing performance under the control and readability-priority masked conditions: each gray line is one participant (mean of two trials per condition); markers show group means with participant-level bootstrap 95\% confidence intervals. Panels show transcription accuracy, words per minute, and first-keystroke latency.}}{14}{}\protected@file@percent }
-\newlabel{fig:study_typing}{{6}{14}{}{figure.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Mean 1--5 Likert ratings (error bars: SD) for readability, stability, and immediate visual comfort across the six rated display conditions, ordered from the unmasked anchor to the readability-priority full configuration. Higher is better on every item.}}{14}{}\protected@file@percent }
-\newlabel{fig:study_ratings}{{7}{14}{}{figure.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}Real-Capture Object Detection and Tracking}{14}{}\protected@file@percent }
-\newlabel{sec:detection}{{\mbox  {V-F}}{14}{}{subsection.5.6}{}}
 \citation{b_hota2021}
-\citation{b_hota2021}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Within-subject typing performance under the control and readability-priority masked conditions: each gray line is one participant (mean of two trials per condition); markers show group means with participant-level bootstrap 95\% confidence intervals. Panels show transcription accuracy, words per minute, and first-keystroke latency.}}{15}{}\protected@file@percent }
+\newlabel{fig:study_typing}{{6}{15}{}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Mean 1--5 Likert ratings (error bars: SD) for readability, stability, and immediate visual comfort across the six rated display conditions, ordered from the unmasked anchor to the readability-priority full configuration. Higher is better on every item.}}{15}{}\protected@file@percent }
+\newlabel{fig:study_ratings}{{7}{15}{}{figure.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}Real-Capture Object Detection and Tracking}{15}{}\protected@file@percent }
+\newlabel{sec:detection}{{\mbox  {V-F}}{15}{}{subsection.5.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Real-Capture COCO Detection (150 Images; \texttt  {real\_clean} = Unprotected Capture Baseline)}}{15}{}\protected@file@percent }
+\newlabel{tab:real_coco}{{14}{15}{}{table.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames; HOTA and IDF1 from the Archived Run-Recorded Tracking-Metric Backend; HOTA Uses TrackEval When Available~\cite  {b_hota2021})}}{15}{}\protected@file@percent }
+\newlabel{tab:real_mot}{{15}{15}{}{table.15}{}}
 \citation{b_smith2007}
 \citation{b_easyocr2020}
 \citation{b_surya2024}
-\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Real-Capture COCO Detection (150 Images; \texttt  {real\_clean} = Unprotected Capture Baseline)}}{15}{}\protected@file@percent }
-\newlabel{tab:real_coco}{{13}{15}{}{table.13}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames; HOTA and IDF1 Computed by TrackEval~\cite  {b_hota2021})}}{15}{}\protected@file@percent }
-\newlabel{tab:real_mot}{{14}{15}{}{table.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Real-capture mAP50 for four detectors across the unprotected capture, short-exposure protected capture, and 150-frame protected mean. Conditions differ in protection, exposure, resolution, and frame reduction.}}{15}{}\protected@file@percent }
-\newlabel{fig:real_det_drop}{{8}{15}{}{figure.8}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Synthetic Single-Subframe OCR: Three-Engine Character Recovery (120 Samples, $n=4$, $\varepsilon =8/255$)}}{15}{}\protected@file@percent }
-\newlabel{tab:ocr_corpus}{{15}{15}{}{table.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-G}}Software Simulation Experiments}{15}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}1}Synthetic Single-Subframe OCR}{15}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}2}Theoretical Security Boundary}{15}{}\protected@file@percent }
-\newlabel{sec:security_frontier}{{\mbox  {V-G}2}{15}{}{subsubsection.5.7.2}{}}
 \citation{b_coco2014}
 \citation{b_mot16}
 \citation{b_yolo26}
 \citation{b_rtdetr2024}
 \citation{b_fasterrcnn2015}
 \citation{b_retinanet2017}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Real-capture mAP50 for four detectors across the unprotected capture, short-exposure protected capture, and 150-frame protected mean. Conditions differ in protection, exposure, resolution, and frame reduction.}}{16}{}\protected@file@percent }
+\newlabel{fig:real_det_drop}{{8}{16}{}{figure.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Synthetic Single-Subframe OCR: Three-Engine Character Recovery (120 Samples, $n=4$, $\varepsilon =8/255$)}}{16}{}\protected@file@percent }
+\newlabel{tab:ocr_corpus}{{16}{16}{}{table.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-G}}Software Simulation Experiments}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}1}Synthetic Single-Subframe OCR}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}2}Theoretical Security Boundary}{16}{}\protected@file@percent }
+\newlabel{sec:security_frontier}{{\mbox  {V-G}2}{16}{}{subsubsection.5.7.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Character recovery for three OCR engines on original frames and single protected subframes; error bars are 95\% bootstrap intervals resampled by corpus sample.}}{16}{}\protected@file@percent }
 \newlabel{fig:multiengine_ocr}{{9}{16}{}{figure.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Archived Digital Reconstruction Boundary (Tesseract)}}{16}{}\protected@file@percent }
-\newlabel{tab:digital_boundary}{{16}{16}{}{table.16}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Archived Digital Reconstruction Boundary (Tesseract)}}{16}{}\protected@file@percent }
+\newlabel{tab:digital_boundary}{{17}{16}{}{table.17}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}3}Detection and Tracking Simulation}{16}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images)}}{16}{}\protected@file@percent }
-\newlabel{tab:coco_sim}{{17}{16}{}{table.17}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; 5,316 Frames; CLEAR and IDF1 by In-Project Approximate Implementation)}}{16}{}\protected@file@percent }
-\newlabel{tab:mot_sim}{{18}{16}{}{table.18}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{16}{}\protected@file@percent }
-\newlabel{sec:discussion}{{VI}{16}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Principal Findings and Research Value}{16}{}\protected@file@percent }
-\citation{b_kaleido2015}
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images)}}{17}{}\protected@file@percent }
+\newlabel{tab:coco_sim}{{18}{17}{}{table.18}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; 5,316 Frames; CLEAR and IDF1 by In-Project Approximate Implementation)}}{17}{}\protected@file@percent }
+\newlabel{tab:mot_sim}{{19}{17}{}{table.19}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{17}{}\protected@file@percent }
+\newlabel{sec:discussion}{{VI}{17}{}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Principal Findings and Research Value}{17}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Residual capability of one protected subframe relative to the clean baseline (clean = 100\%) across the evaluated OCR, detection, and tracking pipelines. The metrics are normalized within task and are not directly commensurate across tasks.}}{17}{}\protected@file@percent }
 \newlabel{fig:all_attackers}{{10}{17}{}{figure.10}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Integration and Attacker Escalation}{17}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Profile Trade-offs and Practical Implications}{17}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM-Aware Implications}{17}{}\protected@file@percent }
-\newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{17}{}{subsection.6.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}Ethics Statement}{17}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-F}}Limitations and Future Work}{17}{}\protected@file@percent }
+\citation{b_kaleido2015}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Profile Trade-offs and Practical Implications}{18}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}VLM-Aware Implications}{18}{}\protected@file@percent }
+\newlabel{sec:vlm_defense}{{\mbox  {VI-D}}{18}{}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-E}}Limitations and Future Work}{18}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{18}{}\protected@file@percent }
+\newlabel{sec:conclusion}{{VII}{18}{}{section.7}{}}
 \bibstyle{IEEEtran}
 \bibdata{refs}
 \bibcite{b_wang2026}{1}
@@ -203,9 +205,6 @@
 \bibcite{b_zhong2023}{19}
 \bibcite{b_mid2021}{20}
 \bibcite{b_naor1994}{21}
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{18}{}\protected@file@percent }
-\newlabel{sec:conclusion}{{VII}{18}{}{section.7}{}}
-\@writefile{toc}{\contentsline {section}{REFERENCES}{18}{}\protected@file@percent }
 \bibcite{b_nguyen2016}{22}
 \bibcite{b_tran2021}{23}
 \bibcite{b_ghiasi2024}{24}
@@ -214,6 +213,7 @@
 \bibcite{b_madry2018}{27}
 \bibcite{b_carlini2017}{28}
 \bibcite{b_eykholt2018}{29}
+\@writefile{toc}{\contentsline {section}{REFERENCES}{19}{}\protected@file@percent }
 \bibcite{b_thys2019}{30}
 \bibcite{b_xu2020}{31}
 \bibcite{b_athalye2018}{32}
@@ -246,4 +246,5 @@
 \bibcite{b_coco2014}{59}
 \bibcite{b_mot16}{60}
 \@writefile{toc}{\contentsline {subsection}{ZHEYUAN HUANG}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{CHEN XING}{20}{}\protected@file@percent }
 \gdef \@abspage@last{20}
