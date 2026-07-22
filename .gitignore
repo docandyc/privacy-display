@@ -9,6 +9,11 @@ paper/*.synctex.gz
 paper/*.xdv
 paper/main.pdf
 
+# Local manuscript and source-code review notes
+paper/EXPERIMENTAL_EVALUATION_REVIEW.md
+paper/SYSTEM_DESIGN_REVIEW.md
+privacy-display/SYSTEM_SOURCE_REVIEW.md
+
 # Large generated evaluation artifacts
 real_captures_d0.5_a0_final/
 ACCESS_latex_template_20260513/

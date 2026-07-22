@@ -1,134 +1,146 @@
-# Experimental Evaluation 章节修订版意见（基于代码与数据核查）
+# Experimental Evaluation Revision Plan
 
-> 核查日期：2026-07-17
-> 核查对象：`~/Downloads/EXPERIMENTAL_EVALUATION_REVIEW.md`（下称"原审"）中对 `paper/main.tex` §V Experimental Evaluation 的全部事实性论断与修改建议
-> 核查方法：逐条对照本机工作区的 `main.tex`、`privacy-display/` 源码、`experiments/` 归档结果 JSON、TrackEval 输出、`用户调研实验结果/cleaned/analysis_formal/analysis_report.json`
-> 本文档性质：替代原审作为本章修改的执行依据。原审中已被论文现状满足或判定为误判的条目集中列于第 4 节，避免无效改动。
+## Purpose and Evidence Boundary
 
-## 1. 总体结论
+This plan governs the revision of Section V, *Experimental Evaluation*, in `main.tex`. Its objective is to make the reported evidence suitable for an IEEE Access submission without changing the paper's established contribution: the work provides system-level empirical evidence and characterizes the boundary at which stronger capture and recognition attacks recover protected content. It must not recast temporal masking as a universal security guarantee or as a wholly unprecedented primitive.
 
-原审的代码级事实基本准确，但它审的是 **git 仓库内容**（fresh clone 视角），而本机 `privacy-display/experiments` 是指向外置盘的符号链接，数据完整可查；同时原审的多数"表述收窄"建议针对的是论文已经改掉的旧状态。核查后：
+The physical-capture chain requires an external camera, a high-refresh display, and subsequently collected image analysis. Therefore, this revision assumes that the archived captures and reported analysis results are genuine and reliable. The review basis is the consistency among the manuscript, the accessible source code, test contracts, and `privacy-display/WIKI.md`; inability to reproduce camera capture in the current environment is not itself a defect in the experimental evidence.
 
-- **确认需要执行的修改项：6 项（E1–E6）+ 1 项投稿前工程项（E7）**；
-- **原审约三分之二的收窄建议论文现状已满足**，不需要动；
-- 原审对 HOTA 的怀疑（"无法确认则删除"）为**误判**：全部 12 个 HOTA 值已确认来自真实 TrackEval 输出；
-- 核查过程中发现一个原审没有发现的新问题：`tab:real_mot` 同一张表的 HOTA 与 IDF1 来自**两个不同的指标后端**（见 E2）。
+No new experiment, algorithm, model, parameter sweep, or numerical result is to be added. The revision may only reorganize, qualify, and clarify claims already supported by the current archived evidence.
 
-## 2. 原审条目逐条判定总表
+## Target Section-Level Claim
 
-| 原审条目 | 判定 | 去向 |
-|---|---|---|
-| 2.1 五项打字指标 Holm 校正未由脚本执行 | **属实**（但补救比"删句"轻） | E1 |
-| 2.2 当前检出版本不能复现多数实验 | **实质成立，表述不准**（目录存在，是外置盘符号链接，git 只跟踪链接本身） | E7 |
-| 2.3 检测/跟踪后端无法确认，"必要时删 HOTA" | **HOTA 部分误判**（已确认 TrackEval）；后端未披露属实 | E2 |
-| 2.4 "pre-registered" 缺少可核验依据 | **属实** | E3 |
-| 3.1 浏览器研究非物理系统等价实现 | **事实前提对，建议已满足**；残余半句光度学限定 | E6（可选） |
-| 3.2 掩码 key 未归档、避免"fully reproducible" | **事实前提对，论文已披露**；"fully reproducible" 全文不存在 | 部分并入 E7 |
-| 3.3 VLM 应定位为攻击边界 | **要求的透明性几乎全部已在文中**；残余一句前瞻句 | E5 |
-| 3.4 长曝光"反转"机制解释 | **方向性误判**（论文报为防护失效方向，且已标注 candidate explanation） | 不改（移 Discussion 为可选风格） |
-| 4.1 主实验/探索性实验分层 | 合理编辑建议，无事实错误 | 重写时采纳 |
-| 4.2 Setup 混入结果 | **属实，逐条核实** | E4 |
-| 4.3 阈值不应写成安全保证 | **已满足**（全文均为 descriptive targets 且保留分位数） | 不改 |
-| 4.4 统计单位与 CI 措辞 | **已满足**（表注原句即 "Not Population Confidence Intervals"） | 不改 |
-| 4.5 检测/跟踪仅探索性压力测试 | **限制已前置**；"transfers beyond text" 为疑问式引入 | 可选微调 |
-| 4.6 用户研究结论保守化 + 伦理 | **已满足**（无 negligible 类表述；伦理段完整） | 不改 |
-| 5 章节结构建议 | 合理编辑建议 | 重写时采纳 |
-| 6.1–6.3 表格规范 | 合理编辑建议 | 重写时采纳 |
-| 6.4 后端版本与引用 | 属实（OCR 引擎版本已在文，评估后端版本缺失） | 并入 E2 |
-| 6.5 不应写作完整 ByteTrack | **已满足**（表题即 "ByteTrack-Style Greedy Association"） | 不改 |
-| 6.6 ΔE00/SSIM 数字代理 | **已满足**（main.tex:181 已限定 "digital reconstruction quality"） | 不改 |
+After revision, Section V should support the following bounded conclusion:
 
-注：原审引用的 Holm 句行号 655 实为 main.tex:664，不影响判定。
+> In the evaluated 240-Hz display--S600 UVC-camera link, the tested composite profiles substantially reduce conventional OCR recovery under the matched short-exposure protocol. Fixed preprocessing, long exposure, temporal averaging, full-cycle digital reconstruction, and VLM probing recover substantial information under stronger attacker capabilities. The browser study separately quantifies the usability cost of the readability-priority configuration.
 
-## 3. 确认需要执行的修改项
+The section should not imply protection against arbitrary cameras, panels, exposure control, continuous recording, commercial OCR, VLMs, or complete-cycle reconstruction.
 
-### E1（P0）打字指标 Holm 校正：补分析代码，不删正文句
+## Revision Principles
 
-**事实**：`webstudy/analyze_study.py` 中 `holm_adjust()`（第 160 行）仅用于主观评分的 Friedman 后成对 Wilcoxon（第 203–208 行）；五项打字指标只逐项调用 `paired_inference()`（第 360–362 行）。权威报告 `用户调研实验结果/cleaned/analysis_formal/analysis_report.json` 的 typing 各指标均无 holm 字段。
+1. **Use one primary estimand.** The matched eight-geometry, common-setting comparison is the primary OCR result. The nine-geometry pool is sensitivity evidence only.
+2. **Preserve the distinction between observation and causal attribution.** The physical results are evidence from one system link; brightness, exposure, panel response, ISP behavior, and profile order are not fully isolated.
+3. **Report the real statistical unit.** Capture-level counts describe the archive, while content-cluster resampling describes the uncertainty calculation.
+4. **Treat successful attacks as primary evidence, not as exceptions.** Preprocessing, temporal averaging, reconstruction, and VLM results define the attack boundary central to the paper.
+5. **Keep evidence tiers explicit.** Main physical OCR is the central evaluation; VLM probing and browser usability are complementary; detection/tracking and small-image simulations are stress-test or pipeline evidence.
+6. **Do not manufacture precision.** Any missing provenance detail should be described conservatively, not inferred from unavailable physical measurements.
 
-**验算**：权威报告五个原始 p 值为 wpm 0.0049、cpm 0.0049、accuracy 0.0431、attempted_chars 0.0043、first_key_latency 0.2003。Holm 校正后依次为 0.0215、0.0215、0.0215、0.0862、0.2003：WPM、CPM、attempted 显著，accuracy（rank 4 of 5）不显著，latency 不显著。**main.tex:664 的正文结论算术完全正确**，问题仅是归档脚本未产出该数值。
+## Planned Revisions by Subsection
 
-**改法**：在 `analyze_study.py` 的 typing 推断段对五个 p 值调用现成的 `holm_adjust()`，将 `holm_p` 写入 `typing` 报告字段，重新生成 `analysis_report.json`（数值结论不会变）。正文无需改动。原审"删除该句"的选项不必采用。
+### 1. Experimental Setup
 
-### E2（P0）检测/跟踪指标后端：统一 IDF1 来源并披露后端与版本
+**Current role:** Defines hardware, UVC exposure labels, content, metrics, aggregation, preprocessing, and exact physical-capture profiles.
 
-**事实（核查确认，回答原审 P0 问题 2）**：
+**Required revisions:**
 
-- mAP/mAP50/AR：真实拍摄与仿真的所有单元 `evaluator=pycocotools`（`real_capture_coco_detection.json`、`coco_detection_attack.json`），非回退实现；
-- HOTA：来自真实 TrackEval 运行（`experiments/results/trackeval_workspace_real/trackers/PRIVACY-train/*/pedestrian_summary.txt`），论文 `tab:real_mot` 的 12 个 HOTA 值与之逐格精确吻合，**不需要删除 HOTA**；
-- 但 `tab:real_mot` 的 IDF1 一列与 TrackEval 不符，而与 `real_capture_mot_tracking.json` 中 `metric_backend=approximate_scipy` 的项目内近似实现逐格吻合（差异示例：RT-DETR short 5.2 vs TrackEval 5.37；Faster R-CNN video 7.1 vs 7.56；RetinaNet clean 9.8 vs 10.34）。即**同一张表两列来自两个后端**；
-- 仿真 MOT 表（main.tex:857–886）的 MOTA/MOTP/IDF1 全部来自同一近似实现（`mot_tracking_attack.json` 全单元 `metric_backend=approximate_scipy`），未使用 motmetrics；
-- tracker 为 `greedy_bytetrack_fallback`（项目内贪心关联），论文措辞已如实，无需改。
+- Add a short paragraph immediately after the capture-device description stating that the reported UVC exposure values are control-derived labels and that profile acquisition order was fixed. State that automatic exposure, gain, white balance, physical panel luminance, and panel--camera phase were not fully measured. This should frame the physical comparisons as system-link evidence rather than a fully isolated causal experiment.
+- Retain the exact physical profile table. Keep the explicit distinction between the reusable `strong` default and the reported readability-priority override (`stripe alpha = 0.10`, `glyph alpha = 0.12`, inversion `alpha = 0.20`). This matches the playback contract.
+- In the OCR aggregation paragraph, distinguish the three quantities clearly:
+  - capture-level result rows;
+  - duplicate-averaged, matched profile--content--position--repeat cells;
+  - 12 content-item clusters used for the paired bootstrap.
+- State that the cluster intervals hold the evaluated geometries fixed. Do not describe the 288 matched capture units as 288 independent population samples.
+- Preserve the six-transform preprocessing grid as a fixed attacker model. Continue to state that it is stronger than raw OCR but not an exhaustive adaptive reconstruction attack.
 
-**改法（推荐 a）**：
+**Do not change:** Hardware names, the nine geometry locations, the UVC labels, the 12-item content composition, the fixed preprocessing transformations, engine versions, or reported values.
 
-a. 将 `tab:real_mot` 的 IDF1 替换为 TrackEval 输出值（同一后端产出 HOTA+IDF1，全表口径一致），正文 main.tex:751 的 IDF1 区间随之更新；
-b. 或保留现值，在表注声明两列来源不同。
+### 2. Real-Capture OCR Experiment
 
-无论 a/b，均需在 §V 检测/跟踪小节（main.tex:685 附近）与仿真小节补一句后端披露，含义为：mAP 系列由 pycocotools 计算；真实拍摄跟踪的 HOTA（及 IDF1，若采用方案 a）由 TrackEval 计算；仿真 MOT 的 CLEAR/IDF1 指标由项目内近似实现计算。同时补 pycocotools、TrackEval 的版本号与引用（HOTA 原始论文与 TrackEval 工具）。OCR 引擎版本已在文中（main.tex:303），无需重复。
+**Current role:** Supplies the main physical evidence for conventional OCR reduction and the physical integration boundary.
 
-### E3（P0）"pre-registered" 改为 "pre-specified"
+**Required revisions:**
 
-**事实**：main.tex:619（"Pre-registered exclusion criteria"）与 main.tex:623（"met all pre-registered inclusion criteria"）两处。全文无 OSF/AsPredicted 或机构注册记录可引；`analysis_report.json` 内嵌的 analysis plan 不构成带时间戳的公开注册。
+- Introduce Table `tab:real_ocr_common` explicitly as the sole primary headline estimate: 8 common-setting geometries, 12 content items, 3 repeats, and 288 matched units per profile.
+- Describe the 94.1% / 15.1% / 5.0% nine-geometry values only as an unbalanced all-available sensitivity pool. Do not use them as the main cross-profile comparison in the section narrative.
+- In Table `tab:real_ocr_common` or its caption, add a compact note that uncertainty is derived from 12 content clusters, with geometry held fixed. The table may retain `$N=288$`, but the resampling unit must be visible near the result.
+- Keep the best-of-engine aggregation because it models an attacker selecting the most successful tested OCR engine. Continue to report per-engine results so that the attacker-favorable summary remains auditable.
+- Retain the preprocessing oracle result and state its interpretation precisely: the reported raw short-exposure reduction is not a bound against the fixed preprocessing attacker.
+- Tighten the long-exposure discussion. Keep the observed position-dependent reversal, but call it an interaction observed in the evaluated imaging chain. Do not attribute it definitively to the mask or overlays; retain saturation/contrast compression only as a candidate explanation.
+- Retain the high-suppression result as an exploratory recovery-boundary profile. Avoid presenting the descriptive `<10%` target as a general security threshold.
+- State the nominal duration associated with the 150-frame mean at the recorded nominal frame rate, and specify whether each aggregate is formed per content item and position. If the existing archived documentation contains exact segment/window information, quote it; otherwise use only the currently documented aggregate definition.
 
-**改法**：两处改为 "pre-specified"。若作者确有带时间戳的注册记录，则保留原词并在文中给出匿名标识（作者决定）。
+**Claims to retain:**
 
-### E4（P1）将结果数据移出 Experimental Setup
+- Short-exposure conventional OCR reduction in the matched physical protocol.
+- Upper-tail leakage and sensitive-field recovery as part of the attack-boundary characterization.
+- Recovery under long exposure and 150-frame temporal averaging.
 
-**核实的混入位置**（原审举例全部属实）：
+### 3. Inversion-Strength Ablation
 
-- main.tex:295：readability-priority 与 high-suppression 的 P50/P75/P90/P95/P99 数值（10.1/22.0/45.6/63.6/95.0 与 3.4/9.2/15.2/19.1/22.6）；
-- main.tex:297：全几何差值 78.0pp [75.5, 80.3]、89.1pp [85.0, 92.4]、mask-only 3.0pp [-0.5, 6.5]；
-- main.tex:299：匹配均值 94.5/17.8/5.6、差值 76.7/88.9、408 图敏感性均值 16.7%、视频均值 71.1→79.7、47.9→53.9；
-- main.tex:301：leave-one-round-out 16.6%/15.8%。
+**Current role:** Establishes that the readability-priority inversion setting is a modeled operating choice rather than an empirically optimized universal setting.
 
-**改法**：数值移入 §V.B 真实拍摄 OCR 结果（分位数与尾部风险并入相应结果段，leave-one-round-out 并入稳健性检查段）。Setup 保留定义性内容：硬件、拍摄协议、内容构成、指标定义、统计单位与匹配策略、resample 参数与 seed、软件版本、预处理网格、复现状态。
+**Required revisions:**
 
-### E5（P1）前瞻句移入 Discussion
+- Keep the five-item subset and its separate sample sizes prominent in the prose and caption.
+- Retain the explicit statement that the `alpha = 0.20` ablation estimate is not a second estimate of the 12-item readability-priority condition.
+- Use neutral phrasing for overlapping descriptive resampling intervals; do not claim equivalence or an optimized weak-inversion setting.
+- Keep the degradation under near-full inversion as a trade-off observation, not as a recommendation for deployment.
 
-main.tex:593 句尾 "content-adaptive, VLM-aware temporal profiles warrant investigation" 属未来设计方向，移入 Discussion 的 VLM-Aware Implications 小节（main.tex:923 起），合并前先查重：该小节已有相近含义表述，若重复则直接删除 §V 中这半句。
+### 4. Real-Capture VLM Probes
 
-### E6（P1，可选）用户研究补光度边界半句
+**Current role:** Demonstrates that conventional OCR results do not delimit recovery by stronger recognition systems and thus materially characterizes the attack boundary.
 
-现状已有关键区分句（web player 为独立 JavaScript/Canvas2D 路径、非 ChaCha20 与梯度噪声管线；§IV main.tex:199 亦声明 web 实现无 CSPRNG 性质）。残余缺口：rAF/时序日志证明的是帧调度，不构成面板 scan-out 或子帧光度波形的测量验证。可在该句后追加一句，含义为：
+**Required revisions:**
 
-> Frame-scheduling logs verify presentation timing at the JavaScript level; no photometric measurement of per-subframe panel output was performed.
+- Keep the three endpoint names, raw-JPEG input path, temperature-zero setting, local scoring, and the statement that ground truth was excluded from prompts.
+- Preserve the distinction between conditional parseable-response cells and lower/upper missingness bounds. Do not rank models using cells with non-random failures.
+- Make the 0.5-m session-selection qualification visible in the subsection opening and in any summary sentence: the reported high short-exposure recovery comes from the archived adequate-exposure, attacker-favorable session selected after comparing the two available sessions.
+- Align the Abstract and Conclusion with this qualification when they cite the 77.8% exact-match result. The statement must not read as a stable distance-generalizable estimate.
+- Clarify the video aggregation protocol in reproducible prose: source duration or nominal frame count, number of aggregate inputs, whether windows overlap, and the unit represented by each table row. Only use details already present in archived metadata or scripts.
+- Retain the content-type analysis as evidence that large-font short snippets are more recoverable than dense pages. Do not infer an untested general relationship between VLM ability and all font sizes or languages.
 
-### E7（P2）投稿冻结前的 artifact release
+### 5. User Experience Study
 
-**事实**：`privacy-display/experiments` 在 git 中是 mode 120000 的符号链接（指向 `/Volumes/Mac扩展盘/项目数据/privacy-display/experiments`），实验脚本与结果 JSON 均不在 git 内容中；fresh clone 无法复现，原审 2.2 的实质结论成立。
+**Current role:** Quantifies the usability cost of the readability-priority browser implementation, separately from the Python physical-capture path.
 
-**改法**：冻结一个包含以下内容的 release/tag 或补充材料包：实验脚本、去标识输入与结果 JSON、依赖版本、模型标识、文件哈希（`reproducibility_manifest.py` 已有基础），并分类列出随机性来源：掩码 key（不归档，论文 main.tex:275 已披露，复现依赖归档 stimuli）、内容 cluster resample seed 20260612（已在文）、浏览器确定性 seed、检测/跟踪派生 key、bootstrap seed。
+**Required revisions:**
 
-## 4. 判定为误判或论文现状已满足的条目（不要重复修改）
+- Retain the within-subject design, formal 200-Hz gate, fixed `n=4`, ABBA/BAAB typing order, six-condition Latin-square rating order, exclusion criteria, participant-level aggregation, bootstrap intervals, and Holm correction. These match the accessible browser and analysis code.
+- Keep the rendering-path distinction explicit: the study uses the independent Canvas2D implementation with a deterministic browser PRNG, pixel-space gain, surrogate texture noise, six rotating cycles, and `alpha = 0.20` inversion. It is a usability evaluation of that browser implementation, not a photometric replication of the Python playback path.
+- Replace any wording that implies identical control and masked text instances or that the temporal pipeline is literally the sole trial-level difference. The implementation generates independent pseudo-word text instances with the same generation mechanism and target length. State this accurately and retain the order counterbalancing explanation.
+- Keep the interpretation of subjective measures narrow: stability is an inverse-flicker item, and comfort is immediate self-reported visual comfort rather than a clinical fatigue endpoint.
+- In the results paragraph, retain the Holm-qualified interpretation: speed-related outcomes remain significant after correction, whereas the nominal accuracy difference does not.
 
-以下各条附核查证据，重写章节时**保持现状即可**：
+### 6. Real-Capture Object Detection and Tracking
 
-1. **HOTA 来源怀疑（原审 2.3）**：误判。12/12 HOTA 值与 TrackEval `pedestrian_summary.txt` 精确吻合，删除 HOTA 的条件不成立。
-2. **"fully reproducible" 过度声明（原审 2.2/3.2）**：该短语在 main.tex 中不存在。唯一 "reproducible" 修饰固定参数预处理网格（main.tex:303），本身成立。§IV Implementation Scope and Reproducibility（main.tex:275）已主动披露 playback metadata 不保存掩码 key、复现依赖归档 stimuli，正是原审 3.2 要求的披露。
-3. **阈值写成安全保证（原审 4.3）**：已满足。main.tex:181 "tiered design goals ... These descriptive thresholds"；摘要、main.tex:325/395/949 均用 "descriptive target"；P50–P99、exact match、敏感字段、尾部分位数均已保留，均值未掩盖尾部泄露。
-4. **CI 措辞（原审 4.4）**：已满足。九位置池表注（main.tex:347）原句即 "Brackets Are 95% Capture-Resampling Summaries, Not Population Confidence Intervals"；main.tex:297 正文同样限定。
-5. **用户研究结论与伦理（原审 4.6）**：已满足。全文无 "negligible"、"normal user experience" 类表述；摘要结论为 "indicating measurable usability costs"。伦理段（main.tex:607）与 Discussion Ethics Statement（main.tex:930）已说明：机构无对应伦理委员会、当面确认自愿同意与光敏筛查、正式流程未采集姓名/学号/专业/年龄/性别、仅发布去标识数据。数据库遗留身份字段与论文声明不冲突（论文只声明"未采集"，与正式前端行为一致）。
-6. **浏览器研究定位（原审 3.1）**：核心区分句已在（独立 JS/Canvas2D 路径、非 ChaCha20 管线；无 CSPRNG 性质），仅剩 E6 的半句光度学限定。
-7. **检测/跟踪定位（原审 4.5）**：限制已前置。main.tex:685 小节首句即 "exploratory ... stress test ... evidence strength is not equivalent to the OCR main experiment"；main.tex:751 再次声明 "cross-task stress test rather than an isolated protection effect"；8 张 COCO 已标注 "implementation pipeline diagnostic"（main.tex:821）。"To probe whether ... transfers beyond text" 为疑问式引入而非结论，可在重写时顺手软化，非必改项。
-8. **ByteTrack 措辞（原审 6.5）**：已满足。表题 "ByteTrack-Style Greedy Association"，正文 "in-project greedy association implementation inspired by ByteTrack"。
-9. **长曝光机制解释（原审 3.4）**：方向性误判。论文将长曝光反转如实报告为防护失效方向（掩模降低亮度使攻击者恢复率升高），并非"系统额外保护优势的证据"；机制表述已标注 "a candidate explanation"（main.tex:399），摘要为 hedged 的 "consistent with"。是否将解释移入 Discussion 属风格选择。
-10. **VLM 透明性（原审 3.3）**：已满足。1,188/1,133 与失败分布、非随机缺失声明、单元上下界、"Conditional cells are not used to rank models"（main.tex:520 原句）、0.5 m 会话事后选择披露（main.tex:526）、provider 标识/解码参数/prompt 归档（main.tex:524）均在文中。残余仅 E5。
-11. **ΔE00/SSIM（原审 6.6）**：已满足。main.tex:181 限定为 "digital reconstruction quality"。
+**Current role:** Provides an exploratory cross-task stress test, not the primary proof of the display-privacy claim.
 
-## 5. 原审四个 P0 问题的核查答案
+**Required revisions:**
 
-1. **Holm 依据**：脚本确实未执行，但论文数值算术正确；按 E1 补代码闭环，无需删句。
-2. **HOTA/COCO/MOT 后端**：mAP=pycocotools；HOTA=TrackEval；`tab:real_mot` 的 IDF1 与仿真 MOT 全部指标=项目内 approximate_scipy 近似实现；tracker=项目内贪心（措辞已如实）。按 E2 统一并披露。
-3. **实验脚本与归档**：存在且完整，但在外置盘符号链接下、不在 git 内容中；按 E7 冻结 release。
-4. **pre-registered**：无带时间戳的注册记录；按 E3 改词（除非作者确有注册）。
+- Preserve the opening limitation that the evidence strength is below that of the main OCR experiment.
+- State in the table captions and accompanying text that `real_clean`, `real_short`, and `real_video` differ in more than protection: exposure, resolution/cropping, and temporal aggregation differ. Do not describe their gaps as an isolated protection effect.
+- Retain the still-display-then-capture description for MOT17; do not imply that it is a continuous real-world motion-video result.
+- Verify the metric provenance from the archived result manifest before final wording. Report the backend actually used for HOTA and IDF1. The accessible code supports `motmetrics`, a SciPy fallback, and optional TrackEval; the manuscript must not make a broader TrackEval claim than the archived run supports.
+- Replace any phrase equating detector/tracker degradation with OCR reduction. Use “directional degradation in exploratory detector/tracker stress tests.”
 
-## 6. 保留采纳的结构性建议
+### 7. Software Simulation Experiments
 
-原审 4.1（证据分层标注）、第 5 节（primary OCR → enhanced attack → boundary attack → usability → exploratory transfer 的小节顺序）、6.1–6.3（主文/补充材料分配、单表单结论、指标方向标注与小数精度统一）无事实错误，作为本章重写时的编辑框架采纳。执行 E4 的搬移应与该重排一次完成，避免两轮大改。
+**Current role:** Explains mechanism-level behavior and makes complete-cycle reconstruction an explicit, reproducible failure boundary.
 
-## 7. 修订后的优先级
+**Required revisions:**
 
-- **P0（重写正文前）**：E1 补 Holm 代码并重新生成报告；E2 确定 IDF1 方案（推荐替换为 TrackEval 值）并起草后端披露句；E3 改词（或作者提供注册记录）。
-- **P1（本轮章节重写）**：E4 Setup 移结果；E5 前瞻句移 Discussion；E6 可选半句；同步执行第 6 节的结构重排。
-- **P2（投稿冻结前）**：E7 artifact release 与随机性来源清单。
+- Retain the 120-sample single-subframe OCR experiment as a renderer-level diagnostic, not as a physical-camera result.
+- Retain the full-cycle mean and strongest per-sample reconstruction results as direct evidence that linear complementary decomposition is not secure after registered full-cycle accumulation.
+- Keep the 16-sample profile reconstruction ablation clearly separate from the 120-sample base corpus.
+- Retain the COCO 8-image evaluation only as a pipeline diagnostic, as currently labeled. Do not use it to claim broad detection generalization.
+- Retain the 5,316-frame MOT simulation as an implementation-level stress test and preserve the in-project greedy-association qualification.
+
+## Cross-Section Consistency Changes
+
+The following wording changes must be propagated outside Section V after the section itself is revised:
+
+1. **Abstract:** Use the matched common-setting OCR estimate as the main quantitative result. If the 0.5-m VLM exact-match value remains, include the attacker-favorable adequate-exposure-session qualification.
+2. **Discussion and Conclusion:** Describe detection/tracking as exploratory cross-task stress evidence, not as additional OCR evidence.
+3. **Discussion and Limitations:** Keep the one-camera, one-panel, fixed-order, control-derived exposure, and incomplete physical photometry limitations; ensure they do not contradict the upfront Experimental Setup disclosure.
+4. **Data Availability:** Retain the existing access statement unless repository policy changes. The revision must not claim that the camera experiment can be regenerated in the current no-camera environment.
+
+## Verification Checklist Before Editing `main.tex`
+
+- [ ] Every numerical headline identifies whether it is the matched primary analysis or the unbalanced sensitivity pool.
+- [ ] Every interval identifies its resampling unit and does not imply independent capture-level inference when clustering is used.
+- [ ] Profile labels and exact physical parameters match the playback contract.
+- [ ] VLM table labels, effective call counts, missingness qualifiers, and session-selection language agree with the archived evaluation record.
+- [ ] User-study configuration and values agree with `webstudy/static/app.js` and `webstudy/analysis_output/analysis_report.json`.
+- [ ] Detection/tracking metric backend wording agrees with the run manifest and `src/evaluation/mot.py`.
+- [ ] Simulations are consistently labeled as renderer, reconstruction-boundary, or pipeline evidence rather than physical generalization evidence.
+- [ ] No revision adds new numerical claims, attack models, algorithms, or experiments.

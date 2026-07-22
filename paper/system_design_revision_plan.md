@@ -1,15 +1,15 @@
 # System Design 章节修改方案
 
-> 生成日期：2026-07-17
-> 依据：`~/Downloads/SYSTEM_DESIGN_REVIEW.md` 审稿意见，经逐条源码核查确认后筛选
-> 适用对象：`paper/main.tex` §IV System Design（行号以当前版本为准）及方法流程图
+> 更新日期：2026-07-18
+> 依据：当前 `privacy-display/WIKI.md`、逐条源码核查结果及既有审核意见
+> 适用对象：`paper/main.tex` §IV System Design、§V Experimental Evaluation（仅涉及 profile 定义、参数和选择依据的分工）及方法流程图
 > 性质：修改建议清单，含可直接粘贴的 LaTeX 替换文本；不自动改动 main.tex
 
 ## 0. 范围说明：不纳入本方案的条目
 
 | 审稿条目 | 不纳入原因 |
 |---|---|
-| 2.1 Strong 档参数差异 | 作者确认：物理实验通过 CLI 显式参数运行（`--stripe-alpha 0.10 --glyph-alpha 0.12`），论文表格 0.10/0.12 与实验事实一致。仅在 M2 提供一句可选披露（见 M2 可选句），是否采用由作者决定 |
+| 2.1 Strong 档参数差异 | 论文的 0.10/0.12 与真实采集 `deployed` 条件的显式 CLI 覆盖一致，但不同于通用 `strong` 默认值 0.18/0.22。该问题不再排除，改由 M10 明确区分“系统 profile 定义”与“实验实例参数”。 |
 | 3.1 中 "Integration ≈50 ms" | 已在早前修图轮次由 `remove_fixed_integration_time.py` 删除，最终 `final/figure2_method_pipeline.vsdx`/PDF 已无此文字，无需处理 |
 | 6 中 ByteTrack 提醒 | 论文已写 "in-project greedy association implementation inspired by ByteTrack"（main.tex:680），表题为 "ByteTrack-Style Greedy Association"，归档结果确认实际使用 `greedy_bytetrack_fallback`，表述合规 |
 
@@ -31,12 +31,12 @@
 | M7 | P1 | main.tex:199 | 卡方自由度一般化 |
 | M8 | P1 | main.tex:199、177 | "cross-cycle correlation" 改为可验证表述（两处） |
 | M9 | — | — | 已并入 M5 |
-| M10 | P1 | main.tex:232、261 | profile 定位措辞；结果性判断改为设计意图 + 前向引用；小节改名（可选） |
-| M11 | P1 | main.tex:269–287、261、227 | inversion ablation 段+表移入 §V；Kaleido 对比句移入 Discussion；TCSF/CFF 压缩 |
+| M10 | P0 | §IV profile 小节、§V Experimental Setup | 明确 profile 定义归 System Design，具体实验参数、显式覆盖和选择依据归 Experimental Evaluation；收紧 high-suppression 定位 |
+| M11 | 已落实 | §IV、§V、Discussion | inversion ablation 已在 §V；Kaleido 对比已在 Discussion；TCSF/CFF 已压缩，后续仅防止重构时回退 |
 | M12 | P1 | main.tex §V.C（约 608 行） | 用户研究小节补一句 Web 路径披露（可选但推荐） |
 | M13 | P2 | §IV 整体 | 审稿 §4 的完整结构重排（可选，见 §4） |
 
-建议执行顺序：M11（结构移动，先做避免行号漂移干扰后续定位）→ M2/M4（小节重写）→ M3/M5/M6（句级替换）→ M7/M8/M10/M12（措辞微调）→ M1（图，独立于正文）。
+建议执行顺序：M10（先建立两章职责边界）→ M2/M4（小节重写）→ M3/M5/M6（句级替换）→ M7/M8/M12（措辞微调）→ M1（图，独立于正文）；M11 仅在最终检查时复核。
 
 ---
 
@@ -76,7 +76,7 @@ The current PoC operates at the application layer, using Python and GPU renderin
 ```latex
 \subsection{Implementation Scope and Reproducibility}
 
-The PoC operates at the application layer in Python (NumPy, PyCryptodome, pygame/SDL, mss, ModernGL; PDF input via pypdfium2 or pdftoppm) and separates three rendering paths. The evaluated physical-capture path pre-generates all subframes offline with a CPU compositor and plays the sequence back through pygame with vsync on the 240\,Hz panel, so no per-slot synthesis occurs during display. A separate live-demonstration window captures the screen with mss and renders through an optional ModernGL backend that reads each frame back to the CPU and falls back to a NumPy renderer when GPU initialization fails; one capture--mask--compose cycle takes on the order of 190\,ms, so this window cannot sustain the 120--240\,Hz slot budget and serves demonstration only. Its inversion variant shows a full inversion frame for a target fraction $\alpha$ of the slot interval, a duration-based approximation that vsync does not guarantee. The user study runs a third, independent JavaScript/Canvas2D implementation (\S\ref{sec:user_study}). Mask keys default to 32 bytes from the operating-system CSPRNG, and a fixed key can be supplied for regeneration; the playback metadata records permutations, the per-cycle noise schedule, and profile parameters, but not the key, so reproduction relies on the archived stimuli and explicit configurations rather than on command-level replay. No operating-system, display-driver, or backlight-level integration is implemented.
+The PoC operates at the application layer in Python (NumPy, PyCryptodome, pygame/SDL, mss, ModernGL; PDF input via pypdfium2 or pdftoppm) and separates three rendering paths. The physical-capture protocol pre-generates all subframes offline with a CPU compositor and presents the sequence through pygame, requesting VSync and applying a software frame-rate cap when VSync is unavailable; no per-slot synthesis occurs during display. A separate live-demonstration window captures the screen with mss and renders through an optional ModernGL backend that reads each frame back to the CPU and falls back to a NumPy renderer when GPU initialization fails; one capture--mask--compose cycle takes on the order of 190\,ms, so this window cannot sustain the 120--240\,Hz slot budget and serves demonstration only. Its inversion variant shows a full inversion frame for a target fraction $\alpha$ of the slot interval, a duration-based approximation that VSync does not guarantee. The user study runs a third, independent JavaScript/Canvas2D implementation (\S\ref{sec:user_study}). Mask keys default to 32 bytes from the operating-system CSPRNG, and a fixed key can be supplied for regeneration; the playback metadata records permutations, the per-cycle noise schedule, and profile parameters, but not the key, so reproduction relies on the archived stimuli and explicit configurations rather than on command-level replay. No operating-system, display-driver, or backlight-level integration is implemented.
 ```
 
 可选披露句（涉及审稿 2.1 与 composer 默认增益，作者已确认实验值，采用与否自行决定；若担心 artifact 审查可保留）：
@@ -191,27 +191,69 @@ Per-cycle randomization avoids a fixed, periodically repeated pixel-to-slot patt
 
 理由：仓库中唯一的互信息度量是单子帧对原图的 NMI（`metrics.py:197–200`），不存在跨周期相关性测量，不应声称已实证降低某个未报告指标。
 
-### M10 profile 定位措辞（对应审稿 3.6）
+### M10 profile 定义与实验配置的章节分工（P0）
 
-处 1，main.tex:232：
+**原则：定义归 §IV，参数与选择归 §V。** Profile 是系统中可组合组件的命名和角色约定，因此读者必须在 System Design 中先理解 `Mask only`、`Mask + noise`、`Strong`、`Readability-priority` 与 `High-suppression` 的组成及设计意图；但某一组 alpha、`n`、刷新率、曝光设置和显式 CLI 覆盖是具体实验实例，不应被包装为通用系统默认值。
 
-```latex
-% 现：...we introduce nonlinear enhanced profiles.
-% 改：
-...we instantiate composite operating profiles that add nonlinear components to probe the suppression--utility trade-off and the system's recovery boundaries.
-```
+#### M10a：§IV System Design 保留 profile 定义，但删除实验性细节
 
-处 2，main.tex:261 末句：
+1. 将小节标题改为：
 
 ```latex
-% 现：The high-suppression profile therefore trades visible artifacts for lower measured recovery under full-cycle integration.
-% 改：
-The high-suppression profile is designed to trade visible artifacts for reduced full-cycle recovery; \S\ref{sec:real_capture} reports the measured outcome.
+\subsection{Evaluated Profile Definitions}
+\label{sec:hardened}
 ```
 
-可选：小节标题 `\subsection{Exploratory High-Suppression Profile}`（main.tex:229）实际涵盖全部档位，可改为 `\subsection{Evaluated Operating Profiles}`（保留 `\label{sec:hardened}` 不动，避免引用断裂）。
+2. 保留简短的组件关系说明：
+
+```latex
+The implementation exposes composable profiles that combine the base temporal mask with optional complementary noise, stripe/glyph artifacts, and a partial inversion frame. ``Mask only'' and ``Mask + noise'' isolate the base components; ``Strong'' denotes the readability-oriented artifact profile; ``Readability-priority'' denotes the composite configuration assessed for usability; and ``High-suppression'' denotes an exploratory stress configuration for characterizing recovery boundaries.
+```
+
+3. 以一张**定义表**替换当前带有具体数值的 Table~\ref{tab:profile_composition}。表中只列 `Mask`、`Noise`、`Stripe/glyph artifacts`、`Partial inversion` 和 `Role`；不列 cell size、alpha、刷新率、曝光或 capture 标签。表注应明确：
+
+```latex
+\caption{Component-level definitions of the evaluated operating profiles. Exact parameterizations and the profile instances used in each experiment are reported in \S\ref{sec:setup}.}
+```
+
+4. 保留但收紧 high-suppression 的设计意图：
+
+```latex
+The high-suppression profile is designed to trade visible artifacts for reduced recovery under stronger acquisition conditions; \S\ref{sec:real_capture} reports the measured outcome.
+```
+
+5. 将当前 §IV 中 UVC 曝光标签、`\alpha` 消融结果、以及任何“which setting performed better”的结果性句子移出。§IV 只说明反色帧的数学形式、它在不同渲染路径中的实现差异及其不能保证阻止完整周期重构的边界。
+
+#### M10b：§V Experimental Evaluation 负责精确参数、覆盖和选择范围
+
+在 `\subsection{Experimental Setup}` 中，在硬件与采集协议之后新增一个紧凑小节或加粗段落：
+
+```latex
+\textbf{Evaluated configurations}: Table~\ref{tab:evaluated_configurations} reports the exact profile instances used for physical capture and for the browser study. These settings are experimental configurations rather than universal implementation defaults. In particular, the readability-priority capture condition invokes the \texttt{strong} profile with explicit stripe and glyph overrides of 0.10 and 0.12, respectively, plus a partial inversion frame with $\alpha=0.20$; the reusable \texttt{strong} CLI default uses different overlay amplitudes. The high-suppression condition uses the canonical \texttt{capture\_hardened} profile.
+```
+
+新增 `tab:evaluated_configurations`，将原表中的数值迁入，并至少区分以下两类实例：
+
+| 实例 | 应报告的字段 | 归属 |
+|---|---|---|
+| 物理真实采集 | profile/legacy archive label、`n`、noise、cell size、stripe/glyph alpha、inversion alpha、nominal display refresh、capture exposure label | §V Experimental Setup |
+| WebStudy 完整部署条件 | JavaScript/Canvas2D、deterministic PRNG、`n`、cycles、pixel-space gain、surrogate texture noise、stripe/glyph alpha、inversion alpha、refresh eligibility rule | §V User Experience Study setup |
+
+表注应说明 `Strong` 的通用 Python 默认值为 stripe/glyph `0.18/0.22`，而真实采集和 WebStudy 的 readability-oriented instance 明确覆盖为 `0.10/0.12`。这样可同时保持源码和论文实验事实一致。
+
+#### M10c：术语与结论边界
+
+- 一律使用 `Readability-priority` 指称论文中用于真实采集主比较和用户研究的评估实例；
+- 使用 `Strong (anti-OCR)` 仅指无反色帧的组件 profile；
+- 使用 `High-suppression` 指称论文中的探索性 stress profile，必要时在首次出现处标明归档名 `capture_hardened`；
+- 不把实验实例的参数称为 “default” 或 “optimal”；不把 high-suppression 写成新的核心算法或通用安全保证；
+- 具体配置的 OCR、VLM、长曝光和用户研究结果只在 §V 报告，§IV 不提前给出数值或比较性结论。
+
+**源码依据：** 通用 `strong` 默认值为 stripe/glyph `0.18/0.22`（`src/demo/playback_demo.py`）；真实采集 `deployed` 条件使用 `--stripe-alpha 0.10 --glyph-alpha 0.12 --inversion-alpha 0.20`（`tests/test_real_capture_ablation.py`）；WebStudy 对同一 readable instance 使用 `0.10/0.12`、`n=4`、六个变换周期和 `\alpha=0.2`（`webstudy/static/app.js`、`webstudy/static/mask.js`）。
 
 ### M11 结构移动（对应审稿第 5 节）
+
+**当前状态（2026-07-18）：已落实，后续不应重复移动。** 当前稿已将 inversion-strength ablation 置于 §V、将 Kaleido 对比置于 Discussion、并采用压缩后的 TCSF/CFF 段落。下列内容保留为来源与回归核验记录；重写 §IV/§V 时须维持这一分工。
 
 (a) **inversion ablation 段+表移入 §V**。将 main.tex:269 整段与 Table（main.tex:271–287，含 `\label{tab:inversion_ablation}`）原样移动到 §V，在 `\subsection{Real-Capture VLM Probes}`（main.tex:508）之前新建：
 
@@ -267,18 +309,19 @@ The web player is the independent JavaScript/Canvas2D path described in \S\ref{s
 | B. CSPRNG-Based Temporal Mask Construction | 现 §IV.A + M3；itemize 的 completeness/exclusivity 改紧凑正文 |
 | C. Optional Perturbation Components | 现 §IV.B（噪声）+ stripe/glyph 说明 + M5 反色帧机制句，按"动机、机制、边界"组织，不报结果 |
 | D. Playback, Timing, and Luminance Model | 现 §IV.D + M4 + main.tex:289 |
-| E. Evaluated Operating Profiles | 现 §IV.E 表与三档说明（M10 措辞）|
+| E. Evaluated Profile Definitions | §IV 只保留组件构成、命名和设计角色；精确参数表按 M10 移至 §V |
 | F. Implementation Scope and Reproducibility | M2 |
 
 ---
 
 ## 5. 执行与验证清单
 
-1. 按 §1 的顺序应用 M11 → M2/M4 → M3/M5/M6 → M7/M8/M10/M12；每步 `git diff` 自查。
+1. 按 §1 的顺序应用 M10 → M2/M4 → M3/M5/M6 → M7/M8/M12；每步 `git diff` 自查。
 2. M1 改图：文本替换 vsdx → `export_final_pdf.py` 重导出 → 文本提取复核旧字符串归零 → 核对 `main.tex:203` viewport。
 3. 交叉引用检查：`grep -n "inversion_ablation\|sec:hardened\|sec:user_study\|sec:real_capture" paper/main.tex`，确认无悬空引用。
-4. Kaleido 引用键确认后再插入 M11(b) 句。
+4. 复核 `tab:inversion_ablation` 位于 §V、Kaleido 对比位于 Discussion，且两者引用键未因重构失效。
 5. `latexmk -xelatex main.tex` 全量重编译：无新增 error；overfull hbox 数量不高于当前基线（class logo 的 505pt 警告除外）；PLACEHOLDER 数量不变。
 6. 摘要未触及（本方案不改 Abstract），无需复核字数。
 7. 对所有被改动的英文段落跑一遍成稿语言门（academic-humanizer rewrite），保持术语一致：readability-priority / high-suppression / Strong (anti-OCR) profile / partial inversion frame / temporal pixel masking。
 8. 若采用 M2 可选披露句或想在正文声称记录了 gradient_source，先核实实体采集归档是否保存 `noise_schedule`；未保存则不写。
+9. 复核 M10 的章节边界：§IV 不再包含 profile 的具体 alpha、曝光、刷新率或“最佳”选择；§V 的 `tab:evaluated_configurations` 则完整报告这些实验实例及 `strong` 默认值与显式覆盖的差异。
