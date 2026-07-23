@@ -48,3 +48,10 @@ Use these checks when a manuscript figure has an editable `.vsdx` source plus mi
 **Cause**: Auxiliary files were cleaned and only one XeLaTeX pass was run. The first pass records citation and label requests; BibTeX and subsequent XeLaTeX passes are still required.
 
 **Corrective action**: Run the checked-in `latexmk` build entry point. If a cited key is still unresolved after a complete build, compare keys in `main.aux`, `main.bbl`, and the bibliography database before editing manuscript prose.
+
+## Windows output-path and PDF-lock fallback
+
+- [ ] If `xdvipdfmx` reports `Unable to open "main.pdf"` after XeLaTeX succeeds, test whether a PDF viewer has locked the existing file before changing manuscript source.
+- [ ] When the canonical PDF is locked, complete the review build in a relative ASCII-only directory under the manuscript, for example `latexmk -xelatex -outdir=_build_review main.tex`.
+- [ ] Prefer a relative review directory over `%TEMP%` on Windows hosts with a non-ASCII user profile. TeX Live can otherwise corrupt the expanded output path under a legacy console code page and fail while setting `TEXMF_OUTPUT_DIRECTORY`.
+- [ ] Inspect the review PDF and final log normally, then replace the canonical PDF only after its lock is released. Do not delete or forcibly rename a locked user-opened PDF.
