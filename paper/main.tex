@@ -225,7 +225,7 @@ Whether an observer integrates complementary subframes into a perceptually compl
 \subsection{Operating Profiles and Configurability}
 \label{sec:hardened}
 
-Our work is configurable, the evaluation uses named, composable operating profiles rather than treating one parameter setting as universally appropriate. Unless otherwise stated, the profiles use $n=4$ temporal frames and the complementary perturbation described above. Table~\ref{tab:profile_definitions} defines the components and intended evaluation role of each profile. The exact parameter instances used in the physical-capture evaluation are reported separately in Section~\ref{sec:setup}. This separation distinguishes a reusable system interface from the particular configurations evaluated in this paper.
+Our work is configurable, and the evaluation uses named, composable operating profiles rather than treating one parameter setting as universally appropriate. Unless otherwise stated, the protected profiles use $n=4$ temporal frames, with complementary perturbation included as indicated in Table~\ref{tab:profile_definitions}. The table defines the components and intended evaluation role of each profile, including the unprotected baseline. The exact parameter instances used in the physical-capture evaluation are reported separately in Section~\ref{sec:setup}. This separation distinguishes a reusable system interface from the particular configurations evaluated in this paper.
 
 \begin{table*}[!t]
 \caption{Component-Level Definitions of the Evaluated Operating Profiles. Exact Parameter Instances Are Reported in Section~\ref{sec:setup}.}
@@ -237,10 +237,11 @@ Our work is configurable, the evaluation uses named, composable operating profil
 \toprule
 Profile & Temporal mask & Complementary noise & Additional display artifacts & Intended evaluation role \\
 \midrule
+Original (unprotected) & -- & -- & -- & Unprotected baseline \\
 Mask only & \checkmark & -- & -- & Isolate temporal decomposition \\
 Mask + noise & \checkmark & \checkmark & -- & Isolate complementary perturbation \\
-Strong & \checkmark & \checkmark & Stripe and glyph overlays & Readability-oriented artifact condition \\
-Readability-priority & \checkmark & \checkmark & Stripe/glyph overlays and partial inversion & Usability-facing composite condition \\
+Strong & \checkmark & \checkmark & Stripe and glyph overlays & Isolate the effects of stripe and glyph overlays \\
+Readability-priority & \checkmark & \checkmark & Stripe and glyph overlays with partial inversion & Evaluate the complete configuration for usability \\
 High-suppression & \checkmark & \checkmark & Enhanced overlays and partial inversion & Exploratory recovery-boundary stress condition \\
 \bottomrule
 \end{tabular}
@@ -283,7 +284,7 @@ All nine geometries used the same control values: $-8$ for short-exposure stills
 \textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. These settings are experimental configurations rather than universal implementation defaults. In particular, the readability-priority capture condition invokes the \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively, and a partial inversion frame with $\alpha=0.20$; the reusable \texttt{strong} command-line default uses different overlay amplitudes. The high-suppression condition uses the canonical \texttt{capture\_hardened} profile (legacy tag \texttt{vlm}).
 
 \begin{table*}[!t]
-\caption{Exact Profile Instances Used in the Physical-Capture Evaluation ($n=4$ for All Profiles). The Readability-Priority Row Is the Archived \texttt{deployed} Condition and Explicitly Overrides the Reusable \texttt{strong} Defaults.}
+\caption{Exact Profile Instances Used in the Physical-Capture Evaluation ($n=4$ for All Masked Profiles). The Readability-Priority Row Is the Archived \texttt{deployed} Condition and Explicitly Overrides the Reusable \texttt{strong} Defaults.}
 \label{tab:profile_composition}
 \centering
 \footnotesize
@@ -292,6 +293,7 @@ All nine geometries used the same control values: $-8$ for short-exposure stills
 \toprule
 Profile & Mask & Noise & Cell (px) & Stripe width (px) & Stripe $\alpha_s$ & Glyph $\alpha_g$ & Inv.\ $\alpha$ \\
 \midrule
+Original (unprotected) & -- & -- & -- & -- & -- & -- & -- \\
 Mask only & \checkmark & -- & 1 & -- & -- & -- & -- \\
 Mask + noise & \checkmark & \checkmark & 1 & -- & -- & -- & -- \\
 Strong & \checkmark & \checkmark & 1 & 10 & 0.10 & 0.12 & -- \\
