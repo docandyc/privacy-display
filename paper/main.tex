@@ -240,7 +240,7 @@ Profile & Temporal mask & Complementary noise & Additional display artifacts & I
 Original (unprotected) & -- & -- & -- & Unprotected baseline \\
 Mask only & \checkmark & -- & -- & Isolate temporal decomposition \\
 Mask + noise & \checkmark & \checkmark & -- & Isolate complementary perturbation \\
-Strong & \checkmark & \checkmark & Stripe and glyph overlays & Isolate the effects of stripe and glyph overlays \\
+Strong (anti-OCR) & \checkmark & \checkmark & Stripe and glyph overlays & Isolate the effects of stripe and glyph overlays \\
 Readability-priority & \checkmark & \checkmark & Stripe and glyph overlays with partial inversion & Evaluate the complete configuration for usability \\
 High-suppression & \checkmark & \checkmark & Enhanced overlays and partial inversion & Exploratory recovery-boundary stress condition \\
 \bottomrule
@@ -281,7 +281,7 @@ All nine geometries used the same control values: $-8$ for short-exposure stills
 
 \textbf{Test content}: Each position used 12 fixed items: two account strings, two code snippets, two digit strings, one English sentence, two mixed-language snippets, two English paragraphs, and one CET6 (College English Test Band~6) document. The CET6 page and two mixed-language items include Chinese characters. Three repeats give 36 captures per profile--attack--position cell and 324 across 9 positions before disclosed repeats. Detection and tracking use separate subsets as cross-task stress tests.
 
-\textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. These settings are experimental configurations rather than universal implementation defaults. In particular, the readability-priority capture condition invokes the \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively, and a partial inversion frame with $\alpha=0.20$; the reusable \texttt{strong} command-line default uses different overlay amplitudes. The high-suppression condition uses the canonical \texttt{capture\_hardened} profile (legacy tag \texttt{vlm}).
+\textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. These settings are experimental configurations rather than universal implementation defaults. In particular, the readability-priority capture condition invokes the \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively, and a partial inversion frame with $\alpha=0.20$; the reusable \texttt{strong} command-line default uses different overlay amplitudes. Relative to readability-priority, high-suppression further strengthens the masking configuration by increasing the cell size from 1 to 2 pixels, narrowing the stripe width from 10 to 6 pixels, and raising the stripe and glyph opacities from 0.10 and 0.12 to 0.42 and 0.55, respectively, while retaining the same partial inversion strength of $\alpha=0.20$.
 
 \begin{table*}[!t]
 \caption{Exact Profile Instances Used in the Physical-Capture Evaluation ($n=4$ for All Masked Profiles). The Readability-Priority Row Is the Archived \texttt{deployed} Condition and Explicitly Overrides the Reusable \texttt{strong} Defaults.}
@@ -296,7 +296,7 @@ Profile & Mask & Noise & Cell (px) & Stripe width (px) & Stripe $\alpha_s$ & Gly
 Original (unprotected) & -- & -- & -- & -- & -- & -- & -- \\
 Mask only & \checkmark & -- & 1 & -- & -- & -- & -- \\
 Mask + noise & \checkmark & \checkmark & 1 & -- & -- & -- & -- \\
-Strong & \checkmark & \checkmark & 1 & 10 & 0.10 & 0.12 & -- \\
+Strong (anti-OCR) & \checkmark & \checkmark & 1 & 10 & 0.10 & 0.12 & -- \\
 Readability-priority & \checkmark & \checkmark & 1 & 10 & 0.10 & 0.12 & 0.20 \\
 High-suppression & \checkmark & \checkmark & 2 & 6 & 0.42 & 0.55 & 0.20 \\
 \bottomrule
@@ -453,7 +453,7 @@ Profile & Engine & Char (\%) & Exact (\%) & N \\
  & EasyOCR & 18.1 & 0.0 & 324 \\
  & Tesseract & 4.8 & 0.0 & 324 \\
 \midrule
-\multirow{3}{*}{Strong}
+\multirow{3}{*}{Strong (anti-OCR)}
  & Surya & 6.1 & 0.6 & 324 \\
  & EasyOCR & 16.3 & 0.0 & 324 \\
  & Tesseract & 2.1 & 0.0 & 324 \\
