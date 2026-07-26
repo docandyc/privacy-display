@@ -57,7 +57,10 @@ Completed G3-G13 PoC gaps with off-axis and learned reconstruction experiments, 
 
 ### Main Changes
 
-(Add details)
+- Restored the nine-position primary real-capture contract, including `d0.5_a15`, across manifest metadata and regression tests.
+- Completed and synced the 19,926-cell fixed-grid OCR matrix and all derived Data Availability reports.
+- Made the external archive self-contained by syncing every source/result file declared by the reproducibility manifest.
+- Added the reusable nine-position archive contract to the backend quality specification and repaired the workspace `experiments` link.
 
 ### Git Commits
 
@@ -68,7 +71,10 @@ Completed G3-G13 PoC gaps with off-axis and learned reconstruction experiments, 
 
 ### Testing
 
-- [OK] (Add test results)
+- [OK] 31 targeted workspace tests passed.
+- [OK] Staging and external nine-position archive validators passed.
+- [OK] Matrix audit: 19,926 unique cells, 0 OCR errors, 2,214 cells per position.
+- [OK] Manifest audit: 71 source and 80 result records, 0 existence/SHA-256 issues.
 
 ### Status
 
@@ -164,6 +170,39 @@ Added server-side least-filled WebStudy assignment, required vision correction, 
 | Hash | Message |
 |------|---------|
 | `0f13654` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
+
+
+## Session 6: Complete nine-position archive consistency
+
+**Date**: 2026-07-27
+**Task**: Complete nine-position archive consistency
+**Branch**: `master`
+
+### Summary
+
+Regenerated and validated the full nine-position fixed-grid OCR archive, synced 19,926 error-free cells and self-contained provenance files, updated regression contracts/specs, and repaired the workspace experiments link.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0889461` | (see git log) |
 
 ### Testing
 
