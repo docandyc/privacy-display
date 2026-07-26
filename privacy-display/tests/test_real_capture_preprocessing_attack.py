@@ -1,3 +1,4 @@
+from collections import Counter
 from pathlib import Path
 import json
 
@@ -22,6 +23,10 @@ from experiments.real_capture_preprocessing_attack import (
     summarize_primary_selection,
     validate_complete_matrix,
     validate_no_ocr_errors,
+)
+from src.evaluation.reproducibility_manifest import (
+    REAL_CAPTURE_POSITION_LABELS,
+    REPRODUCTION_COMMANDS,
 )
 
 
@@ -90,6 +95,7 @@ def test_primary_selection_matches_the_paper_estimand():
 
     assert summary["positions"] == [
         "d0.5_a0",
+        "d0.5_a15",
         "d0.5_a30",
         "d1.5_a0",
         "d1.5_a15",
@@ -99,17 +105,45 @@ def test_primary_selection_matches_the_paper_estimand():
         "d1_a30",
     ]
     assert summary["capture_counts"] == {
-        "original": 288,
-        "deployed": 408,
-        "high_suppression": 288,
+        "original": 324,
+        "deployed": 459,
+        "high_suppression": 324,
     }
     assert summary["matched_unit_counts"] == {
-        "original": 288,
-        "deployed": 288,
-        "high_suppression": 288,
+        "original": 324,
+        "deployed": 324,
+        "high_suppression": 324,
     }
+    assert len(records) == 1_107
+    position_capture_counts = Counter(record["position"] for record in records)
+    assert dict(position_capture_counts) == {
+        position: 123 for position in summary["positions"]
+    }
+    matrix_cells_per_position = {
+        position: capture_count * len(PREPROCESSOR_MANIFEST) * 3
+        for position, capture_count in position_capture_counts.items()
+    }
+    assert matrix_cells_per_position == {
+        position: 2_214 for position in summary["positions"]
+    }
+    assert sum(matrix_cells_per_position.values()) == 19_926
     assert all(record["image_path"].is_file() for record in records)
     assert all(record["truth"].strip() for record in records)
+
+
+def test_reproducibility_manifest_declares_complete_nine_position_matrix():
+    assert len(REAL_CAPTURE_POSITION_LABELS) == 9
+    assert "d0.5_a15" in REAL_CAPTURE_POSITION_LABELS
+    command = next(
+        item
+        for item in REPRODUCTION_COMMANDS
+        if item["name"] == "real_capture_preprocessing_three_engine"
+    )
+
+    assert "nine-position" in command["purpose"]
+    assert "19,926 error-free cells" in command["expected"]
+    assert "2,214 per position" in command["expected"]
+    assert "all 9 positions" in command["expected"]
 
 
 def _record_with_raw_rows(capture_id="capture-1"):
@@ -474,10 +508,10 @@ def test_completed_three_engine_matrix_is_reflected_in_manuscript():
     )
     manuscript = (root.parent / "paper" / "main.tex").read_text(encoding="utf-8")
 
-    assert report["audit"]["matrix_row_count"] == 17_712
+    assert report["audit"]["matrix_row_count"] == 19_926
     assert report["audit"]["ocr_error_count"] == 0
     assert report["config"]["engines"] == ["tesseract", "easyocr", "surya"]
-    assert "17,712" in manuscript
-    assert "40.2\\%" in manuscript
-    assert "13.7\\%" in manuscript
+    assert "19,926" in manuscript
+    assert "37.2\\%" in manuscript
+    assert "13.2\\%" in manuscript
     assert "EasyOCR and Surya preprocessing remain unevaluated" not in manuscript

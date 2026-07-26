@@ -532,8 +532,8 @@ REPRODUCTION_COMMANDS = [
     {
         "name": "real_capture_preprocessing_three_engine",
         "command": ".venv-surya/Scripts/python.exe experiments/real_capture_preprocessing_attack.py --engines tesseract,easyocr,surya --checkpoint experiments/results/real_capture_preprocessing_rows/matrix.jsonl --json-out experiments/results/real_capture_preprocessing_attack_three_engine.json --md-out experiments/results/real_capture_preprocessing_attack_three_engine.md --workers 1",
-        "purpose": "Validate and aggregate the complete fixed-grid preprocessing matrix across all three OCR engines.",
-        "expected": "17,712 error-free cells plus real_capture_preprocessing_attack_three_engine.{json,md}",
+        "purpose": "Validate and aggregate the complete nine-position fixed-grid preprocessing matrix across all three OCR engines.",
+        "expected": "19,926 error-free cells (2,214 per position across all 9 positions) plus real_capture_preprocessing_attack_three_engine.{json,md}",
         "requires_data": [
             "experiments/results/real_capture_ocr.json",
             "experiments/results/real_capture_preprocessing_rows/matrix.jsonl",

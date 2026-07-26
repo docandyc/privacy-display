@@ -886,6 +886,76 @@ for path in sorted(paths, key=numeric_position_key):
         raise ValueError("duplicate capture/engine row")
 ```
 
+## Scenario: Nine-Position Real-Capture Preprocessing Archive
+
+### 1. Scope / Trigger
+- Trigger: changing the primary real-capture geometry set, fixed preprocessing grid, canonical OCR archive, paper-facing preprocessing statistics, or Data Availability files derived from them.
+
+### 2. Signatures
+- Command: `python experiments/real_capture_preprocessing_attack.py --engines tesseract,easyocr,surya --checkpoint experiments/results/real_capture_preprocessing_rows/matrix.jsonl --json-out experiments/results/real_capture_preprocessing_attack_three_engine.json --md-out experiments/results/real_capture_preprocessing_attack_three_engine.md --workers 1`
+- Matrix key: `(capture_id, preprocessor, engine)`.
+- Primary geometry set: `d0.5_a0`, `d0.5_a15`, `d0.5_a30`, `d1_a0`, `d1_a15`, `d1_a30`, `d1.5_a0`, `d1.5_a15`, `d1.5_a30`.
+- Input grid: `raw`, `gamma_0.5`, `clahe_luma`, `unsharp_mask`, `adaptive_threshold`, `upscale_2x`.
+- Outputs: the matrix JSONL plus engine-specific and three-engine JSON/Markdown reports.
+
+### 3. Contracts
+- The primary pool contains 1,107 short-exposure images across all nine geometries. With six input forms and three OCR engines, the complete matrix is exactly 19,926 unique cells.
+- Every geometry contributes 2,214 cells; every engine contributes 6,642 cells; every input form contributes 3,321 cells.
+- `d0.5_a15` is a normal primary geometry using the common nominal `-8/-5` exposure configuration. It must not appear in `excluded_positions` or be described as a special UVC-control session.
+- Raw cells may be imported from the canonical OCR archive. Every non-raw cell must come from applying its named transform to the archived source image and running the named OCR engine; copying raw OCR output into transformed rows is forbidden.
+- Long runs must use a resumable checkpoint keyed by `(capture_id, preprocessor, engine)`. Merge operations must reject or deduplicate identical keys and sort deterministically before publication.
+- Clustered OCR, sensitive-field recovery, design audit, preprocessing reports, publication summary, and reproducibility manifest must be regenerated from the same nine-position canonical archive.
+- Paper-facing matched means use 324 units per profile after duplicate averaging and matching. Rounded three-engine character recovery is raw `94.1/16.2/5.0%` and fixed-grid oracle `95.5/37.2/13.2%` for original/readability-priority/high-suppression.
+
+### 4. Validation & Error Matrix
+- Matrix row count or unique-key count is not 19,926 -> archive is incomplete and must not be published.
+- Any geometry is absent or does not have 2,214 cells -> geometry selection or checkpoint merge is inconsistent.
+- Any engine/input count differs from 6,642/3,321 -> fixed grid is incomplete.
+- Any `ocr_error` is non-empty -> rerun the failed cell; do not aggregate an error row as recovery evidence.
+- A non-raw `d0.5_a15` row has `source=canonical_raw_archive` -> reject it as raw-result substitution.
+- A primary report lists `d0.5_a15` in `excluded_positions`, uses 288 matched units, or describes an eight-geometry subset -> stale archive; regenerate before syncing.
+- Report rounded values disagree with the manuscript -> stop publication and trace the report/matrix hashes rather than hand-editing percentages.
+
+### 5. Good/Base/Bad Cases
+- Good: preserve verified old-position cells, run only genuinely missing `d0.5_a15` transforms, merge by unique key, regenerate reports, and validate both staging and the external archive.
+- Base: an interrupted CPU OCR run resumes from its JSONL checkpoint without recalculating completed cells.
+- Bad: infer 19,926 row-level results from percentages recorded in a conversation or console log.
+- Bad: duplicate raw OCR rows under five transform names to make the matrix count appear complete.
+- Bad: update the manuscript to nine positions while leaving clustered, sensitive-field, preprocessing, or manifest artifacts at eight positions.
+
+### 6. Tests Required
+- Assert all nine geometry labels are selected, `excluded_positions == []`, and matched counts are 324 per profile.
+- Assert 1,107 primary capture records produce 19,926 matrix cells, 2,214 per position, 6,642 per engine, and 3,321 per input form.
+- Assert every matrix key is unique, every `ocr_error` is empty, and all `d0.5_a15` non-raw rows use `source=generated_preprocessing_attack`.
+- Assert the three-engine report rounds to raw `94.1/16.2/5.0%` and oracle `95.5/37.2/13.2%`, matching the manuscript.
+- Assert the reproducibility command metadata declares a nine-position, 19,926-cell matrix.
+- Run `pytest tests/test_paper_ocr_cluster_analysis.py tests/test_real_capture_design_audit.py tests/test_real_capture_preprocessing_attack.py -q` and an archive-level matrix/report validator before syncing.
+
+### 7. Wrong vs Correct
+#### Wrong
+```python
+for capture in primary_captures:
+    if capture.position == "d0.5_a15":
+        continue
+    for transform in transforms:
+        rows.append(copy_raw_row(capture, preprocessor=transform))
+```
+
+#### Correct
+```python
+for capture in primary_captures:  # all nine positions
+    for transform in fixed_transforms:
+        transformed = preprocess_image(load_rgb(capture.image_path), transform)
+        rows.append(run_ocr(capture, transformed, transform, engine))
+
+validate_complete_matrix(
+    rows,
+    expected_rows=19_926,
+    expected_positions=9,
+    expected_cells_per_position=2_214,
+)
+```
+
 ## Scenario: Reproducibility Manifest
 
 ### 1. Scope / Trigger

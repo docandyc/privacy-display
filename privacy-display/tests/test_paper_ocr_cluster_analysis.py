@@ -162,7 +162,7 @@ def test_build_cluster_report_contains_required_json_contract(tmp_path):
     assert "original_short_minus_high_suppression_short" in report["contrasts"]
 
     primary = report["primary_common_setting"]
-    assert primary["excluded_positions"] == ["d0.5_a15"]
+    assert primary["excluded_positions"] == []
     assert primary["matched_unit_count_per_profile"] == 2
     assert primary["profiles"]["original"]["char_accuracy_mean"] == pytest.approx(0.85)
     assert primary["profiles"]["deployed"]["char_accuracy_mean"] == pytest.approx(0.15)
