@@ -234,12 +234,12 @@ INPUT ./figures/real_capture_montage.pdf
 INPUT ./figures/real_capture_bar.pdf
 INPUT ./figures/real_capture_bar.pdf
 INPUT ./figures/real_capture_bar.pdf
-INPUT ./figures/real_engine_ocr.pdf
-INPUT ./figures/real_engine_ocr.pdf
-INPUT ./figures/real_engine_ocr.pdf
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
+INPUT ./figures/real_engine_ocr.pdf
+INPUT ./figures/real_engine_ocr.pdf
+INPUT ./figures/real_engine_ocr.pdf
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png

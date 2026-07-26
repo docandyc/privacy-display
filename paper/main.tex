@@ -409,7 +409,7 @@ Profile & Attack mode & $N$ & Char recovery [95\% summary] & Exact match & Leak 
 
 \item \textbf{High-suppression reduces integration leakage}: This exploratory stress profile yields 9.3\% char [7.9, 10.9] / 0\% exact for nominal long exposure and 47.9\% char [41.8, 54.0] / 5.6\% exact [1.9, 10.2] under the 150-frame mean. Brackets are capture-resampling summaries, and the pooled mean includes considerable inter-position variation. The user study evaluates readability-priority rather than this visibly stronger profile.
 
-\item \textbf{Geometric trends}: Across 9~conditions (0.5--1.5\,m $\times$ 0--30$^{\circ}$), protected short-exposure recovery remains below unprotected recovery. Geometry-specific values are reported descriptively because the archived design is unbalanced. A leave-one-round-out analysis on the five repeated content items gives readability-priority short-exposure recovery of 16.6\% for round~1 and 15.8\% for round~2, leaving the profile-level pattern unchanged.
+\item \textbf{Geometric trends}: Across 9~conditions (0.5--1.5\,m $\times$ 0--30$^{\circ}$), protected short-exposure recovery remains below unprotected recovery. Geometry-specific values are reported descriptively because the archived design is unbalanced. A round-selection sensitivity analysis over all 12 content-item strata gives readability-priority short-exposure recovery of 16.6\% when round~1 is selected for the five repeated items and 15.8\% when round~2 is selected; across the five repeated items alone, the corresponding means are 13.5\% and 11.7\%. The profile-level pattern remains unchanged.
 \end{enumerate}
 
 \begin{figure}[!t]
@@ -720,7 +720,7 @@ Detector & Condition & mAP & mAP50 & AR \\
 \end{table}
 
 \begin{table}[!t]
-\caption{Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames; HOTA and IDF1 from the Archived Run-Recorded Tracking-Metric Backend; HOTA Uses TrackEval When Available~\cite{b_hota2021})}
+\caption{Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames; HOTA and IDF1 Computed by TrackEval~\cite{b_hota2021})}
 \label{tab:real_mot}
 \centering
 \footnotesize
@@ -751,7 +751,7 @@ Detector & Condition & HOTA & IDF1 \\
 \end{tabular}
 \end{table}
 
-Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Table~\ref{tab:real_coco}, Fig.~\ref{fig:real_det_drop}), representing relative decreases exceeding 85\%, while the \texttt{real\_video} condition yields 3.0--7.3\%, also below the \texttt{real\_clean} baselines. Because protection, exposure, resolution, and frame reduction differ across conditions, these values are a cross-task stress test rather than an isolated protection effect. In still-frame tracking (Table~\ref{tab:real_mot}), HOTA decreases from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.8--12.4\% to 4.4--6.5\%. Detection mAP was computed by pycocotools. HOTA and IDF1 are taken from the archived tracking output: the evaluation code uses TrackEval for HOTA when available and records IDF1 from the backend used for that run (TrackEval or motmetrics, with a SciPy fallback in the implementation). The tracker is an in-project greedy IoU association implementation.
+Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Table~\ref{tab:real_coco}, Fig.~\ref{fig:real_det_drop}), representing relative decreases exceeding 85\%, while the \texttt{real\_video} condition yields 3.0--7.3\%, also below the \texttt{real\_clean} baselines. Because protection, exposure, resolution, and frame reduction differ across conditions, these values are a cross-task stress test rather than an isolated protection effect. In still-frame tracking (Table~\ref{tab:real_mot}), HOTA decreases from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.8--12.4\% to 4.4--6.5\%. Detection mAP was computed by pycocotools. HOTA and IDF1 were both computed by TrackEval. The tracker is an in-project greedy IoU association implementation.
 
 \begin{figure}[!t]
 \centering
