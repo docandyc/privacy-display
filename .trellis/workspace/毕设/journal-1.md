@@ -215,3 +215,36 @@ Regenerated and validated the full nine-position fixed-grid OCR archive, synced 
 ### Next Steps
 
 - None - task complete
+
+
+## Session 7: Fix English Figure 4 error-bar reporting
+
+**Date**: 2026-07-28
+**Task**: Fix English Figure 4 error-bar reporting
+**Branch**: `master`
+
+### Summary
+
+Defined Figure 4 capture-resampled 95% percentile-bootstrap intervals, regenerated asymmetric error bars and the English paper PDF, and verified a clean complete LaTeX build.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `27da278` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete

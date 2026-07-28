@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 6
-- **Last Active**: 2026-07-27
+- **Total Sessions**: 7
+- **Last Active**: 2026-07-28
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~211 | Active |
+| `journal-1.md` | ~250 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 7 | 2026-07-28 | Fix English Figure 4 error-bar reporting | `27da278` | `master` |
 | 6 | 2026-07-27 | Complete nine-position archive consistency | `0889461` | `master` |
 | 5 | 2026-07-06 | 删除 WebStudy 防偷窥评分项 | `0f13654` | `master` |
 | 4 | 2026-07-06 | 调整 WebStudy 单选与评分色阶 | `276ea88` | `master` |
