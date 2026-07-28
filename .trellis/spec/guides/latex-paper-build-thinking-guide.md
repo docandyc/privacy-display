@@ -12,6 +12,17 @@ Use this checklist whenever a paper source, bibliography, label, figure, or gene
 - [ ] Do not treat one direct XeLaTeX run as a complete build after auxiliary files were removed.
 - [ ] Keep the bibliography database and all `\\cite{...}` keys synchronized.
 
+## Generated figure path integrity
+
+- [ ] If a plotting script derives its repository root from
+      `Path(__file__).resolve()`, inspect every parent symlink before running
+      it. Resolving a symlink can redirect the output to another checkout even
+      when the command was launched from the manuscript workspace.
+- [ ] After regeneration, verify the absolute path, modification time, and
+      content of the figure actually referenced by the manuscript. A generator
+      log that reports a different `paper/figures/` directory does not prove
+      that the current manuscript received the new artifact.
+
 ## Verification
 
 - [ ] The build command exits with status 0.

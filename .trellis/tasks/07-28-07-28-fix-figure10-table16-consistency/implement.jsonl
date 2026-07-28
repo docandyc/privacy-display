@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "The aggregation helper must reuse one ratio-selection rule across OCR, detection, and tracking."}
+{"file": ".trellis/spec/guides/latex-paper-build-thinking-guide.md", "reason": "The task changes a generated figure, manuscript source, and compiled PDF."}

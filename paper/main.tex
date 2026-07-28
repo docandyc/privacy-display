@@ -777,7 +777,7 @@ Using Tesseract~\cite{b_smith2007}, EasyOCR~\cite{b_easyocr2020}, and Surya~\cit
 \toprule
 OCR engine & Original frame & Single subframe & Reduction \\
 \midrule
-Tesseract & 94.0\% & 0.0\% & 94.0\% \\
+Tesseract & 94.0\% & 0.0\% & 93.9\% \\
 EasyOCR & 94.1\% & 0.0\% & 94.1\% \\
 Surya & 97.0\% & 2.6\% & 94.4\% \\
 \bottomrule
@@ -888,12 +888,12 @@ Detector & Condition & MOTA & MOTP & IDF1 \\
 \end{tabular}
 \end{table}
 
-On the 8 COCO images, single-subframe mAP50 across the four detectors is 0--6.0\%. Across the 5,316 MOT frames, single-subframe IDF1 is 0.1--5.4\%, while MOTA includes negative and nonmonotonic values. Negative MOTA occurs when the false-positive, false-negative, and identity-error penalties exceed the number of ground-truth objects; it is not a negative detection probability. Detector architecture, confidence thresholds, proposal density, and the greedy associator jointly shape the observed differences. Fig.~\ref{fig:all_attackers} summarizes the residual capability of a single protected subframe relative to the clean baseline across the evaluated OCR, detection, and tracking pipelines.
+On the 8 COCO images, single-subframe mAP50 across the four detectors is 0--6.0\%. Across the 5,316 MOT frames, single-subframe IDF1 is 0.1--5.4\%, while MOTA includes negative and nonmonotonic values. Negative MOTA occurs when the false-positive, false-negative, and identity-error penalties exceed the number of ground-truth objects; it is not a negative detection probability. Detector architecture, confidence thresholds, proposal density, and the greedy associator jointly shape the observed differences. Fig.~\ref{fig:all_attackers} reports the largest model-wise protected-to-clean ratio within each evaluated task family: Surya for OCR and RT-DETR-x for detection and tracking. This conservative strongest-tested-pipeline summary uses task-specific metrics that are not directly commensurate.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/all_attackers.pdf}
-\caption{Residual capability of one protected subframe relative to the clean baseline (clean = 100\%) across the evaluated OCR, detection, and tracking pipelines. The metrics are normalized within task and are not directly commensurate across tasks.}
+\caption{Residual capability of one protected subframe relative to the clean baseline (clean = 100\%). Within each task family, the protected value is the largest model-wise protected-to-clean ratio among the evaluated pipelines: Surya for OCR and RT-DETR-x for detection and tracking. This conservative strongest-tested-pipeline aggregation is normalized within task. The task-specific metrics are not directly commensurate across tasks.}
 \label{fig:all_attackers}
 \end{figure}
 

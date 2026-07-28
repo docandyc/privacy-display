@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Verify the same strongest-ratio rule is applied consistently to every task family."}
+{"file": ".trellis/spec/guides/latex-paper-build-thinking-guide.md", "reason": "Verify the regenerated figure and full manuscript build, including references and citations."}
