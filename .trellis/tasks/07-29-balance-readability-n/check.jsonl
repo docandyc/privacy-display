@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "Check the analysis implementation and regression coverage against repository contracts."}
+{"file": ".trellis/spec/guides/latex-paper-build-thinking-guide.md", "reason": "Verify the full manuscript build, references, and final PDF."}

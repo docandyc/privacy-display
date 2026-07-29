@@ -248,3 +248,36 @@ Defined Figure 4 capture-resampled 95% percentile-bootstrap intervals, regenerat
 ### Next Steps
 
 - None - task complete
+
+
+## Session 8: 修复论文表格排版与 Strong 命名
+
+**Date**: 2026-07-29
+**Task**: 修复论文表格排版与 Strong 命名
+**Branch**: `master`
+
+### Summary
+
+修复英文稿 Table 12 Delta caption glyph, Table 4 caption grammar, Table 16 percentage-point unit, and distinguish the Strong-overlay physical-capture instance from reusable strong defaults. Built paper/main.tex with latexmk -xelatex -g and verified the final PDF and log.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `24c5e89` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete

@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 7
-- **Last Active**: 2026-07-28
+- **Total Sessions**: 8
+- **Last Active**: 2026-07-29
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~250 | Active |
+| `journal-1.md` | ~283 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 8 | 2026-07-29 | 修复论文表格排版与 Strong 命名 | `24c5e89` | `master` |
 | 7 | 2026-07-28 | Fix English Figure 4 error-bar reporting | `27da278` | `master` |
 | 6 | 2026-07-27 | Complete nine-position archive consistency | `0889461` | `master` |
 | 5 | 2026-07-06 | 删除 WebStudy 防偷窥评分项 | `0f13654` | `master` |
