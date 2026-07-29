@@ -30,6 +30,8 @@ Use this checklist whenever a paper source, bibliography, label, figure, or gene
 - [ ] The final log contains no `There were undefined references`.
 - [ ] The final log contains no `Label(s) may have changed`.
 - [ ] Extracted PDF text contains no citation placeholders such as `[?]`, `(?)`, or repeated `??`.
+- [ ] For the English `paper/` manuscript, use `latexmk -xelatex -g main.tex` because that directory has no standalone `build.sh`; inspect the resulting `main.pdf` and `main.log` after the full XeLaTeX/BibTeX/xdvipdfmx cycle.
+- [ ] In the checked-in `ieeeaccess.cls`, table captions use a different math-font version from table bodies. Uppercase Greek symbols such as `\Delta` can therefore render as an incorrect accent in a caption even when the same symbol is correct in a table header; use the `textgreek` text glyph (for example `{\textDelta}`) in the affected caption and verify the final PDF visually or with `pdftotext`.
 
 ## Editable Visio figure integrity
 
