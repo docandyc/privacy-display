@@ -280,7 +280,7 @@ All nine geometries used the same control values: $-8$ for short-exposure stills
 
 
 
-\textbf{Test content}: Each position used 12 fixed items: two account strings, two code snippets, two digit strings, one English sentence, two mixed-language snippets, two English paragraphs, and one CET6 (College English Test Band~6) document. The CET6 page and two mixed-language items include Chinese characters. Three repeats give 36 captures per profile--attack--position cell and 324 across 9 positions before disclosed repeats. Detection and tracking use separate subsets as cross-task stress tests.
+\textbf{Test content}: Each position used 12 fixed items: two account strings, two code snippets, two digit strings, one English sentence, two mixed-language snippets, two English paragraphs, and one CET6 (College English Test Band~6) document. The CET6 page and two mixed-language items include Chinese characters. For short- and long-exposure stills, three repeats yield 36 captures per profile--attack--position cell and 324 across nine positions. For video, one 150-frame clip was planned per content--geometry cell, yielding 12 clips per position and 108 across nine positions; disclosed repeat-round clips are duplicate-averaged. Detection and tracking use separate subsets as cross-task stress tests.
 
 \textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. These settings are experimental configurations rather than universal implementation defaults. In particular, the physical-capture evaluation names the low-amplitude overlay instance \texttt{strong@overlay} (Strong-overlay): it uses the reusable \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively. The readability-priority capture condition reuses this Strong-overlay instance and adds a partial inversion frame with $\alpha=0.20$, whereas the reusable \texttt{strong} command-line default uses overlay amplitudes of 0.18 and 0.22. Relative to readability-priority, \texttt{high-suppression} further strengthens the masking configuration by increasing the cell size from 1 to 2 pixels, narrowing the stripe width from 10 to 6 pixels, and raising the stripe and glyph opacities from 0.10 and 0.12 to 0.42 and 0.55, respectively, while retaining the same partial inversion strength of $\alpha=0.20$.
 
@@ -354,7 +354,7 @@ High-suppression & 1.0\% & 1.0\% \\
 \end{table}
 
 \begin{table*}[!t]
-\caption{Single-UVC Real-Capture OCR Duplicate-Averaged Summary (Best-of-Engine; $N$ = Content--Geometry--Repeat Units per Row; All 9 Geometries). The raw archive retains 459/153 readability-priority short/video captures, but repeated captures within a unit are averaged before analysis, yielding $N=324/108$. Brackets are 95\% unit-resampling summaries, not population confidence intervals. Each video unit averages 150 frames (nominally 2.5\,s at 60\,fps).}
+\caption{Single-UVC Real-Capture OCR Duplicate-Averaged Summary (Best-of-Engine; All 9 Geometries). $N$ Denotes Duplicate-Averaged Analysis Units per Row: Still Rows Use Content--Geometry--Repeat Units, Whereas Video Rows Use Content--Geometry Units. The raw archive retains 459/153 readability-priority short/video captures, but repeated captures within an analysis unit are averaged before analysis, yielding $N=324/108$. Brackets are 95\% unit-resampling summaries, not population confidence intervals. Each video unit averages 150 frames (nominally 2.5\,s at 60\,fps).}
 \label{tab:real_ocr_full_pool}
 \centering
 \footnotesize
@@ -648,7 +648,7 @@ Accuracy (\%) & 96.54 & 94.83 & $-1.71$ [$-3.39$, $-0.04$] \\
 WPM & 20.44 & 19.30 & $-1.14$ [$-1.91$, $-0.39$] \\
 CPM & 102.19 & 96.48 & $-5.71$ [$-9.56$, $-1.88$] \\
 Attempted chars & 35.21 & 33.47 & $-1.74$ [$-2.88$, $-0.62$] \\
-First-key latency (ms) & 742.64 & 833.61 & $+90.96$ [$-31.11$, $+210.69$] \\
+First-key latency (ms) & 742.64 & 833.61 & $+90.97$ [$-31.11$, $+210.69$] \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -673,7 +673,7 @@ Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $
 \end{tabular}
 \end{table}
 
-\textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the typing task. Relative to the control condition, the readability-priority full configuration changed mean accuracy by $-1.71$ percentage points (95\% CI $[-3.39, -0.04]$, Wilcoxon $W=428$, $p=0.043$, $r_{rb}=-0.33$), WPM by $-1.14$ (95\% CI $[-1.91, -0.39]$, $t(55)=-2.93$, $p=0.005$, $d_z=-0.39$), and first-keystroke latency by $+91.0$\,ms (95\% CI $[-31.1, +210.7]$, Wilcoxon $W=641$, $p=0.200$, $r_{rb}=0.20$); CPM and attempted characters gave $p=0.005$ ($d_z=-0.39$) and $p=0.004$ ($d_z=-0.40$), respectively. Under Holm correction across the five typing metrics, WPM, CPM, and attempted characters remain significant whereas the accuracy difference ($p=0.043$, rank 4 of 5) does not. Table~\ref{tab:study_ratings} and Fig.~\ref{fig:study_ratings} summarize the subjective ratings: Friedman tests yielded $\chi^2(5)=72.2$ ($p=3.5\times10^{-14}$) for readability, $\chi^2(5)=123.2$ ($p=6.5\times10^{-25}$) for stability, and $\chi^2(5)=98.5$ ($p=1.1\times10^{-19}$) for immediate visual comfort; Holm-corrected pairwise comparisons between the readability-priority full configuration and the unmasked anchor gave $p=2.6\times10^{-4}$, $p=2.2\times10^{-7}$, and $p=1.8\times10^{-6}$ on the three items, respectively.
+\textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the typing task. Relative to the control condition, the readability-priority full configuration changed mean accuracy by $-1.71$ percentage points (95\% CI $[-3.39, -0.04]$, Wilcoxon $W=428$, $p=0.043$, $r_{rb}=-0.33$). WPM changed by $-1.14$ (95\% CI $[-1.91, -0.39]$, $t(55)=-2.93$, $p=0.005$, $d_z=-0.39$). CPM changed by $-5.71$ (95\% CI $[-9.56, -1.88]$, $t(55)=-2.93$, $p=0.005$, $d_z=-0.39$). Attempted characters changed by $-1.74$ (95\% CI $[-2.88, -0.62]$, $t(55)=-2.98$, $p=0.004$, $d_z=-0.40$). First-keystroke latency changed by $+91.0$\,ms (95\% CI $[-31.1, +210.7]$, Wilcoxon $W=641$, $p=0.200$, $r_{rb}=0.20$). Under Holm correction across the five typing metrics, WPM, CPM, and attempted characters remain significant whereas the accuracy difference ($p=0.043$, rank 4 of 5) does not. Table~\ref{tab:study_ratings} and Fig.~\ref{fig:study_ratings} summarize the subjective ratings. Friedman tests yielded $\chi^2(5)=72.2$ ($p=3.5\times10^{-14}$) for readability, $\chi^2(5)=123.2$ ($p=6.5\times10^{-25}$) for stability, and $\chi^2(5)=98.5$ ($p=1.1\times10^{-19}$) for immediate visual comfort. For deployed full minus the unmasked anchor, readability gave Wilcoxon $W=58$, Holm-adjusted $p=2.6\times10^{-4}$, and $r_{rb}=-0.82$. Stability gave $W=16.5$, Holm-adjusted $p=2.2\times10^{-7}$, and $r_{rb}=-0.97$. Immediate visual comfort gave $W=21.5$, Holm-adjusted $p=1.8\times10^{-6}$, and $r_{rb}=-0.95$.
 
 \begin{figure}[!t]
 \centering
@@ -786,9 +786,9 @@ Using Tesseract~\cite{b_smith2007}, EasyOCR~\cite{b_easyocr2020}, and Surya~\cit
 \toprule
 OCR engine & Original frame & Single subframe & Reduction (pp) \\
 \midrule
-Tesseract & 94.0\% & 0.0\% & 94.0\% \\
-EasyOCR & 94.1\% & 0.0\% & 94.1\% \\
-Surya & 97.0\% & 2.6\% & 94.4\% \\
+Tesseract & 94.0\% & 0.0\% & 94.0 \\
+EasyOCR & 94.1\% & 0.0\% & 94.1 \\
+Surya & 97.0\% & 2.6\% & 94.4 \\
 \bottomrule
 \end{tabular}
 \end{table}

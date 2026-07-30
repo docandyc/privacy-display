@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/guides/latex-paper-build-thinking-guide.md", "reason": "Verify a complete build, resolved references, and the actual figure paths used by the manuscript."}
+{"file": ".trellis/tasks/07-30-fix-paper-experiment-consistency/research/authoritative-statistics.md", "reason": "Cross-check all reported statistical values against the formal analysis output."}

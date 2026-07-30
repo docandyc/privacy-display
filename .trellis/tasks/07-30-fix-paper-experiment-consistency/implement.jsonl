@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/guides/latex-paper-build-thinking-guide.md", "reason": "The task changes manuscript source, generated figure PDFs, and the compiled paper."}
+{"file": ".trellis/tasks/07-30-fix-paper-experiment-consistency/research/authoritative-statistics.md", "reason": "Use the formal unrounded statistical output for every newly reported test statistic and effect size."}
