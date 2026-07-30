@@ -113,11 +113,11 @@
 \citation{b_kimi_k26}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Real-capture montage at 1.0\,m and $0^{\circ }$. Within each vertically stacked profile group (unprotected, readability-priority, and high-suppression), panels show, from top to bottom, the digital integrated reconstruction, 3.91\,ms short-exposure capture, and 31.25\,ms long-exposure capture. Camera panels are identically cropped from the archived raw camera JPEGs with no geometric correction or brightness gain, so they differ from the geometrically corrected crops used for OCR evaluation. Digital panels use the same $1920\times 1080$ black playback canvas and brightness-aligned full-cycle integration for each profile (for the unprotected profile this integration equals the displayed source frame); the readability-priority and high-suppression reconstructions include the recorded $\alpha =0.2$ inversion slot. These digital views are not direct evidence of human readability or visual comfort.}}{11}{}\protected@file@percent }
 \newlabel{fig:montage}{{3}{11}{}{figure.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Best-of-engine OCR character recovery and exact match for three representative real-capture profiles (unprotected, readability-priority, and high-suppression) under short exposure, long exposure, and a 150-frame video temporal mean, pooled across the 9 tested distance--angle configurations. Repeated captures within the same content--geometry--repeat unit are averaged first; the readability-priority bars therefore use $N=324/324/108$ units for short/long/video despite the disclosed 459/324/153 raw captures. Error bars are unit-resampled 95\% percentile-bootstrap intervals (2,000 resamples); they quantify uncertainty within the archived design rather than cross-device or cross-scenario generalization. Lower bars indicate less recovered text. The long-exposure and video bars expose the integration boundary: the readability-priority profile retains substantial recoverable content even when its short-exposure bar is low.}}{11}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Best-of-engine OCR character recovery and exact-match rates for unprotected, readability-priority, and high-suppression profiles under short and long exposures and a 150-frame video mean, pooled across nine distance--angle configurations. Repeated captures are averaged within each content--geometry--repeat unit; readability-priority uses $N=324/324/108$ units for short/long/video. Error bars show unit-resampled 95\% percentile-bootstrap intervals (2,000 resamples). Lower values indicate less recovered text. Long exposure and video averaging reveal substantial residual recoverability in the readability-priority profile.}}{11}{}\protected@file@percent }
 \newlabel{fig:bar_attack}{{4}{11}{}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Raw-input versus fixed-grid-oracle character recovery for each OCR engine across the nine-geometry matched pool ($N=324$ per profile). The oracle selects the best of raw plus five predeclared transforms separately for each capture and metric. Lines show within-engine increases, not uncertainty intervals. Exact values appear in Table~\ref {tab:preprocessing_grid}.}}{11}{}\protected@file@percent }
+\newlabel{fig:real_engine_ocr}{{5}{11}{}{figure.5}{}}
 \citation{b_shi2023,b_jiang2025}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Raw-input versus fixed-grid-oracle character recovery for each OCR engine across the nine-geometry matched pool ($N=324$ per profile). The oracle selects the best of raw plus five predeclared transforms separately for each capture and metric. Lines show within-engine increases, not uncertainty intervals. Exact values appear in Table~\ref {tab:preprocessing_grid}.}}{12}{}\protected@file@percent }
-\newlabel{fig:real_engine_ocr}{{5}{12}{}{figure.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}User Experience Study}{12}{}\protected@file@percent }
 \newlabel{sec:user_study}{{\mbox  {V-E}}{12}{}{subsection.5.5}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Real-Capture VLM Probes at 0$^{\circ }$ On-Axis. VLM Cells Report Exact / Character Recovery (\%) [Valid/Planned]. Ranges Are Missing-Response Bounds Obtained by Assigning Unresolved Calls 0\% or 100\% Recovery; Point Values Indicate Complete Returns. OCR BoE Reports Same-Batch Exact / Character Recovery. Protected rows use high-suppression; the 0.5\,m Original Short row is the unprotected reference.}}{13}{}\protected@file@percent }
@@ -154,11 +154,11 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Real-capture mAP50 for four detectors across the unprotected capture, short-exposure protected capture, and 150-frame protected mean. Conditions differ in protection, exposure, resolution, and frame reduction.}}{16}{}\protected@file@percent }
 \newlabel{fig:real_det_drop}{{8}{16}{}{figure.8}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-G}}Software Simulation Experiments}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}1}Synthetic Single-Subframe OCR}{16}{}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Synthetic Single-Subframe OCR: Three-Engine Character Recovery (120 Samples, $n=4$, $\varepsilon =8/255$)}}{16}{}\protected@file@percent }
 \newlabel{tab:ocr_corpus}{{16}{16}{}{table.16}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Character recovery for three OCR engines on original frames and single protected subframes; error bars are 95\% bootstrap intervals resampled by corpus sample.}}{16}{}\protected@file@percent }
 \newlabel{fig:multiengine_ocr}{{9}{16}{}{figure.9}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}1}Synthetic Single-Subframe OCR}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}2}Theoretical Security Boundary}{16}{}\protected@file@percent }
 \newlabel{sec:security_frontier}{{\mbox  {V-G}2}{16}{}{subsubsection.5.7.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-G}3}Detection and Tracking Simulation}{16}{}\protected@file@percent }
@@ -206,8 +206,8 @@
 \bibcite{b_naor1994}{21}
 \bibcite{b_nguyen2016}{22}
 \bibcite{b_tran2021}{23}
-\@writefile{toc}{\contentsline {section}{REFERENCES}{19}{}\protected@file@percent }
 \bibcite{b_ghiasi2024}{24}
+\@writefile{toc}{\contentsline {section}{REFERENCES}{19}{}\protected@file@percent }
 \bibcite{b_song2018}{25}
 \bibcite{b_goodfellow2015}{26}
 \bibcite{b_madry2018}{27}
