@@ -241,7 +241,7 @@ Profile & Temporal mask & Complementary noise & Additional display artifacts & I
 Original (unprotected) & -- & -- & -- & Unprotected baseline \\
 Mask only & \checkmark & -- & -- & Isolate temporal decomposition \\
 Mask + noise & \checkmark & \checkmark & -- & Isolate complementary perturbation \\
-Strong (anti-OCR) & \checkmark & \checkmark & Stripe and glyph overlays & Isolate the effects of stripe and glyph overlays \\
+Strong-overlay (anti-OCR) & \checkmark & \checkmark & Stripe and glyph overlays & Isolate the effects of stripe and glyph overlays \\
 Readability-priority & \checkmark & \checkmark & Stripe and glyph overlays with partial inversion & Evaluate the complete configuration for usability \\
 High-suppression & \checkmark & \checkmark & Enhanced overlays and partial inversion & Exploratory recovery-boundary stress condition \\
 \bottomrule
@@ -523,7 +523,7 @@ $\alpha$ & Long-exp.\ char (\%) & Video avg.\ char (\%) \\
 \subsection{Real-Capture VLM Probes}
 \label{sec:vlm}
 
-To probe the attack boundary against stronger recognizers, we applied three commercially hosted VLM endpoints exposed through the SiliconFlow application programming interface (API): Qwen3-VL-32B-Instruct~\cite{b_qwen3vl2025}, Kimi-K2.6~\cite{b_kimi_k26}, and GLM-4.5V~\cite{b_glm45v2025}. These probes characterize recovery on the evaluated photographs rather than serving as a cross-platform VLM benchmark.
+To probe the attack boundary against stronger recognizers, we applied three commercially hosted VLM endpoints exposed through the SiliconFlow application programming interface (API): Qwen3-VL-32B-Instruct~\cite{b_qwen3vl2025}, Kimi-K2.6~\cite{b_kimi_k26}, and GLM-4.5V~\cite{b_glm45v2025}. These diagnostic probes are intended to assess recovery performance on the photographs evaluated in this study, rather than to provide a cross-platform benchmark of VLMs.
 
 The probes cover 0$^{\circ}$ on-axis at three distances. At this geometry, the VLM probes are restricted to the high-suppression profile plus an unprotected original-short reference. The nominal 60\,fps video was split into 12 equal segments (one per content item) and aggregated four ways: (1)~\emph{single best}: the single frame within each segment with the highest grayscale contrast; (2)~\emph{150-frame mean}: the pixel-wise average of the 150 frames assigned to that segment (nominally 2.5\,s); (3)~\emph{window-mean best}: a sliding 30-frame mean, keeping the window with the highest mean luminance; and (4)~\emph{max projection}: the per-pixel temporal maximum across all frames in the segment. The 0.5\,m run includes 156 inputs: 36 unprotected short-exposure baselines, 36 high-suppression short- and long-exposure inputs each, and these four aggregate views (12 segments each). The 1.0\,m and 1.5\,m runs each include 120 high-suppression inputs: 36 short- and long-exposure inputs each plus four video aggregate types (12 segments each). VLM inputs and the OCR best-of-engine (BoE) reference in Table~\ref{tab:real_vlm} use the same file batch with nominal 3.91/31.25\,ms labels. Both attackers also receive the identical input pipeline. This pipeline uses the geometrically corrected content crops defined in \S\ref{sec:setup}, submitted as unenhanced RGB without photometric preprocessing. The OCR--VLM gap therefore reflects the recognizer rather than a difference in image preparation.
 
