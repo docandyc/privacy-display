@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  4 AUG 2026 12:20
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  21 AUG 2026 22:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -760,7 +760,7 @@ Package xcolor Warning: Incompatible color definition on input line 226.
 Package xcolor Warning: Incompatible color definition on input line 232.
 
 
-Overfull \hbox (27.14963pt too wide) in paragraph at lines 237--249
+Overfull \hbox (41.58162pt too wide) in paragraph at lines 237--249
  [][] 
  []
 
@@ -1074,6 +1074,7 @@ Underfull \hbox (badness 1953) in paragraph at lines 604--605
 
 Package xcolor Warning: Incompatible color definition on input line 610.
 
+Missing character: There is no ， ("FF0C) in font t1-times!
 
 
 File: notaglinelogo.png Graphic file (type bmp)
@@ -1245,8 +1246,6 @@ Package xcolor Warning: Incompatible color definition on input line 768.
 Package xcolor Warning: Incompatible color definition on input line 773.
 
 
-
-
 Package xcolor Warning: Incompatible color definition on input line 777.
 
 
@@ -1259,6 +1258,8 @@ Package xcolor Warning: Incompatible color definition on input line 799.
 
 
 Package xcolor Warning: Incompatible color definition on input line 799.
+
+
 
 
 Package xcolor Warning: Incompatible color definition on input line 805.
@@ -1304,8 +1305,6 @@ Package xcolor Warning: Incompatible color definition on input line 836.
 
 Package xcolor Warning: Incompatible color definition on input line 869.
 
-
-
 File: figures/all_attackers.pdf Graphic file (type pdf)
 <use figures/all_attackers.pdf>
 
@@ -1323,8 +1322,13 @@ Package xcolor Warning: Incompatible color definition on input line 915.
 
 
 
+Package xcolor Warning: Incompatible color definition on input line 921.
+
+
+
+
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 920.
+(Font)              using `T1/formata/m/it' instead on input line 926.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1345,9 +1349,6 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [17]
 
-Package xcolor Warning: Incompatible color definition on input line 921.
-
-
 Package xcolor Warning: Incompatible color definition on input line 927.
 
 
@@ -1356,12 +1357,12 @@ Underfull \hbox (badness 2600) in paragraph at lines 931--932
  []
 
 
-
-
 Package xcolor Warning: Incompatible color definition on input line 935.
 
 
 Package xcolor Warning: Incompatible color definition on input line 940.
+
+
 
 
 Underfull \hbox (badness 3449) in paragraph at lines 944--945
@@ -1382,15 +1383,12 @@ Underfull \hbox (badness 2158) in paragraph at lines 944--945
 Package xcolor Warning: Incompatible color definition on input line 954.
 
 
-Underfull \vbox (badness 1418) has occurred while \output is active []
-
-
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 958.
+(Font)              using `T1/formata/m/it' instead on input line 962.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1426,11 +1424,11 @@ Package xcolor Warning: Incompatible color definition on input line 2.
 
 LaTeX Font Info:    Calculating math sizes for size <7.61> on input line 30.
 
-
-
 Underfull \hbox (badness 1817) in paragraph at lines 76--79
 \T1/times/n/it/7.61 Cir-cuits and Sys-tems (IS-CAS)\T1/times/n/n/7.61 , 2014, pp. 449--452, doi: 10.1109/IS-
  []
+
+
 
 
 Underfull \hbox (badness 1635) in paragraph at lines 130--133
@@ -1446,7 +1444,7 @@ Underfull \hbox (badness 3449) in paragraph at lines 130--133
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 156.
+(Font)              using `T1/formata/m/it' instead on input line 202.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1478,29 +1476,6 @@ Underfull \hbox (badness 3635) in paragraph at lines 227--232
 
 
 )
-
-File: notaglinelogo.png Graphic file (type bmp)
-<notaglinelogo.png>
-
-LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 989.
-
-
-Overfull \hbox (505.12177pt too wide) has occurred while \output is active
-[]
- []
-
-
-Overfull \hbox (505.12177pt too wide) has occurred while \output is active
-[]
- []
-
-
-Underfull \hbox (badness 10000) has occurred while \output is active
-[]
- []
-
-[20]
 File: profiles/hzy.JPG Graphic file (type bmp)
 <profiles/hzy.JPG>
 File: profiles/hzy.JPG Graphic file (type bmp)
@@ -1513,14 +1488,12 @@ File: bullet.png Graphic file (type bmp)
 <bullet.png>
 
 
-
-
+File: notaglinelogo.png Graphic file (type bmp)
+<notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
 (Font)              using `T1/formata/m/it' instead on input line 999.
 
-File: notaglinelogo.png Graphic file (type bmp)
-<notaglinelogo.png>
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
 []
@@ -1536,9 +1509,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[21
-
-] (./main.aux)
+[20] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1547,14 +1518,17 @@ L3 programming layer <2025-01-18>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
  6235 strings out of 473832
  105817 string characters out of 5729481
- 515612 words of memory out of 5000000
+ 515660 words of memory out of 5000000
  29163 multiletter control sequences out of 15000+600000
  630429 words of font info for 158 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 57i,10n,65p,1822b,506s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,10n,65p,1822b,508s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (21 pages).
+Output written on main.pdf (20 pages).
