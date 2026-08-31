@@ -226,7 +226,7 @@ Whether an observer integrates complementary subframes into a perceptually compl
 \subsection{Operating Profiles and Configurability}
 \label{sec:hardened}
 
-Our work is configurable, and the evaluation uses named, composable operating profiles rather than treating one parameter setting as universally appropriate. Unless otherwise stated, the protected profiles use $n=4$ temporal frames, with complementary perturbation included as indicated in Table~\ref{tab:profile_definitions}. The table defines the components and intended evaluation role of each profile, including the unprotected baseline. The exact parameter instances used in the physical-capture evaluation are reported separately in Section~\ref{sec:setup}. This separation distinguishes a reusable system interface from the particular configurations evaluated in this paper.
+Our work is configurable, and the evaluation uses named, composable operating profiles rather than treating one parameter setting as universally appropriate. Unless otherwise stated, the protected profiles use $n=4$ temporal frames, with complementary perturbation included as indicated in Table~\ref{tab:profile_definitions}. The table defines the components of each profile, including the unprotected baseline. The exact parameter instances used in the physical-capture evaluation are reported separately in Section~\ref{sec:setup}. This separation distinguishes a reusable system interface from the particular configurations evaluated in this paper.
 
 \begin{table*}[!t]
 \caption{Component-Level Definitions of the Evaluated Operating Profiles. Exact Parameter Instances Are Reported in Section~\ref{sec:setup}.}
@@ -234,16 +234,16 @@ Our work is configurable, and the evaluation uses named, composable operating pr
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3.2pt}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccc}
 \toprule
-Profile & Temporal mask & Complementary noise & Additional display artifacts & Intended evaluation role \\
+Profile & Temporal mask & Complementary noise & Additional display artifacts \\
 \midrule
-Original (unprotected) & -- & -- & -- & Unprotected baseline \\
-Mask only & \checkmark & -- & -- & Isolate temporal decomposition \\
-Mask + noise & \checkmark & \checkmark & -- & Isolate complementary perturbation \\
-Strong-overlay (anti-OCR) & \checkmark & \checkmark & Stripe and glyph overlays & Isolate the effects of stripe and glyph overlays \\
-Readability-priority & \checkmark & \checkmark & Stripe and glyph overlays with partial inversion & Evaluate the complete configuration for usability \\
-High-suppression & \checkmark & \checkmark & Enhanced overlays and partial inversion & Exploratory recovery-boundary stress condition \\
+Original (unprotected) & -- & -- & -- \\
+Mask only & \checkmark & -- & -- \\
+Mask + noise & \checkmark & \checkmark & -- \\
+Strong-overlay (anti-OCR) & \checkmark & \checkmark & Stripe and glyph overlays \\
+Readability-priority & \checkmark & \checkmark & Stripe and glyph overlays with partial inversion \\
+High-suppression & \checkmark & \checkmark & Enhanced overlays and partial inversion \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -270,19 +270,19 @@ The proof of concept (PoC) operates at the application layer in Python (with Num
 \subsection{Experimental Setup}
 \label{sec:setup}
 
-\textbf{Hardware platform}: Most experiments used a desktop workstation with an Intel Core i7-8700K (3.70\,GHz), 32\,GB RAM, and an NVIDIA TITAN Xp (12\,GB VRAM). The display was an AOC 24G51Z driven at a nominal 240\,Hz. Each nominal 240-Hz slot lasts 4.17\,ms, while the basic and inversion-augmented cycles are 60 and 48\,Hz.
+\textbf{Hardware platform}: All experiments used a desktop workstation with an Intel Core i7-8700K (3.70\,GHz), 32\,GB RAM, and an NVIDIA TITAN Xp (12\,GB VRAM). The display was an AOC 24G51Z driven at a nominal 240\,Hz. Each nominal 240-Hz slot lasts 4.17\,ms, while the basic and inversion-augmented cycles are 60 and 48\,Hz.
 
 \textbf{Capture setup}: All physical captures used one eMeet SmartCam S600 USB webcam with its standard UVC driver. Camera frames underwent perspective correction and content cropping before recognition. Per-capture metadata store exposure labels derived from DirectShow/UVC log$_2$ controls.
 
-The camera was placed at 0.5\,m, 1\,m, and 1.5\,m from the display, rotated to $0^{\circ}$, $15^{\circ}$, and $30^{\circ}$ at each distance, providing nine distance--angle configurations for the physical evaluation. The manufacturer specifies an 8-megapixel 4K sensor and 1080p/60\,fps output~\cite{b_emeet_s600}.
+The camera was placed at 0.5\,m, 1\,m, and 1.5\,m from the display, rotated horizontally (in yaw) to $0^{\circ}$, $15^{\circ}$, and $30^{\circ}$ at each distance, providing nine distance--angle configurations for the physical evaluation. The manufacturer specifies an 8-megapixel 4K sensor and 1080p/60\,fps output~\cite{b_emeet_s600}.
 
 All nine geometries used the same control values: $-8$ for short-exposure stills and video frames (nominally 3.91\,ms), and $-5$ for long-exposure stills (31.25\,ms). These values are control-derived labels. The display-brightness setting remained fixed, profiles were acquired in a fixed order, and video was captured nominally at 60\,fps. Auto-exposure, gain, white balance, focus, and panel luminance were neither locked nor independently measured. Accordingly, the results characterize the evaluated display--camera link rather than an isolated temporal mechanism. The primary OCR inputs are geometrically corrected content crops.
 
 
 
-\textbf{Test content}: Each position used 12 fixed items: two account strings, two code snippets, two digit strings, one English sentence, two mixed-language snippets, two English paragraphs, and one CET6 (College English Test Band~6) document. The CET6 page and two mixed-language items include Chinese characters. For short- and long-exposure stills, three repeats yield 36 captures per profile--attack--position cell and 324 across nine positions. For video, one 150-frame clip was planned per content--geometry cell, yielding 12 clips per position and 108 across nine positions; disclosed repeat-round clips are duplicate-averaged. Detection and tracking use separate subsets as cross-task stress tests.
+\textbf{Test content}: Each position used 12 fixed items: two account strings, two code snippets, two digit strings, one English sentence, two mixed-language snippets, two English paragraphs, and one CET6 (College English Test Band~6) document. The CET6 page and two mixed-language items include Chinese characters. For short- and long-exposure stills, three repeats yield 36 captures per profile--attack--position cell and 324 across nine positions. For video, one 150-frame clip was planned per content--geometry cell, yielding 12 clips per position and 108 across nine positions; disclosed repeat-round clips are duplicate-averaged. 
 
-\textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. These settings are experimental configurations rather than universal implementation defaults. In particular, the physical-capture evaluation names the low-amplitude overlay instance \texttt{strong@overlay} (Strong-overlay): it uses the reusable \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively. The readability-priority capture condition reuses this Strong-overlay instance and adds a partial inversion frame with $\alpha=0.20$, whereas the reusable \texttt{strong} command-line default uses overlay amplitudes of 0.18 and 0.22. Relative to readability-priority, \texttt{high-suppression} further strengthens the masking configuration by increasing the cell size from 1 to 2 pixels, narrowing the stripe width from 10 to 6 pixels, and raising the stripe and glyph opacities from 0.10 and 0.12 to 0.42 and 0.55, respectively, while retaining the same partial inversion strength of $\alpha=0.20$.
+\textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. In particular, the physical-capture evaluation names the low-amplitude overlay instance \texttt{strong@overlay} (Strong-overlay): it uses the reusable \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively. The readability-priority capture condition reuses this Strong-overlay instance and adds a partial inversion frame with $\alpha=0.20$, whereas the reusable \texttt{strong} command-line default uses overlay amplitudes of 0.18 and 0.22. Relative to readability-priority, \texttt{high-suppression} further strengthens the masking configuration by increasing the cell size from 1 to 2 pixels, narrowing the stripe width from 10 to 6 pixels, and raising the stripe and glyph opacities from 0.10 and 0.12 to 0.42 and 0.55, respectively, while retaining the same partial inversion strength of $\alpha=0.20$.
 
 \begin{table*}[!t]
 \caption{Exact Profile Instances Used in the Physical-Capture Evaluation ($n=4$ for All Masked Profiles). The Strong-overlay Row is the physical-capture \texttt{strong@overlay} instance with explicit 0.10/0.12 overlay amplitudes; the Readability-Priority Row reuses it and adds a partial inversion frame. Both are distinct from the reusable \texttt{strong} defaults.}
@@ -304,11 +304,11 @@ High-suppression & \checkmark & \checkmark & 2 & 6 & 0.42 & 0.55 & 0.20 \\
 \end{tabular}
 \end{table*}
 
-\textbf{Evaluation metrics}: OCR character recovery is defined as $\max(0,1-\mathrm{CER})$, where CER is character error rate. Exact match uses case-insensitive full-text comparison after whitespace removal. Explicit-field recovery uses 18 fields fixed before scoring across 9 field-bearing content items. A field counts as recovered only when its complete Unicode-normalized form appears in at least one engine output for that capture; case, whitespace, and punctuation are ignored. We report field-level micro recovery and sample-level macro recovery separately. Leak rate is the proportion of samples with character recovery $\geq20\%$ and is only a descriptive threshold.
+\textbf{Evaluation metrics}: Each captured image is processed independently by three OCR engines: Tesseract, EasyOCR, and Surya. OCR character recovery is defined as $\max(0,1-\mathrm{CER})$, where CER is character error rate. Exact match uses case-insensitive full-text comparison after whitespace removal. Explicit-field recovery uses 18 fields fixed before scoring across 9 field-bearing content items. A field counts as recovered only when its complete Unicode-normalized form appears in at least one engine output for that capture; case, whitespace, and punctuation are ignored. We report field-level micro recovery and sample-level macro recovery separately. Leak rate is the proportion of samples with character recovery $\geq20\%$ .
 
-\textbf{OCR aggregation and uncertainty}: Character and whole-text metrics are maximized independently across the three engines for each capture. Explicit fields use the union of fields recovered by the three engines. Duplicate captures with the same profile, attack, content item, position, and repeat are averaged before summary or matching. Thus, the 324 units in each primary short-exposure profile comprise 12 content items, 9 geometries, and 3 repeats, which are not treated as 324 independent population samples. Descriptive table intervals resample these duplicate-averaged units with 2,000 resamples and seed 20260612. The primary comparison uses keys present in all three profiles; paired contrasts instead resample the 12 content items as clusters with the same seed and resample count, holding the tested geometries fixed. These intervals quantify sensitivity within the archived design.
+\textbf{OCR aggregation and uncertainty}: Character and whole-text metrics are maximized independently across the three engines for each capture. Explicit fields use the union of fields recovered by the three engines. Duplicate captures with the same profile, attack, content item, position, and repeat are averaged before summary or matching. Thus, the 324 units in each primary short-exposure profile comprise 12 content items, 9 geometries, and 3 repeats, which are not treated as 324 independent population samples. The 95\% summary intervals reported in Table~\ref{tab:real_ocr_full_pool} resample these duplicate-averaged units with 2,000 resamples and seed 20260612. The primary comparison uses keys present in all three profiles; paired contrasts instead resample the 12 content items as clusters with the same seed and resample count, holding the tested geometries fixed. These intervals quantify sensitivity within the archived design.
 
-\textbf{Common-setting analysis}: All 9 geometries define the primary fixed-setting result (Table~\ref{tab:real_ocr_common}). After duplicate averaging and three-profile matching, each profile contains $N=324$ units. Table~\ref{tab:real_ocr_full_pool} reports the corresponding duplicate-averaged profile--attack summaries; unlike the raw archive counts, its $N$ gives every planned content--geometry--repeat unit equal weight.
+\textbf{Common-setting analysis}: All 9 geometries define the primary fixed-setting result (Table~\ref{tab:real_ocr_common}). After duplicate averaging and three-profile matching, each profile contains $N=324$ units. Table~\ref{tab:real_ocr_full_pool} reports the corresponding duplicate-averaged profile--attack summaries. Since duplicate captures are averaged within their unit, each planned content--geometry--repeat unit contributes once to these summaries.
 
 \textbf{Fixed preprocessing stress test}: We evaluated Tesseract, EasyOCR, and Surya on all 1,107 primary short-exposure images spanning the 9 geometries. The fixed input grid comprised raw, gamma 0.5, luminance contrast-limited adaptive histogram equalization (CLAHE; 1st--99th percentile stretch, clip limit 4.0, $8\times8$ tiles), unsharp masking ($\sigma=1.0$, weights 1.7/$-0.7$), Gaussian adaptive thresholding (block 31, constant 5), and 2$\times$ bicubic upscaling. Parameters were fixed before scoring. For each metric and capture, the attacker retained the best engine--input pair; duplicate captures were then averaged before three-profile matching. The complete matrix contains 19,926 cells (1,107 images $\times$ 6 input forms $\times$ 3 engines) with no OCR errors. All cells used Tesseract 5.4.1 through \texttt{pytesseract 0.3.13}, EasyOCR 1.7.2, and Surya 0.14.7; raw and transformed inputs were evaluated on CUDA or CPU with the same software versions. The resulting oracle measures a reproducible fixed-grid preprocessing attack on the nine-geometry primary pool.
 
@@ -321,7 +321,7 @@ Digital reconstruction proxies: $\Delta E_{00}$ is the mean CIEDE2000 color diff
 The physical archive comprises 10,575 images (1,175 per position), including ablations, parameter sweeps, and main attack conditions. Readability-priority includes a second capture round for 5 of 12 items, so the raw archive retains 459 short-exposure images and 153 videos across all positions rather than 324 and 108. These records are not discarded: duplicate keys are averaged within the matched content--geometry--repeat unit for Table~\ref{tab:real_ocr_full_pool} and the primary contrasts. Surya~\cite{b_surya2024}, EasyOCR~\cite{b_easyocr2020}, and Tesseract~\cite{b_smith2007} produced 31,725 engine-level records. Each geometry uses an archived four-point homography and output canvas, followed by the recorded content crop. The primary OCR pipeline adds no adaptive enhancement. Profiles were collected in the order original, mask-only, mask+noise, Strong-overlay, readability-priority, and high-suppression. Fig.~\ref{fig:montage} shows digital reconstructions and matched captures at 1.0\,m/$0^{\circ}$.
 
 \begin{table*}[!t]
-\caption{Primary Matched Short-Exposure OCR Comparison at the Common Nominal 3.91-ms UVC Setting. Duplicate Captures Are Averaged Before Matching. $N=324$ per Profile Comprises 12 Content Items $\times$ 9 Geometries $\times$ 3 Repeats. Paired contrasts resample the 12 content items as clusters while holding the 9 tested geometries fixed. The 324 units are not treated as independent population samples. All contrasts are computed from unrounded per-unit values and may therefore differ by up to 0.1\,pp from the difference of the rounded means shown in the table.}
+\caption{Primary Matched Short-Exposure OCR Comparison at the Common Nominal 3.91-ms UVC Setting. Duplicate Captures Are Averaged Before Matching. $N=324$ per Profile Comprises 12 Content Items $\times$ 9 Geometries $\times$ 3 Repeats. Paired contrasts resample the 12 content items as clusters while holding the 9 tested geometries fixed. The 324 units are not treated as independent population samples. All contrasts are computed from unrounded per-unit values and may therefore differ by up to 0.1\% from the difference of the rounded means shown in the table.}
 \label{tab:real_ocr_common}
 \centering
 \footnotesize
@@ -331,8 +331,8 @@ The physical archive comprises 10,575 images (1,175 per position), including abl
 Profile & $N$ & Mean char recovery & Unprotected $-$ profile & Interpretation \\
 \midrule
 Original (unprotected) & 324 & 94.1\% & -- & Common-setting baseline \\
-Readability-priority & 324 & 16.2\% & 78.0\,pp [75.5, 80.3] & Conventional-OCR reduction, with upper-tail failures \\
-High-suppression & 324 & 5.0\% & 89.1\,pp [85.0, 92.4] & Exploratory stress profile; meets descriptive $<10\%$ target \\
+Readability-priority & 324 & 16.2\% & 78.0 [75.5, 80.3]\% & Conventional-OCR reduction, with upper-tail failures \\
+High-suppression & 324 & 5.0\% & 89.1 [85.0, 92.4]\% & Exploratory stress profile; meets descriptive $<10\%$ target \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -630,8 +630,7 @@ Scoring no longer compares characters position-by-position but aligns the full t
 
 \textbf{Sample size and analysis plan}: A minimum of $N=24$ participants was planned, a number within the range required for paired effect sizes of $d_z\approx0.6$--$0.8$ at 80\% power, and exactly covering two rounds of the 12-person joint order assignment. Pre-specified exclusion criteria are debug/demo sessions, incomplete four typing or six rating records, measured refresh rate below 200\,Hz, any typing trial with fewer than 5 attempted characters, control mean accuracy below 50\%, masked trials not in temporal mode, any trial with observed basic cycle rate below 50\,Hz, or minimum-view straight-line ratings. The last criterion is defined as all six rating rows having a recorded viewing duration no greater than 11~seconds (a 1-second tolerance above the 10-second submission gate) and, within every row, identical scores on all three items. WPM, CPM, accuracy, attempted characters, and first-keystroke latency are first averaged within each participant by condition; speed metrics must be interpreted jointly with accuracy to avoid misinterpreting fast input under low accuracy as performance improvement. Paired differences are tested using paired $t$-tests when the pre-specified Shapiro test is passed, otherwise Wilcoxon signed-rank tests, with effect sizes and participant-level bootstrap 95\% confidence intervals reported. Likert data are analyzed per dimension using Friedman tests with Holm-corrected post-hoc pairwise Wilcoxon tests. Analysis scripts generate de-identified participant means, JSON audit reports, and two \LaTeX\ tables directly from the formal database \texttt{study\_formal.db}.
 
-% NOTE: Data filled 2026-07-15 from the formal-window analysis report.
-% The table rows and statistical results below map to the released analysis output.
+
 \textbf{Participants}: 61 volunteers were recruited; 56 sessions met all pre-specified inclusion criteria and entered analysis (5 excluded: 3 for minimum-view straight-line ratings and 2 for control mean accuracy below 50\%; the per-criterion audit accompanies the released analysis output). 46 of the 56 wore glasses, 1 wore contact lenses, and 9 reported no vision correction. All formal sessions ran on the 240\,Hz laboratory display with a measured refresh rate of at least 200\,Hz.
 
 \begin{table}[!t]
