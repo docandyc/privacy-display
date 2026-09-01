@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  31 AUG 2026 23:17
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  1 SEP 2026 17:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -871,13 +871,13 @@ Underfull \hbox (badness 1852) in paragraph at lines 401--402
 
 
 
-Underfull \hbox (badness 2495) in paragraph at lines 405--406
-[]\T1/times/b/n/10 Profiles show dis-tinct com-po-nent and attacker-
+Overfull \hbox (6.86617pt too wide) in paragraph at lines 405--406
+[]\T1/times/b/n/10 Attacker-dependent re-cov-ery\T1/times/n/n/10 : Mask-only, mask+noise,
  []
 
 
-Underfull \hbox (badness 7273) in paragraph at lines 405--406
-\T1/times/n/n/10 sum-mary, mask-only reaches 19.2%, mask+noise
+Underfull \hbox (badness 1681) in paragraph at lines 405--406
+\T1/times/n/n/10 micro ex-act re-cov-ery (Ta-ble 5[]). Its em-pir-i-cal P99
  []
 
 
@@ -889,7 +889,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 406.
+(Font)              using `T1/formata/m/it' instead on input line 408.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -907,17 +907,24 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [8]
-Underfull \hbox (badness 1845) in paragraph at lines 409--410
-\T1/times/b/n/10 ver-sal\T1/times/n/n/10 : Un-der the com-mon nom-i-nal 31.25ms set-
+Underfull \hbox (badness 3039) in paragraph at lines 409--410
+\T1/times/n/n/10 lu-mi-nance, resid-ual over-lay edges, and geometry-
  []
 
 
-Underfull \hbox (badness 2293) in paragraph at lines 409--410
-\T1/times/n/n/10 are can-di-date ex-pla-na-tions rather than an iso-lated
+Underfull \hbox (badness 3449) in paragraph at lines 411--412
+[]\T1/times/b/n/10 High-suppression in-te-gra-tion re-cov-ery\T1/times/n/n/10 : This ex-
  []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \hbox (badness 7468) in paragraph at lines 413--414
+\T1/times/n/n/10 ex-po-sure. Av-er-ag-ing du-pli-cate keys en-sures that
+ []
+
+
+Underfull \hbox (badness 3058) in paragraph at lines 413--414
+\T1/times/n/n/10 once. In a de-scrip-tive sen-si-tiv-ity check, se-lect-ing
+ []
 
 
 
@@ -936,11 +943,6 @@ Package xcolor Warning: Incompatible color definition on input line 426.
 
 
 Package xcolor Warning: Incompatible color definition on input line 426.
-
-
-Underfull \hbox (badness 4144) in paragraph at lines 430--431
-[]\T1/times/b/n/10 Per-engine re-sults\T1/times/n/n/10 : Ta-ble 7[] breaks down duplicate-
- []
 
 
 Package xcolor Warning: Incompatible color definition on input line 433.
@@ -974,7 +976,7 @@ Package xcolor Warning: Incompatible color definition on input line 523.
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 527.
+(Font)              using `T1/formata/m/it' instead on input line 529.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -994,7 +996,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [9]
-Underfull \vbox (badness 1571) has occurred while \output is active []
+Underfull \vbox (badness 3942) has occurred while \output is active []
 
 
 
@@ -1084,7 +1086,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 618.
+(Font)              using `T1/formata/m/it' instead on input line 620.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1263,9 +1265,9 @@ Package xcolor Warning: Incompatible color definition on input line 798.
 Package xcolor Warning: Incompatible color definition on input line 798.
 
 
-
-
 Package xcolor Warning: Incompatible color definition on input line 804.
+
+
 
 
 Package xcolor Warning: Incompatible color definition on input line 809.
@@ -1279,12 +1281,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 832--833
  []
 
 
+Package xcolor Warning: Incompatible color definition on input line 835.
+
+
+Package xcolor Warning: Incompatible color definition on input line 868.
+
+
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 833.
+(Font)              using `T1/formata/m/it' instead on input line 900.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1302,14 +1310,9 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [16]
-
-Package xcolor Warning: Incompatible color definition on input line 835.
-
-
-Package xcolor Warning: Incompatible color definition on input line 868.
-
 File: figures/all_attackers.pdf Graphic file (type pdf)
 <use figures/all_attackers.pdf>
+
 
 Package xcolor Warning: Incompatible color definition on input line 904.
 
@@ -1447,7 +1450,7 @@ Underfull \hbox (badness 3449) in paragraph at lines 130--133
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 202.
+(Font)              using `T1/formata/m/it' instead on input line 208.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1525,7 +1528,7 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Here is how much of TeX's memory you used:
  6235 strings out of 473832
  105817 string characters out of 5729481
- 515555 words of memory out of 5000000
+ 518932 words of memory out of 5000000
  29163 multiletter control sequences out of 15000+600000
  630429 words of font info for 158 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
