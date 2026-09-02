@@ -130,6 +130,8 @@ INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/placeins/placeins.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/placeins/placeins.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
@@ -307,7 +309,6 @@ INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1pcr.fd
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm
 INPUT t1-formata-medium.tfm
 INPUT t1-formata-mediumitalic.tfm
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
@@ -319,8 +320,6 @@ INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/vf/adobe/courier/pcrr8t.vf
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8r.tfm
 INPUT ./figures/real_capture_montage.pdf
 INPUT ./figures/real_capture_montage.pdf
 INPUT ./figures/real_capture_montage.pdf
@@ -357,7 +356,6 @@ INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cbfonts/grmn0700.tfm
 INPUT ./figures/study_typing_paired.pdf
 INPUT ./figures/study_typing_paired.pdf
 INPUT ./figures/study_typing_paired.pdf
@@ -368,11 +366,11 @@ INPUT ./figures/study_ratings_likert.pdf
 INPUT ./figures/study_ratings_likert.pdf
 INPUT ./figures/study_ratings_likert.pdf
 INPUT ./figures/study_ratings_likert.pdf
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
 INPUT ./figures/real_detection_drop.pdf
 INPUT ./figures/real_detection_drop.pdf
 INPUT ./figures/real_detection_drop.pdf
@@ -457,13 +455,10 @@ INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT main.aux
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
@@ -471,7 +466,6 @@ INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb
-INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/cbfonts/grmn0700.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
 INPUT ./t1-formata-bold.pfb
 INPUT ./t1-formata-condmedium.pfb

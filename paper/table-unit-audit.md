@@ -16,25 +16,25 @@
 
 | 表 | 标签与表头位置 | 最终处理 |
 |---|---:|---|
-| 表 1 | `tab:kaleido_compare`，132 | 定性比较，无定量单位，保留。 |
-| 表 2 | `tab:profile_definitions`，233 | 组件启用情况，无定量单位，保留。 |
-| 表 3 | `tab:profile_composition`，289 | `Cell (px)`、`Stripe width (px)` 已正确；`\alpha` 系数保持无量纲，保留。 |
-| 表 4 | `tab:real_ocr_common`，325 | 已改为 `Mean char recovery (\%)` 和 `Unprotected $-$ profile (\%)`；数据区移除重复 `%`。 |
-| 表 5 | `tab:explicit_fields`，342 | 已改为 `Field micro (\%; 486 opp.)` 和 `Sample macro (\%)`；数据区移除重复 `%`。 |
-| 表 6 | `tab:real_ocr_full_pool`，359 | 已为 character recovery、exact match、leak rate 三列补 `(%)`；数据区移除重复 `%`。 |
-| 表 7 | `tab:real_ocr_engine`，435 | 原表头已有 `Char (\%)`、`Exact (\%)`，保留。 |
-| 表 8 | `tab:preprocessing_grid`，478 | 已增加跨列表头 `Character recovery (\%)`。 |
-| 表 9 | `tab:inversion_ablation`，510 | 原表头已有 `Long-exp. char (\%)`、`Video avg. char (\%)`，保留。 |
-| 表 10 | `tab:real_vlm`，543 | 已增加跨列表头 `Exact / character recovery (\%)`；`Distance` 改为 `Distance (m)`，数据区距离只保留数值。 |
-| 表 11 | `tab:vlm_content`，577 | 原四个恢复率列均已有 `(%)`，保留。 |
-| 表 12 | `tab:study_typing`，641 | Accuracy、WPM、CPM、字符数及延迟沿用 Metric 行各自单位；差值不另设其他单位。 |
-| 表 13 | `tab:study_ratings`，660 | 1--5 Likert 范围和 Mean ± SD 已在表注说明，保留。 |
-| 表 14 | `tab:real_coco`，705 | 已改为 `mAP (\%)`、`mAP50 (\%)`、`AR (\%)`；数据区移除重复 `%`。 |
-| 表 15 | `tab:real_mot`，738 | 已改为 `HOTA (\%)`、`IDF1 (\%)`；数据区移除重复 `%`。 |
-| 表 16 | `tab:ocr_corpus`，787 | 已改为 `Original (\%)`、`Single subframe (\%)`、`Reduction (\%)`；数据区只保留数字。 |
-| 表 17 | `tab:digital_boundary`，817 | 已改为 `Char. (\%)`、`Exact (\%)`；SSIM 和 `\Delta E_{00}` 保持原样。 |
-| 表 18 | `tab:coco_sim`，843 | 已改为 `mAP (\%)`、`mAP50 (\%)`、`AR (\%)`；数据区移除重复 `%`。 |
-| 表 19 | `tab:mot_sim`，876 | 已改为 `MOTA (\%)`、`MOTP (\%)`、`IDF1 (\%)`；数据区移除重复 `%`。 |
+| 表 1 | `tab:kaleido_compare`，133 | 定性比较，无定量单位，保留。 |
+| 表 2 | `tab:profile_definitions`，234 | 组件启用情况，无定量单位，保留。 |
+| 表 3 | `tab:profile_composition`，290 | `Cell (px)`、`Stripe width (px)` 已正确；`\alpha` 系数保持无量纲，保留。 |
+| 表 4 | `tab:real_ocr_common`，328 | 已改为 `Mean char recovery (\%)` 和 `Unprotected $-$ profile (\%)`；数据区移除重复 `%`。 |
+| 表 5 | `tab:explicit_fields`，347 | 已改为 `Field micro (\%; 486 opp.)` 和 `Sample macro (\%)`；数据区移除重复 `%`。 |
+| 表 6 | `tab:real_ocr_full_pool`，366 | 已为 character recovery、exact match、leak rate 三列补 `(%)`；数据区移除重复 `%`。 |
+| 表 7 | `tab:real_ocr_engine`，446 | 原表头已有 `Char (\%)`、`Exact (\%)`，保留。 |
+| 表 8 | `tab:preprocessing_grid`，491 | 已增加跨列表头 `Character recovery (\%)`。 |
+| 表 9 | `tab:inversion_ablation`，525 | 原表头已有 `Long-exp. char (\%)`、`Video avg. char (\%)`，保留。 |
+| 表 10 | `tab:real_vlm`，558 | 已增加跨列表头 `Exact / character recovery (\%)`；`Distance` 改为 `Distance (m)`，数据区距离只保留数值。 |
+| 表 11 | `tab:vlm_content`，594 | 原四个恢复率列均已有 `(%)`，保留。 |
+| 表 12 | `tab:study_typing`，660 | Accuracy、WPM、CPM、字符数及延迟沿用 Metric 行各自单位；差值不另设其他单位。 |
+| 表 13 | `tab:study_ratings`，679 | 1--5 Likert 范围和 Mean ± SD 已在表注说明，保留。 |
+| 表 14 | `tab:real_coco`，724 | 已改为 `mAP (\%)`、`mAP50 (\%)`、`AR (\%)`；数据区移除重复 `%`。 |
+| 表 15 | `tab:real_mot`，757 | 已改为 `HOTA (\%)`、`IDF1 (\%)`；数据区移除重复 `%`。 |
+| 表 16 | `tab:ocr_corpus`，806 | 已改为 `Original (\%)`、`Single subframe (\%)`、`Reduction (\%)`；数据区只保留数字。 |
+| 表 17 | `tab:digital_boundary`，836 | 已改为 `Char. (\%)`、`Exact (\%)`；SSIM 和 `\Delta E_{00}` 保持原样；原表内长说明已移至正文。 |
+| 表 18 | `tab:coco_sim`，864 | 已改为 `mAP (\%)`、`mAP50 (\%)`、`AR (\%)`；数据区移除重复 `%`。 |
+| 表 19 | `tab:mot_sim`，897 | 已改为 `MOTA (\%)`、`MOTP (\%)`、`IDF1 (\%)`；数据区移除重复 `%`。 |
 
 ## 正文同步
 

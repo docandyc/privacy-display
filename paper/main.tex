@@ -8,6 +8,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{placeins}
 \usepackage{xcolor}
 \usepackage{url}
 
@@ -85,7 +86,7 @@ We investigate this question through \emph{temporal pixel masking}, a display-si
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/visio/figure1_concept_threat/final/figure1_concept_threat.png}
-\caption{Threat scenario and operating principle of temporal pixel masking. (a) A nearby camera can capture sensitive on-screen content without accessing the host system. (b) Human vision integrates complementary subframes, while a short camera exposure can intersect only part of a display cycle and leave OCR with an incomplete fragment.}
+\caption{Threat scenario and operating principle of temporal pixel masking.}
 \label{fig:concept}
 \end{figure}
 
@@ -125,10 +126,10 @@ Attribution mechanisms address a different stage of the leakage process. General
 
 Temporal display techniques are the closest predecessors of the present work. Yerazunis and Carbone introduced time-masked privacy-enhanced displays~\cite{b_yerazunis2001}. Wu and Zhai subsequently formalized temporal psychovisual modulation~\cite{b_wu2013}, and Gao et al. applied that framework to an information-security display~\cite{b_gao2014}. Lim used persistence of vision to construct browser keypads that resist a single digital screenshot~\cite{b_lim2007}. Kaleido decomposes video into chrominance-complementary frames with controlled luminance variation so that viewers perceive the intended sequence while camera recordings are degraded~\cite{b_kaleido2015}. Screen-camera communication explores the complementary objective: systems such as spatially adaptive embedding, DeepLight, and passive screen-to-camera communication encode camera-decodable information while limiting perceptual disturbance to human viewers~\cite{b_nguyen2016,b_tran2021,b_ghiasi2024}.
 
-These studies establish temporal modulation and multi-frame decomposition as prior mechanisms, the present work does not claim to introduce either concept. The unresolved issue is their security boundary for static sensitive text under modern machine recognition and increasingly capable capture strategies. Existing studies do not jointly measure short-exposure physical capture, multi-engine OCR, vision-language-model recovery, temporal integration, and phase-aware reconstruction. Our implementation also differs from Kaleido in mechanism: it uses randomized discrete pixel partitioning, and its exploratory high-suppression profile deliberately breaks strict per-cycle completeness (\S\ref{sec:hardened}). Table~\ref{tab:kaleido_compare} compares representative systems by protection locus, threat model, and reported evaluation.
+These studies establish temporal modulation and multi-frame decomposition as prior mechanisms, the present work does not claim to introduce either concept. The unresolved issue is their security boundary for static sensitive text under modern machine recognition and increasingly capable capture strategies. Existing studies do not jointly measure short-exposure physical capture, multi-engine OCR, vision-language-model recovery, temporal integration, and phase-aware reconstruction. Our implementation also differs from Kaleido in mechanism: it uses randomized discrete pixel partitioning, and its exploratory high-suppression profile deliberately breaks strict per-cycle completeness (\S\ref{sec:hardened}). Table~\ref{tab:kaleido_compare} compares representative systems by protection locus, threat model, and reported evaluation. Because the systems address different threats and evaluation targets, this is a contextual comparison rather than a matched-parameter performance ranking.
 
 \begin{table*}[!t]
-\caption{Scope comparison with representative screen-privacy systems. Entries describe different threat models and evaluation targets, they are not matched-parameter performance claims.}
+\caption{Scope comparison with representative screen-privacy systems.}
 \label{tab:kaleido_compare}
 \centering
 \footnotesize
@@ -193,12 +194,12 @@ Given a normalized original frame $\mathbf{I}\in[0,1]^{H\times W\times C}$, we g
 \end{itemize}
 The distinction between ``summation'' and ``temporal averaging'' matters: on an ideal linear display with equal slot durations and equal peak luminance, the average radiance over one cycle is $\mathbf{I}/n$, not $\mathbf{I}$, so digital-domain completeness means only that subframes can be re-summed, not that real display luminance has been losslessly preserved.
 
-Pixel assignments are generated from a ChaCha20~\cite{b_chacha2008} CSPRNG, with an HMAC-SHA256-derived subkey per cycle, rejection sampling mapping the byte stream to unbiased slot indices, and a separate Fisher--Yates shuffle~\cite{b_knuth1997} randomizing subframe playback order. A chi-square slot-count check ($\alpha=0.01$, $\mathrm{df}=n{-}1$, 3 at the evaluated $n=4$), used only as an implementation sanity check with at most 5 resampling attempts, is not evidence of cryptographic strength. Per-cycle randomization avoids a fixed, periodically repeated pixel-to-slot pattern across cycles, but it cannot prevent linear reconstruction of a registered full cycle. This ChaCha20-based generator drives the Python physical-capture pipeline. The user-study web implementation reproduces the same mask structure, rejection sampling, and playback shuffling with a deterministic seeded 32-bit generator so that stimuli are exactly repeatable in the browser. And it has no CSPRNG properties (\S\ref{sec:user_study}). Fig.~\ref{fig:pipeline} illustrates the complete pipeline.
+Pixel assignments are generated from a ChaCha20~\cite{b_chacha2008} CSPRNG, with an HMAC-SHA256-derived subkey per cycle, rejection sampling mapping the byte stream to unbiased slot indices, and a separate Fisher--Yates shuffle~\cite{b_knuth1997} randomizing subframe playback order. A chi-square slot-count check ($\alpha=0.01$, $\mathrm{df}=n{-}1$, 3 at the evaluated $n=4$), used only as an implementation sanity check with at most 5 resampling attempts, is not evidence of cryptographic strength. Per-cycle randomization avoids a fixed, periodically repeated pixel-to-slot pattern across cycles, but it cannot prevent linear reconstruction of a registered full cycle. This ChaCha20-based generator drives the Python physical-capture pipeline. The user-study web implementation reproduces the same mask structure, rejection sampling, and playback shuffling with a deterministic seeded 32-bit generator so that stimuli are exactly repeatable in the browser, but it has no CSPRNG properties (\S\ref{sec:user_study}). Fig.~\ref{fig:pipeline} traces the source frame through complementary masks, optional noise and overlays, partial inversion, and high-refresh playback. It also contrasts the multi-slot integration available to human observers, long exposure, and video averaging with the sparse subframe that a short exposure may record.
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/visio/figure2_method_pipeline/final/figure2_method_pipeline.cropped.png}
-\caption{Temporal pixel masking system pipeline from source content to protected display. The input frame is decomposed into CSPRNG-assigned complementary pixel masks. Optional complementary OCR-oriented noise, profile-dependent stripe/glyph overlays, and an optional partial inversion frame are then inserted before high-refresh playback. A human observer is expected to integrate multiple slots into a readable view, whereas a short-exposure camera may capture only a sparse subframe. Long exposure and video temporal averaging can accumulate multiple slots and are evaluated separately.}
+\caption{Temporal pixel masking system pipeline.}
 \label{fig:pipeline}
 \end{figure*}
 
@@ -229,7 +230,7 @@ Whether an observer integrates complementary subframes into a perceptually compl
 Our work is configurable, and the evaluation uses named, composable operating profiles rather than treating one parameter setting as universally appropriate. Unless otherwise stated, the protected profiles use $n=4$ temporal frames, with complementary perturbation included as indicated in Table~\ref{tab:profile_definitions}. The table defines the components of each profile, including the unprotected baseline. The exact parameter instances used in the physical-capture evaluation are reported separately in Section~\ref{sec:setup}. This separation distinguishes a reusable system interface from the particular configurations evaluated in this paper.
 
 \begin{table*}[!t]
-\caption{Component-Level Definitions of the Evaluated Operating Profiles. Exact Parameter Instances Are Reported in Section~\ref{sec:setup}.}
+\caption{Components of the evaluated operating profiles.}
 \label{tab:profile_definitions}
 \centering
 \footnotesize
@@ -285,7 +286,7 @@ All nine geometries used the same control values: $-8$ for short-exposure stills
 \textbf{Evaluated configurations}: Table~\ref{tab:profile_composition} reports the exact profile instances used in the physical-capture evaluation. In particular, the physical-capture evaluation names the low-amplitude overlay instance \texttt{strong@overlay} (Strong-overlay): it uses the reusable \texttt{strong} profile with explicit stripe and glyph opacity overrides of 0.10 and 0.12, respectively. The readability-priority capture condition reuses this Strong-overlay instance and adds a partial inversion frame with $\alpha=0.20$, whereas the reusable \texttt{strong} command-line default uses overlay amplitudes of 0.18 and 0.22. Relative to readability-priority, \texttt{high-suppression} further strengthens the masking configuration by increasing the cell size from 1 to 2 pixels, narrowing the stripe width from 10 to 6 pixels, and raising the stripe and glyph opacities from 0.10 and 0.12 to 0.42 and 0.55, respectively, while retaining the same partial inversion strength of $\alpha=0.20$.
 
 \begin{table*}[!t]
-\caption{Exact Profile Instances Used in the Physical-Capture Evaluation ($n=4$ for All Masked Profiles). The Strong-overlay Row is the physical-capture \texttt{strong@overlay} instance with explicit 0.10/0.12 overlay amplitudes; the Readability-Priority Row reuses it and adds a partial inversion frame. Both are distinct from the reusable \texttt{strong} defaults.}
+\caption{Physical-capture profile instances for all masked profiles ($n=4$).}
 \label{tab:profile_composition}
 \centering
 \footnotesize
@@ -320,8 +321,10 @@ Digital reconstruction proxies: $\Delta E_{00}$ is the mean CIEDE2000 color diff
 
 The physical archive comprises 10,575 images (1,175 per position), including ablations, parameter sweeps, and main attack conditions. Readability-priority includes a second capture round for 5 of 12 items, so the raw archive retains 459 short-exposure images and 153 videos across all positions rather than 324 and 108. These records are not discarded: duplicate keys are averaged within the matched content--geometry--repeat unit for Table~\ref{tab:real_ocr_full_pool} and the primary contrasts. Surya~\cite{b_surya2024}, EasyOCR~\cite{b_easyocr2020}, and Tesseract~\cite{b_smith2007} produced 31,725 engine-level records. Each geometry uses an archived four-point homography and output canvas, followed by the recorded content crop. The primary OCR pipeline adds no adaptive enhancement. Profiles were collected in the order original, mask-only, mask+noise, Strong-overlay, readability-priority, and high-suppression. Fig.~\ref{fig:montage} shows digital reconstructions and matched captures at 1.0\,m/$0^{\circ}$.
 
+Table~\ref{tab:real_ocr_common} averages duplicates before matching, yielding $N=324$ units per profile from 12 content items, 9 geometries, and 3 repeats. Paired contrasts resample the 12 content items as clusters while holding the 9 geometries fixed, so the 324 units are not treated as independent population samples. Contrasts use unrounded per-unit values and may differ by up to 0.1\% from differences between the displayed rounded means.
+
 \begin{table*}[!t]
-\caption{Primary Matched Short-Exposure OCR Comparison at the Common Nominal 3.91-ms UVC Setting. Duplicate Captures Are Averaged Before Matching. $N=324$ per Profile Comprises 12 Content Items $\times$ 9 Geometries $\times$ 3 Repeats. Paired contrasts resample the 12 content items as clusters while holding the 9 tested geometries fixed. The 324 units are not treated as independent population samples. All contrasts are computed from unrounded per-unit values and may therefore differ by up to 0.1\% from the difference of the rounded means shown in the table.}
+\caption{Primary matched short-exposure OCR comparison at the nominal 3.91-ms UVC setting.}
 \label{tab:real_ocr_common}
 \centering
 \footnotesize
@@ -337,8 +340,10 @@ High-suppression & 324 & 5.0 & 89.1 [85.0, 92.4] & Exploratory stress profile; m
 \end{tabular}
 \end{table*}
 
+For the field-level analysis in Table~\ref{tab:explicit_fields}, 18 fields were fixed before scoring, and 243 of the 324 units per profile contain at least one field.
+
 \begin{table}[!t]
-\caption{Explicit Sensitive-Field Exact Recovery Across the Nine-Geometry Matched Pool. The 18 Fields Were Fixed Before Scoring; 243 of 324 Units per Profile Contain at Least One Field.}
+\caption{Exact recovery of preidentified sensitive fields in the matched pool.}
 \label{tab:explicit_fields}
 \centering
 \footnotesize
@@ -354,8 +359,10 @@ High-suppression & 1.0 & 1.0 \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:real_ocr_full_pool} reports duplicate-averaged best-of-engine results. Still rows use content--geometry--repeat units, whereas video rows use content--geometry units. Brackets are 95\% unit-resampling summaries rather than population confidence intervals, and each video unit is the mean of 150 frames (nominally 2.5\,s at 60\,fps).
+
 \begin{table*}[!t]
-\caption{Single-UVC Real-Capture OCR Duplicate-Averaged Summary (Best-of-Engine; All 9 Geometries). $N$ Denotes Duplicate-Averaged Analysis Units per Row: Still Rows Use Content--Geometry--Repeat Units, Whereas Video Rows Use Content--Geometry Units. The raw archive retains 459/153 readability-priority short/video captures, but repeated captures within an analysis unit are averaged before analysis, yielding $N=324/108$. Brackets are 95\% unit-resampling summaries, not population confidence intervals. Each video unit averages 150 frames (nominally 2.5\,s at 60\,fps).}
+\caption{Duplicate-averaged real-capture OCR summary across nine geometries.}
 \label{tab:real_ocr_full_pool}
 \centering
 \footnotesize
@@ -414,24 +421,28 @@ Profile & Attack mode & $N$ & Char recovery (\%) [95\% summary] & Exact match (\
 \item \textbf{Geometry and repeat sensitivity}: Across all nine tested distance--angle geometries, character recovery for both readability-priority and high-suppression remains below the unprotected condition under short exposure. Averaging duplicate keys ensures that each planned content--geometry--repeat unit contributes once. In a descriptive sensitivity check, selecting round~1 or round~2 for the five repeated readability-priority items while retaining the other seven yields 16.6\% and 15.8\%, respectively, bracketing the reported duplicate-averaged estimate of 16.2\%. Neither selection changes the profile ordering.
 \end{enumerate}
 
+For each of the unprotected, readability-priority, and high-suppression profiles, Fig.~\ref{fig:montage} shows, from top to bottom, digital integration, a 3.91\,ms capture, and a 31.25\,ms capture. Camera panels are identical crops of archived raw JPEGs without geometric correction or brightness gain, whereas OCR uses geometrically corrected crops. Digital panels share a $1920\times1080$ black canvas and brightness-aligned full-cycle integration; unprotected integration equals the displayed source frame, and the protected reconstructions include the recorded $\alpha=0.2$ inversion slot. These digital views do not measure human readability or visual comfort.
+
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/real_capture_montage.pdf}
-\caption{Real-capture montage at 1.0\,m and $0^{\circ}$. Within each vertically stacked profile group (unprotected, readability-priority, and high-suppression), panels show, from top to bottom, the digital integrated reconstruction, 3.91\,ms short-exposure capture, and 31.25\,ms long-exposure capture. Camera panels are identically cropped from the archived raw camera JPEGs with no geometric correction or brightness gain, so they differ from the geometrically corrected crops used for OCR evaluation. Digital panels use the same $1920\times1080$ black playback canvas and brightness-aligned full-cycle integration for each profile (for the unprotected profile this integration equals the displayed source frame); the readability-priority and high-suppression reconstructions include the recorded $\alpha=0.2$ inversion slot. These digital views are not direct evidence of human readability or visual comfort.}
+\caption{Matched digital reconstructions and real captures at 1.0\,m and $0^{\circ}$.}
 \label{fig:montage}
 \end{figure}
+
+Fig.~\ref{fig:bar_attack} presents best-of-engine character recovery and exact-match rates pooled across all nine geometries. Repeated captures are averaged within content--geometry--repeat units; readability-priority contributes $N=324/324/108$ units for short exposure, long exposure, and video averaging. Error bars are unit-resampled 95\% percentile-bootstrap intervals from 2,000 resamples, and lower values indicate less recovered text.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/real_capture_bar.pdf}
-\caption{Best-of-engine OCR character recovery and exact-match rates for unprotected, readability-priority, and high-suppression profiles under short and long exposures and a 150-frame video mean, pooled across nine distance--angle configurations. Repeated captures are averaged within each content--geometry--repeat unit; readability-priority uses $N=324/324/108$ units for short/long/video. Error bars show unit-resampled 95\% percentile-bootstrap intervals (2,000 resamples). Lower values indicate less recovered text. Long exposure and video averaging reveal substantial residual recoverability in the readability-priority profile.}
+\caption{OCR recovery across profiles and capture attacks.}
 \label{fig:bar_attack}
 \end{figure}
 
 \textbf{Per-engine character recovery}: Table~\ref{tab:real_ocr_engine} reports descriptive raw-input point estimates after duplicate averaging. Unprotected recovery is 84.3\% for Tesseract, 79.5\% for EasyOCR, and 37.1\% for Surya. Across engines, protected recovery ranges from 2.1--16.3\% for Strong-overlay, 3.2--12.6\% for readability-priority, and 1.8--2.0\% for high-suppression. Because engine selection is performed per capture, the best-of-three result can exceed every single-engine mean. The reference-guided per-capture grid oracle in Table~\ref{tab:preprocessing_grid} and Fig.~\ref{fig:real_engine_ocr} yields 10.4\%, 31.0\%, and 18.3\% recovery for readability-priority and 7.6\%, 5.8\%, and 6.1\% for high-suppression using Tesseract, EasyOCR, and Surya, respectively. Because the raw input is included and selection uses the reference text, these increases quantify within-grid oracle gain rather than the performance of a single deployable transform.
 
 \begin{table}[!t]
-\caption{Real-Capture Short-Exposure OCR: Per-Engine Results After Duplicate Averaging Across 9 Geometric Conditions ($N$ = Content--Geometry--Repeat Units)}
+\caption{Per-engine short-exposure OCR across nine geometries.}
 \label{tab:real_ocr_engine}
 \centering
 \footnotesize
@@ -473,8 +484,10 @@ Profile & Engine & Char (\%) & Exact (\%) & N \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:preprocessing_grid} reports raw input $\rightarrow$ per-capture grid-oracle recovery for $N=324$ matched units per profile after duplicate averaging. For the best-of-three oracle, whole-text exact match changes from 65.7\% to 78.7\% for Original, from 0.5\% to 2.6\% for readability-priority, and remains 0.0\% for high-suppression.
+
 \begin{table}[!t]
-\caption{Character Recovery Across the Nine-Geometry Matched Pool Under the Fixed Preprocessing Grid. Each Cell Is Raw Input $\rightarrow$ Per-Capture Grid Oracle (\%); $N=324$ per Profile After Duplicate Averaging and Matching. For the Best-of-Three Oracle, Matched Whole-Text Exact-Match Rates Are 65.7\% $\rightarrow$ 78.7\% for Original, 0.5\% $\rightarrow$ 2.6\% for Readability-Priority, and 0.0\% $\rightarrow$ 0.0\% for High-Suppression.}
+\caption{Character recovery under the fixed preprocessing grid.}
 \label{tab:preprocessing_grid}
 \centering
 \footnotesize
@@ -493,20 +506,22 @@ Best of three & 94.1 $\rightarrow$ 95.5 & 16.2 $\rightarrow$ 37.2 & 5.0 $\righta
 \end{tabular}
 \end{table}
 
+Fig.~\ref{fig:real_engine_ocr} plots these within-engine increases. Connecting lines are not uncertainty intervals, and exact values appear in Table~\ref{tab:preprocessing_grid}.
+
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/real_engine_ocr.pdf}
-\caption{Raw-input versus fixed-grid-oracle character recovery for each OCR engine across the nine-geometry matched pool ($N=324$ per profile). The oracle selects the best of raw plus five predeclared transforms separately for each capture and metric. Lines show within-engine increases, not uncertainty intervals. Exact values appear in Table~\ref{tab:preprocessing_grid}.}
+\caption{Per-engine OCR recovery before and after fixed-grid preprocessing.}
 \label{fig:real_engine_ocr}
 \end{figure}
 
 \subsection{Inversion-Frame Ablation}
 \label{sec:inversion_ablation}
 
-A real-capture ablation (Table~\ref{tab:inversion_ablation}, pipeline per \S\ref{sec:real_capture}) compared a four-slot reference without an inversion frame ($\alpha=0$) against five-slot cycles with an amplitude-scaled inversion frame ($\alpha>0$). Thus, contrasts with $\alpha=0$ do not isolate inversion strength because they also change the cycle length. The ablation holds the Strong-overlay instance fixed and uses a five-item account/code/CET6 subset. For $\alpha\leq0.5$, recovery was nonmonotonic and remained 61.7--72.0\% under long exposure and 64.3--72.7\% under 150-frame averaging. At $\alpha=0.2$, the corresponding estimates were 67.0\% and 69.8\%, versus 68.6\% and 72.7\% at $\alpha=0$. These point estimates and capture-resampling intervals are descriptive, and interval overlap does not establish equivalence. Full inversion ($\alpha=1.0$) reduced recovery to 18.1\% and 28.4\%, respectively, but visual utility was not evaluated across $\alpha$. The $\alpha=0.2$ long-exposure result ($N=135$) is not a repeated estimate of the readability-priority row. Accordingly, $\alpha=0.2$ remains a modeled design choice rather than a validated optimum.
+A real-capture ablation (Table~\ref{tab:inversion_ablation}, pipeline per \S\ref{sec:real_capture}) compared a four-slot reference without an inversion frame ($\alpha=0$) against five-slot cycles with an amplitude-scaled inversion frame ($\alpha>0$). Thus, contrasts with $\alpha=0$ do not isolate inversion strength because they also change the cycle length. The ablation holds the Strong-overlay instance fixed ($\alpha_s=0.10$, $\alpha_g=0.12$) and uses a five-item account/code/CET6 subset. Each setting contributes $N=135$ long-exposure units and $N=45$ video-averaging units from the five items across nine geometries, with three repeats for long exposure. Values are mean best-of-engine character recovery with 95\% capture-resampling intervals. For $\alpha\leq0.5$, recovery was nonmonotonic and remained 61.7--72.0\% under long exposure and 64.3--72.7\% under 150-frame averaging. At $\alpha=0.2$, the corresponding estimates were 67.0\% and 69.8\%, versus 68.6\% and 72.7\% at $\alpha=0$. These point estimates and intervals are descriptive, and interval overlap does not establish equivalence. Full inversion ($\alpha=1.0$) reduced recovery to 18.1\% and 28.4\%, respectively, but visual utility was not evaluated across $\alpha$. This subset differs from the 12-item readability-priority rows in Table~\ref{tab:real_ocr_full_pool}; the $\alpha=0.2$ long-exposure result is not a repeated estimate of that row. Accordingly, $\alpha=0.2$ remains a modeled design choice rather than a validated optimum.
 
 \begin{table}[!t]
-\caption{Inversion-frame ablation on the fixed Strong-overlay instance ($\alpha_s=0.10$, $\alpha_g=0.12$). Values are mean best-of-engine character recovery with 95\% capture-resampling intervals. The $\alpha=0$ reference omits the inversion frame (four-slot cycle); $\alpha>0$ uses a five-slot cycle. The five account/code/CET6 items span nine geometries ($N=5\times9\times3=135$ per setting for long exposure; $N=5\times9=45$ for video averaging). This subset differs from the 12-item readability-priority rows in Table~\ref{tab:real_ocr_full_pool}.}
+\caption{Inversion-frame ablation on the fixed Strong-overlay profile.}
 \label{tab:inversion_ablation}
 \centering
 \footnotesize
@@ -532,14 +547,14 @@ The probes used the same 12 content items at three on-axis positions (0.5, 1.0, 
 
 All calls used SiliconFlow's OpenAI-compatible API. The recorded provider identifiers are \texttt{Qwen/\allowbreak Qwen3-\allowbreak VL-\allowbreak 32B-\allowbreak Instruct}, \texttt{Pro/\allowbreak moonshotai/\allowbreak Kimi-\allowbreak K2.6}, and \texttt{zai-\allowbreak org/\allowbreak GLM-\allowbreak 4.5V}. Qwen3-VL and GLM-4.5V have public technical reports~\cite{b_qwen3vl2025,b_glm45v2025}. For Kimi-K2.6, the public model card~\cite{b_kimi_k26}, the provider endpoint identifier, and archived request metadata form the reproducibility record. Decoding temperature is 0, and the maximum output is 4,096 tokens. The shared prompt requests only visible text and prohibits guessing; ground truth is not provided. Full prompts, parameters, and per-call outputs are archived. Metrics follow \S\ref{sec:setup} and are pooled at the capture level.
 
-API outcomes were classified as parseable transcriptions, explicit refusals or valid empty outputs, and unresolved technical failures. Refusals and valid empty outputs received zero exact match and character recovery; other failures were retried up to three times and otherwise retained as missing. Each cell reports valid/planned calls and missing-response bounds obtained by assigning all unresolved calls either 0\% or 100\% recovery, and these bounds are not confidence intervals. Estimates conditional on successful calls were not used for model ranking, and direct cross-model comparisons were restricted to complete-return cells.
+API outcomes were classified as parseable transcriptions, explicit refusals or valid empty outputs, and unresolved technical failures. Refusals and valid empty outputs received zero exact match and character recovery; other failures were retried up to three times and otherwise retained as missing. Each cell reports valid/planned calls and missing-response bounds obtained by assigning all unresolved calls either 0\% or 100\% recovery, and these bounds are not confidence intervals. Point entries indicate complete-return cells. Estimates conditional on successful calls were not used for model ranking, and direct cross-model comparisons were restricted to complete-return cells.
 
 Of 1,188 planned requests, 1,133 (95.4\%) returned valid outcomes, and 55 remained unresolved after three attempts. At 0.5\,m, failures comprised two Qwen non-JSON responses, 31 GLM HTTP 429 errors, and one GLM non-JSON response. At 1.0\,m, failures comprised four Qwen non-JSON responses, one Kimi connection closure, and 16 GLM TLS errors. No failures occurred at 1.5\,m. The archived errors therefore indicate provider, transport, or formatting failures rather than semantic evidence of unreadability. Their endpoint- and session-clustering also prevents an assumption of random missingness.
 
 We use the failure-free 1.5\,m run as primary cross-model evidence. The 1.0\,m run enters the short-exposure distance sweep as supplementary bounded evidence. At 1.0\,m, long-exposure exact-match bounds are 75.0--86.1\% for Qwen, 72.2--75.0\% for Kimi, and 2.8--19.4\% for GLM. Under the 150-frame mean, Qwen and Kimi each yield 83.3\% exact match with 12/12 valid calls. The corresponding GLM bound is 58.3--75.0\% with 10/12 valid calls. These incomplete cells are descriptive and are not used for direct model ranking. For compactness, Table~\ref{tab:real_vlm} reports only the 150-frame mean at 0.5\,m. The failure-free 1.5\,m run reports all four aggregate views to show view-selection sensitivity.
 
 \begin{table*}[!t]
-\caption{Real-Capture VLM Probes at 0$^{\circ}$ On-Axis. OCR and VLM Cells Report Exact / Character Recovery (\%); VLM Brackets Report Valid/Planned Calls. Ranges Are Missing-Response Bounds Obtained by Assigning Unresolved Calls 0\% or 100\% Recovery; Point Values Indicate Complete Returns. OCR BoE Reports Same-Batch Exact / Character Recovery. Protected rows use high-suppression; the 0.5\,m Original Short row is the unprotected reference.}
+\caption{Real-capture VLM probes at $0^{\circ}$ on-axis.}
 \label{tab:real_vlm}
 \centering
 \scriptsize
@@ -572,8 +587,10 @@ Distance (m) & Condition & OCR BoE & Qwen3-VL & Kimi-K2.6 & GLM-4.5V \\
 }
 \end{table*}
 
+The content breakdown in Table~\ref{tab:vlm_content} uses same-session Qwen3-VL recovery on unprotected Original Short images as its baseline, not the OCR best-of-engine reference. Qwen and Kimi entries are complete-return point estimates; GLM entries give character-recovery bounds and valid/planned calls. In the failure-free 1.5\,m run, CET6 dense pages yield 0\% character recovery for all three models.
+
 \begin{table}[!t]
-\caption{0.5\,m High-Suppression Short-Exposure VLM Character Recovery by Content Type. The Baseline column reports Qwen3-VL character recovery on the same-session unprotected Original Short images, not the OCR BoE reference. Qwen and Kimi Have Complete Returns and Show Point Estimates. GLM Cells Show Character-Recovery Bounds (\%) and Valid/Planned Calls; Point Values Indicate Complete Returns. At 1.5\,m, CET6 Dense Pages Yield 0\% Character Recovery Across All Three Models.}
+\caption{High-suppression short-exposure VLM recovery by content type at 0.5\,m.}
 \label{tab:vlm_content}
 \centering
 \scriptsize
@@ -636,8 +653,10 @@ The browser records actual frame intervals in each trial's \path{requestAnimatio
 
 \textbf{Participants}: Of 61 recruited volunteers, 56 were included in the analysis after applying the prespecified exclusion criteria. Five participants were excluded: three for minimum-view straight-line ratings and two for control mean accuracy below 50\%. Among the analyzed participants, 46 wore glasses, one wore contact lenses, and nine reported no corrective lenses.
 
+Table~\ref{tab:study_typing} uses participant means over two trials per condition, with $\Delta$ defined as masked minus control and participant-level bootstrap 95\% confidence intervals. A paired $t$-test and Cohen's $d_z$ are used when the pre-specified Shapiro test passes; otherwise, the analysis uses a Wilcoxon signed-rank test and rank-biserial $r_{rb}$. Test statistics are reported in the text.
+
 \begin{table}[!t]
-\caption{Typing Task: Within-Subject Comparison of the Control and Readability-Priority Masked Conditions ($N=56$; Participant Means Over Two Trials per Condition; {\textDelta} = Masked $-$ Control With Participant-Level Bootstrap 95\% CI). Per Metric, a Paired $t$-Test Is Used When the Pre-Specified Shapiro Test Passes (Effect Size Cohen's $d_z$), Otherwise a Wilcoxon Signed-Rank Test (Effect Size Rank-Biserial $r_{rb}$); Test Statistics Are Reported in the Text}
+\caption{Within-subject typing outcomes for control and readability-priority masking ($N=56$).}
 \label{tab:study_typing}
 \centering
 \footnotesize
@@ -656,7 +675,7 @@ First-key latency (ms) & 742.64 & 833.61 & $+90.97$ [$-31.11$, $+210.69$] \\
 \end{table}
 
 \begin{table}[!t]
-\caption{Subjective Ratings for the Six Display Conditions ($N=56$; 1--5 Likert, Higher Is Better; Mean $\pm$ SD). Stability Is the Inverse-Flicker Item and Comfort the Immediate Visual Comfort Item (\S\ref{sec:user_study}).}
+\caption{Subjective ratings across six display conditions ($N=56$; mean $\pm$ SD).}
 \label{tab:study_ratings}
 \centering
 \footnotesize
@@ -675,21 +694,21 @@ Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $
 \end{tabular}
 \end{table}
 
- \textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the user-study results. Readability-priority masking retained 94.83\% mean accuracy but reduced WPM by 1.14 (95\% CI $[-1.91,-0.39]$, $d_z=-0.39$). After Holm correction, WPM, CPM, and attempted characters remained significantly lower, whereas accuracy and first-keystroke latency did not differ significantly.
+ \textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the user-study results. In Fig.~\ref{fig:study_typing}, each gray line is one participant's mean across two trials per condition, and markers show group means with participant-level bootstrap 95\% confidence intervals. The panels report transcription accuracy, words per minute, and first-keystroke latency. Readability-priority masking retained 94.83\% mean accuracy but reduced WPM by 1.14 (95\% CI $[-1.91,-0.39]$, $d_z=-0.39$). After Holm correction, WPM, CPM, and attempted characters remained significantly lower, whereas accuracy and first-keystroke latency did not differ significantly.
 
- All three subjective ratings varied across display conditions (Friedman tests, all $p<10^{-13}$). Relative to the unmasked anchor, the readability-priority configuration received lower readability, stability, and comfort ratings, with large negative rank-biserial effects ($|r_{rb}|=0.82$--$0.97$. All Holm-adjusted $p\leq2.6\times10^{-4}$).
+ All three subjective ratings varied across display conditions (Friedman tests, all $p<10^{-13}$). Relative to the unmasked anchor, the readability-priority configuration received lower readability, stability, and comfort ratings, with large negative rank-biserial effects ($|r_{rb}|=0.82$--$0.97$. All Holm-adjusted $p\leq2.6\times10^{-4}$). Fig.~\ref{fig:study_ratings} orders the six conditions from the unmasked anchor to the readability-priority configuration. Markers show means, and error bars show SD clipped to the 1--5 scale; higher values indicate better ratings.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/study_typing_paired.pdf}
-\caption{Within-subject typing performance under the control and readability-priority masked conditions: each gray line is one participant (mean of two trials per condition); markers show group means with participant-level bootstrap 95\% confidence intervals. Panels show transcription accuracy, words per minute, and first-keystroke latency.}
+\caption{Within-subject typing performance under control and readability-priority masking.}
 \label{fig:study_typing}
 \end{figure}
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/study_ratings_likert.pdf}
-\caption{Mean 1--5 Likert ratings (error bars: SD, clipped to the 1--5 scale bounds) for readability, stability, and immediate visual comfort across the six rated display conditions, ordered from the unmasked anchor to the readability-priority full configuration. Higher is better on every item.}
+\caption{Readability, stability, and comfort ratings across six display conditions.}
 \label{fig:study_ratings}
 \end{figure}
 
@@ -701,7 +720,7 @@ Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $
 To probe whether temporal degradation transfers beyond text, we report an exploratory detection/tracking stress test within the same display--camera link; its evidence strength is not equivalent to the matched OCR main experiment. Content was displayed on the 240\,Hz screen, captured by the S600 at 1.5\,m / $0^{\circ}$, and processed by four detectors~\cite{b_yolo26,b_rtdetr2024,b_fasterrcnn2015,b_retinanet2017}. mAP, mAP50, and average recall (AR) are reported for detection. Real-capture tracking uses higher-order tracking accuracy (HOTA) and identification F1 (IDF1); simulated tracking additionally reports multiple-object tracking accuracy (MOTA) and multiple-object tracking precision (MOTP). The protected condition uses the $n=4$ mask+noise profile without overlays or inversion. The \texttt{real\_clean} reference is an unprotected nominal 31.25-ms capture. The \texttt{real\_short} image is the maximum-grayscale-contrast frame from a three-frame protected burst at the nominal 3.91-ms setting, and \texttt{real\_video} is the mean of 150 protected frames acquired nominally at 60\,fps. Tracking uses 450~frames from MOT17-09-FRCNN via still-display-then-capture and an in-project greedy association implementation inspired by ByteTrack~\cite{b_bytetrack2022}; it does not establish performance for a continuous-video tracker.
 
 \begin{table}[!t]
-\caption{Real-Capture COCO Detection (150 Images; \texttt{real\_clean} = Unprotected Capture Baseline)}
+\caption{Real-capture COCO detection across 150 images.}
 \label{tab:real_coco}
 \centering
 \footnotesize
@@ -734,7 +753,7 @@ Detector & Condition & mAP (\%) & mAP50 (\%) & AR (\%) \\
 \end{table}
 
 \begin{table}[!t]
-\caption{Real-Capture MOT17-09-FRCNN Still-Frame Tracking (ByteTrack-Style Greedy Association, 450 Frames; HOTA and IDF1 Computed by TrackEval~\cite{b_hota2021})}
+\caption{Real-capture MOT17-09-FRCNN tracking across 450 frames.}
 \label{tab:real_mot}
 \centering
 \footnotesize
@@ -765,12 +784,12 @@ Detector & Condition & HOTA (\%) & IDF1 (\%) \\
 \end{tabular}
 \end{table}
 
-Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Table~\ref{tab:real_coco}, Fig.~\ref{fig:real_det_drop}), representing relative decreases exceeding 85\%, while the \texttt{real\_video} condition yields 3.0--7.3\%, also below the \texttt{real\_clean} baselines. Because protection, exposure, resolution, and frame reduction differ across conditions, these values are a cross-task stress test rather than an isolated protection effect. In still-frame tracking (Table~\ref{tab:real_mot}), HOTA decreases from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.8--12.4\% to 4.4--6.5\%. Detection mAP was computed by pycocotools. HOTA and IDF1 were both computed by TrackEval. The tracker is an in-project greedy IoU association implementation.
+Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--5.8\% (Table~\ref{tab:real_coco}, Fig.~\ref{fig:real_det_drop}), representing relative decreases exceeding 85\%, while the \texttt{real\_video} condition yields 3.0--7.3\%, also below the \texttt{real\_clean} baselines. Because protection, exposure, resolution, and frame reduction differ across conditions, these values are a cross-task stress test rather than an isolated protection effect. In still-frame tracking (Table~\ref{tab:real_mot}), HOTA decreases from 14.2--15.8\% to 5.1--8.7\% and IDF1 from 9.8--12.4\% to 4.4--6.5\%. Detection mAP was computed by pycocotools. HOTA and IDF1 were both computed by TrackEval~\cite{b_hota2021}. The tracker is an in-project greedy IoU association implementation.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/real_detection_drop.pdf}
-\caption{Real-capture mAP50 for four detectors across the unprotected capture, short-exposure protected capture, and 150-frame protected mean. Conditions differ in protection, exposure, resolution, and frame reduction.}
+\caption{Real-capture mAP50 across clean, short-exposure, and video-mean conditions.}
 \label{fig:real_det_drop}
 \end{figure}
 
@@ -780,10 +799,10 @@ Under short exposure, all four detectors' mAP50 drops from 39.2--50.2\% to 1.6--
 This section uses software simulation to address two questions: (1)~what is the machine readability of one protected subframe obtained after the application renderer, and (2)~what is recovery under zero camera noise and perfect alignment? By characterizing the post-render single-subframe capture point, the experiment defines a boundary that malware intercepting the original frame or accumulating a complete cycle would bypass.
 
 \subsubsection{Synthetic Single-Subframe OCR}
-Using Tesseract~\cite{b_smith2007}, EasyOCR~\cite{b_easyocr2020}, and Surya~\cite{b_surya2024} on 120 synthetic samples, character recovery drops from 94.0--97.0\% to 0--2.6\% across three engines (Table~\ref{tab:ocr_corpus}). Stratified breakdowns further characterize recovery across the evaluated content categories.
+Using Tesseract~\cite{b_smith2007}, EasyOCR~\cite{b_easyocr2020}, and Surya~\cite{b_surya2024} on 120 synthetic samples, character recovery drops from 94.0--97.0\% to 0--2.6\% across three engines (Table~\ref{tab:ocr_corpus}). Protected subframes use $n=4$ and $\varepsilon=8/255$. Stratified breakdowns further characterize recovery across the evaluated content categories.
 
 \begin{table}[!t]
-\caption{Synthetic Single-Subframe OCR: Three-Engine Character Recovery (120 Samples, $n=4$, $\varepsilon=8/255$)}
+\caption{Synthetic single-subframe OCR across three engines and 120 samples.}
 \label{tab:ocr_corpus}
 \centering
 \footnotesize
@@ -802,18 +821,18 @@ Surya & 97.0 & 2.6 & 94.4 \\
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/multiengine_ocr.pdf}
-\caption{Character recovery for three OCR engines on original frames and single protected subframes; error bars are 95\% bootstrap intervals resampled by corpus sample.}
+\caption{Character recovery on original frames and protected subframes.}
 \label{fig:multiengine_ocr}
 \end{figure}
 
-Fig.~\ref{fig:multiengine_ocr} visualizes these results; single-subframe recovery does not exceed 2.6\% for any engine.
+Fig.~\ref{fig:multiengine_ocr} visualizes these results with 95\% bootstrap intervals resampled by corpus sample; single-subframe recovery does not exceed 2.6\% for any engine.
 
 \subsubsection{Theoretical Security Boundary}
 \label{sec:security_frontier}
 When an attacker accumulates registered frames covering a full cycle, complementary subframes can be re-summed in the ideal linear model of~(\ref{eq:noise_complement}), with the archived per-sample strongest digital attack recovering 95.2\% and pure full-cycle temporal averaging recovering 94.3\% (Table~\ref{tab:digital_boundary})---values that empirically mark the reconstruction boundary of the evaluated linear decomposition. Across the nine physical geometries, the high-suppression 150-frame mean yields 47.9\% recovery. Character recovery also depends on content and the physical imaging path.
 
 \begin{table}[!t]
-\caption{Archived Digital Reconstruction Boundary (Tesseract)}
+\caption{Archived digital reconstruction boundary for Tesseract.}
 \label{tab:digital_boundary}
 \centering
 \footnotesize
@@ -829,17 +848,19 @@ High: cycle mean & 16 & 56.6 & 6.3 & 0.764 & 4.87 \\
 High: inversion slot & 16 & 93.0 & 81.2 & -- & -- \\
 \bottomrule
 \end{tabular}
-\vspace{1mm}
-
-\raggedright\scriptsize The 120-sample base attack and 16-sample profile ablation are separate archived digital evaluations. ``Per-sample strongest'' selects the best result among seven prespecified reconstructions (temporal average cycle, blue channel max, differential blue, differential luma, global shutter slot~0, phase search max, and phase search mean) for each sample. ``Inversion slot'' extracts only the $\alpha(\mathbf{1}-\mathbf{I})$ frame and applies contrast stretching; its 93.0\% recovery identifies slot-level composition as a critical design variable. The base rows are scored on the same 120-sample corpus as Table~\ref{tab:ocr_corpus}, whose unprotected Tesseract baseline is 94.0\%. Because reconstructions are normalized before scoring, their 94.3\% and 95.2\% values fall marginally above that baseline; this margin reflects normalization and rounding rather than information gain, so full-cycle reconstruction should be read as saturating at the unprotected level rather than exceeding it. Profile SSIM and $\Delta E_{00}$ describe full-cycle reconstruction quality, not physical or user-perceived quality.
 \end{table}
+\FloatBarrier
+
+The 120-sample base attack and 16-sample profile ablation in Table~\ref{tab:digital_boundary} are separate archived digital evaluations. For each sample, ``per-sample strongest'' selects the best result among seven prespecified reconstructions: temporal average cycle, blue channel max, differential blue, differential luma, global shutter slot~0, phase search max, and phase search mean. The ``inversion slot'' row extracts only the $\alpha(\mathbf{1}-\mathbf{I})$ frame and applies contrast stretching; its 93.0\% recovery identifies slot-level composition as a critical design variable.
+
+The base rows are scored on the same 120-sample corpus as Table~\ref{tab:ocr_corpus}, whose unprotected Tesseract baseline is 94.0\%. Reconstructions are normalized before scoring, so the 94.3\% and 95.2\% values fall marginally above that baseline. This margin reflects normalization and rounding rather than information gain; full-cycle reconstruction should therefore be interpreted as saturating at the unprotected level rather than exceeding it. Profile SSIM and $\Delta E_{00}$ describe full-cycle reconstruction quality, not physical or user-perceived quality.
 
 \subsubsection{Detection and Tracking Simulation}
 
-Simulations were run on COCO val2017~\cite{b_coco2014} and MOT17~\cite{b_mot16} with YOLO26x~\cite{b_yolo26}, RT-DETR-x~\cite{b_rtdetr2024}, Faster R-CNN~\cite{b_fasterrcnn2015}, and RetinaNet~\cite{b_retinanet2017}: the COCO simulation used 8~images as an implementation pipeline diagnostic (Table~\ref{tab:coco_sim}), while the MOT simulation covers 7~sequences totaling 5,316~frames and uses the same in-project ByteTrack-inspired greedy association method (Table~\ref{tab:mot_sim}).
+Simulations were run on COCO val2017~\cite{b_coco2014} and MOT17~\cite{b_mot16} with YOLO26x~\cite{b_yolo26}, RT-DETR-x~\cite{b_rtdetr2024}, Faster R-CNN~\cite{b_fasterrcnn2015}, and RetinaNet~\cite{b_retinanet2017}: the COCO simulation used 8~images as an implementation pipeline diagnostic (Table~\ref{tab:coco_sim}), while the MOT simulation covers 7~sequences totaling 5,316~frames and uses the same in-project ByteTrack-inspired greedy association method (Table~\ref{tab:mot_sim}). CLEAR metrics and IDF1 are computed by this in-project approximate implementation.
 
 \begin{table}[!t]
-\caption{COCO val2017 Simulated Detection Pipeline Diagnostics (4 Detectors, 8 Images)}
+\caption{Simulated COCO val2017 detection diagnostics across four detectors and eight images.}
 \label{tab:coco_sim}
 \centering
 \footnotesize
@@ -872,7 +893,7 @@ Detector & Condition & mAP (\%) & mAP50 (\%) & AR (\%) \\
 \end{table}
 
 \begin{table}[!t]
-\caption{MOT17 Simulated Tracking (ByteTrack-Style Greedy Association; 5,316 Frames; CLEAR and IDF1 by In-Project Approximate Implementation)}
+\caption{Simulated MOT17 tracking across 5,316 frames.}
 \label{tab:mot_sim}
 \centering
 \footnotesize
@@ -909,7 +930,7 @@ On the 8 COCO images, single-subframe mAP50 across the four detectors is 0--6.0\
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{figures/all_attackers.pdf}
-\caption{Residual capability of one protected subframe relative to the clean baseline (clean = 100\%). Within each task family, the protected value is the largest model-wise protected-to-clean ratio among the evaluated pipelines: Surya for OCR and RT-DETR-x for detection and tracking. This conservative strongest-tested-pipeline aggregation is normalized within task. The task-specific metrics are not directly commensurate across tasks.}
+\caption{Strongest tested protected-to-clean ratio within each task family.}
 \label{fig:all_attackers}
 \end{figure}
 
