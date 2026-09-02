@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  1 SEP 2026 17:19
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  2 SEP 2026 17:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -861,22 +861,17 @@ Package xcolor Warning: Incompatible color definition on input line 324.
 Package xcolor Warning: Incompatible color definition on input line 341.
 
 
-Package xcolor Warning: Incompatible color definition on input line 357.
-
-
-Underfull \hbox (badness 1852) in paragraph at lines 401--402
-\T1/times/n/n/10 16.2% for readability-priority, and 5.0% for high-
- []
+Package xcolor Warning: Incompatible color definition on input line 358.
 
 
 
 
-Overfull \hbox (6.86617pt too wide) in paragraph at lines 405--406
+Overfull \hbox (6.86617pt too wide) in paragraph at lines 406--407
 []\T1/times/b/n/10 Attacker-dependent re-cov-ery\T1/times/n/n/10 : Mask-only, mask+noise,
  []
 
 
-Underfull \hbox (badness 1681) in paragraph at lines 405--406
+Underfull \hbox (badness 1681) in paragraph at lines 406--407
 \T1/times/n/n/10 micro ex-act re-cov-ery (Ta-ble 5[]). Its em-pir-i-cal P99
  []
 
@@ -889,7 +884,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 408.
+(Font)              using `T1/formata/m/it' instead on input line 409.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -907,22 +902,22 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [8]
-Underfull \hbox (badness 3039) in paragraph at lines 409--410
+Underfull \hbox (badness 3039) in paragraph at lines 410--411
 \T1/times/n/n/10 lu-mi-nance, resid-ual over-lay edges, and geometry-
  []
 
 
-Underfull \hbox (badness 3449) in paragraph at lines 411--412
+Underfull \hbox (badness 3449) in paragraph at lines 412--413
 []\T1/times/b/n/10 High-suppression in-te-gra-tion re-cov-ery\T1/times/n/n/10 : This ex-
  []
 
 
-Underfull \hbox (badness 7468) in paragraph at lines 413--414
+Underfull \hbox (badness 7468) in paragraph at lines 414--415
 \T1/times/n/n/10 ex-po-sure. Av-er-ag-ing du-pli-cate keys en-sures that
  []
 
 
-Underfull \hbox (badness 3058) in paragraph at lines 413--414
+Underfull \hbox (badness 3058) in paragraph at lines 414--415
 \T1/times/n/n/10 once. In a de-scrip-tive sen-si-tiv-ity check, se-lect-ing
  []
 
@@ -931,52 +926,52 @@ Underfull \hbox (badness 3058) in paragraph at lines 413--414
 File: figures/real_capture_montage.pdf Graphic file (type pdf)
 <use figures/real_capture_montage.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 419.
+Package xcolor Warning: Incompatible color definition on input line 420.
 
 
-Package xcolor Warning: Incompatible color definition on input line 419.
+Package xcolor Warning: Incompatible color definition on input line 420.
 
 File: figures/real_capture_bar.pdf Graphic file (type pdf)
 <use figures/real_capture_bar.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 426.
+Package xcolor Warning: Incompatible color definition on input line 427.
 
 
-Package xcolor Warning: Incompatible color definition on input line 426.
+Package xcolor Warning: Incompatible color definition on input line 427.
 
 
-Package xcolor Warning: Incompatible color definition on input line 433.
+Package xcolor Warning: Incompatible color definition on input line 434.
 
 
-Overfull \hbox (4.27019pt too wide) in paragraph at lines 438--473
- [][] 
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 476.
+Package xcolor Warning: Incompatible color definition on input line 477.
 
 File: figures/real_engine_ocr.pdf Graphic file (type pdf)
 <use figures/real_engine_ocr.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 496.
+Package xcolor Warning: Incompatible color definition on input line 499.
 
 
-Package xcolor Warning: Incompatible color definition on input line 496.
+Package xcolor Warning: Incompatible color definition on input line 499.
 
 
-Package xcolor Warning: Incompatible color definition on input line 500.
+Package xcolor Warning: Incompatible color definition on input line 503.
 
 
-Package xcolor Warning: Incompatible color definition on input line 506.
+Package xcolor Warning: Incompatible color definition on input line 509.
 
 
-Package xcolor Warning: Incompatible color definition on input line 523.
+Package xcolor Warning: Incompatible color definition on input line 526.
+
+
+Underfull \hbox (badness 1521) in paragraph at lines 529--530
+\T1/times/n/n/10 API: Qwen3-VL-32B-Instruct [47], Kimi-K2.6 [48], and
+ []
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 529.
+(Font)              using `T1/formata/m/it' instead on input line 532.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1006,7 +1001,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 529.
+(Font)              using `T1/formata/m/it' instead on input line 534.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1029,7 +1024,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 531.
+(Font)              using `T1/formata/m/it' instead on input line 536.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1049,44 +1044,44 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [11]
-Underfull \hbox (badness 10000) in paragraph at lines 534--535
-[]\T1/times/n/n/10 Of 1,188 planned re-quests, 1,133 (95.4%) yielded
- []
+
+Package xcolor Warning: Incompatible color definition on input line 542.
 
 
-Package xcolor Warning: Incompatible color definition on input line 539.
+Package xcolor Warning: Incompatible color definition on input line 576.
 
 
-Package xcolor Warning: Incompatible color definition on input line 571.
-
-
-
-
-Underfull \hbox (badness 2073) in paragraph at lines 600--601
+Underfull \hbox (badness 2073) in paragraph at lines 605--606
 []\T1/times/b/n/10 VLM re-cov-ery con-cen-trates on large-font short
  []
 
 
-Underfull \hbox (badness 6380) in paragraph at lines 604--605
+
+
+Underfull \hbox (badness 6380) in paragraph at lines 609--610
 []\T1/times/b/n/10 Sustained video ag-gre-ga-tion strongly in-creases
  []
 
 
-Underfull \hbox (badness 1953) in paragraph at lines 604--605
+Underfull \hbox (badness 1953) in paragraph at lines 609--610
 \T1/times/n/n/10 GLM has 8/12 valid calls, with bounds of 58.3--
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 610.
+Package xcolor Warning: Incompatible color definition on input line 615.
 
-Missing character: There is no ， ("FF0C) in font t1-times!
+
+Underfull \hbox (badness 1609) in paragraph at lines 626--627
+[]\T1/times/b/n/10 Task de-sign\T1/times/n/n/10 : Par-tic-i-pants com-pleted a 12-second un-
+ []
+
 
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 620.
+(Font)              using `T1/formata/m/it' instead on input line 627.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1104,17 +1099,15 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [12]
+Underfull \vbox (badness 1603) has occurred while \output is active []
 
 
-Underfull \hbox (badness 3302) in paragraph at lines 625--626
-[]\T1/times/n/n/10 Both con-di-tions are ren-dered by the same \T1/pcr/n/n/10 render
- []
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 626.
+(Font)              using `T1/formata/m/it' instead on input line 638.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1134,23 +1127,54 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [13]
-Underfull \hbox (badness 6995) in paragraph at lines 627--628
-[]\T1/times/n/n/10 Scoring no longer com-pares char-ac-ters position-by-
+
+Package xcolor Warning: Incompatible color definition on input line 640.
+
+LaTeX Font Info:    Trying to load font information for LGR+formata on input line 640.
+LaTeX Font Info:    No file LGRformata.fd. on input line 640.
+
+LaTeX Font Warning: Font shape `LGR/formata/m/n' undefined
+(Font)              using `LGR/cmr/m/n' instead on input line 640.
+
+
+Package xcolor Warning: Incompatible color definition on input line 659.
+
+File: figures/study_typing_paired.pdf Graphic file (type pdf)
+<use figures/study_typing_paired.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 685.
+
+
+Package xcolor Warning: Incompatible color definition on input line 685.
+
+File: figures/study_ratings_likert.pdf Graphic file (type pdf)
+<use figures/study_ratings_likert.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 692.
+
+
+Package xcolor Warning: Incompatible color definition on input line 692.
+
+
+Package xcolor Warning: Incompatible color definition on input line 698.
+
+
+Underfull \hbox (badness 1635) in paragraph at lines 701--702
+\T1/pcr/n/n/10 real_short \T1/times/n/n/10 im-age is the maximum-grayscale-contrast
  []
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 637.
-
-LaTeX Font Info:    Trying to load font information for LGR+formata on input line 637.
-LaTeX Font Info:    No file LGRformata.fd. on input line 637.
-
-LaTeX Font Warning: Font shape `LGR/formata/m/n' undefined
-(Font)              using `LGR/cmr/m/n' instead on input line 637.
+Package xcolor Warning: Incompatible color definition on input line 704.
 
 
-Package xcolor Warning: Incompatible color definition on input line 656.
+Package xcolor Warning: Incompatible color definition on input line 737.
+
+
+Underfull \hbox (badness 2913) in paragraph at lines 768--769
+\T1/times/n/n/10 base-lines. Be-cause pro-tec-tion, ex-po-sure, res-o-lu-tion, and
+ []
 
 
 
@@ -1158,7 +1182,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 676.
+(Font)              using `T1/formata/m/it' instead on input line 769.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1176,49 +1200,42 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [14]
-File: figures/study_typing_paired.pdf Graphic file (type pdf)
-<use figures/study_typing_paired.pdf>
+File: figures/real_detection_drop.pdf Graphic file (type pdf)
+<use figures/real_detection_drop.pdf>
 
 
-Package xcolor Warning: Incompatible color definition on input line 680.
+Package xcolor Warning: Incompatible color definition on input line 773.
 
 
-Package xcolor Warning: Incompatible color definition on input line 680.
-
-File: figures/study_ratings_likert.pdf Graphic file (type pdf)
-<use figures/study_ratings_likert.pdf>
-
-Package xcolor Warning: Incompatible color definition on input line 687.
+Package xcolor Warning: Incompatible color definition on input line 773.
 
 
-Package xcolor Warning: Incompatible color definition on input line 687.
+Package xcolor Warning: Incompatible color definition on input line 778.
 
 
-Package xcolor Warning: Incompatible color definition on input line 693.
+Package xcolor Warning: Incompatible color definition on input line 782.
 
 
-Underfull \hbox (badness 1635) in paragraph at lines 696--697
-\T1/pcr/n/n/10 real_short \T1/times/n/n/10 im-age is the maximum-grayscale-contrast
- []
+Package xcolor Warning: Incompatible color definition on input line 786.
+
+File: figures/multiengine_ocr.pdf Graphic file (type pdf)
+<use figures/multiengine_ocr.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 805.
 
 
+Package xcolor Warning: Incompatible color definition on input line 805.
 
 
-Package xcolor Warning: Incompatible color definition on input line 699.
+Package xcolor Warning: Incompatible color definition on input line 811.
 
 
-Package xcolor Warning: Incompatible color definition on input line 731.
-
-
-Underfull \hbox (badness 2913) in paragraph at lines 762--763
-\T1/times/n/n/10 base-lines. Be-cause pro-tec-tion, ex-po-sure, res-o-lu-tion, and
- []
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 763.
+(Font)              using `T1/formata/m/it' instead on input line 814.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1238,53 +1255,38 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [15]
-File: figures/real_detection_drop.pdf Graphic file (type pdf)
-<use figures/real_detection_drop.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 816.
 
 
-Package xcolor Warning: Incompatible color definition on input line 767.
+Package xcolor Warning: Incompatible color definition on input line 837.
 
 
-Package xcolor Warning: Incompatible color definition on input line 767.
-
-
-Package xcolor Warning: Incompatible color definition on input line 772.
-
-
-Package xcolor Warning: Incompatible color definition on input line 776.
-
-
-Package xcolor Warning: Incompatible color definition on input line 780.
-
-File: figures/multiengine_ocr.pdf Graphic file (type pdf)
-<use figures/multiengine_ocr.pdf>
-
-Package xcolor Warning: Incompatible color definition on input line 798.
-
-
-Package xcolor Warning: Incompatible color definition on input line 798.
-
-
-Package xcolor Warning: Incompatible color definition on input line 804.
-
-
-
-
-Package xcolor Warning: Incompatible color definition on input line 809.
-
-
-Package xcolor Warning: Incompatible color definition on input line 830.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 832--833
+Underfull \hbox (badness 10000) in paragraph at lines 839--840
 \T1/times/n/n/10 Simulations were run on COCO val2017 [59] and
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 835.
+Package xcolor Warning: Incompatible color definition on input line 842.
 
 
-Package xcolor Warning: Incompatible color definition on input line 868.
+Package xcolor Warning: Incompatible color definition on input line 875.
+
+
+
+File: figures/all_attackers.pdf Graphic file (type pdf)
+<use figures/all_attackers.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 912.
+
+
+Package xcolor Warning: Incompatible color definition on input line 912.
+
+
+Package xcolor Warning: Incompatible color definition on input line 919.
+
+
+Package xcolor Warning: Incompatible color definition on input line 922.
 
 
 
@@ -1292,7 +1294,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 900.
+(Font)              using `T1/formata/m/it' instead on input line 925.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1310,31 +1312,45 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [16]
-File: figures/all_attackers.pdf Graphic file (type pdf)
-<use figures/all_attackers.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 928.
 
 
-Package xcolor Warning: Incompatible color definition on input line 904.
+Package xcolor Warning: Incompatible color definition on input line 934.
 
 
-Package xcolor Warning: Incompatible color definition on input line 904.
-
-
-Package xcolor Warning: Incompatible color definition on input line 911.
-
-
-Package xcolor Warning: Incompatible color definition on input line 914.
+Underfull \hbox (badness 2600) in paragraph at lines 938--939
+\T1/times/n/n/10 par-tic-i-pants re-tained 94.83% typ-ing ac-cu-racy but typed
+ []
 
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 920.
+Package xcolor Warning: Incompatible color definition on input line 942.
+
+
+Package xcolor Warning: Incompatible color definition on input line 947.
+
+
+Underfull \hbox (badness 3449) in paragraph at lines 951--952
+[]\T1/times/n/n/10 The sta-tis-ti-cal and at-tack ev-i-dence is also bounded.
+ []
+
+
+Underfull \hbox (badness 1436) in paragraph at lines 951--952
+\T1/times/n/n/10 while track-ing uses 450 still-display-then-capture frames
+ []
+
+
+Underfull \hbox (badness 2158) in paragraph at lines 951--952
+\T1/times/n/n/10 from one MOT17 se-quence. Com-mer-cial OCR, learned
+ []
 
 
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 925.
+(Font)              using `T1/formata/m/it' instead on input line 956.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1355,38 +1371,40 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [17]
 
-Package xcolor Warning: Incompatible color definition on input line 926.
+Package xcolor Warning: Incompatible color definition on input line 961.
 
 
-Underfull \hbox (badness 2600) in paragraph at lines 930--931
-\T1/times/n/n/10 par-tic-i-pants re-tained 94.83% typ-ing ac-cu-racy but typed
+Package xcolor Warning: Incompatible color definition on input line 973.
+
+
+Package xcolor Warning: Incompatible color definition on input line 979.
+
+
+Package xcolor Warning: Incompatible color definition on input line 985.
+
+
+Package manuscript Warning: Unresolved submission placeholder on input line 986.
+
+(./main.bbl
+
+
+Package xcolor Warning: Incompatible color definition on input line 2.
+
+LaTeX Font Info:    Calculating math sizes for size <7.61> on input line 30.
+
+Underfull \hbox (badness 1817) in paragraph at lines 76--79
+\T1/times/n/it/7.61 Cir-cuits and Sys-tems (IS-CAS)\T1/times/n/n/7.61 , 2014, pp. 449--452, doi: 10.1109/IS-
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 934.
-
-
-Package xcolor Warning: Incompatible color definition on input line 939.
-
-
-
-
-Underfull \hbox (badness 3449) in paragraph at lines 943--944
-[]\T1/times/n/n/10 The sta-tis-ti-cal and at-tack ev-i-dence is also bounded.
+Underfull \hbox (badness 1635) in paragraph at lines 130--133
+[]\T1/times/n/n/7.61 S. Zhu, C. Zhang, and X. Zhang, ``Au-tomat-ing vi-sual pri-vacy pro-
  []
 
 
-Underfull \hbox (badness 1436) in paragraph at lines 943--944
-\T1/times/n/n/10 while track-ing uses 450 still-display-then-capture frames
+Underfull \hbox (badness 3449) in paragraph at lines 130--133
+\T1/times/n/n/7.61 tec-tion us-ing a smart LED,'' in \T1/times/n/it/7.61 Proc. 23rd ACM Int. Conf. Mo-
  []
-
-
-Underfull \hbox (badness 2158) in paragraph at lines 943--944
-\T1/times/n/n/10 from one MOT17 se-quence. Com-mer-cial OCR, learned
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 953.
 
 
 
@@ -1394,7 +1412,7 @@ File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 961.
+(Font)              using `T1/formata/m/it' instead on input line 143.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1412,45 +1430,22 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [18]
-
-Package xcolor Warning: Incompatible color definition on input line 965.
-
-
-Package xcolor Warning: Incompatible color definition on input line 971.
+Underfull \hbox (badness 3271) in paragraph at lines 227--232
+\T1/times/m/n/7.61 A. Khakzar, Z. Li, X. Cao, and P. Torr, ``A sur-vey on trans-fer-
+ []
 
 
-Package xcolor Warning: Incompatible color definition on input line 977.
-
-
-Package manuscript Warning: Unresolved submission placeholder on input line 978.
-
-(./main.bbl
-
-Package xcolor Warning: Incompatible color definition on input line 2.
-
-LaTeX Font Info:    Calculating math sizes for size <7.61> on input line 30.
-
-Underfull \hbox (badness 1817) in paragraph at lines 76--79
-\T1/times/n/it/7.61 Cir-cuits and Sys-tems (IS-CAS)\T1/times/n/n/7.61 , 2014, pp. 449--452, doi: 10.1109/IS-
+Underfull \hbox (badness 3635) in paragraph at lines 227--232
+\T1/times/n/it/7.61 ac-tions on Ma-chine Learn-ing Re-search\T1/times/m/n/7.61 , 2024, [On-line]. Avail-able:
  []
 
 
 
-
-Underfull \hbox (badness 1635) in paragraph at lines 130--133
-[]\T1/times/n/n/7.61 S. Zhu, C. Zhang, and X. Zhang, ``Au-tomat-ing vi-sual pri-vacy pro-
- []
-
-
-Underfull \hbox (badness 3449) in paragraph at lines 130--133
-\T1/times/n/n/7.61 tec-tion us-ing a smart LED,'' in \T1/times/n/it/7.61 Proc. 23rd ACM Int. Conf. Mo-
- []
-
-
+)
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 208.
+(Font)              using `T1/formata/m/it' instead on input line 996.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1470,18 +1465,6 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [19]
-Underfull \hbox (badness 3271) in paragraph at lines 227--232
-\T1/times/m/n/7.61 A. Khakzar, Z. Li, X. Cao, and P. Torr, ``A sur-vey on trans-fer-
- []
-
-
-Underfull \hbox (badness 3635) in paragraph at lines 227--232
-\T1/times/n/it/7.61 ac-tions on Ma-chine Learn-ing Re-search\T1/times/m/n/7.61 , 2024, [On-line]. Avail-able:
- []
-
-
-
-)
 File: profiles/hzy.JPG Graphic file (type bmp)
 <profiles/hzy.JPG>
 File: profiles/hzy.JPG Graphic file (type bmp)
@@ -1494,11 +1477,13 @@ File: bullet.png Graphic file (type bmp)
 <bullet.png>
 
 
+
+
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 998.
+(Font)              using `T1/formata/m/it' instead on input line 1006.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1515,7 +1500,9 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[20] (./main.aux)
+[20
+
+] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1526,12 +1513,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 6235 strings out of 473832
- 105817 string characters out of 5729481
- 518932 words of memory out of 5000000
- 29163 multiletter control sequences out of 15000+600000
+ 6234 strings out of 473832
+ 105803 string characters out of 5729481
+ 518778 words of memory out of 5000000
+ 29162 multiletter control sequences out of 15000+600000
  630429 words of font info for 158 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 57i,10n,65p,1822b,508s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,10n,65p,1808b,510s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on main.pdf (20 pages).
