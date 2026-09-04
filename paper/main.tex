@@ -13,6 +13,7 @@
 \usepackage{url}
 
 \usepackage{bm}
+\usepackage[hidelinks,bookmarks=false]{hyperref}
 \makeatletter
 \AtBeginDocument{\DeclareMathVersion{bold}
 \SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
@@ -981,7 +982,9 @@ This research is defensive in nature and evaluates recovery boundaries to assess
 %% DATA AVAILABILITY
 %% ============================================================
 \section*{Data Availability}
-The data and code that support the findings of this study are available from the corresponding author upon reasonable request.
+The source code, experimental configurations, analysis pipelines, and curated benchmark data supporting the findings of this study are available at \url{https://github.com/docandyc/temporal-pixel-masking}.
+
+The code is distributed under the MIT license. Full raw capture datasets and raw participant databases are withheld due to volume and privacy considerations; these materials are available from the corresponding author upon reasonable request.
 
 %% ============================================================
 %% ACKNOWLEDGMENT
