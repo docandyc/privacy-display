@@ -940,40 +940,25 @@ On the 8 COCO images, single-subframe mAP50 across the four detectors is 0--6.0\
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Principal Findings and Research Value}
+\subsection{Interpretation of Findings}
 
-The primary result is a matched short-exposure comparison in the tested S600 display--camera link. Across 12 content items, 9 geometries, and 3 repeats, best-of-engine character recovery falls from 94.1\% for unprotected content to 16.2\% for readability-priority and 5.0\% for high-suppression. The corresponding content-cluster contrasts are 78.0\% and 89.1\%. Thus, the result establishes feasibility for mitigating conventional OCR under the evaluated short-exposure conditions, rather than a general guarantee against screen photography.
+The matched evaluation shows that temporal pixel masking substantially reduces conventional OCR recovery under the tested short-exposure conditions (Table~\ref{tab:real_ocr_common}). This result is specific to the evaluated display--camera link and does not establish general resistance to screen photography. The main contribution is therefore a system-level characterization of conditional effectiveness and attacker escalation. Detection and tracking remain secondary cross-task stress tests.
 
-The research value lies in treating protection as a system property rather than inferring it from digitally generated subframes alone. The evaluation connects multi-engine OCR, explicit-field leakage and upper-tail risk, fixed preprocessing, temporal integration, digital reconstruction, and VLM probes within the same display--camera setting. Together, these analyses characterize not only when conventional OCR recovery decreases, but also how recovery changes as the attack capability is strengthened. Detection and tracking remain secondary cross-task stress tests and do not carry the same evidentiary weight as the matched OCR analysis.
+\subsection{Attack Boundaries and Trade-offs}
 
-\subsection{Integration and Attacker Escalation}
+Temporal masking relies on the mismatch between human integration and short camera exposure. However, a registered full cycle remains reconstructable, and physical frame averaging also recovers substantial text. The VLM probes further show that conventional OCR underestimates stronger recognition attackers. Protection claims must therefore specify the attacker, capture mode, and content regime.
 
-Temporal masking exploits the difference between human temporal integration and short camera exposure; in the ideal linear model, registered complementary subframes can reconstruct the original because $\sum\mathbf{I}_k = \mathbf{I}$. The digital attack evaluation makes this boundary explicit: per-sample strongest reconstruction reaches 95.2\% recovery and pure full-cycle averaging reaches 94.3\%. These values characterize the reconstruction boundary of the evaluated digital decomposition; they are not a measure of physical display performance, human readability, or confidentiality in the camera link.
+The profiles expose a security--utility trade-off. Readability-priority preserves greater reconstruction fidelity but leaves more residual text, whereas high-suppression improves resistance with greater distortion. These digital metrics do not directly represent human experience. The user study nevertheless indicates that readability-priority preserves typing accuracy while reducing speed, stability, and comfort.
 
-The physical temporal-averaging attack likewise recovers substantial text without the mask seed or phase. Across the nine geometries, the duplicate-averaged 150-frame mean reaches 73.4\% recovery for readability-priority and 47.9\% for high-suppression. Sustained capture can therefore convert temporal fragments into a usable recognition signal, while the extent of recovery remains coupled to the evaluated imaging conditions.
-
-\subsection{Profile Trade-offs and Practical Implications}
-
-The two evaluated profiles exhibit distinct operating points. Readability-priority has a digitally reconstructed SSIM of 0.948 but retains 15.7\% field-micro exact recovery across the nine-geometry matched pool, whereas high-suppression lowers several recovery measures while reducing SSIM to 0.764 and increasing $\Delta E_{00}$ from 1.46 to 4.87. These SSIM and color-difference values describe full-cycle digital reconstructions, not human readability, comfort, or physical panel luminance; they therefore identify a digital reconstruction--recovery trade-off rather than a continuously validated tuning curve.
-
-The user study supplies the human-facing evidence for the readability-priority operating point. In the independent JavaScript/Canvas2D implementation and short typing task, participants retained 94.83\% typing accuracy but typed 1.14\,WPM more slowly; readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of 5. These results make the speed and perceived-stability costs explicit, but they do not substitute for physical photometric measurement of the capture pipeline.
-
-This objective differs from Kaleido-class temporal re-encoding in its treatment of completeness~\cite{b_kaleido2015}. The present composite profiles intentionally depart from strict completeness because full-cycle completeness creates an entry point for integration attacks on static text. At the same time, 93.0\% recovery from the high-suppression inversion slot after contrast stretching identifies slot-level composition as a weakness in the current digital attack evaluation. Temporal masking should therefore be treated as one display-layer control that can be paired with field-level policies and independent access controls for high-value content, not as a standalone protection guarantee.
-
-\subsection{VLM-Aware Implications}
-\label{sec:vlm_defense}
-
-The VLM probes show that conventional OCR is not an adequate proxy for all recognition attackers. On the protected photographs, recovery is strongest for large-font credentials, code, digits, and short sentences, while dense CET6 pages are more strongly suppressed. These results show that high-suppression can reduce conventional OCR recovery while stronger recognition still recovers substantial large-font content.
+Kaleido uses complementary color modulation to preserve the intended visual appearance~\cite{b_kaleido2015}. Our enhanced profiles, by contrast, do not require exact full-cycle reconstruction. Recovery from the inversion slot nevertheless shows that relaxing this constraint does not eliminate reconstruction risk. Temporal masking should therefore complement field-level policies and independent access controls.
 
 \subsection{Limitations and Future Work}
 
-The physical evidence is limited to one S600 UVC webcam, and profiles were captured in a fixed rather than randomized order. Exposure values are control-derived labels rather than photometric shutter measurements. The archive does not decode or independently measure auto-exposure state, gain, white balance, focus, ambient illuminance, display--camera phase, or physical panel luminance. These factors can interact with time, geometry, and profile order, which limits both causal isolation and external generalization.
+The physical evidence is limited to one webcam and a fixed profile order. Exposure values are control-derived labels, while camera state, ambient illumination, display--camera phase, slot timing, and panel luminance remain unmeasured. These coupled factors limit causal isolation and external generalization.
 
-The statistical and attack evidence is also bounded. Content-cluster intervals hold the tested geometries fixed, and the 12-item corpus is too small for script-level inference. The 150-frame experiment does not map the duration--recovery curve. Detection uses 150 COCO images at one position, while tracking uses 450 still-display-then-capture frames from one MOT17 sequence. Commercial OCR, learned restoration, and unconstrained adaptive preprocessing may recover additional text.
+The corpus and tested geometries cannot support broader script- or device-level inference. The aggregation experiment covers one duration, and detection and tracking remain exploratory stress tests. The short browser-based user study does not evaluate high-suppression.
 
-The current PoC operates at the application layer and lacks photometric slot-timing measurements, luminance-matched static controls, and matched noise-off versions of the enhanced profiles. Temporal sparsity, duty-cycle luminance, overlays, panel response, camera exposure, and image signal processor processing therefore remain coupled. Rolling-shutter row mixing and panel transitions are candidate explanations for the simulation-to-real gap. The user evidence comes from an independent browser implementation and a short task, and it does not assess the visibly stronger high-suppression profile.
-
-Future work should randomize profile order, lock camera parameters, record batch time, and measure physical slot timing and luminance. Matched static controls can separate temporal and luminance effects. Replication across cameras and displays can test transfer, while continuous-video attacks can map recovery against recording duration. Longer usability studies across panels, including the high-suppression profile, can further characterize the observed security--usability trade-off.
+Future work should use randomized capture, locked camera parameters, photometric controls, additional devices, duration sweeps, and longer cross-profile usability studies.
 
 
 %% ============================================================
@@ -982,11 +967,9 @@ Future work should randomize profile order, lock camera parameters, record batch
 \section{Conclusion}
 \label{sec:conclusion}
 
-We evaluated temporal pixel masking on one UVC camera link. Across 9 geometries, the same 324 matched units per profile (12 content items $\times$ 9 geometries $\times$ 3 repeats) yield 94.1\% mean recovery for unprotected content, 16.2\% for readability-priority, and 5.0\% for high-suppression. The corresponding paired content-cluster contrasts are 78.0\% and 89.1\%. These results show that conventional OCR recovery can be substantially reduced in the evaluated short-exposure display--camera link; they do not establish a general guarantee against screen photography.
+We evaluated temporal pixel masking as a display-side mitigation against camera-based text recovery. Across nine geometries in one UVC display--camera link, the matched short-exposure analysis showed substantially lower conventional OCR recovery. Mean best-of-engine character recovery decreased from 94.1\% unprotected to 16.2\% for readability-priority and 5.0\% for high-suppression. However, 150-frame averaging recovered 73.4\% and 47.9\%, respectively. The fixed-grid preprocessing oracle, digital reconstruction, and VLM probes exposed additional recovery paths, limiting protection claims to the evaluated attacker and capture conditions.
 
-The attack-oriented evaluation also defines the limits of that result. Fixed preprocessing, full-cycle digital reconstruction, temporal integration, and VLM probes recover substantial information under their respective conditions. Temporal pixel masking is therefore a conditional mitigation against conventional short-exposure OCR, not a general defense against sustained recording, registered reconstruction, or stronger recognition systems.
-
-In a 56-participant user study, readability-priority masking retained high typing accuracy while imposing measurable speed and perceived-stability costs. Detection and tracking provide secondary cross-task stress tests under coupled display, capture, and reduction conditions; they are not substitutes for the matched OCR evidence. Together, the results position the contribution as a system-level empirical characterization of both the feasible operating region and the attack boundary of temporal pixel masking.
+In a short browser-based study with 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14\,WPM. Lower subjective stability and comfort ratings revealed additional usability costs. Together, these findings provide system-level evidence of conditional effectiveness, usability trade-offs, and attack boundaries. Temporal pixel masking can mitigate conventional short-exposure OCR in the tested setting, but does not provide a general guarantee against sustained capture or stronger recognition.
 
 %% ============================================================
 %% ETHICS STATEMENT
