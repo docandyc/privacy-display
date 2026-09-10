@@ -634,7 +634,7 @@ Table~\ref{tab:real_vlm} presents the pooled VLM probe results, where short-expo
 
 To evaluate the impact of the protected display on human readability and visual comfort, we designed and conducted a web-based user study.
 
-\textbf{Equipment and environment protocol}: The same 240\,Hz display as in \S\ref{sec:setup}. The formal study version sets a hard measured refresh-rate threshold of $\geq$200\,Hz to ensure the fixed $n=4$ basic subframe cycle rate $f_r/n\geq50$\,Hz, what below this threshold participation is blocked. Before each trial, display settings were standardized (fixed brightness, auto-brightness, etc.), background processes were closed, and viewing distance was approximate 60\,cm.
+\textbf{Equipment and environment protocol}: The same 240\,Hz display as in \S\ref{sec:setup}. The formal study version sets a hard measured refresh-rate threshold of $\geq$200\,Hz to ensure the fixed $n=4$ basic subframe cycle rate $f_r/n\geq50$\,Hz, what below this threshold participation is blocked. Before each trial, display settings were standardized (fixed brightness, auto-brightness, etc.), background processes were closed,.
 
 The browser records actual frame intervals in each trial's \path{requestAnimationFrame} loop. If the interval between adjacent callbacks exceeds 1.5$\times$ the expected interval computed from the pre-trial measured refresh rate, a dropped-frame event is logged, along with estimated drop count, drop rate, mean/max frame intervals, observed refresh rate, basic subframe cycle rate, and full cycle rate with inversion frame.
 
