@@ -1,0 +1,8 @@
+﻿issue,scope,evidence,action
+batch_environment_change,formal,July: Chrome147/30bit; Sep08: Chrome147/32bit; Sep10-12: Chrome129/24bit,Keep batch_id; verify lab logs and use prespecified paired comparisons plus clearly exploratory batch sensitivity later; do not infer physical monitor identity from screen fields.
+boundary_whitespace_removed,typing,114 of 468 trials compatible with trimmed boundary spaces; zero unexplained score cases,Preserve stored browser scores. Do not overwrite scores from trimmed text or present inferred padding as observed keystrokes.
+rating_low_observed_base_cycle,included ratings,source pid 6,Keep main exclusions unchanged; prepare complete-participant rating sensitivity removing affected participants only from that sensitivity.
+long_session_review_only,P015,111.41 minutes,Retain: total session time includes pauses and is not a preregistered exclusion.
+long_session_review_only,P040,130.17 minutes,Retain: total session time includes pauses and is not a preregistered exclusion.
+long_session_review_only,P057,33.71 minutes,Retain: total session time includes pauses and is not a preregistered exclusion.
+anchor_readability_one,P020,Unmasked anchor readability=1,Retain; the original plan explicitly forbids requiring anchor score=5.

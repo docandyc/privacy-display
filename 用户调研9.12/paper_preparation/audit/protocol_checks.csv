@@ -1,0 +1,13 @@
+﻿check,scope,checked_units,failures,participant_ids
+assignment_indexes,formal,112,0,
+typing_order,formal,112,0,
+latin_rating_order,formal,112,0,
+typing_repetition_order,formal,448,0,
+condition_and_profile,formal,1120,0,
+typing_duration_20s,formal,448,0,
+first_key_latency_range_and_presence,formal,448,0,
+session_and_rating_timestamp_order,formal,112,0,
+rating_duration_clock_within_5ms,formal,672,0,
+timing_metadata_formulas,formal,1120,0,
+timing_metadata_completeness,formal,1120,0,
+three_refresh_runs_above_200hz,formal,112,0,

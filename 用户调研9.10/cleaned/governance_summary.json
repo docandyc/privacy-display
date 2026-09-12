@@ -1,0 +1,81 @@
+{
+  "raw_sessions": 105,
+  "historical_sessions": 66,
+  "new_sessions": 39,
+  "pilot_sessions": 5,
+  "formal_sessions": 100,
+  "included_sessions": 94,
+  "excluded_sessions_including_pilots": 11,
+  "formal_quality_exclusions": 6,
+  "new_included": 38,
+  "new_excluded": 1,
+  "included_typing_rows": 376,
+  "included_rating_rows": 564,
+  "excluded_typing_rows": 44,
+  "excluded_rating_rows": 66,
+  "exclusions": {
+    "1": "pilot_session",
+    "2": "pilot_session",
+    "3": "pilot_session",
+    "4": "pilot_session",
+    "5": "pilot_session",
+    "25": "rating_straightline_minimum_view",
+    "33": "rating_straightline_minimum_view",
+    "38": "rating_straightline_minimum_view",
+    "40": "control_accuracy_below_50pct",
+    "48": "control_accuracy_below_50pct",
+    "70": "rating_straightline_minimum_view"
+  },
+  "by_date_utc": {
+    "2026-07-03": {
+      "total": 1,
+      "included": 0,
+      "excluded": 1
+    },
+    "2026-07-06": {
+      "total": 4,
+      "included": 0,
+      "excluded": 4
+    },
+    "2026-07-08": {
+      "total": 35,
+      "included": 31,
+      "excluded": 4
+    },
+    "2026-07-13": {
+      "total": 26,
+      "included": 25,
+      "excluded": 1
+    },
+    "2026-09-08": {
+      "total": 10,
+      "included": 9,
+      "excluded": 1
+    },
+    "2026-09-10": {
+      "total": 29,
+      "included": 29,
+      "excluded": 0
+    }
+  },
+  "checks": {
+    "participants_unchanged_old_rows": 66,
+    "typing_unchanged_old_rows": 264,
+    "ratings_unchanged_old_rows": 396,
+    "duplicate_participant_id_excess": 0,
+    "duplicate_session_uuid_excess": 0,
+    "duplicate_student_id_excess": 0,
+    "duplicate_name_excess": 0,
+    "duplicate_registration_index_excess": 0,
+    "csv_json_matching_event_rows": 1050,
+    "csv_json_fields_per_row": 62,
+    "invalid_accuracy_values": 0,
+    "invalid_rating_values": 0,
+    "missing_consent_or_screening": 0
+  },
+  "sha256": {
+    "用户调研9.10/data.json": "621cc3a46b39752858ae36895e126763b62f0fb54a1fabe4408dc3fde9a986c9",
+    "用户调研9.10/privacy_display_study.csv": "e75cab69fb17b0e1fd42dfa5f476ba1c18272edf488c9546b1ca2d6c31e2e614",
+    "privacy-display/webstudy/analyze_study.py": "91fee05c7cb9ccaa2159ec16e53bf6c676e51bdd3da300980afdf3a3b359852f"
+  }
+}

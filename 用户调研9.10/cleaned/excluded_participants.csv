@@ -1,0 +1,12 @@
+﻿participant_id,participant_code,batch,date_utc,status,reasons,reason_zh,typing_rows,rating_rows,control_mean_accuracy,minimum_rating_view_ms,maximum_rating_view_ms,within_condition_straightline_rows
+1,,historical,2026-07-03,excluded,pilot_session,历史试运行（沿用旧报告）,4,6,1.0,10320,16241,4
+2,,historical,2026-07-06,excluded,pilot_session,历史试运行（沿用旧报告）,4,6,1.0,10928,93885,5
+3,,historical,2026-07-06,excluded,pilot_session,历史试运行（沿用旧报告）,4,6,1.0,10475,20475,6
+4,,historical,2026-07-06,excluded,pilot_session,历史试运行（沿用旧报告）,4,6,0.9923076923076923,31263,172192,5
+5,,historical,2026-07-06,excluded,pilot_session,历史试运行（沿用旧报告）,4,6,1.0,10819,426703,4
+25,,historical,2026-07-08,excluded,rating_straightline_minimum_view,6个条件均观看≤11秒，且每个条件内三项评分相同,4,6,1.0,10364,10959,6
+33,,historical,2026-07-08,excluded,rating_straightline_minimum_view,6个条件均观看≤11秒，且每个条件内三项评分相同,4,6,0.9659090909090909,10388,10523,6
+38,,historical,2026-07-08,excluded,rating_straightline_minimum_view,6个条件均观看≤11秒，且每个条件内三项评分相同,4,6,0.9797794117647058,10195,10725,6
+40,,historical,2026-07-08,excluded,control_accuracy_below_50pct,control两次平均准确率低于50%,4,6,0.180792062047749,10647,11010,6
+48,,historical,2026-07-13,excluded,control_accuracy_below_50pct,control两次平均准确率低于50%,4,6,0.44526315789473686,10558,11113,2
+70,,new,2026-09-08,excluded,rating_straightline_minimum_view,6个条件均观看≤11秒，且每个条件内三项评分相同,4,6,0.9545454545454546,10395,10908,6

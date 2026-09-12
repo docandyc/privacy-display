@@ -1,0 +1,23 @@
+{
+  "created_at_utc": "2026-09-12T04:13:27.933070+00:00",
+  "source_generated_at": "2026-09-12T03:54:18.105404+00:00",
+  "inputs": {
+    "用户调研9.12/data.json": "9673165f4eaf12c6375abbb7fa2aae4a15254d7816f02a27296275736c7deb52",
+    "用户调研9.12/privacy_display_study.csv": "59c94f6bc43c7377504eb66f272dd505b42e53bdf1f11d7e7fb2a4b72cd93b85",
+    "用户调研9.12/cleaned/governance_summary.json": "f116cee70e32f936c375442eb335ab390ca38d350cb31344e952a355cf615ce8",
+    "用户调研9.12/cleaned/participant_audit.csv": "965b4f38e3b4d53deb9b2187c411ee53ac0535da014b347c28c97df6ba286ffd",
+    "用户调研实验结果/数据治理报告.md": "81790f00a9560e7bad58e2f71252e5c5d3aa0f47f73f33cfe2d777bdb8a27ea5",
+    "paper/main.tex": "064d84dd3944c42a0632411596711e8356b857fca1e0cbbdd649692d3719b0ec",
+    "paper-Chinese/main.tex": "ea6ce311fb0fb80bbc7d04117ce9c16bc9f10b3a7d7edaac963a900b669338ba",
+    "privacy-display/webstudy/analyze_study.py": "91fee05c7cb9ccaa2159ec16e53bf6c676e51bdd3da300980afdf3a3b359852f",
+    "privacy-display/webstudy/assignment.py": "1a7544b91c93237aa67c5667f80c82ef632964559fd12de844ca03e65235fdc7",
+    "privacy-display/webstudy/server.py": "6fe1dc25a0c59d86cbdd5035cdc90f9dffb835a91f01c8acba467e0e68deb99f",
+    "privacy-display/webstudy/README.md": "672f5516b3179d2af1a2601a33fb4afe0419ef7f5530904f510b8ea3a1c6167c",
+    "privacy-display/webstudy/static/typing.js": "7af72924b0e761fbea256cf0f704b1c590b3d7f8d5b3d25a4fab32200bcb1935",
+    "privacy-display/webstudy/static/design.js": "66e0f574de0b1cb14e3122a4418c6b7526f17842f12f0280c1a568da5cbfcb52",
+    "privacy-display/webstudy/static/mask.js": "2c9388e90677ccf4e039e84618c5e304750fed6be63d7532b0441743adc30376",
+    "privacy-display/webstudy/static/app.js": "4c2141beb3940362478d2009b0b7d0ea20d47a60962e47f4ca69d4f7c57facf5",
+    "privacy-display/webstudy/static/pseudoword.js": "a89a2fe07ad1bbfa99c41cf552f20a5522a47cfad47cfca5d27e49a31785fa03"
+  },
+  "policy": "Do not edit raw inputs or manuscript. Recorded scores retained; no newly applied exclusions; no inferential statistics."
+}

@@ -1,0 +1,204 @@
+{
+  "snapshot": "9.12 paper preparation",
+  "raw_n": 117,
+  "formal_n": 112,
+  "included_n": 106,
+  "new_exclusions": 0,
+  "protocol_check_failures": {},
+  "scoring_status_all": {
+    "direct_match": 354,
+    "compatible_with_stripped_boundary_spaces": 114
+  },
+  "scoring_status_included": {
+    "direct_match": 319,
+    "compatible_with_stripped_boundary_spaces": 105
+  },
+  "scoring_affected_included_participants": 66,
+  "vision_correction": {
+    "glasses": 88,
+    "none": 16,
+    "contacts": 2
+  },
+  "typing_order_formal": {
+    "BAAB": 56,
+    "ABBA": 56
+  },
+  "typing_order_included": {
+    "BAAB": 52,
+    "ABBA": 54
+  },
+  "rating_low_base_cycle_source_ids": [
+    6
+  ],
+  "rating_sensitivity_n": 105,
+  "batches": [
+    {
+      "batch_id": "july",
+      "formal_n": 61,
+      "included_n": 56,
+      "excluded_n": 5,
+      "typing_ABBA": 28,
+      "typing_BAAB": 28
+    },
+    {
+      "batch_id": "sep08",
+      "formal_n": 10,
+      "included_n": 9,
+      "excluded_n": 1,
+      "typing_ABBA": 5,
+      "typing_BAAB": 4
+    },
+    {
+      "batch_id": "sep10_12",
+      "formal_n": 41,
+      "included_n": 41,
+      "excluded_n": 0,
+      "typing_ABBA": 21,
+      "typing_BAAB": 20
+    }
+  ],
+  "timing_by_condition": {
+    "control_anchor": {
+      "drop_rate": {
+        "n": 106,
+        "min": 0,
+        "median": 0.0,
+        "max": 0.0006727211570803902
+      },
+      "base_cycle_hz": {
+        "n": 106,
+        "min": 239.8404830715077,
+        "median": 240.00224040651227,
+        "max": 240.00543262094914
+      },
+      "max_interval_ms": {
+        "n": 106,
+        "min": 4.2999999999883585,
+        "median": 4.399999999965075,
+        "max": 12.5
+      },
+      "drop_over_1pct": 0
+    },
+    "n2_mask_noise": {
+      "drop_rate": {
+        "n": 106,
+        "min": 0.001097037997407001,
+        "median": 0.003632172957127153,
+        "max": 0.0183982683982684
+      },
+      "base_cycle_hz": {
+        "n": 106,
+        "min": 117.76162035834848,
+        "median": 119.56522284976236,
+        "max": 119.86969436578924
+      },
+      "max_interval_ms": {
+        "n": 106,
+        "min": 25,
+        "median": 50.0,
+        "max": 291.60000000009313
+      },
+      "drop_over_1pct": 1
+    },
+    "n3_mask_noise": {
+      "drop_rate": {
+        "n": 106,
+        "min": 0.0014078405891271388,
+        "median": 0.004712511574687226,
+        "max": 0.015000815261699005
+      },
+      "base_cycle_hz": {
+        "n": 106,
+        "min": 78.78749938049903,
+        "median": 79.62381967351358,
+        "max": 79.88820329949287
+      },
+      "max_interval_ms": {
+        "n": 106,
+        "min": 37.5,
+        "median": 62.44999999999709,
+        "max": 383.29999999993015
+      },
+      "drop_over_1pct": 4
+    },
+    "n4_mask_noise": {
+      "drop_rate": {
+        "n": 106,
+        "min": 0.0011805213969503198,
+        "median": 0.0045808479011657955,
+        "max": 0.0242409402546523
+      },
+      "base_cycle_hz": {
+        "n": 106,
+        "min": 58.531670260329825,
+        "median": 59.72569295395558,
+        "max": 59.929687536891876
+      },
+      "max_interval_ms": {
+        "n": 106,
+        "min": 37.5,
+        "median": 66.59999999997672,
+        "max": 420.9000000000233
+      },
+      "drop_over_1pct": 1
+    },
+    "n4_mask_only": {
+      "drop_rate": {
+        "n": 106,
+        "min": 0.0005938242280285036,
+        "median": 0.001975796613477773,
+        "max": 0.009940891993551854
+      },
+      "base_cycle_hz": {
+        "n": 106,
+        "min": 59.40444026025074,
+        "median": 59.8819964101909,
+        "max": 59.9647266313933
+      },
+      "max_interval_ms": {
+        "n": 106,
+        "min": 16.599999999976717,
+        "median": 37.39999999999418,
+        "max": 158.30000000004657
+      },
+      "drop_over_1pct": 0
+    },
+    "deployed_full": {
+      "drop_rate": {
+        "n": 106,
+        "min": 0.00832938949361098,
+        "median": 0.02997795877439434,
+        "max": 0.2138291690877397
+      },
+      "base_cycle_hz": {
+        "n": 106,
+        "min": 47.08871332614067,
+        "median": 58.1811862318994,
+        "max": 59.49528103669548
+      },
+      "max_interval_ms": {
+        "n": 106,
+        "min": 325,
+        "median": 375.04999999998836,
+        "max": 3091.600000000093
+      },
+      "drop_over_1pct": 105
+    }
+  },
+  "all_scored_typing_20_seconds": true,
+  "included_first_key_missing_or_invalid": 0,
+  "typing_target_lengths_formal": {
+    "220": 373,
+    "219": 75
+  },
+  "rating_stimulus_lengths_formal": {
+    "170": 576,
+    "169": 96
+  },
+  "typing_target_exhausted_included": 0,
+  "long_session_source_ids": [
+    20,
+    50,
+    67
+  ]
+}

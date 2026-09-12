@@ -1,0 +1,86 @@
+{
+  "raw_sessions": 117,
+  "historical_sessions": 105,
+  "new_sessions": 12,
+  "pilot_sessions": 5,
+  "formal_sessions": 112,
+  "included_sessions": 106,
+  "excluded_sessions_including_pilots": 11,
+  "formal_quality_exclusions": 6,
+  "new_included": 12,
+  "new_excluded": 0,
+  "included_typing_rows": 424,
+  "included_rating_rows": 636,
+  "excluded_typing_rows": 44,
+  "excluded_rating_rows": 66,
+  "exclusions": {
+    "1": "pilot_session",
+    "2": "pilot_session",
+    "3": "pilot_session",
+    "4": "pilot_session",
+    "5": "pilot_session",
+    "25": "rating_straightline_minimum_view",
+    "33": "rating_straightline_minimum_view",
+    "38": "rating_straightline_minimum_view",
+    "40": "control_accuracy_below_50pct",
+    "48": "control_accuracy_below_50pct",
+    "70": "rating_straightline_minimum_view"
+  },
+  "by_date_utc": {
+    "2026-07-03": {
+      "total": 1,
+      "included": 0,
+      "excluded": 1
+    },
+    "2026-07-06": {
+      "total": 4,
+      "included": 0,
+      "excluded": 4
+    },
+    "2026-07-08": {
+      "total": 35,
+      "included": 31,
+      "excluded": 4
+    },
+    "2026-07-13": {
+      "total": 26,
+      "included": 25,
+      "excluded": 1
+    },
+    "2026-09-08": {
+      "total": 10,
+      "included": 9,
+      "excluded": 1
+    },
+    "2026-09-10": {
+      "total": 29,
+      "included": 29,
+      "excluded": 0
+    },
+    "2026-09-12": {
+      "total": 12,
+      "included": 12,
+      "excluded": 0
+    }
+  },
+  "checks": {
+    "participants_unchanged_old_rows": 105,
+    "typing_unchanged_old_rows": 420,
+    "ratings_unchanged_old_rows": 630,
+    "duplicate_participant_id_excess": 0,
+    "duplicate_session_uuid_excess": 0,
+    "duplicate_student_id_excess": 0,
+    "duplicate_name_excess": 0,
+    "duplicate_registration_index_excess": 0,
+    "csv_json_matching_event_rows": 1170,
+    "csv_json_fields_per_row": 62,
+    "invalid_accuracy_values": 0,
+    "invalid_rating_values": 0,
+    "missing_consent_or_screening": 0
+  },
+  "sha256": {
+    "用户调研9.12/data.json": "9673165f4eaf12c6375abbb7fa2aae4a15254d7816f02a27296275736c7deb52",
+    "用户调研9.12/privacy_display_study.csv": "59c94f6bc43c7377504eb66f272dd505b42e53bdf1f11d7e7fb2a4b72cd93b85",
+    "privacy-display/webstudy/analyze_study.py": "91fee05c7cb9ccaa2159ec16e53bf6c676e51bdd3da300980afdf3a3b359852f"
+  }
+}

@@ -229,7 +229,6 @@ INPUT t1-times-italic.tfm
 INPUT t1-times-italic.tfm
 INPUT t1-times.tfm
 INPUT t1-times.tfm
-INPUT t1-times-bold.tfm
 INPUT t1-formata-bold.tfm
 INPUT t1-times-bold.tfm
 INPUT t1-times-bold.tfm
@@ -354,9 +353,6 @@ INPUT ./figures/all_attackers.pdf
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
-INPUT ./notaglinelogo.png
 INPUT ./main.bbl
 INPUT ./main.bbl
 INPUT main.bbl
@@ -373,6 +369,9 @@ INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
 INPUT t1-times-italic.tfm
 INPUT t1-times-italic.tfm
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
+INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png
 INPUT ./notaglinelogo.png

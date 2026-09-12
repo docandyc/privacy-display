@@ -62,7 +62,7 @@ data are analyzed and reported.}
 %% ABSTRACT
 %% ============================================================
 \begin{abstract}
-Screen content can be covertly photographed and transcribed by optical character recognition (OCR) or vision-language models (VLMs). We present temporal pixel masking, a display method exploiting differences between human temporal integration and short camera exposures. A base frame is decomposed into rapidly alternating, cryptographically randomized complementary subframes. We evaluate a 240-Hz software prototype using one USB Video Class (UVC) webcam. In the primary matched short-exposure analysis (12 content items $\times$ 9 geometries $\times$ 3 repeats), best-of-engine OCR character recovery decreased from 94.1\% unprotected to 16.2\% for the readability-priority profile and 5.0\% for the high-suppression profile; paired content-cluster contrasts were 78.0\% and 89.1\%, respectively. The high-suppression result meets the descriptive $<$10\% recovery target. Across the same nine geometries, 150-frame temporal averaging recovered 47.9--73.4\% of characters for these two profiles. In the 0.5\,m VLM probe, the strongest of three tested VLMs reached 77.8\% exact match, with recovery concentrated on large-font short snippets. Under long exposure, masking could increase recovery over the unprotected baseline, consistent with reduced luminance shifting the sensor into its linear range. These results establish feasibility for mitigating conventional OCR in the tested short-exposure UVC-camera link, but not protection against temporal integration or VLM attackers. In 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14 words per minute (WPM); readability, stability, and comfort averaged 3.79, 2.98, and 3.39 out of 5, indicating measurable usability costs.
+Screen content can be covertly photographed and transcribed by optical character recognition (OCR) or vision-language models (VLMs). We present temporal pixel masking, a display method exploiting differences between human temporal integration and short camera exposures. A base frame is decomposed into rapidly alternating, cryptographically randomized complementary subframes. We evaluate a 240-Hz software prototype using one USB Video Class (UVC) webcam. In the primary matched short-exposure analysis (12 content items $\times$ 9 geometries $\times$ 3 repeats), best-of-engine OCR character recovery decreased from 94.1\% unprotected to 16.2\% for the readability-priority profile and 5.0\% for the high-suppression profile; paired content-cluster contrasts were 78.0\% and 89.1\%, respectively. The high-suppression result meets the descriptive $<$10\% recovery target. Across the same nine geometries, 150-frame temporal averaging recovered 47.9--73.4\% of characters for these two profiles. In the 0.5\,m VLM probe, the strongest of three tested VLMs reached 77.8\% exact match, with recovery concentrated on large-font short snippets. Under long exposure, masking could increase recovery over the unprotected baseline, consistent with reduced luminance shifting the sensor into its linear range. These results establish feasibility for mitigating conventional OCR in the tested short-exposure UVC-camera link, but not protection against temporal integration or VLM attackers. In 106 participants, readability-priority masking retained 95.98\% typing accuracy but reduced speed by 1.38 words per minute (WPM); readability, stability, and comfort averaged 3.67, 2.62, and 3.06 out of 5, indicating measurable usability costs.
 \end{abstract}
 
 \begin{keywords}
@@ -92,7 +92,7 @@ We investigate this question through \emph{temporal pixel masking}, a display-si
 
 We implement the method as a 240-Hz graphics processing unit (GPU) rendering prototype and evaluate it with an instrumented USB Video Class (UVC) capture pipeline. The physical archive contains 10,575 captures from one webcam across three distances and three viewing angles. In the primary matched analysis at the common nominal exposure setting, conventional OCR character recovery decreases from 94.1\% for the unprotected display to 16.2\% for the readability-priority profile and 5.0\% for the high-suppression profile. These results provide evidence of feasibility within the evaluated short-exposure camera link rather than a general guarantee against screen photography.
 
-The evaluation therefore extends beyond favorable single-frame conditions. Fixed image preprocessing, long exposure, 150-frame temporal averaging, digital reconstruction, and VLM probes test how recovery changes as attacker capability increases. These attacks recover substantial information, especially from large-font short snippets, and expose the integration boundary of the approach. A 56-participant study separately measures the human side of the trade-off: readability-priority masking retains high typing accuracy but imposes measurable costs in speed, perceived stability, and visual comfort.
+The evaluation therefore extends beyond favorable single-frame conditions. Fixed image preprocessing, long exposure, 150-frame temporal averaging, digital reconstruction, and VLM probes test how recovery changes as attacker capability increases. These attacks recover substantial information, especially from large-font short snippets, and expose the integration boundary of the approach. A 106-participant study separately measures the human side of the trade-off: readability-priority masking retains high typing accuracy but imposes measurable costs in speed, perceived stability, and visual comfort.
 
 The main contributions are as follows:
 \begin{enumerate}
@@ -100,7 +100,7 @@ The main contributions are as follows:
 
 \item \textbf{Attack-boundary characterization}: We evaluate fixed preprocessing, long-exposure capture, temporal-average attacks, digital reconstruction, and commercially hosted VLMs. The resulting evidence identifies both the conditions under which conventional OCR recovery decreases and the conditions under which sustained capture or stronger recognition recovers substantial content. Detection and tracking experiments provide secondary cross-task stress tests.
 
-\item \textbf{Security--usability trade-off}: We compare readability-priority and high-suppression operating points and conduct a controlled within-subject study with 56 participants. The results connect machine recovery to typing performance, readability, perceived stability, and immediate visual comfort, making the cost of the usability-facing configuration explicit.
+\item \textbf{Security--usability trade-off}: We compare readability-priority and high-suppression operating points and conduct a controlled within-subject study with 106 participants. The results connect machine recovery to typing performance, readability, perceived stability, and immediate visual comfort, making the cost of the usability-facing configuration explicit.
 \end{enumerate}
 
 The remainder of this paper reviews related work, defines the threat model and system design, and then presents the physical, attack-oriented, and usability evaluations. The final sections discuss the evidence boundaries and conclude the study.
@@ -642,21 +642,21 @@ The browser records actual frame intervals in each trial's \path{requestAnimatio
 
 \textbf{Task design}: Participants completed a 12-second unmasked typing warm-up, a 10-second readability-priority preview, and an 8-second masked practice before four scored 20-second trials. On each typing screen, the stimulus was visible before the participant clicked ``Start,'' with masked playback already active. Starting a trial initiated a 5-second countdown; input and timing began when the countdown ended.
 
-\textbf{Conditions and stimuli}: Each participant completed two trials per condition: (A) an unmasked control ($n=1$) and (B) readability-priority masking ($n=4$, mask+noise, Strong-overlay with $\alpha_s=0.10$ and $\alpha_g=0.12$, and inversion with $\alpha=0.2$). Trial order was counterbalanced using ABBA or BAAB. The masked renderer rotated through six distinct mask, noise, and stripe instances before repeating. Both conditions used the same Canvas rendering path, background, 23\,px bold font, and color scheme. Their 220-character pseudo-word targets were independently generated by the same seeded procedure and matched in length and distribution, but not in literal content. The browser stimuli used the independent JavaScript/Canvas2D implementation described in \S\ref{sec:method}, rather than the Python physical-capture pipeline.
+\textbf{Conditions and stimuli}: Each participant completed two trials per condition: (A) an unmasked control ($n=1$) and (B) readability-priority masking ($n=4$, mask+noise, Strong-overlay with $\alpha_s=0.10$ and $\alpha_g=0.12$, and inversion with $\alpha=0.2$). Trial order was counterbalanced using ABBA or BAAB. The masked renderer rotated through six distinct mask, noise, and stripe instances before repeating. Both conditions used the same Canvas rendering path, background, 23\,px bold font, and color scheme. Their 219--220-character pseudo-word targets were independently generated by the same seeded procedure and matched in distribution, but not in literal content. The browser stimuli used the independent JavaScript/Canvas2D implementation described in \S\ref{sec:method}, rather than the Python physical-capture pipeline.
 
 \textbf{Scoring}: Transcriptions were aligned with the optimal target prefix using Levenshtein minimum string distance (MSD)~\cite{b_soukoreff2003}, yielding accuracy, characters per minute (CPM), and words per minute (WPM). First-keystroke latency was measured from the end of the countdown to the first nonempty input. Each participant's two trials per condition were averaged before paired analysis.
 
-\textbf{Subjective ratings}: After typing, participants rated six display conditions on three 1--5 scales. Readability ranged from difficult to clear, stability from strong to no perceptible flicker, and visual comfort from very uncomfortable to very comfortable; higher scores indicated better outcomes. Conditions included the unmasked anchor, mask+noise at $n\in\{2,3,4\}$, $n=4$ mask-only, and the $n=4$ readability-priority configuration used for typing. The three mask+noise conditions operated at $\geq60$\,Hz on the 240\,Hz panel. A balanced Latin-square order counterbalanced position and carryover effects, and each condition was viewed for at least 10~seconds before rating. The high-suppression profile was not evaluated for acceptability.
+\textbf{Subjective ratings}: After typing, participants rated six display conditions on three 1--5 scales. Readability ranged from difficult to clear, stability from strong to no perceptible flicker, and visual comfort from very uncomfortable to very comfortable; higher scores indicated better outcomes. Conditions included the unmasked anchor, mask+noise at $n\in\{2,3,4\}$, $n=4$ mask-only, and the $n=4$ readability-priority configuration used for typing. The three mask+noise conditions had nominal basic cycle rates of $f_r/n\in\{120, 80, 60\}$\,Hz on the 240\,Hz panel. A balanced Latin-square order counterbalanced position and carryover effects, and each condition was viewed for at least 10~seconds before rating. The high-suppression profile was not evaluated for acceptability.
 
 \textbf{Sample size and analysis plan}: A minimum of $N=24$ was planned for 80\% power at paired effects of $d_z\approx0.6$--$0.8$ and two complete 12-participant counterbalancing blocks. Pre-specified exclusions covered debug or incomplete sessions, refresh rates below 200\,Hz, insufficient typing input, control accuracy below 50\%, invalid temporal playback, and minimum-view straight-line ratings. The last criterion identified sessions in which all six ratings were submitted within 11~seconds and all three scores were identical within every condition. Typing outcomes were averaged by participant and condition, with speed interpreted jointly with accuracy. Paired differences used paired $t$-tests when the paired data passed the pre-specified Shapiro test; otherwise, Wilcoxon signed-rank tests were used. Effect sizes and participant-level bootstrap 95\% confidence intervals were reported. Likert dimensions were analyzed using Friedman tests with Holm-corrected pairwise Wilcoxon tests.
 
 
-\textbf{Participants}: Of 61 recruited volunteers, 56 were included in the analysis after applying the prespecified exclusion criteria. Five participants were excluded: three for minimum-view straight-line ratings and two for control mean accuracy below 50\%. Among the analyzed participants, 46 wore glasses, one wore contact lenses, and nine reported no corrective lenses.
+\textbf{Participants}: Of 112 formally submitted sessions, 106 were included in the analysis after applying the prespecified exclusion criteria. Six participants were excluded: four for minimum-view straight-line ratings and two for control mean accuracy below 50\%. Among the analyzed participants, 88 wore glasses, two wore contact lenses, and 16 reported no corrective lenses.
 
 Table~\ref{tab:study_typing} uses participant means over two trials per condition, with $\Delta$ defined as masked minus control and participant-level bootstrap 95\% confidence intervals. A paired $t$-test and Cohen's $d_z$ are used when the pre-specified Shapiro test passes; otherwise, the analysis uses a Wilcoxon signed-rank test and rank-biserial $r_{rb}$. Test statistics are reported in the text.
 
 \begin{table}[!t]
-\caption{Within-subject typing outcomes for control and readability-priority masking ($N=56$).}
+\caption{Within-subject typing outcomes for control and readability-priority masking ($N=106$).}
 \label{tab:study_typing}
 \centering
 \footnotesize
@@ -665,17 +665,17 @@ Table~\ref{tab:study_typing} uses participant means over two trials per conditio
 \toprule
 Metric & Control & Masked & $\Delta$ [95\% CI] \\
 \midrule
-Accuracy (\%) & 96.54 & 94.83 & $-1.71$ [$-3.39$, $-0.04$] \\
-WPM & 20.44 & 19.30 & $-1.14$ [$-1.91$, $-0.39$] \\
-CPM & 102.19 & 96.48 & $-5.71$ [$-9.56$, $-1.88$] \\
-Attempted chars & 35.21 & 33.47 & $-1.74$ [$-2.88$, $-0.62$] \\
-First-key latency (ms) & 742.64 & 833.61 & $+90.97$ [$-31.11$, $+210.69$] \\
+Accuracy (\%) & 97.26 & 95.98 & $-1.29$ [$-2.28$, $-0.31$] \\
+WPM & 22.37 & 21.00 & $-1.38$ [$-1.92$, $-0.83$] \\
+CPM & 111.86 & 104.99 & $-6.88$ [$-9.68$, $-4.13$] \\
+Attempted chars & 38.17 & 36.08 & $-2.09$ [$-2.94$, $-1.23$] \\
+First-key latency (ms) & 650.50 & 722.23 & $+71.73$ [$-11.34$, $+158.61$] \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[!t]
-\caption{Subjective ratings across six display conditions ($N=56$; mean $\pm$ SD).}
+\caption{Subjective ratings across six display conditions ($N=106$; mean $\pm$ SD).}
 \label{tab:study_ratings}
 \centering
 \footnotesize
@@ -684,19 +684,19 @@ First-key latency (ms) & 742.64 & 833.61 & $+90.97$ [$-31.11$, $+210.69$] \\
 \toprule
 Condition & Readability & Stability & Comfort \\
 \midrule
-Unmasked anchor & 4.80 $\pm$ 0.64 & 4.79 $\pm$ 0.68 & 4.75 $\pm$ 0.61 \\
-$n{=}2$ mask+noise & 4.61 $\pm$ 0.68 & 4.77 $\pm$ 0.57 & 4.48 $\pm$ 0.87 \\
-$n{=}3$ mask+noise & 4.21 $\pm$ 0.87 & 4.57 $\pm$ 0.76 & 4.11 $\pm$ 0.91 \\
-$n{=}4$ mask+noise & 4.23 $\pm$ 0.91 & 4.38 $\pm$ 0.93 & 4.02 $\pm$ 1.05 \\
-$n{=}4$ mask-only & 4.16 $\pm$ 0.87 & 4.45 $\pm$ 0.78 & 4.02 $\pm$ 0.96 \\
-Readability-priority full ($n{=}4$) & 3.79 $\pm$ 1.17 & 2.98 $\pm$ 1.30 & 3.39 $\pm$ 1.25 \\
+Unmasked anchor & 4.90 $\pm$ 0.48 & 4.88 $\pm$ 0.51 & 4.75 $\pm$ 0.60 \\
+$n{=}2$ mask+noise & 4.63 $\pm$ 0.61 & 4.75 $\pm$ 0.57 & 4.47 $\pm$ 0.80 \\
+$n{=}3$ mask+noise & 4.18 $\pm$ 0.83 & 4.58 $\pm$ 0.67 & 4.01 $\pm$ 0.87 \\
+$n{=}4$ mask+noise & 4.10 $\pm$ 0.95 & 4.29 $\pm$ 0.87 & 3.79 $\pm$ 0.98 \\
+$n{=}4$ mask-only & 4.11 $\pm$ 0.78 & 4.30 $\pm$ 0.79 & 3.83 $\pm$ 0.88 \\
+Readability-priority full ($n{=}4$) & 3.67 $\pm$ 1.05 & 2.62 $\pm$ 1.23 & 3.06 $\pm$ 1.16 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
- \textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the user-study results. In Fig.~\ref{fig:study_typing}, each gray line is one participant's mean across two trials per condition, and markers show group means with participant-level bootstrap 95\% confidence intervals. The panels report transcription accuracy, words per minute, and first-keystroke latency. Readability-priority masking retained 94.83\% mean accuracy but reduced WPM by 1.14 (95\% CI $[-1.91,-0.39]$, $d_z=-0.39$). After Holm correction, WPM, CPM, and attempted characters remained significantly lower, whereas accuracy and first-keystroke latency did not differ significantly.
+ \textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the user-study results. In Fig.~\ref{fig:study_typing}, each gray line is one participant's mean across two trials per condition, and markers show group means with participant-level bootstrap 95\% confidence intervals. The panels report transcription accuracy, words per minute, and first-keystroke latency. Readability-priority masking retained 95.98\% mean accuracy (Wilcoxon $W=1600.5$, $p=0.008$, $r_{rb}=-0.31$) but reduced WPM by 1.38 (95\% CI $[-1.92,-0.83]$, $t(105)=-4.88$, $p=3.8\times10^{-6}$, $d_z=-0.47$). CPM and attempted characters yielded $p=3.8\times10^{-6}$ ($d_z=-0.47$) and $p=5.3\times10^{-6}$ ($d_z=-0.47$), respectively. First-keystroke latency did not differ significantly ($W=2367.0$, $p=0.140$, $r_{rb}=+0.17$). After Holm correction, accuracy, WPM, CPM, and attempted characters remained significant, whereas first-keystroke latency did not.
 
- All three subjective ratings varied across display conditions (Friedman tests, all $p<10^{-13}$). Relative to the unmasked anchor, the readability-priority configuration received lower readability, stability, and comfort ratings, with large negative rank-biserial effects ($|r_{rb}|=0.82$--$0.97$. All Holm-adjusted $p\leq2.6\times10^{-4}$). Fig.~\ref{fig:study_ratings} orders the six conditions from the unmasked anchor to the readability-priority configuration. Markers show means, and error bars show SD clipped to the 1--5 scale; higher values indicate better ratings.
+ All three subjective ratings varied across display conditions (Friedman tests, all $p<10^{-40}$). Relative to the unmasked anchor, the readability-priority configuration received lower readability, stability, and comfort ratings, with large negative rank-biserial effects ($|r_{rb}|=0.91$--$0.99$; all Holm-adjusted $p\leq1.8\times10^{-11}$). Fig.~\ref{fig:study_ratings} orders the six conditions from the unmasked anchor to the readability-priority configuration. Bars show means, and error bars show SD clipped to the 1--5 scale; higher values indicate better ratings.
 
 \begin{figure}[!t]
 \centering
@@ -969,7 +969,7 @@ Future work should use randomized capture, locked camera parameters, photometric
 
 We evaluated temporal pixel masking as a display-side mitigation against camera-based text recovery. Across nine geometries in one UVC display--camera link, the matched short-exposure analysis showed substantially lower conventional OCR recovery. Mean best-of-engine character recovery decreased from 94.1\% unprotected to 16.2\% for readability-priority and 5.0\% for high-suppression. However, 150-frame averaging recovered 73.4\% and 47.9\%, respectively. The fixed-grid preprocessing oracle, digital reconstruction, and VLM probes exposed additional recovery paths, limiting protection claims to the evaluated attacker and capture conditions.
 
-In a short browser-based study with 56 participants, readability-priority masking retained 94.83\% typing accuracy but reduced speed by 1.14\,WPM. Lower subjective stability and comfort ratings revealed additional usability costs. Together, these findings provide system-level evidence of conditional effectiveness, usability trade-offs, and attack boundaries. Temporal pixel masking can mitigate conventional short-exposure OCR in the tested setting, but does not provide a general guarantee against sustained capture or stronger recognition.
+In a short browser-based study with 106 participants, readability-priority masking retained 95.98\% typing accuracy but reduced speed by 1.38\,WPM. Lower subjective stability and comfort ratings revealed additional usability costs. Together, these findings provide system-level evidence of conditional effectiveness, usability trade-offs, and attack boundaries. Temporal pixel masking can mitigate conventional short-exposure OCR in the tested setting, but does not provide a general guarantee against sustained capture or stronger recognition.
 
 %% ============================================================
 %% ETHICS STATEMENT

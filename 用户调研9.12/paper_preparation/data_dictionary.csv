@@ -1,0 +1,84 @@
+﻿file,field,definition,missing_values
+participants.csv,participant_code,本轮匿名代号；与既有 P001–P106 一致，原始 pid 映射仅见本地 audit。,0
+participants.csv,batch_id,july=7月；sep08=9月8日；sep10_12=9月10/12日。保留采集批次，不能据此分离日期、浏览器、色深的因果作用。,0
+participants.csv,vision_correction,glasses=框架眼镜；contacts=隐形眼镜；none=无矫正。,0
+participants.csv,typing_order,ABBA 或 BAAB，A=control、B=masked。,0
+participants.csv,rating_order_index,六阶平衡拉丁方行索引，0–5。,0
+rating_participant_wide.csv,participant_code,本轮匿名代号；与既有 P001–P106 一致，原始 pid 映射仅见本地 audit。,0
+rating_participant_wide.csv,batch_id,july=7月；sep08=9月8日；sep10_12=9月10/12日。保留采集批次，不能据此分离日期、浏览器、色深的因果作用。,0
+rating_participant_wide.csv,n3_mask_noise_readability,条件 n3_mask_noise 的单次评分；可读性，1–5，越高越清晰。,0
+rating_participant_wide.csv,n3_mask_noise_stability,条件 n3_mask_noise 的单次评分；稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_participant_wide.csv,n3_mask_noise_immediate_comfort,条件 n3_mask_noise 的单次评分；即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_participant_wide.csv,n4_mask_noise_readability,条件 n4_mask_noise 的单次评分；可读性，1–5，越高越清晰。,0
+rating_participant_wide.csv,n4_mask_noise_stability,条件 n4_mask_noise 的单次评分；稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_participant_wide.csv,n4_mask_noise_immediate_comfort,条件 n4_mask_noise 的单次评分；即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_participant_wide.csv,n2_mask_noise_readability,条件 n2_mask_noise 的单次评分；可读性，1–5，越高越清晰。,0
+rating_participant_wide.csv,n2_mask_noise_stability,条件 n2_mask_noise 的单次评分；稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_participant_wide.csv,n2_mask_noise_immediate_comfort,条件 n2_mask_noise 的单次评分；即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_participant_wide.csv,n4_mask_only_readability,条件 n4_mask_only 的单次评分；可读性，1–5，越高越清晰。,0
+rating_participant_wide.csv,n4_mask_only_stability,条件 n4_mask_only 的单次评分；稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_participant_wide.csv,n4_mask_only_immediate_comfort,条件 n4_mask_only 的单次评分；即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_participant_wide.csv,control_anchor_readability,条件 control_anchor 的单次评分；可读性，1–5，越高越清晰。,0
+rating_participant_wide.csv,control_anchor_stability,条件 control_anchor 的单次评分；稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_participant_wide.csv,control_anchor_immediate_comfort,条件 control_anchor 的单次评分；即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_participant_wide.csv,deployed_full_readability,条件 deployed_full 的单次评分；可读性，1–5，越高越清晰。,0
+rating_participant_wide.csv,deployed_full_stability,条件 deployed_full 的单次评分；稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_participant_wide.csv,deployed_full_immediate_comfort,条件 deployed_full 的单次评分；即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_trials.csv,participant_code,本轮匿名代号；与既有 P001–P106 一致，原始 pid 映射仅见本地 audit。,0
+rating_trials.csv,batch_id,july=7月；sep08=9月8日；sep10_12=9月10/12日。保留采集批次，不能据此分离日期、浏览器、色深的因果作用。,0
+rating_trials.csv,condition,条件编码；typing 为 control/masked；rating 六种，参见分析计划。,0
+rating_trials.csv,order_index,评分呈现顺序，0–5。,0
+rating_trials.csv,n,实际子帧层数，control=1。,0
+rating_trials.csv,view_duration_ms,每个评分条件观看时长，毫秒。,0
+rating_trials.csv,readability,可读性，1–5，越高越清晰。,0
+rating_trials.csv,stability,稳定感，原字段 flicker，1–5，越高表示越少闪烁，不反向计分。,0
+rating_trials.csv,immediate_comfort,即时视觉舒适感，原字段 fatigue，1–5，越高越舒适；不是临床疲劳量表。,0
+rating_trials.csv,observed_base_cycle_hz,浏览器观测刷新率/n，Hz。,0
+rating_trials.csv,observed_full_cycle_hz,浏览器观测刷新率/每周期时隙数；含反色的n=4配置分母为5，Hz。,0
+rating_trials.csv,dropped_frame_rate,估计丢帧数/(已记录帧间隔数+估计丢帧数)，0–1。,0
+sensitivity_membership.csv,participant_code,本轮匿名代号；与既有 P001–P106 一致，原始 pid 映射仅见本地 audit。,0
+sensitivity_membership.csv,main_sample,原有规则纳入，全部为True。,0
+sensitivity_membership.csv,batch_id,july=7月；sep08=9月8日；sep10_12=9月10/12日。保留采集批次，不能据此分离日期、浏览器、色深的因果作用。,0
+sensitivity_membership.csv,rating_sensitivity_base_ge_50hz,仅用于探索性评分敏感性分析，所有评分条件基本周期均≥50Hz的参与者。,0
+sensitivity_membership.csv,note,敏感性样本说明。,0
+typing_participant_means.csv,participant_code,本轮匿名代号；与既有 P001–P106 一致，原始 pid 映射仅见本地 audit。,0
+typing_participant_means.csv,batch_id,july=7月；sep08=9月8日；sep10_12=9月10/12日。保留采集批次，不能据此分离日期、浏览器、色深的因果作用。,0
+typing_participant_means.csv,typing_order,ABBA 或 BAAB，A=control、B=masked。,0
+typing_participant_means.csv,control_wpm,两次条件内算术均值。正确字符/5/分钟，越高表示更快；结合准确率解释。,0
+typing_participant_means.csv,control_cpm,两次条件内算术均值。正确字符/分钟，等于5×WPM，非独立的第二项速度证据。,0
+typing_participant_means.csv,control_accuracy,两次条件内算术均值。MSD准确率，0–1，越高越好；不是简单 correct_chars/attempted_chars。,0
+typing_participant_means.csv,control_attempted_chars,两次条件内算术均值。计分时原始输入字符数，含空格。,0
+typing_participant_means.csv,control_first_key_latency_ms,两次条件内算术均值。输入启用至首次非空输入的毫秒数；更短不自动表示更佳。,0
+typing_participant_means.csv,masked_wpm,两次条件内算术均值。正确字符/5/分钟，越高表示更快；结合准确率解释。,0
+typing_participant_means.csv,masked_cpm,两次条件内算术均值。正确字符/分钟，等于5×WPM，非独立的第二项速度证据。,0
+typing_participant_means.csv,masked_accuracy,两次条件内算术均值。MSD准确率，0–1，越高越好；不是简单 correct_chars/attempted_chars。,0
+typing_participant_means.csv,masked_attempted_chars,两次条件内算术均值。计分时原始输入字符数，含空格。,0
+typing_participant_means.csv,masked_first_key_latency_ms,两次条件内算术均值。输入启用至首次非空输入的毫秒数；更短不自动表示更佳。,0
+typing_participant_means.csv,delta_wpm,masked条件均值减control条件均值。正确字符/5/分钟，越高表示更快；结合准确率解释。,0
+typing_participant_means.csv,delta_cpm,masked条件均值减control条件均值。正确字符/分钟，等于5×WPM，非独立的第二项速度证据。,0
+typing_participant_means.csv,delta_accuracy,masked条件均值减control条件均值。MSD准确率，0–1，越高越好；不是简单 correct_chars/attempted_chars。,0
+typing_participant_means.csv,delta_attempted_chars,masked条件均值减control条件均值。计分时原始输入字符数，含空格。,0
+typing_participant_means.csv,delta_first_key_latency_ms,masked条件均值减control条件均值。输入启用至首次非空输入的毫秒数；更短不自动表示更佳。,0
+typing_trials.csv,participant_code,本轮匿名代号；与既有 P001–P106 一致，原始 pid 映射仅见本地 audit。,0
+typing_trials.csv,batch_id,july=7月；sep08=9月8日；sep10_12=9月10/12日。保留采集批次，不能据此分离日期、浏览器、色深的因果作用。,0
+typing_trials.csv,condition,条件编码；typing 为 control/masked；rating 六种，参见分析计划。,0
+typing_trials.csv,trial_index,计分打字呈现序号，0–3。,0
+typing_trials.csv,condition_repetition,该打字条件第几次重复，1或2。,0
+typing_trials.csv,n,实际子帧层数，control=1。,0
+typing_trials.csv,requested_n,请求子帧层数；正式模式不自适应降低。,0
+typing_trials.csv,components,存储的显示组件组合。,0
+typing_trials.csv,duration_s,浏览器计分时长，秒。,0
+typing_trials.csv,accuracy,MSD准确率，0–1，越高越好；不是简单 correct_chars/attempted_chars。,0
+typing_trials.csv,wpm,正确字符/5/分钟，越高表示更快；结合准确率解释。,0
+typing_trials.csv,cpm,正确字符/分钟，等于5×WPM，非独立的第二项速度证据。,0
+typing_trials.csv,attempted_chars,计分时原始输入字符数，含空格。,0
+typing_trials.csv,attempted_letters,计分时非空格输入字符数。,0
+typing_trials.csv,correct_chars,最优前缀对齐中匹配字符数，含空格。,0
+typing_trials.csv,correct_letters,对齐中匹配的非空格字符数。,0
+typing_trials.csv,total_chars,计分时目标长度。,0
+typing_trials.csv,edit_distance,最优目标前缀与输入的 Levenshtein 编辑距离。,0
+typing_trials.csv,aligned_target_chars,选择的最优目标前缀长度。,0
+typing_trials.csv,msd_error_rate,"编辑距离/max(对齐前缀长度,尝试字符数,1)。",0
+typing_trials.csv,scoring_method,原始计分版本 msd_target_prefix_v1。,0
+typing_trials.csv,first_key_latency_ms,输入启用至首次非空输入的毫秒数；更短不自动表示更佳。,0
+typing_trials.csv,text_storage_status,direct_match=导出文本可直接复算；compatible_with_stripped_boundary_spaces=与服务端去边界空格机制兼容，原始分数保留。,0
