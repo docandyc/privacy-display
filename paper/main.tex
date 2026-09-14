@@ -340,7 +340,7 @@ High-suppression & 324 & 5.0 & 89.1 [85.0, 92.4] & Exploratory stress profile; m
 \end{tabular}
 \end{table*}
 
-For the field-level analysis in Table~\ref{tab:explicit_fields}, 18 fields were fixed before scoring, and 243 of the 324 units per profile contain at least one field.
+For the field-level analysis in Table~\ref{tab:explicit_fields}, 18 fields were fixed before scoring across nine field-bearing content items. These fields yield 486 field-scoring opportunities per profile (18 fields $\times$ 9 geometries $\times$ 3 repeats), and 243 of the 324 analysis units contain at least one field.
 
 \begin{table}[!t]
 \caption{Exact recovery of preidentified sensitive fields in the matched pool.}
@@ -350,7 +350,7 @@ For the field-level analysis in Table~\ref{tab:explicit_fields}, 18 fields were 
 \setlength{\tabcolsep}{4.5pt}
 \begin{tabular}{lcc}
 \toprule
-Profile & Field micro (\%; 486 opp.) & Sample macro (\%) \\
+Profile & Field micro (\%) & Sample macro (\%) \\
 \midrule
 Original (unprotected) & 90.1 & 85.5 \\
 Readability-priority & 15.7 & 15.6 \\
@@ -368,7 +368,7 @@ Table~\ref{tab:real_ocr_full_pool} reports duplicate-averaged best-of-engine res
 \footnotesize
 \begin{tabular}{lllccc}
 \toprule
-Profile & Attack mode & $N$ & Char recovery (\%) [95\% summary] & Exact match (\%) & Leak rate (\%) \\
+Profile & Attack mode & $N$ & Char recovery (\%) & Exact match (\%) & Leak rate (\%) \\
 \midrule
 \multirow{3}{*}{Original (unprotected)}
  & Short exposure & 324 & 94.1 [93.1, 95.0] & 65.7 & 99.4 \\
@@ -598,7 +598,7 @@ The content breakdown in Table~\ref{tab:vlm_content} uses same-session Qwen3-VL 
 {\renewcommand{\arraystretch}{1.12}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lcccc@{}}
 \toprule
-Content type (planned) & Baseline (\%) & Qwen (\%) & Kimi (\%) & GLM (\%) [valid/planned] \\
+Content type (planned) & Baseline (\%) & Qwen (\%) & Kimi (\%) & GLM (\%) \\
 \midrule
 CET6 document (3) & 64.4 & 18.5 & 5.6 & 0.4 [3/3] \\
 Credentials (6) & 97.6 & 97.6 & 88.3 & 64.3--80.9 [5/6] \\
