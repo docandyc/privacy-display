@@ -665,11 +665,11 @@ Table~\ref{tab:study_typing} uses participant means over two trials per conditio
 \toprule
 Metric & Control & Masked & $\Delta$ [95\% CI] \\
 \midrule
-Accuracy (\%) & 97.26 & 95.98 & $-1.29$ [$-2.28$, $-0.31$] \\
+Accuracy (\%) & 97.26 & 95.98 & $-1.29$ [$-2.29$, $-0.33$] \\
 WPM & 22.37 & 21.00 & $-1.38$ [$-1.92$, $-0.83$] \\
 CPM & 111.86 & 104.99 & $-6.88$ [$-9.68$, $-4.13$] \\
 Attempted chars & 38.17 & 36.08 & $-2.09$ [$-2.94$, $-1.23$] \\
-First-key latency (ms) & 650.50 & 722.23 & $+71.73$ [$-11.34$, $+158.61$] \\
+First-key latency (ms) & 650.50 & 722.23 & $+71.73$ [$-14.28$, $+158.36$] \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -694,16 +694,18 @@ Readability-priority full ($n{=}4$) & 3.67 $\pm$ 1.05 & 2.62 $\pm$ 1.23 & 3.06 $
 \end{tabular}
 \end{table}
 
- \textbf{Results}: Table~\ref{tab:study_typing} and Fig.~\ref{fig:study_typing} summarize the user-study results. In Fig.~\ref{fig:study_typing}, each gray line is one participant's mean across two trials per condition, and markers show group means with participant-level bootstrap 95\% confidence intervals. The panels report transcription accuracy, words per minute, and first-keystroke latency. Readability-priority masking retained 95.98\% mean accuracy (Wilcoxon $W=1600.5$, $p=0.008$, $r_{rb}=-0.31$) but reduced WPM by 1.38 (95\% CI $[-1.92,-0.83]$, $t(105)=-4.88$, $p=3.8\times10^{-6}$, $d_z=-0.47$). CPM and attempted characters yielded $p=3.8\times10^{-6}$ ($d_z=-0.47$) and $p=5.3\times10^{-6}$ ($d_z=-0.47$), respectively. First-keystroke latency did not differ significantly ($W=2367.0$, $p=0.140$, $r_{rb}=+0.17$). After Holm correction, accuracy, WPM, CPM, and attempted characters remained significant, whereas first-keystroke latency did not.
+\textbf{Results}: Table~\ref{tab:study_typing} reports condition means and paired differences, while Fig.~\ref{fig:study_typing} displays the distribution of within-participant changes for all 106 included participants. Each change is computed from the participant's mean across two trials per condition. Accuracy and WPM are plotted as masked minus control; latency is plotted as control minus masked, so positive values consistently indicate better performance under masking. Gray points show individual changes, gray violin outlines summarize their distributions, and blue diamonds and error bars show mean changes and participant-level bootstrap 95\% confidence intervals. For these three outcomes, the intervals in the figure and table use 10,000 participant resamples with seed 20260703, initialized separately for each outcome. Unlike the figure, the table and test effect sizes retain masked-minus-control coding for latency.
+
+Readability-priority masking retained 95.98\% mean accuracy, a decrease of 1.29 percentage points (95\% CI $[-2.29,-0.33]$; Wilcoxon $W=1600.5$, $p=0.008$, $r_{rb}=-0.31$), and reduced WPM by 1.38 (95\% CI $[-1.92,-0.83]$, $t(105)=-4.88$, $p=3.8\times10^{-6}$, $d_z=-0.47$). The individual changes varied in direction, so these mean decreases do not imply deterioration in every participant. CPM and attempted characters yielded $p=3.8\times10^{-6}$ ($d_z=-0.47$) and $p=5.3\times10^{-6}$ ($d_z=-0.47$), respectively. First-keystroke latency increased by 71.73\,ms on average (95\% CI $[-14.28,+158.36]$), corresponding to the plotted change of $-71.7$\,ms, but did not differ significantly ($W=2367.0$, $p=0.140$, $r_{rb}=+0.17$). After Holm correction, accuracy, WPM, CPM, and attempted characters remained significant, whereas first-keystroke latency did not.
 
  All three subjective ratings varied across display conditions (Friedman tests, all $p<10^{-40}$). Relative to the unmasked anchor, the readability-priority configuration received lower readability, stability, and comfort ratings, with large negative rank-biserial effects ($|r_{rb}|=0.91$--$0.99$; all Holm-adjusted $p\leq1.8\times10^{-11}$). Fig.~\ref{fig:study_ratings} orders the six conditions from the unmasked anchor to the readability-priority configuration. Bars show means, and error bars show SD clipped to the 1--5 scale; higher values indicate better ratings.
 
-\begin{figure}[!t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\columnwidth]{figures/study_typing_paired.pdf}
-\caption{Within-subject typing performance under control and readability-priority masking.}
+\includegraphics[width=\textwidth]{figures/study_typing_delta.pdf}
+\caption{Within-participant typing changes under readability-priority masking ($N=106$). Diamonds and error bars show means and bootstrap 95\% CIs; positive values indicate improvement.}
 \label{fig:study_typing}
-\end{figure}
+\end{figure*}
 
 \begin{figure}[!t]
 \centering

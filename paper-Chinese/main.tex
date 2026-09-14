@@ -15,8 +15,8 @@
 % 中文支持（中文草稿阶段使用 XeLaTeX 编译）
 \usepackage{xeCJK}
 \setCJKmainfont{STSong}
-\setCJKsansfont{STHeiti}
-\setCJKmonofont{STFangsong}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Songti SC}
 
 \usepackage{bm}
 \makeatletter
@@ -452,39 +452,39 @@ $\alpha$ & 长曝光字符（\%） & 视频均值字符（\%） \\
 \centering
 \footnotesize
 \setlength{\tabcolsep}{5.5pt}
-\begin{tabular}{llccc}
+\begin{tabular}{llcc}
 \toprule
-档位 & 引擎 & 字符（\%） & 完全匹配（\%） & N \\
+档位 & 引擎 & 字符（\%） & 完全匹配（\%） \\
 \midrule
 \multirow{3}{*}{原始}
- & Surya & 37.1 & 22.8 & 324 \\
- & EasyOCR & 79.5 & 27.8 & 324 \\
- & Tesseract & 84.3 & 47.8 & 324 \\
+ & Surya & 37.1 & 22.8 \\
+ & EasyOCR & 79.5 & 27.8 \\
+ & Tesseract & 84.3 & 47.8 \\
 \midrule
 \multirow{3}{*}{仅掩蔽}
- & Surya & 4.2 & 0.3 & 324 \\
- & EasyOCR & 15.6 & 0.0 & 324 \\
- & Tesseract & 3.2 & 0.0 & 324 \\
+ & Surya & 4.2 & 0.3 \\
+ & EasyOCR & 15.6 & 0.0 \\
+ & Tesseract & 3.2 & 0.0 \\
 \midrule
 \multirow{3}{*}{掩蔽加噪声}
- & Surya & 11.0 & 2.8 & 324 \\
- & EasyOCR & 18.1 & 0.0 & 324 \\
- & Tesseract & 4.8 & 0.0 & 324 \\
+ & Surya & 11.0 & 2.8 \\
+ & EasyOCR & 18.1 & 0.0 \\
+ & Tesseract & 4.8 & 0.0 \\
 \midrule
 \multirow{3}{*}{Strong}
- & Surya & 6.1 & 0.6 & 324 \\
- & EasyOCR & 16.3 & 0.0 & 324 \\
- & Tesseract & 2.1 & 0.0 & 324 \\
+ & Surya & 6.1 & 0.6 \\
+ & EasyOCR & 16.3 & 0.0 \\
+ & Tesseract & 2.1 & 0.0 \\
 \midrule
 \multirow{3}{*}{可读性优先档}
- & Surya & 3.2 & 0.4 & 459 \\
- & EasyOCR & 11.7 & 0.0 & 459 \\
- & Tesseract & 3.3 & 0.0 & 459 \\
+ & Surya & 3.2 & 0.4 \\
+ & EasyOCR & 11.7 & 0.0 \\
+ & Tesseract & 3.3 & 0.0 \\
 \midrule
 \multirow{3}{*}{高抑制档}
- & Surya & 1.8 & 0.0 & 324 \\
- & EasyOCR & 2.0 & 0.0 & 324 \\
- & Tesseract & 1.9 & 0.0 & 324 \\
+ & Surya & 1.8 & 0.0 \\
+ & EasyOCR & 2.0 & 0.0 \\
+ & Tesseract & 1.9 & 0.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -635,11 +635,11 @@ CET6 文档（3） & 64.4 & 18.5 & 5.6 & 0.4 \\
 \toprule
 指标 & 控制 & 掩蔽 & $\Delta$ [95\% CI] \\
 \midrule
-准确率（\%） & 97.26 & 95.98 & $-1.29$ [$-2.28$, $-0.31$] \\
+准确率（\%） & 97.26 & 95.98 & $-1.29$ [$-2.29$, $-0.33$] \\
 WPM & 22.37 & 21.00 & $-1.38$ [$-1.92$, $-0.83$] \\
 CPM & 111.86 & 104.99 & $-6.88$ [$-9.68$, $-4.13$] \\
 尝试字符数 & 38.17 & 36.08 & $-2.09$ [$-2.94$, $-1.23$] \\
-首次按键延迟（ms） & 650.50 & 722.23 & $+71.73$ [$-11.34$, $+158.61$] \\
+首次按键延迟（ms） & 650.50 & 722.23 & $+71.73$ [$-14.28$, $+158.36$] \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -664,14 +664,18 @@ $n{=}4$ 仅掩蔽 & 4.11 $\pm$ 0.78 & 4.30 $\pm$ 0.79 & 3.83 $\pm$ 0.88 \\
 \end{tabular}
 \end{table}
 
-\textbf{结果}：表~\ref{tab:study_typing} 和图~\ref{fig:study_typing} 汇总了打字任务。与控制条件相比，可读性优先完整配置使平均准确率变化 $-1.29$ 个百分点（95\% CI $[-2.28, -0.31]$，Wilcoxon $W=1600.5$，$p=0.008$，$r_{rb}=-0.31$），WPM 变化 $-1.38$（95\% CI $[-1.92, -0.83]$，$t(105)=-4.88$，$p=3.8\times10^{-6}$，$d_z=-0.47$），首次按键延迟变化 $+71.7$\,ms（95\% CI $[-11.3, +158.6]$，Wilcoxon $W=2367.0$，$p=0.140$，$r_{rb}=-0.17$）；CPM 和尝试字符数对应的结果分别为 $p=3.8\times10^{-6}$（$d_z=-0.47$）和 $p=5.3\times10^{-6}$（$d_z=-0.47$）。对五项打字指标进行 Holm 校正后，准确率、WPM、CPM 和尝试字符数的差异均显著，仅首次按键延迟差异不显著。表~\ref{tab:study_ratings} 和图~\ref{fig:study_ratings} 汇总了主观评分：可读性、稳定性和即时视觉舒适度的 Friedman 检验结果分别为 $\chi^2(5)=200.2$（$p=2.6\times10^{-41}$）、$\chi^2(5)=297.0$（$p=4.5\times10^{-62}$）和 $\chi^2(5)=249.4$（$p=7.4\times10^{-52}$）；可读性优先完整配置与无掩蔽锚点在三个条目上的 Holm 校正成对比较分别为 $p=1.8\times10^{-11}$、$p=6.8\times10^{-16}$ 和 $p=2.8\times10^{-14}$。
+\textbf{结果}：表~\ref{tab:study_typing} 报告条件均值与配对差值，图~\ref{fig:study_typing} 展示全部 106 名纳入参与者的个体变化分布。每个差值均由同一参与者在每个条件下两次试验的均值计算。准确率与 WPM 按掩蔽减控制绘制，首次按键延迟按控制减掩蔽绘制，使三个面板中的正值均表示掩蔽条件下表现改善。灰点表示个体变化，浅灰色小提琴轮廓表示变化分布，蓝色菱形和误差线分别表示平均变化与参与者层面的 bootstrap 95\% 置信区间。这三项指标的图表区间均使用 10,000 次参与者重采样，并为每项指标分别以种子 20260703 初始化随机数生成器。表中的延迟差值与检验效应量仍按掩蔽减控制编码。
 
-\begin{figure}[!t]
+可读性优先完整配置保持了 95.98\% 的平均准确率，比控制条件下降 1.29 个百分点（95\% CI $[-2.29,-0.33]$，Wilcoxon $W=1600.5$，$p=0.008$，$r_{rb}=-0.31$），WPM 下降 1.38（95\% CI $[-1.92,-0.83]$，$t(105)=-4.88$，$p=3.8\times10^{-6}$，$d_z=-0.47$）。个体变化的方向并不一致，因此平均下降不意味着每名参与者的表现均变差。首次按键延迟平均增加 71.73\,ms（95\% CI $[-14.28,+158.36]$），对应图中的 $-71.7$\,ms，但差异不显著（Wilcoxon $W=2367.0$，$p=0.140$，$r_{rb}=+0.17$）；CPM 和尝试字符数对应的结果分别为 $p=3.8\times10^{-6}$（$d_z=-0.47$）和 $p=5.3\times10^{-6}$（$d_z=-0.47$）。对五项打字指标进行 Holm 校正后，准确率、WPM、CPM 和尝试字符数的差异均显著，仅首次按键延迟差异不显著。
+
+表~\ref{tab:study_ratings} 和图~\ref{fig:study_ratings} 汇总了主观评分：可读性、稳定性和即时视觉舒适度的 Friedman 检验结果分别为 $\chi^2(5)=200.2$（$p=2.6\times10^{-41}$）、$\chi^2(5)=297.0$（$p=4.5\times10^{-62}$）和 $\chi^2(5)=249.4$（$p=7.4\times10^{-52}$）；可读性优先完整配置与无掩蔽锚点在三个条目上的 Holm 校正成对比较分别为 $p=1.8\times10^{-11}$、$p=6.8\times10^{-16}$ 和 $p=2.8\times10^{-14}$。
+
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\columnwidth]{figures/study_typing_paired.pdf}
-\caption{控制条件与可读性优先掩蔽条件下的被试内打字表现：每条灰线代表一名参与者（每个条件下两次试验的均值）；标记表示组均值及参与者层面的 bootstrap 95\% 置信区间。各面板依次显示转录准确率、每分钟词数和首次按键延迟。}
+\includegraphics[width=\textwidth]{figures/study_typing_delta.pdf}
+\caption{可读性优先掩蔽下的被试内打字变化（$N=106$）。菱形和误差线表示均值及 bootstrap 95\% 置信区间；正值表示改善。}
 \label{fig:study_typing}
-\end{figure}
+\end{figure*}
 
 \begin{figure}[!t]
 \centering

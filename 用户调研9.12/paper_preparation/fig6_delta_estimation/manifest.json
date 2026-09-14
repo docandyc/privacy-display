@@ -1,0 +1,15 @@
+{
+  "source": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/用户调研9.12/paper_preparation/analysis_data/typing_participant_means.csv",
+  "source_sha256": "6ba2fb443b374ef51d110b762df463bce2183e407407f94eff2c8fda18fdf3d0",
+  "n": 106,
+  "bootstrap_samples": 10000,
+  "seed": 20260703,
+  "figure_encoding": {
+    "gray_points": "participant-level paired changes",
+    "gray_violin": "distribution density",
+    "blue_diamond": "mean paired change",
+    "blue_error_bar": "participant bootstrap 95% confidence interval for the mean paired change",
+    "zero_line": "no within-subject change",
+    "direction": "positive values indicate improved performance; first-key latency sign is reversed"
+  }
+}

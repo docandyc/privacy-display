@@ -1,0 +1,4 @@
+﻿metric,n,displayed_change,mean,sd,bootstrap_95ci_low,bootstrap_95ci_high,participants_better,participants_worse,participants_unchanged
+accuracy,106,(Mask - Ctrl) x 100,-1.2860984679907626,5.2639012437284,-2.2850323575029465,-0.32537216547783443,35,61,10
+wpm,106,Mask - Ctrl,-1.3754716981132074,2.901487674928639,-1.9160377358490566,-0.8264150943396226,33,70,3
+first_key_latency_ms,106,Ctrl - Mask (sign reversed so positive is better),-71.72877358486585,447.23654910422493,-158.35994103766848,14.278408018912721,48,58,0

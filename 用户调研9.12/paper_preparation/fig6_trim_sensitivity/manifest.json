@@ -1,0 +1,10 @@
+{
+  "source": "/Users/andyhuang/Desktop/毕业设计相关文档/我的毕设/用户调研9.12/paper_preparation/analysis_data/typing_participant_means.csv",
+  "source_sha256": "6ba2fb443b374ef51d110b762df463bce2183e407407f94eff2c8fda18fdf3d0",
+  "seed": 20260703,
+  "bootstrap_samples": 10000,
+  "rule": "Per metric, sort masked-control; remove first 3 and last 3; break exact ties by participant_code ascending.",
+  "interpretation": "Post-hoc descriptive sensitivity analysis. Bootstrap conditional on selected retained sample; selection is not repeated in resamples. No confirmatory p-values.",
+  "original_n": 106,
+  "retained_n_per_metric": 100
+}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  12 SEP 2026 13:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.12)  14 SEP 2026 14:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -633,35 +633,29 @@ Package xcolor Warning: Incompatible color definition on input line 68.
 
 Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
-(fontspec)             'STHeiti'. Check the typeset output, and if it is okay
+(fontspec)             'Heiti SC'. Check the typeset output, and if it is okay
 (fontspec)             then ignore this warning. Otherwise a different font
 (fontspec)             should be chosen.
 
 
 Package fontspec Info: 
-(fontspec)             Could not resolve font "STHeiti/BI" (it probably
+(fontspec)             Could not resolve font "Heiti SC/I" (it probably
 (fontspec)             doesn't exist).
 
 
 Package fontspec Info: 
-(fontspec)             Could not resolve font "STHeiti/B" (it probably doesn't
-(fontspec)             exist).
-
-
-Package fontspec Info: 
-(fontspec)             Could not resolve font "STHeiti/I" (it probably doesn't
-(fontspec)             exist).
-
-
-Package fontspec Info: 
-(fontspec)             Font family 'STHeiti(0)' created for font 'STHeiti'
+(fontspec)             Font family 'HeitiSC(0)' created for font 'Heiti SC'
 (fontspec)             with options [Script={CJK}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"STHeiti/OT:script=hani;language=dflt;"
+(fontspec)             - 'normal' (m/n) with NFSS spec.: <->"Heiti
+(fontspec)             SC/OT:script=hani;language=dflt;"
+(fontspec)             - 'bold' (b/n) with NFSS spec.: <->"Heiti
+(fontspec)             SC/B/OT:script=hani;language=dflt;"
+(fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Heiti
+(fontspec)             SC/BI/OT:script=hani;language=dflt;"
 
 
 LaTeX Font Warning: Font shape `TU/STSong(0)/n/n' undefined
@@ -685,24 +679,20 @@ File: bullet.png Graphic file (type bmp)
 Package xcolor Warning: Incompatible color definition on input line 72.
 
 
-LaTeX Font Warning: Font shape `TU/STHeiti(0)/n/n' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 77.
+LaTeX Font Warning: Font shape `TU/HeitiSC(0)/n/n' undefined
+(Font)              using `TU/HeitiSC(0)/m/n' instead on input line 77.
 
 
 Package xcolor Warning: Incompatible color definition on input line 77.
 
 
-LaTeX Font Warning: Font shape `TU/STHeiti(0)/cm/n' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 77.
+LaTeX Font Warning: Font shape `TU/HeitiSC(0)/cm/n' undefined
+(Font)              using `TU/HeitiSC(0)/m/n' instead on input line 77.
 
 LaTeX Font Info:    Calculating math sizes for size <9.9> on input line 77.
 
 Package manuscript Warning: Unresolved submission placeholder on input line 77.
 
-
-
-LaTeX Font Warning: Font shape `TU/STHeiti(0)/b/n' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 77.
 
 LaTeX Font Info:    Calculating math sizes for size <6.6> on input line 77.
 
@@ -738,8 +728,8 @@ LaTeX Font Warning: Font shape `TU/STSong(0)/n/it' undefined
 Package xcolor Warning: Incompatible color definition on input line 86.
 
 
-LaTeX Font Warning: Font shape `TU/STHeiti(0)/m/it' undefined
-(Font)              using `TU/STHeiti(0)/m/n' instead on input line 86.
+LaTeX Font Warning: Font shape `TU/HeitiSC(0)/m/it' undefined
+(Font)              using `TU/HeitiSC(0)/m/n' instead on input line 86.
 
 
 
@@ -920,23 +910,13 @@ Package xcolor Warning: Incompatible color definition on input line 244.
 
 Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
-(fontspec)             'STFangsong'. Check the typeset output, and if it is
+(fontspec)             'Songti SC'. Check the typeset output, and if it is
 (fontspec)             okay then ignore this warning. Otherwise a different
 (fontspec)             font should be chosen.
 
 
 Package fontspec Info: 
-(fontspec)             Could not resolve font "STFangsong/BI" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: 
-(fontspec)             Could not resolve font "STFangsong/B" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: 
-(fontspec)             Could not resolve font "STFangsong/I" (it probably
+(fontspec)             Could not resolve font "Songti SC/I" (it probably
 (fontspec)             doesn't exist).
 
 LaTeX Font Info:    Trying to load font information for T1+pcr on input line 27
@@ -950,14 +930,18 @@ LaTeX Font Warning: Font shape `T1/pcr/n/n' undefined
 
 
 Package fontspec Info: 
-(fontspec)             Font family 'STFangsong(0)' created for font
-(fontspec)             'STFangsong' with options [Script={CJK}].
+(fontspec)             Font family 'SongtiSC(0)' created for font 'Songti SC'
+(fontspec)             with options [Script={CJK}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"STFangsong/OT:script=hani;language=dflt;"
+(fontspec)             - 'normal' (m/n) with NFSS spec.: <->"Songti
+(fontspec)             SC/OT:script=hani;language=dflt;"
+(fontspec)             - 'bold' (b/n) with NFSS spec.: <->"Songti
+(fontspec)             SC/B/OT:script=hani;language=dflt;"
+(fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Songti
+(fontspec)             SC/BI/OT:script=hani;language=dflt;"
 
 
 Package xcolor Warning: Incompatible color definition on input line 274.
@@ -1113,7 +1097,7 @@ Package xcolor Warning: Incompatible color definition on input line 516.
 
 
 
-Underfull \vbox (badness 3460) has occurred while \output is active []
+Underfull \vbox (badness 3396) has occurred while \output is active []
 
 
 
@@ -1148,7 +1132,7 @@ Underfull \hbox (badness 3439) in paragraph at lines 527--528
  []
 
 
-Underfull \vbox (badness 3323) has occurred while \output is active []
+Underfull \vbox (badness 3364) has occurred while \output is active []
 
 
 
@@ -1193,17 +1177,17 @@ Package xcolor Warning: Incompatible color definition on input line 562.
 
 
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 
 
 
-Package manuscript Warning: Unresolved submission placeholder on input line 685
+Package manuscript Warning: Unresolved submission placeholder on input line 689
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 685.
+(Font)              using `T1/formata/m/it' instead on input line 689.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1225,19 +1209,19 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [9]
 
 
-Underfull \vbox (badness 2065) has occurred while \output is active []
+Underfull \vbox (badness 2057) has occurred while \output is active []
 
 
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
-Package manuscript Warning: Unresolved submission placeholder on input line 685
+Package manuscript Warning: Unresolved submission placeholder on input line 689
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 685.
+(Font)              using `T1/formata/m/it' instead on input line 689.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1256,46 +1240,52 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [10]
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 
-Overfull \hbox (2.7094pt too wide) in paragraph at lines 685--685
+Overfull \hbox (2.7094pt too wide) in paragraph at lines 689--689
  [][] 
  []
 
 
 
-File: figures/study_typing_paired.pdf Graphic file (type pdf)
-<use figures/study_typing_paired.pdf>
+File: figures/study_typing_delta.pdf Graphic file (type pdf)
+<use figures/study_typing_delta.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 File: figures/study_ratings_likert.pdf Graphic file (type pdf)
 <use figures/study_ratings_likert.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 
-Package xcolor Warning: Incompatible color definition on input line 685.
+Package xcolor Warning: Incompatible color definition on input line 689.
 
 
-Package xcolor Warning: Incompatible color definition on input line 688.
+Package xcolor Warning: Incompatible color definition on input line 692.
+
+
+Package xcolor Warning: Incompatible color definition on input line 698.
+
+
+Package xcolor Warning: Incompatible color definition on input line 730.
 
 
 
 
-Package manuscript Warning: Unresolved submission placeholder on input line 692
+Package manuscript Warning: Unresolved submission placeholder on input line 762
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 692.
+(Font)              using `T1/formata/m/it' instead on input line 762.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1316,21 +1306,13 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [11]
 
-Package xcolor Warning: Incompatible color definition on input line 694.
-
-
-Package xcolor Warning: Incompatible color definition on input line 726.
-
 File: figures/real_detection_drop.pdf Graphic file (type pdf)
 <use figures/real_detection_drop.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 762.
+Package xcolor Warning: Incompatible color definition on input line 766.
 
 
-Package xcolor Warning: Incompatible color definition on input line 762.
-
-
-Package xcolor Warning: Incompatible color definition on input line 767.
+Package xcolor Warning: Incompatible color definition on input line 766.
 
 
 Package xcolor Warning: Incompatible color definition on input line 771.
@@ -1338,38 +1320,17 @@ Package xcolor Warning: Incompatible color definition on input line 771.
 
 Package xcolor Warning: Incompatible color definition on input line 775.
 
-File: figures/multiengine_ocr.pdf Graphic file (type pdf)
-<use figures/multiengine_ocr.pdf>
-
-Package xcolor Warning: Incompatible color definition on input line 793.
-
-
-Package xcolor Warning: Incompatible color definition on input line 793.
-
-
-
-
-Package xcolor Warning: Incompatible color definition on input line 799.
-
-
-Package xcolor Warning: Incompatible color definition on input line 804.
-
-
-Overfull \hbox (3.80316pt too wide) in paragraph at lines 809--821
- [][] 
- []
-
 
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
-Package manuscript Warning: Unresolved submission placeholder on input line 823
+Package manuscript Warning: Unresolved submission placeholder on input line 777
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 823.
+(Font)              using `T1/formata/m/it' instead on input line 777.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1388,45 +1349,61 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [12]
 
-Package xcolor Warning: Incompatible color definition on input line 825.
+Package xcolor Warning: Incompatible color definition on input line 779.
+
+File: figures/multiengine_ocr.pdf Graphic file (type pdf)
+<use figures/multiengine_ocr.pdf>
+
+Package xcolor Warning: Incompatible color definition on input line 797.
 
 
-Package xcolor Warning: Incompatible color definition on input line 830.
+Package xcolor Warning: Incompatible color definition on input line 797.
 
 
-Package xcolor Warning: Incompatible color definition on input line 863.
+Package xcolor Warning: Incompatible color definition on input line 803.
 
 
+Package xcolor Warning: Incompatible color definition on input line 808.
+
+
+Overfull \hbox (3.80316pt too wide) in paragraph at lines 813--825
+ [][] 
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 829.
+
+
+
+
+Package xcolor Warning: Incompatible color definition on input line 834.
+
+
+Package xcolor Warning: Incompatible color definition on input line 867.
 
 File: figures/all_attackers.pdf Graphic file (type pdf)
 <use figures/all_attackers.pdf>
 
-Package xcolor Warning: Incompatible color definition on input line 899.
+Package xcolor Warning: Incompatible color definition on input line 903.
 
 
-Package xcolor Warning: Incompatible color definition on input line 899.
+Package xcolor Warning: Incompatible color definition on input line 903.
 
 
-Package xcolor Warning: Incompatible color definition on input line 906.
+Package xcolor Warning: Incompatible color definition on input line 910.
 
 
-Package xcolor Warning: Incompatible color definition on input line 909.
-
-
-Package xcolor Warning: Incompatible color definition on input line 915.
-
-
-Package xcolor Warning: Incompatible color definition on input line 921.
+Package xcolor Warning: Incompatible color definition on input line 913.
 
 
 
 
-Package manuscript Warning: Unresolved submission placeholder on input line 924
+Package manuscript Warning: Unresolved submission placeholder on input line 918
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 924.
+(Font)              using `T1/formata/m/it' instead on input line 918.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1447,20 +1424,53 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 [13]
 
-Package xcolor Warning: Incompatible color definition on input line 927.
+Package xcolor Warning: Incompatible color definition on input line 919.
 
 
-Package xcolor Warning: Incompatible color definition on input line 932.
+Package xcolor Warning: Incompatible color definition on input line 925.
+
+
+Package xcolor Warning: Incompatible color definition on input line 931.
 
 
 Package xcolor Warning: Incompatible color definition on input line 936.
 
 
-Package xcolor Warning: Incompatible color definition on input line 950.
+
+
+Package xcolor Warning: Incompatible color definition on input line 940.
+
+
+Package xcolor Warning: Incompatible color definition on input line 954.
 
 
 
-(./main.bbl
+File: notaglinelogo.png Graphic file (type bmp)
+<notaglinelogo.png>
+
+Package manuscript Warning: Unresolved submission placeholder on input line 962
+.
+
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 962.
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[14] (./main.bbl
 
 Package xcolor Warning: Incompatible color definition on input line 2.
 
@@ -1478,61 +1488,34 @@ Underfull \hbox (badness 3449) in paragraph at lines 76--79
  []
 
 
-
-File: notaglinelogo.png Graphic file (type bmp)
-<notaglinelogo.png>
-
-Package manuscript Warning: Unresolved submission placeholder on input line 93.
-
-
-
-LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 93.
-
-
-Overfull \hbox (505.12177pt too wide) has occurred while \output is active
-[]
- []
-
-
-Overfull \hbox (505.12177pt too wide) has occurred while \output is active
-[]
- []
-
-
-Underfull \hbox (badness 10000) has occurred while \output is active
-[]
- []
-
-[14]
 Underfull \hbox (badness 1817) in paragraph at lines 126--129
-\T1/times/n/it/7.61 Cir-cuits and Sys-tems (IS-CAS)\T1/times/m/n/7.61 , 2014, p
+\T1/times/n/it/7.61 Cir-cuits and Sys-tems (IS-CAS)\T1/times/n/n/7.61 , 2014, p
 p. 449--452, doi: 10.1109/IS-
  []
 
 
+
+
 Underfull \hbox (badness 3271) in paragraph at lines 191--196
-\T1/times/m/n/7.61 A. Khakzar, Z. Li, X. Cao, and P. Torr, ``A sur-vey on trans
+\T1/times/n/n/7.61 A. Khakzar, Z. Li, X. Cao, and P. Torr, ``A sur-vey on trans
 -fer-
  []
 
 
 Underfull \hbox (badness 3635) in paragraph at lines 191--196
-\T1/times/n/it/7.61 ac-tions on Ma-chine Learn-ing Re-search\T1/times/m/n/7.61 
+\T1/times/n/it/7.61 ac-tions on Ma-chine Learn-ing Re-search\T1/times/n/n/7.61 
 , 2024, [On-line]. Avail-able:
  []
 
 
 
 
-
-
-Package manuscript Warning: Unresolved submission placeholder on input line 349
+Package manuscript Warning: Unresolved submission placeholder on input line 252
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 349.
+(Font)              using `T1/formata/m/it' instead on input line 252.
 
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
@@ -1565,12 +1548,12 @@ File: bullet.png Graphic file (type bmp)
 File: notaglinelogo.png Graphic file (type bmp)
 <notaglinelogo.png>
 
-Package manuscript Warning: Unresolved submission placeholder on input line 971
+Package manuscript Warning: Unresolved submission placeholder on input line 975
 .
 
 
 LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
-(Font)              using `T1/formata/m/it' instead on input line 971.
+(Font)              using `T1/formata/m/it' instead on input line 975.
 
 
 Overfull \hbox (505.12177pt too wide) has occurred while \output is active
@@ -1600,12 +1583,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 9925 strings out of 473832
- 262529 string characters out of 5729481
- 731361 words of memory out of 5000000
- 32752 multiletter control sequences out of 15000+600000
- 632833 words of font info for 220 fonts, out of 8000000 for 9000
+ 9955 strings out of 473832
+ 263500 string characters out of 5729481
+ 731282 words of memory out of 5000000
+ 32776 multiletter control sequences out of 15000+600000
+ 632881 words of font info for 226 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 74i,10n,93p,844b,544s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,10n,93p,775b,544s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.xdv (16 pages, 428296 bytes).
+Output written on main.xdv (16 pages, 431696 bytes).
